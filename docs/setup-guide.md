@@ -1,3 +1,5 @@
+> Canonical docs live on GitHub; this page is a snapshot.
+
 # OpenClawBrain Operator Setup Guide
 
 ## Prerequisites
@@ -24,7 +26,7 @@ After init, replay your existing sessions to seed graph edges and extract learni
 openclawbrain replay --state ./brain/state.json --sessions ./sessions/
 ```
 
-This extracts durable correction/teaching nodes and runs maintenance in one command.
+This extracts durable correction/teaching nodes and runs maintenance in one command (`--full-learning`, alias: `--full-pipeline`).
 
 For cheap edge-only replay (no LLM, no harvest):
 
@@ -46,6 +48,7 @@ openclawbrain replay \
   --checkpoint ./brain/replay_checkpoint.json \
   --json
 ```
+`--extract-learning-events` is an alias for `--fast-learning`.
 
 `fast-learning` stores extracted events in an append-only log:
 - `./brain/learning_events.jsonl`
@@ -53,6 +56,18 @@ openclawbrain replay \
 You can run this repeatedly; dedupe is by `(type, sha256(content), session_pointer)`, so repeated runs are idempotent.
 
 For ongoing operation after startup, use `--ignore-checkpoint` only when you intentionally want to replay older chunks that were already ingested.
+
+Checkpoint visibility:
+
+```bash
+openclawbrain replay --state ./brain/state.json --show-checkpoint --resume
+openclawbrain replay --state ./brain/state.json --show-checkpoint --resume --json
+```
+
+Resume semantics:
+- `--resume` enables checkpoint offsets.
+- `--ignore-checkpoint` disables resume even when a checkpoint exists.
+- If a checkpoint only has legacy top-level `sessions` offsets, replay still resumes from them and prints a warning.
 
 ## Step 2: Wire up the fast loop (per-query)
 
@@ -113,7 +128,7 @@ openclawbrain replay --state ./brain/state.json --sessions ./sessions/ --edges-o
 
 ## Performance knobs
 
-- `--workers`: parallelize LLM window extraction (higher = faster, bounded by rate limits)
+- `--workers`: LLM workers for fast-learning window extraction (higher = faster, bounded by rate limits)
 - `--window-radius`: context breadth around likely feedback turns
 - `--max-windows`: max feedback windows sampled per file/session
 - `--hard-max-turns`: hard cap total turns considered to keep extraction bounded
@@ -237,13 +252,13 @@ Reference: `examples/ops/callbacks.py`
 Run the production service as a Unix socket wrapper around the NDJSON daemon:
 
 ```bash
-python3 -m openclawbrain.socket_server --state ~/.openclawbrain/main/state.json
+openclawbrain serve --state ~/.openclawbrain/main/state.json
 ```
 
 The socket server creates and manages:
 
 - `~/.openclawbrain/<agent>/daemon.sock` (for example: `~/.openclawbrain/main/daemon.sock`)  
-  (created automatically by `socket_server`)
+  (created automatically by `openclawbrain serve`)
 
 Test it with:
 
@@ -265,9 +280,8 @@ Create `~/Library/LaunchAgents/com.openclawbrain.daemon.plist`:
   <key>ProgramArguments</key>
   <array>
     <string>/usr/bin/env</string>
-    <string>python3</string>
-    <string>-m</string>
-    <string>openclawbrain.socket_server</string>
+    <string>openclawbrain</string>
+    <string>serve</string>
     <string>--state</string>
     <string>/Users/YOU/.openclawbrain/main/state.json</string>
   </array>
@@ -303,7 +317,7 @@ After=network-online.target
 Type=simple
 User=YOUR_USER
 WorkingDirectory=/home/YOUR_USER
-ExecStart=/usr/bin/python3 -m openclawbrain.socket_server --state /home/YOUR_USER/.openclawbrain/main/state.json
+ExecStart=/usr/bin/env openclawbrain serve --state /home/YOUR_USER/.openclawbrain/main/state.json
 Restart=always
 RestartSec=1
 
