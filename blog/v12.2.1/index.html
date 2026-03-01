@@ -274,6 +274,28 @@
       <li><strong>272 tests, 3 production brains:</strong> crash-safe persistence</li>
     </ul>
 
+    <h2 id="comparison">OpenClawBrain vs GraphRAG/RAPTOR/Self-RAG</h2>
+    <ul>
+      <li><strong>OpenClawBrain:</strong> Learns from outcomes across runs, so repeated workflows improve over time.</li>
+      <li><strong>GraphRAG:</strong> Great for corpus structure and graph-aware retrieval.</li>
+      <li><strong>RAPTOR:</strong> Great for hierarchical summarization and organization.</li>
+      <li><strong>Self-RAG:</strong> Great for per-response retrieval decisions.</li>
+    </ul>
+    <p><strong>Best for:</strong> OpenClawBrain for repeated agent workflows with outcomes; GraphRAG/RAPTOR for corpus structure and summarization; Self-RAG for per-response decision making.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>System</th><th>Best for</th><th>Key behavior</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>OpenClawBrain</td><td>Repeated agent workflows</td><td>Persistent outcome learning and route refinement across runs</td></tr>
+          <tr><td>GraphRAG / RAPTOR</td><td>Corpus structure and summarization</td><td>Graph/hierarchical organization for retrieval and synthesis</td></tr>
+          <tr><td>Self-RAG</td><td>Per-response retrieval control</td><td>Retrieval decisions made inside each response</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Key differences (OpenClawBrain):</strong> persistent outcome learning; mistake suppression; multi-step retrieval as primitive; context gets cheaper on repeated tasks; cache-friendly deterministic <code>prompt_context</code>. See <a href="/docs/operator-guide.md">operator guide</a>, <a href="/docs/ops-recipes.md">ops recipes</a>, <a href="/gu2016/">Gu (2016) derivation</a>, and <a href="/blog/v12.2.0/">v12.2.0 post</a>.</p>
+
     <h2 id="bug">The Bug in the Old Learning Rule</h2>
     <p>Imagine you're training a retrieval system. The agent queries your graph, follows edges A→B→C, retrieves some context, and the user says "good job." The natural thing is to reinforce that path: make A→B stronger, make B→C stronger. That's what the heuristic did.</p>
 

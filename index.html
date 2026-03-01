@@ -177,6 +177,28 @@ OpenClawBrain provides value on two axes: retrieval accuracy and context efficie
 For accuracy, graph structure enables better retrieval than flat embedding-only retrieval on repeated procedural paths.
 For efficiency, repeated outcomes compress context from 30 nodes to 2.7 in deployment simulation (91% reduction) and from 52--66KB to 3--13KB per query in production via trajectory learning.</p>
 
+  <h2 id="comparison">OpenClawBrain vs GraphRAG/RAPTOR/Self-RAG</h2>
+  <ul>
+    <li><strong>OpenClawBrain:</strong> Learns routing from outcomes so repeated workflows get faster, smaller, and more reliable.</li>
+    <li><strong>GraphRAG:</strong> Excellent for corpus-aware retrieval using graph structure over entities, documents, and relationships.</li>
+    <li><strong>RAPTOR:</strong> Strong for hierarchical chunking and summarization over large corpora.</li>
+    <li><strong>Self-RAG:</strong> Strong for deciding when/how to retrieve during a single response.</li>
+  </ul>
+  <p><strong>Best for:</strong> Use OpenClawBrain when you run repeated agent workflows and can provide outcome feedback; use GraphRAG or RAPTOR when corpus structure and summarization are primary; use Self-RAG when per-response retrieval decisions are the main need.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>System</th><th>Best for</th><th>Key behavior</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>OpenClawBrain</td><td>Repeated agent workflows with outcomes</td><td>Learns persistent routes and suppresses bad ones over time</td></tr>
+        <tr><td>GraphRAG / RAPTOR</td><td>Corpus structure and summarization</td><td>Improves retrieval quality via graph/hierarchical organization</td></tr>
+        <tr><td>Self-RAG</td><td>Per-response retrieval control</td><td>Decides retrieval behavior within each response</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Key differences (OpenClawBrain):</strong> persistent outcome learning; mistake suppression; multi-step retrieval as primitive; context gets cheaper on repeated tasks; cache-friendly deterministic <code>prompt_context</code>. See <a href="/docs/operator-guide.md">operator guide</a>, <a href="/docs/ops-recipes.md">ops recipes</a>, <a href="/gu2016/">Gu (2016) derivation</a>, and <a href="/blog/v12.2.0/">v12.2.0 post</a>.</p>
+
   <div class="note">
     This page is the companion guide to the formal paper (<a href="/openclawbrain.tex" style="color: var(--text-bright);">openclawbrain.tex</a> / <a href="/openclawbrain.pdf" style="color: var(--text-bright);">openclawbrain.pdf</a>) in this directory. The paper contains the reference definitions, equations, and benchmarks; this page presents the same claims with implementation context.
   </div>
