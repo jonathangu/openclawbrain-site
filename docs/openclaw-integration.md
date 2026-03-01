@@ -5,7 +5,7 @@ Canonical docs and examples: https://openclawbrain.ai
 Primary operator runbook: [docs/operator-guide.md](operator-guide.md)
 Operator recipes (cutover, parallel replay, prompt caching, media memory): [docs/ops-recipes.md](ops-recipes.md)
 New-agent canonical SOP (workspace + dedicated brain + launchd + routing): [docs/new-agent-sop.md](new-agent-sop.md)
-Packaged adapter CLIs (no repo clone required): `python3 -m openclawbrain.openclaw_adapter.query_brain ...` and `python3 -m openclawbrain.openclaw_adapter.learn_correction ...`
+Packaged adapter CLIs (no repo clone required): `python3 -m openclawbrain.openclaw_adapter.query_brain ...`, `python3 -m openclawbrain.openclaw_adapter.capture_feedback ...`, `python3 -m openclawbrain.openclaw_adapter.learn_by_chat_id ...`, and `python3 -m openclawbrain.openclaw_adapter.learn_correction ...`
 
 If you’re already running OpenClaw, this guide shows the fastest path to:
 
@@ -69,7 +69,7 @@ OpenClaw agent
    ↓ (reads AGENTS.md)
 OpenClawBrain query (daemon)
    ↓
-Context chunks + fired node IDs
+Prompt appendix (`[BRAIN_CONTEXT]`) + internal fired-node tracking
    ↓
 Agent response
    ↓
@@ -94,7 +94,7 @@ With `openclawbrain serve`, you pay the load cost once and queries become:
 
 This is the “production shape” for OpenClaw integration.
 
-Adapter CLIs (`python3 -m openclawbrain.openclaw_adapter.query_brain` and `python3 -m openclawbrain.openclaw_adapter.learn_correction`) now auto-detect the daemon socket:
+Adapter CLIs (`python3 -m openclawbrain.openclaw_adapter.query_brain` and `python3 -m openclawbrain.openclaw_adapter.capture_feedback`) now auto-detect the daemon socket:
 
 - If `~/.openclawbrain/<agent>/daemon.sock` exists, they use the in-memory socket transport (fast path).
 - If the socket is missing, they fall back to loading `state.json` from disk directly (slower but still works).
@@ -146,9 +146,9 @@ Notes:
 
 OpenClaw agents do what `AGENTS.md` says. The simplest integration is:
 
-- **Before answering:** run a query, get context + fired IDs
-- **After answering:** call `learn` with +1/-1 using the fired IDs
-- **When corrected:** use the daemon `correction` method to atomically penalize and inject a durable correction node
+- **Before answering:** run a query and append prompt-only `[BRAIN_CONTEXT]`
+- **After answering:** learn by `chat_id` (no node IDs in prompt payload)
+- **When corrected or taught:** call `capture_feedback` in the same turn (canonical path)
 
 Paste this block into your OpenClaw workspace `AGENTS.md` (edit `AGENT` and paths):
 
@@ -157,21 +157,28 @@ Paste this block into your OpenClaw workspace `AGENTS.md` (edit `AGENT` and path
 
 **Query** (before answering questions about prior work, context, decisions, corrections, lessons):
 ```bash
-python3 -m openclawbrain.openclaw_adapter.query_brain ~/.openclawbrain/AGENT/state.json '<summary of user message>' --chat-id '<chat_id from inbound metadata>' --json --compact --no-include-node-ids --exclude-bootstrap --max-prompt-context-chars 12000
+python3 -m openclawbrain.openclaw_adapter.query_brain ~/.openclawbrain/AGENT/state.json '<summary of user message>' --chat-id '<chat_id from inbound metadata>' --format prompt --exclude-bootstrap --max-prompt-context-chars 12000
 ```
-Always pass `--chat-id` so fired nodes are logged for later corrections.
+Always pass `--chat-id` so fired nodes are logged for later learning/corrections.
 Use `--exclude-recent-memory <today-note> <yesterday-note>` only when those files are already loaded by OpenClaw in the same prompt and you want to avoid duplication.
 
-**Learn** (after each response, using fired node IDs from query output):
-- Good: `openclawbrain learn --state ~/.openclawbrain/AGENT/state.json --outcome 1.0 --fired-ids <ids>`
-- Bad: `openclawbrain learn --state ~/.openclawbrain/AGENT/state.json --outcome -1.0 --fired-ids <ids>`
-
-**Inject correction** (when corrected — same turn, don't wait for harvester):
+**Capture feedback** (canonical always-on path; same turn, no "log this" phrasing needed):
 ```bash
-echo '{"id":"correct-1","method":"correction","params":{"chat_id":"<chat_id>","outcome":-1.0,"content":"The correction text here"}}' \
-  | openclawbrain daemon --state ~/.openclawbrain/AGENT/state.json
+python3 -m openclawbrain.openclaw_adapter.capture_feedback \
+  --state ~/.openclawbrain/AGENT/state.json \
+  --chat-id '<chat_id>' \
+  --kind CORRECTION \
+  --content "The correction text here" \
+  --lookback 1 \
+  --message-id '<stable-message-id>' \
+  --json
 ```
-This applies negative feedback to the last query's fired nodes and injects a CORRECTION node with inhibitory edges in one request.
+Use `--dedup-key` (or `--message-id`) whenever possible so harvest/replay retries cannot double-inject. For positive reinforcement with a teaching:
+`--kind TEACHING --content "..." --outcome 1.0 --dedup-key '<stable-id>'`.
+
+Compatibility fallback:
+- `learn_by_chat_id` still works for outcome-only updates.
+- `learn_correction` still works for correction-specific flow.
 
 **Inject new knowledge** (when you learn something not in any workspace file):
 ```bash
@@ -200,16 +207,28 @@ openclawbrain compact --state ~/.openclawbrain/AGENT/state.json --memory-dir /pa
 
 That block is intentionally boring: it’s the contract OpenClaw already supports.
 
+### Always-on self-learning (default)
+
+Use this as the default operator policy; no special user phrasing like "log this" should be required.
+
+- If the user clearly corrects the agent, run `capture_feedback --kind CORRECTION --chat-id '<chat_id>' --lookback 1`.
+- If the user teaches a durable rule/fact, run `capture_feedback --kind TEACHING` (optionally with `--outcome`).
+- If intent is ambiguous (correction vs preference vs new teaching), ask one clarifying question before writing memory.
+- Never log secrets, tokens, passwords, private keys, or other sensitive values.
+- Always pass a stable `--dedup-key` (or `--message-id`) when available.
+
+This remains compatible with tight prompts:
+- Keep retrieval on `query_brain --format prompt` so prompt payload contains only `[BRAIN_CONTEXT]`.
+- Learning/injection uses `capture_feedback` keyed by `chat_id`, with optional `--outcome`.
+- Do not pass `fired_nodes` in prompt/tool payloads; the brain tracks them internally by `chat_id`.
+
 ### Prompt-context duplication control (recommended)
 
 OpenClaw already loads bootstrap files (`AGENTS.md`, `SOUL.md`, `USER.md`, `MEMORY.md`, `active-tasks.md`) into the base prompt. If you also include them again from brain retrieval, token usage grows quickly with little value.
 
-Use adapter compact mode and exclusions to keep context “tight and right”:
+Use prompt format and exclusions to keep context “tight and right”:
 
-- Prefer `--json --compact` for deterministic prompt appendices only.
-- Compact JSON is minified by default (single-line, no indentation). Use `--pretty-json` when you need human-readable formatting.
-- In compact mode, node id lines are omitted by default (`--no-include-node-ids` behavior). Use `--include-node-ids` only when operators need explicit IDs in prompt context.
-- Compact JSON returns only `state`, `query`, `fired_nodes`, and `prompt_context` by default. Add `--include-stats` only when you need lightweight scalar stats/timings.
+- Prefer `--format prompt` so only `[BRAIN_CONTEXT]` is appended to the model prompt.
 - Keep `--exclude-bootstrap` enabled (default in the adapter).
 - Start with `--max-prompt-context-chars 8000` to `12000`; only increase when needed.
 - Use `--exclude-recent-memory ...` only for explicit daily notes already injected into the same OpenClaw turn.
@@ -232,7 +251,7 @@ The daemon speaks NDJSON over `stdin`/`stdout`.
 - Response: one JSON object with matching `id` and either `result` or `error`.
 - Start-up cost is paid once (state loaded at process start); expected savings are 100-800ms on hot-path calls, with production measurement at ~504ms on Mac Mini M4 Pro.
 
-Supported methods: `query`, `learn`, `maintain`, `health`, `info`, `save`, `reload`, `shutdown`, `inject`, `correction`.
+Supported methods: `query`, `learn`, `last_fired`, `learn_by_chat_id`, `capture_feedback`, `maintain`, `health`, `info`, `save`, `reload`, `shutdown`, `inject`, `correction`.
 
 Example request and reply:
 
@@ -518,7 +537,7 @@ Two practical options:
 ### “Corrections aren’t sticking”
 
 - Ensure you pass `--chat-id` on every query so fired nodes are logged.
-- On correction, run daemon `correction` in the same turn.
+- On correction/teaching, run daemon `capture_feedback` in the same turn with `dedup_key`/`message_id`.
 
 ### “state.json is getting big”
 
@@ -538,8 +557,11 @@ It supports **all OpenClawBrain daemon methods** (plus a safe generic passthroug
 
 | Action | Description |
 |---|---|
-| `query` | Retrieve context + fired node IDs |
+| `query` | Retrieve context + prompt appendix (`prompt_context`) |
 | `learn` | Apply numeric outcome to fired IDs (weight updates) |
+| `last_fired` | Return recent fired node IDs for `chat_id` |
+| `learn_by_chat_id` | Apply numeric outcome using recent fired nodes for `chat_id` |
+| `capture_feedback` | Canonical real-time CORRECTION/TEACHING/DIRECTIVE with optional `outcome` + dedup |
 | `inject` | Inject TEACHING/CORRECTION/DIRECTIVE nodes |
 | `maintain` | Run structural maintenance tasks |
 | `health` | Health summary |
@@ -559,7 +581,12 @@ Query:
 openclawbrain(action="query", query="how do we deploy", chat_id="telegram:123", top_k=4)
 ```
 
-Correction:
+Feedback capture (canonical):
+```
+openclawbrain(action="capture_feedback", chat_id="telegram:123", kind="CORRECTION", content="Actually we use blue-green deploys, not rolling", message_id="telegram:123:456")
+```
+
+Legacy correction:
 ```
 openclawbrain(action="correction", chat_id="telegram:123", content="Actually we use blue-green deploys, not rolling")
 ```
