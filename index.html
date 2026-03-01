@@ -120,13 +120,15 @@
       <ol style="margin: 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.6;">
         <li><code>openclawbrain init --workspace ~/.openclaw/workspace --output ~/.openclawbrain/main</code></li>
         <li><code>openclawbrain serve --state ~/.openclawbrain/main/state.json</code></li>
-        <li>Add one <code>Query</code> line to <code>AGENTS.md</code>: <code>python3 -m openclawbrain.openclaw_adapter.query_brain ~/.openclawbrain/main/state.json '&lt;summary&gt;' --chat-id '&lt;chat_id&gt;' --json --compact --no-include-node-ids --exclude-bootstrap --max-prompt-context-chars 12000</code></li>
+        <li>Add one <code>Query</code> line to <code>AGENTS.md</code> (prompt-only, tight + right): <code>python3 -m openclawbrain.openclaw_adapter.query_brain ~/.openclawbrain/main/state.json '&lt;summary&gt;' --chat-id '&lt;chat_id&gt;' --format prompt --exclude-bootstrap --max-prompt-context-chars 12000</code></li>
+        <li>Enable always-on self-learning (recommended): <code>python3 -m openclawbrain.openclaw_adapter.capture_feedback --state ~/.openclawbrain/main/state.json --chat-id '&lt;chat_id&gt;' --kind CORRECTION --content '&lt;correction&gt;' --lookback 1 --message-id '&lt;stable-message-id&gt;' --json</code></li>
         <li>Optional quick cutover: <code>openclawbrain replay --state ~/.openclawbrain/main/state.json --sessions ~/.openclaw/agents/main/sessions --fast-learning --stop-after-fast-learning --resume --checkpoint ~/.openclawbrain/main/replay_checkpoint.json</code></li>
       </ol>
       <ul style="margin: 0.55rem 0 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.88rem; line-height: 1.55; color: var(--text-muted);">
         <li>Avoids duplicating bootstrap files already in OpenClaw context.</li>
         <li>Keeps the prompt appendix deterministic and bounded (tight and right).</li>
         <li>Repeated workflows should shrink context over time (paper/blog claims).</li>
+        <li>Always-on self-learning: same-turn <code>capture_feedback</code> (deduped by message_id) prevents repeated mistakes.</li>
         <li>Canonical new-agent setup flow: <a href="/docs/new-agent-sop.md">docs/new-agent-sop.md</a></li>
       </ul>
       <p style="margin: 0.55rem 0 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">If you see bloat, read <a href="/docs/openclaw-integration.md">openclaw integration guide</a> and <a href="/docs/operator-guide.md">operator guide</a>.</p>
