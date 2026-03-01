@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 260" font-family="Inter, -apple-system, sans-serif">
+  <defs>
+    <filter id="gh"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="800" height="260" fill="#0a0a0a" rx="12"/>
+  <text x="400" y="28" text-anchor="middle" fill="#f0f0f0" font-size="14" font-weight="700">Three-Tier Compute Hierarchy</text>
+  <text x="400" y="46" text-anchor="middle" fill="#777" font-size="10">Like the brain: reflexes are free, thinking is expensive, most things are habit</text>
+
+  <!-- Tier 1: Reflex -->
+  <rect x="40" y="65" width="220" height="170" rx="10" fill="#0d1a0d" stroke="#3fb950" stroke-opacity="0.4"/>
+  <text x="150" y="90" text-anchor="middle" fill="#3fb950" font-size="22" font-weight="800">70%</text>
+  <text x="150" y="110" text-anchor="middle" fill="#3fb950" font-size="12" font-weight="600">Reflex</text>
+  <text x="150" y="126" text-anchor="middle" fill="#777" font-size="10">Myelinated paths</text>
+  <line x1="70" y1="138" x2="230" y2="138" stroke="#1e1e1e" stroke-width="0.5"/>
+  <text x="150" y="156" text-anchor="middle" fill="#d4d4d4" font-size="10">No LLM call needed</text>
+  <text x="150" y="172" text-anchor="middle" fill="#d4d4d4" font-size="10">Cached pattern match</text>
+  <text x="150" y="188" text-anchor="middle" fill="#d4d4d4" font-size="10">~0ms latency</text>
+  <rect x="90" y="200" width="120" height="24" rx="6" fill="rgba(63,185,80,0.2)" stroke="#3fb950" stroke-opacity="0.5" filter="url(#gh)"/>
+  <text x="150" y="216" text-anchor="middle" fill="#3fb950" font-size="13" font-weight="700">$0.000</text>
+
+  <!-- Tier 2: Habitual -->
+  <rect x="290" y="65" width="220" height="170" rx="10" fill="#111" stroke="#4a9eff" stroke-opacity="0.4"/>
+  <text x="400" y="90" text-anchor="middle" fill="#4a9eff" font-size="22" font-weight="800">25%</text>
+  <text x="400" y="110" text-anchor="middle" fill="#4a9eff" font-size="12" font-weight="600">Habitual</text>
+  <text x="400" y="126" text-anchor="middle" fill="#777" font-size="10">Basal ganglia pattern</text>
+  <line x1="320" y1="138" x2="480" y2="138" stroke="#1e1e1e" stroke-width="0.5"/>
+  <text x="400" y="156" text-anchor="middle" fill="#d4d4d4" font-size="10">Cheap model (Haiku/7B)</text>
+  <text x="400" y="172" text-anchor="middle" fill="#d4d4d4" font-size="10">"I've seen this before"</text>
+  <text x="400" y="188" text-anchor="middle" fill="#d4d4d4" font-size="10">~200ms latency</text>
+  <rect x="340" y="200" width="120" height="24" rx="6" fill="rgba(74,158,255,0.15)" stroke="#4a9eff" stroke-opacity="0.4"/>
+  <text x="400" y="216" text-anchor="middle" fill="#4a9eff" font-size="13" font-weight="700">~$0.001</text>
+
+  <!-- Tier 3: Deliberative -->
+  <rect x="540" y="65" width="220" height="170" rx="10" fill="#111" stroke="#d29922" stroke-opacity="0.4"/>
+  <text x="650" y="90" text-anchor="middle" fill="#d29922" font-size="22" font-weight="800">5%</text>
+  <text x="650" y="110" text-anchor="middle" fill="#d29922" font-size="12" font-weight="600">Deliberative</text>
+  <text x="650" y="126" text-anchor="middle" fill="#777" font-size="10">Prefrontal reasoning</text>
+  <line x1="570" y1="138" x2="730" y2="138" stroke="#1e1e1e" stroke-width="0.5"/>
+  <text x="650" y="156" text-anchor="middle" fill="#d4d4d4" font-size="10">Frontier model (Opus/GPT-5)</text>
+  <text x="650" y="172" text-anchor="middle" fill="#d4d4d4" font-size="10">"This is new, need to think"</text>
+  <text x="650" y="188" text-anchor="middle" fill="#d4d4d4" font-size="10">~2-5s latency</text>
+  <rect x="590" y="200" width="120" height="24" rx="6" fill="rgba(210,153,34,0.15)" stroke="#d29922" stroke-opacity="0.4"/>
+  <text x="650" y="216" text-anchor="middle" fill="#d29922" font-size="13" font-weight="700">~$0.01-0.80</text>
+
+  <!-- Bottom summary -->
+  <text x="400" y="252" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600">Steady-state average: ~$0.001/query — as procedures compile, routine work becomes free</text>
+</svg>

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320" font-family="Inter, -apple-system, sans-serif">
+  <rect width="800" height="320" fill="#0a0a0a" rx="12"/>
+
+  <text x="400" y="30" text-anchor="middle" fill="#f0f0f0" font-size="14" font-weight="700">Cost per Query: Full Breakdown Including Main Inference</text>
+
+  <!-- Y axis -->
+  <line x1="100" y1="55" x2="100" y2="250" stroke="#333" stroke-width="1"/>
+  <text x="90" y="78" text-anchor="end" fill="#555" font-size="9">$3.00</text>
+  <line x1="95" y1="74" x2="700" y2="74" stroke="#1e1e1e" stroke-width="0.5"/>
+  <text x="90" y="130" text-anchor="end" fill="#555" font-size="9">$2.00</text>
+  <line x1="95" y1="126" x2="700" y2="126" stroke="#1e1e1e" stroke-width="0.5"/>
+  <text x="90" y="182" text-anchor="end" fill="#555" font-size="9">$1.00</text>
+  <line x1="95" y1="178" x2="700" y2="178" stroke="#1e1e1e" stroke-width="0.5"/>
+  <text x="90" y="248" text-anchor="end" fill="#555" font-size="9">$0.00</text>
+
+  <!-- X axis -->
+  <line x1="100" y1="244" x2="700" y2="244" stroke="#333" stroke-width="1"/>
+
+  <!-- ===== Bar 1: Full Context (brute force) ===== -->
+  <rect x="130" y="74" width="80" height="170" rx="4" fill="rgba(248,81,73,0.25)" stroke="#f85149" stroke-opacity="0.5"/>
+  <text x="170" y="160" text-anchor="middle" fill="#f85149" font-size="16" font-weight="700">$3.00</text>
+  <text x="170" y="176" text-anchor="middle" fill="#f85149" font-size="9">1M tokens</text>
+  <text x="170" y="262" text-anchor="middle" fill="#d4d4d4" font-size="10" font-weight="500">Full Context</text>
+  <text x="170" y="274" text-anchor="middle" fill="#777" font-size="9">(brute force)</text>
+
+  <!-- ===== Bar 2: Static Loading ===== -->
+  <rect x="250" y="205" width="80" height="39" rx="4" fill="rgba(210,153,34,0.25)" stroke="#d29922" stroke-opacity="0.5"/>
+  <text x="290" y="200" text-anchor="middle" fill="#d29922" font-size="14" font-weight="700">$0.60</text>
+  <text x="290" y="232" text-anchor="middle" fill="#d29922" font-size="8">200K context</text>
+  <text x="290" y="262" text-anchor="middle" fill="#d4d4d4" font-size="10" font-weight="500">Static Loading</text>
+  <text x="290" y="274" text-anchor="middle" fill="#777" font-size="9">(current system)</text>
+
+  <!-- ===== Bar 3: NAM (total = activation + reduced main) ===== -->
+  <!-- Main inference portion -->
+  <rect x="370" y="218" width="80" height="26" rx="4" fill="rgba(63,185,80,0.2)" stroke="#3fb950" stroke-opacity="0.5"/>
+  <!-- Activation overhead portion (stacked on top) -->
+  <rect x="370" y="233" width="80" height="11" rx="0" fill="rgba(74,158,255,0.3)" stroke="none"/>
+  <rect x="370" y="218" width="80" height="26" rx="4" fill="none" stroke="#3fb950" stroke-opacity="0.5"/>
+  <text x="410" y="214" text-anchor="middle" fill="#3fb950" font-size="14" font-weight="700">~$0.17</text>
+  <text x="410" y="262" text-anchor="middle" fill="#d4d4d4" font-size="10" font-weight="600">NAM (total)</text>
+  <text x="410" y="274" text-anchor="middle" fill="#3fb950" font-size="9">(this paper)</text>
+
+  <!-- ===== Bar 4: NAM activation only ===== -->
+  <rect x="490" y="241" width="60" height="3" rx="2" fill="rgba(74,158,255,0.5)" stroke="#4a9eff" stroke-opacity="0.6"/>
+  <text x="520" y="237" text-anchor="middle" fill="#4a9eff" font-size="11" font-weight="600">$0.01</text>
+  <text x="520" y="262" text-anchor="middle" fill="#888" font-size="9">Activation</text>
+  <text x="520" y="274" text-anchor="middle" fill="#777" font-size="8">overhead only</text>
+
+  <!-- ===== Legend ===== -->
+  <rect x="590" y="130" width="150" height="95" rx="8" fill="#111" stroke="#1e1e1e"/>
+  <text x="600" y="150" fill="#777" font-size="9" font-weight="600">NAM BREAKDOWN</text>
+  <rect x="600" y="160" width="10" height="10" rx="2" fill="rgba(63,185,80,0.3)"/>
+  <text x="616" y="169" fill="#888" font-size="9">Main call (50K ctx): $0.15</text>
+  <rect x="600" y="178" width="10" height="10" rx="2" fill="rgba(74,158,255,0.4)"/>
+  <text x="616" y="187" fill="#888" font-size="9">30 activations: $0.01</text>
+  <line x1="600" y1="196" x2="730" y2="196" stroke="#1e1e1e" stroke-width="0.5"/>
+  <text x="616" y="210" fill="#3fb950" font-size="10" font-weight="600">3.5× cheaper than static</text>
+
+  <!-- Bottom note -->
+  <text x="400" y="300" text-anchor="middle" fill="#555" font-size="9">Savings scale with irrelevant context eliminated. Against full 1M brute-force: ~18× cheaper.</text>
+  <text x="400" y="314" text-anchor="middle" fill="#555" font-size="9">All costs use Opus input pricing ($15/M tokens). Activation calls use Sonnet ($3/M tokens).</text>
+</svg>

@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280" font-family="Inter, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="arrow-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#333"/>
+      <stop offset="100%" style="stop-color:#4a9eff"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="800" height="280" fill="#0a0a0a" rx="12"/>
+
+  <!-- Era 1: Expert Systems -->
+  <rect x="20" y="40" width="220" height="200" rx="10" fill="#161616" stroke="#f85149" stroke-opacity="0.4"/>
+  <text x="130" y="72" text-anchor="middle" fill="#f85149" font-size="13" font-weight="600">1980s–2000s</text>
+  <text x="130" y="96" text-anchor="middle" fill="#f0f0f0" font-size="16" font-weight="700">Expert Systems</text>
+
+  <!-- Rules icons -->
+  <rect x="45" y="115" width="170" height="24" rx="4" fill="#1e1e1e"/>
+  <text x="55" y="132" fill="#f85149" font-size="11" font-family="JetBrains Mono, monospace">IF patient.fever THEN...</text>
+  <rect x="45" y="145" width="170" height="24" rx="4" fill="#1e1e1e"/>
+  <text x="55" y="162" fill="#f85149" font-size="11" font-family="JetBrains Mono, monospace">IF risk > 0.8 THEN...</text>
+  <rect x="45" y="175" width="170" height="24" rx="4" fill="#1e1e1e"/>
+  <text x="55" y="192" fill="#f85149" font-size="11" font-family="JetBrains Mono, monospace">IF category = "A" THEN</text>
+
+  <text x="130" y="222" text-anchor="middle" fill="#777" font-size="10">Hand-crafted rules</text>
+  <text x="130" y="234" text-anchor="middle" fill="#777" font-size="10">Brittle · Narrow · Manual</text>
+
+  <!-- Arrow 1 -->
+  <path d="M 250 140 L 285 140" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+
+  <!-- Era 2: Context Engineering -->
+  <rect x="290" y="40" width="220" height="200" rx="10" fill="#161616" stroke="#d29922" stroke-opacity="0.4"/>
+  <text x="400" y="72" text-anchor="middle" fill="#d29922" font-size="13" font-weight="600">2023–2026</text>
+  <text x="400" y="96" text-anchor="middle" fill="#f0f0f0" font-size="16" font-weight="700">Context Engineering</text>
+
+  <rect x="315" y="115" width="170" height="24" rx="4" fill="#1e1e1e"/>
+  <text x="325" y="132" fill="#d29922" font-size="11" font-family="JetBrains Mono, monospace">load("MEMORY.md")</text>
+  <rect x="315" y="145" width="170" height="24" rx="4" fill="#1e1e1e"/>
+  <text x="325" y="162" fill="#d29922" font-size="11" font-family="JetBrains Mono, monospace">if len > 2K: mask()</text>
+  <rect x="315" y="175" width="170" height="24" rx="4" fill="#1e1e1e"/>
+  <text x="325" y="192" fill="#d29922" font-size="11" font-family="JetBrains Mono, monospace">embed(q) → top_k()</text>
+
+  <text x="400" y="222" text-anchor="middle" fill="#777" font-size="10">Static rules + embeddings</text>
+  <text x="400" y="234" text-anchor="middle" fill="#777" font-size="10">Better · Still manual · No learning</text>
+
+  <!-- Arrow 2 -->
+  <path d="M 520 140 L 555 140" stroke="url(#arrow-grad)" stroke-width="2.5" fill="none" marker-end="url(#arrowhead2)"/>
+
+  <!-- Era 3: NAM -->
+  <rect x="560" y="40" width="220" height="200" rx="10" fill="#111" stroke="#4a9eff" stroke-opacity="0.6" filter="url(#glow)"/>
+  <text x="670" y="72" text-anchor="middle" fill="#4a9eff" font-size="13" font-weight="600">2026 →</text>
+  <text x="670" y="96" text-anchor="middle" fill="#f0f0f0" font-size="16" font-weight="700">Neural Activation</text>
+
+  <!-- Graph mini -->
+  <circle cx="620" cy="145" r="8" fill="#4a9eff" opacity="0.9"/>
+  <circle cx="660" cy="125" r="6" fill="#4a9eff" opacity="0.6"/>
+  <circle cx="700" cy="150" r="7" fill="#3fb950" opacity="0.8"/>
+  <circle cx="645" cy="170" r="5" fill="#4a9eff" opacity="0.4"/>
+  <circle cx="690" cy="180" r="6" fill="#3fb950" opacity="0.5"/>
+  <circle cx="720" cy="130" r="5" fill="#4a9eff" opacity="0.3"/>
+  <line x1="620" y1="145" x2="660" y2="125" stroke="#4a9eff" stroke-width="1.5" opacity="0.5"/>
+  <line x1="660" y1="125" x2="700" y2="150" stroke="#4a9eff" stroke-width="1.5" opacity="0.5"/>
+  <line x1="620" y1="145" x2="645" y2="170" stroke="#4a9eff" stroke-width="1" opacity="0.3"/>
+  <line x1="700" y1="150" x2="690" y2="180" stroke="#3fb950" stroke-width="1" opacity="0.4"/>
+  <line x1="660" y1="125" x2="720" y2="130" stroke="#4a9eff" stroke-width="1" opacity="0.3"/>
+  <line x1="645" y1="170" x2="690" y2="180" stroke="#4a9eff" stroke-width="1" opacity="0.3"/>
+
+  <!-- Activation pulse -->
+  <circle cx="620" cy="145" r="14" fill="none" stroke="#4a9eff" stroke-width="1" opacity="0.3">
+    <animate attributeName="r" from="10" to="20" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" from="0.4" to="0" dur="2s" repeatCount="indefinite"/>
+  </circle>
+
+  <text x="670" y="210" text-anchor="middle" fill="#777" font-size="10">LLM-driven graph traversal</text>
+  <text x="670" y="222" text-anchor="middle" fill="#777" font-size="10">Adaptive · Learns · Reasons</text>
+
+  <!-- Arrowheads -->
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#555"/>
+    </marker>
+    <marker id="arrowhead2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4a9eff"/>
+    </marker>
+  </defs>
+</svg>

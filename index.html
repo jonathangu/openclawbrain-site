@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenClawBrain: Learned Graph Traversal for Retrieval Routing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="OpenClawBrain augments similarity-based seeding with learned routing over a document graph, trained by corrected policy gradients from Gu (2016).">
+  <meta property="og:title" content="OpenClawBrain: Learned Graph Traversal for Retrieval Routing">
+  <meta property="og:description" content="A memory architecture where an LLM traverses weighted document graphs and pointer weights learn from trajectory-level feedback.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://openclawbrain.ai/">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="canonical" href="https://openclawbrain.ai/">
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script type="application/ld+json">
+  { "@context": "https://schema.org", "@type": "ScholarlyArticle",
+    "headline": "OpenClawBrain: Learned Graph Traversal for Retrieval Routing",
+    "author": [{"@type": "Person", "name": "Jonathan Gu", "email": "jonathangu@gmail.com", "url": "https://jonathangu.com"}],
+    "datePublished": "2026-02-27", "url": "https://openclawbrain.ai/" }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a; --bg-card: #111111; --bg-code: #161616;
+      --text: #d4d4d4; --text-bright: #f0f0f0; --text-muted: #777;
+      --accent: #4a9eff; --accent-dim: rgba(74, 158, 255, 0.15);
+      --green: #3fb950; --orange: #e3955c; --red: #f85149;
+      --border: #1e1e1e; --crab: #e85d3a; --crab-dim: rgba(232, 93, 58, 0.15);
+      --serif: 'Crimson Pro', Georgia, serif;
+      --sans: 'Inter', -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', 'Menlo', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--serif); background: var(--bg); color: var(--text); font-size: 18px; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+    .paper { max-width: 740px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+    .paper-header { text-align: center; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+    .back-link { display: inline-block; font-family: var(--sans); font-size: 13px; color: var(--text-muted); margin-bottom: 2rem; }
+    .paper-title { font-family: var(--sans); font-size: 2rem; font-weight: 700; color: var(--text-bright); line-height: 1.3; margin-bottom: 0.75rem; }
+    .paper-subtitle { font-size: 1.05rem; color: var(--text-muted); font-style: italic; margin-bottom: 1.5rem; }
+    .authors { font-family: var(--sans); font-size: 0.95rem; color: var(--text); margin-bottom: 0.25rem; }
+    .authors .name { font-weight: 600; color: var(--text-bright); }
+    .paper-meta { font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem; }
+    .badge { display: inline-block; font-family: var(--sans); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 6px; }
+    .badge-draft { background: rgba(227, 149, 92, 0.2); color: var(--orange); }
+    .badge-repo { background: var(--accent-dim); color: var(--accent); }
+    h2 { font-family: var(--sans); font-size: 1.35rem; font-weight: 700; color: var(--text-bright); margin-top: 3rem; margin-bottom: 1rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); }
+    h3 { font-family: var(--sans); font-size: 1.1rem; font-weight: 600; color: var(--text-bright); margin-top: 2rem; margin-bottom: 0.75rem; }
+    p { margin-bottom: 1rem; } ul, ol { margin-bottom: 1rem; padding-left: 1.5rem; } li { margin-bottom: 0.4rem; }
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 0.82rem; }
+    th { text-align: left; padding: 0.6rem 0.8rem; background: var(--bg-card); color: var(--text-bright); font-weight: 600; border-bottom: 2px solid var(--border); }
+    td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+    code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-code); padding: 0.15em 0.4em; border-radius: 4px; color: var(--orange); }
+    pre { background: var(--bg-code); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; overflow-x: auto; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; color: var(--text); margin: 1.5rem 0; }
+    pre code { background: none; padding: 0; }
+    blockquote { border-left: 3px solid var(--accent); margin: 1.5rem 0; padding: 0.75rem 1.25rem; background: var(--accent-dim); border-radius: 0 8px 8px 0; font-size: 0.95rem; }
+    blockquote p { margin-bottom: 0; }
+    .references { font-family: var(--sans); font-size: 0.82rem; line-height: 1.6; color: var(--text-muted); }
+    .references li { margin-bottom: 0.75rem; }
+    .references .ref-title { color: var(--text); font-weight: 500; }
+    .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 2.5rem; }
+    .toc-label { font-family: var(--sans); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .toc ol { list-style: decimal; padding-left: 1.5rem; font-family: var(--sans); font-size: 0.88rem; }
+    .toc li { padding: 0.25rem 0; } .toc a { color: var(--text); } .toc a:hover { color: var(--accent); }
+    .paper-footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-align: center; }
+    .math-block { overflow-x: auto; margin: 1.5rem 0; padding: 0.5rem 0; }
+    .figure { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; text-align: center; }
+    .fig { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; text-align: center; }
+    .fig img { width: 100%; display: block; max-width: 100%; border-radius: 8px; }
+    .fig figcaption { margin-top: 0.85rem; font-family: var(--sans); color: var(--text-muted); font-size: 0.88rem; line-height: 1.45; }
+    .insight { margin: 1.5rem 0; padding: 0.9rem 1.1rem; background: rgba(63, 185, 80, 0.08); border: 1px solid rgba(63, 185, 80, 0.25); border-radius: 7px; color: var(--text-bright); }
+    .note { margin: 1.5rem 0; padding: 0.95rem 1rem; border-left: 3px solid var(--orange); background: rgba(227,149,92,0.09); border-radius: 6px; color: var(--text-bright); }
+    .tag { font-size: 0.76rem; font-family: var(--sans); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+    @media (max-width: 600px) { .paper { padding: 2rem 1rem 4rem; } .paper-title { font-size: 1.5rem; } body { font-size: 16px; } }
+  </style>
+</head>
+<body>
+<article class="paper">
+
+  <header class="paper-header">
+
+    <a href="/" class="back-link">← jonathangu.com</a>
+    <h1 class="paper-title">OpenClawBrain: Learned Graph Traversal for Retrieval Routing</h1>
+    <p class="paper-subtitle">Retrieval accuracy and context efficiency in one routing layer.</p>
+    <p class="paper-subtitle">Graph-structured retrieval with trajectory-level learning.</p>
+    <p class="authors"><span class="name">Jonathan Gu</span> · <a href="mailto:jonathangu@gmail.com" style="color: var(--text-muted); font-size: 0.85rem;">jonathangu@gmail.com</a></p>
+    <div class="paper-meta">
+      <span class="badge badge-repo"><a href="https://pypi.org/project/openclawbrain/" style="color: inherit; text-decoration: none;">📦 PyPI</a></span>
+      <span class="badge badge-repo"><a href="https://clawhub.com" style="color: inherit; text-decoration: none;">🦞 ClawHub</a></span>
+      <span class="badge badge-repo"><a href="https://github.com/jonathangu/openclawbrain" style="color: inherit; text-decoration: none;">GitHub</a></span>
+      <span class="badge badge-repo"><a href="/openclawbrain.pdf" style="color: inherit; text-decoration: none;">📄 PDF</a></span>
+      <span class="badge badge-repo"><a href="/openclawbrain.tex" style="color: inherit; text-decoration: none;">📝 LaTeX</a></span>
+      <span class="badge badge-repo"><a href="/gu2016/" style="color: inherit; text-decoration: none;">📐 Gu (2016) Derivation</a></span>
+      <span class="badge badge-draft">v12.2.1</span>
+      <br><br>February 2026
+    </div>
+  </header>
+
+  <div class="figure" style="padding: 0; overflow: hidden; margin-bottom: 2.5rem;">
+    <img src="hero.png" onerror="this.src='hero-v2.png'" alt="A brain-shaped neural network of document nodes and weighted edges — green reflex paths, blue habitual, gray dormant" style="width: 100%; display: block; border-radius: 8px;">
+  </div>
+
+  <div id="install" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem 1.75rem; margin-bottom: 2.5rem;">
+    <h3 style="font-family: var(--sans); font-size: 0.95rem; font-weight: 600; color: var(--text-bright); margin-bottom: 1rem;">Install &amp; Run</h3>
+<pre style="background: var(--bg-code); border-radius: 6px; padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; overflow-x: auto; color: var(--text);"><code># Install (stable release from PyPI)
+python3 -m pip install openclawbrain
+
+# Install latest main branch (until next release)
+python3 -m pip install git+https://github.com/jonathangu/openclawbrain@main
+
+# Build a brain
+
+python3 -m openclawbrain init --workspace examples/sample_workspace --output /tmp/brain
+
+# Check state health
+python3 -m openclawbrain doctor --state /tmp/brain/state.json
+# ... summary includes 8/9 checks
+
+# Query (text output includes node IDs)
+python3 -m openclawbrain query "how do I deploy" --state /tmp/brain/state.json --top 3 --json
+
+# Teach positive outcome
+python3 -m openclawbrain learn --state /tmp/brain/state.json --outcome 1.0 --fired-ids "deploy.md::0,deploy.md::1"
+
+# Inject correction
+python3 -m openclawbrain inject --state /tmp/brain/state.json \
+  --id "fix::1" --content "Never skip CI for hotfixes" --type CORRECTION</code></pre>
+    <p style="font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.5;">
+      Core graph and traversal are pure Python. The OpenAI SDK is included by default for convenience (hash mode exists if you do not want provider calls), and OpenAI-backed commands require <code>OPENAI_API_KEY</code>.
+      See <a href="https://github.com/jonathangu/openclawbrain">README</a> and <a href="https://github.com/jonathangu/openclawbrain/blob/main/REPRODUCE.md">REPRODUCE.md</a>.
+    </p>
+  </div>
+
+  <div style="margin: 2rem 0; padding: 1.25rem 1.5rem; border: 1px solid rgba(74,158,255,0.3); border-radius: 10px; background: rgba(74,158,255,0.06);">
+    <p style="margin: 0 0 0.5rem; font-family: var(--sans); font-weight: 600; color: #94c7ff; font-size: 0.9rem;">📝 NEW: Blog Post</p>
+    <p style="margin: 0; font-family: var(--serif); font-size: 1.05rem; line-height: 1.6;">
+      <a href="/blog/v12.2.1/" style="color: var(--text-bright); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2);">We Shipped the Correct REINFORCE Update — and the Graph Started Behaving</a>
+      <br><span style="color: var(--text-muted); font-size: 0.88rem;">Policy gradients, self-learning agents, biological self-regulation, and interactive simulation charts. February 2026.</span>
+    </p>
+  </div>
+
+  <h2>Abstract</h2>
+  <p>Standard retrieval, including lexical or embedding similarity matching, selects chunks independently per query and does not learn persistent routing over multi-step trajectories from outcome feedback.
+OpenClawBrain provides value on two axes: retrieval accuracy and context efficiency. It augments query seeding with a learned graph router over document chunks where nodes are chunks and edges are mutable signed pointers.
+For accuracy, graph structure enables better retrieval than flat embedding-only retrieval on repeated procedural paths.
+For efficiency, repeated outcomes compress context from 30 nodes to 2.7 in deployment simulation (91% reduction) and from 52--66KB to 3--13KB per query in production via trajectory learning.</p>
+
+  <div class="note">
+    This page is the companion guide to the formal paper (<a href="/openclawbrain.tex" style="color: var(--text-bright);">openclawbrain.tex</a> / <a href="/openclawbrain.pdf" style="color: var(--text-bright);">openclawbrain.pdf</a>) in this directory. The paper contains the reference definitions, equations, and benchmarks; this page presents the same claims with implementation context.
+  </div>
+
+  <h2>Feature highlights</h2>
+  <ul>
+    <li>Two-axis framing: graph structure for retrieval accuracy and learning for repeated-task context compression.</li>
+    <li>Real-time corrections via logged fires (`--chat-id`) and same-turn correction flow.</li>
+    <li>Optional embedder and generation callbacks for user environments; no assumption of a single provider.</li>
+    <li>TEACHING and DIRECTIVE injection for positive knowledge and instructions.</li>
+    <li>Budget-based traversal termination with hard limits for hops, fired-node count, and context budget.</li>
+  </ul>
+
+  <h2 id="whats-new-v12-2-0">What&apos;s new in v12.2.1</h2>
+  <ul>
+    <li><strong>Policy-gradient learning:</strong> Default learning rule switched from heuristic to <code>apply_outcome_pg</code> (REINFORCE). Redistributes probability mass across all outgoing edges (sum ≈ 0) instead of inflating traversed edges only; 10-15x better branch separation and 24x faster drift recovery in simulation.</li>
+    <li><strong>Self-learning API:</strong> New <code>self_learn</code> daemon method and CLI for autonomous agent learning. Agents detect their own failures/successes and teach themselves without human feedback. Supports <code>CORRECTION</code> (penalize + inhibit) and <code>TEACHING</code> (reinforce + inject).</li>
+    <li><strong>Self-regulation:</strong> Added tier hysteresis (habitual band 0.15-0.6), homeostatic decay (auto-adjusts half-life to maintain 5-15% reflex ratio), and synaptic scaling (soft per-node weight budget to prevent hub domination).</li>
+    <li><strong>Runtime node splitting:</strong> <code>split_node</code> + <code>suggest_splits</code> provide the inverse of merge. Bloated multi-topic nodes split into focused children with embedding-based edge rewiring.</li>
+    <li><strong>Atomic state persistence:</strong> <code>save_state</code> now writes through temp + fsync + rename for crash-safe durability.</li>
+    <li><strong>272 tests</strong>, 10-seed simulation suite, 3 production brains.</li>
+  </ul>
+
+  <h2 id="new-since-v12-2-1-main">New since v12.2.1 (main branch)</h2>
+  <ul>
+    <li><strong>Replay progress logging:</strong> replay exposes <code>--progress-every</code> and emits JSONL progress events for long-running jobs.</li>
+    <li><strong>Frequent checkpoints + resume:</strong> new <code>--checkpoint-every-seconds</code> and <code>--checkpoint-every</code> options provide more frequent persistence with resumable runs.</li>
+    <li><strong>Cutover mode:</strong> <code>--stop-after-fast-learning</code> supports fast-learning cutover workflows.</li>
+    <li><strong>Parallel replay v0:</strong> <code>--replay-workers</code> adds initial parallel worker support for replay throughput.</li>
+    <li><strong>Deterministic prompt context blocks:</strong> <code>query_brain.py --format prompt</code> and <code>prompt_context</code> provide stable prompt-ready context rendering.</li>
+    <li><strong>Media toolResult ingestion:</strong> <code>--include-tool-results</code> plus allowlist controls let image/voice tool outputs feed memory ingestion.</li>
+  </ul>
+
+  <nav class="toc">
+    <div class="toc-label">Table of Contents</div>
+    <ol>
+    <li><a href="#the-problem">The Problem</a></li>
+    <li><a href="#the-graph">The Graph</a></li>
+    <li><a href="#whats-new-v12-2-0">What&apos;s new in v12.2.1</a></li>
+    <li><a href="#new-since-v12-2-1-main">New since v12.2.1 (main branch)</a></li>
+    <li><a href="#two-timescale-architecture">Two-Timescale Architecture</a></li>
+    <li><a href="#context-lifecycle">Context Lifecycle</a></li>
+    <li><a href="#how-it-learns">How It Learns</a></li>
+    <li><a href="#results">Simulation Results</a></li>
+      <li><a href="#structural-maintenance-results">Structural Maintenance Results</a></li>
+      <li><a href="#production">Production Deployment</a></li>
+      <li><a href="#how-it-compares">How It Compares</a></li>
+      <li><a href="#limitations-and-conclusion">Limitations and Conclusion</a></li>
+      <li><a href="#references">References</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="the-problem">1. The Problem</h2>
+
+  <p>Memory retrieval should be about behavior selection, not nearest-neighbor matching. Every query should ask: which sequence of dependencies, safeguards, and operations is useful now, given previous outcomes? A static similarity index cannot determine this.</p>
+
+  <p>OpenClawBrain treats memory as a decision surface: a directed, weighted graph where edges represent route-level transitions. We evaluate behavior through simulations with only code-backed evidence and replace broad benchmarking claims with a note when those data are not in this suite.</p>
+
+  <div class="note">
+    The claims below are constrained to the 15 deterministic simulations and 236 tests, with results from the reproducible benchmark harness in this repo.
+    Axis framing: Section 4 uses Axis 2 (context efficiency) for repeated-task experiments and Axis 1 (accuracy) for behavior correctness.
+  </div>
+
+  <h2 id="the-graph">2. The Graph</h2>
+
+  <p>OpenClawBrain is a directed graph of chunk nodes with typed edges carrying bounded scalar weight. Implementations may store metadata (for example, edge kind and summaries) alongside the graph state.</p>
+
+<pre><code>from dataclasses import dataclass, field
+from typing import Any
+
+@dataclass
+class Node:
+    id: str
+    content: str
+    summary: str = ""
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+@dataclass
+class Edge:
+    source: str
+    target: str
+    weight: float
+    kind: str
+    summary: str = ""
+    metadata: dict[str, Any] = field(default_factory=dict)
+</code></pre>
+
+  <p>A query creates seed nodes \(\mathcal S(q)\) and initial frontier. Fired nodes are the nodes visited in this traversal; only fired nodes are eligible for read/execution.</p>
+
+  <div class="figure">
+    <img src='architecture-vertical.jpg' alt='Vertical flowchart: Query to embedding search, cheap router, graph traversal, and expensive context assembly' style='width:100%;max-width:500px;display:block;margin:0 auto;border-radius:8px'>
+    <figcaption>Figure 1. Inference architecture: seed retrieval, cheap routing, graph traversal, and expensive context assembly.</figcaption>
+  </div>
+
+  <p>Tiering uses explicit precedence on each step: reflex, habitual, inhibitory, then dormant. Inhibition is a hard veto over support, not a soft penalty.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tier</th><th>Weight Range</th><th>Behavior</th><th>Expected Cost</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Reflex</strong></td><td>&gt;= 0.6</td><td>Auto-follow.</td><td>Near zero deliberation.</td></tr>
+        <tr><td><strong>Habitual</strong></td><td>0.2 – 0.6</td><td>Cheap routing decides whether to follow.</td><td>Low.</td></tr>
+        <tr><td><strong>Inhibitory</strong></td><td>&lt;= -0.01</td><td>Skips/ suppresses nodes.</td><td>Near zero.</td></tr>
+        <tr><td><strong>Dormant</strong></td><td>&lt; 0.2</td><td>Skipped unless directly re-seeded.</td><td>Zero.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The graph is deliberately sparse in active retrieval because routing should remain selective. Dormant edges are not deleted; they can recover if feedback returns.</p>
+
+  <pre><code>def route_fn(query, candidate_targets):
+    """Policy hook for selecting habitual actions."""
+
+    ...
+    return selected_targets
+
+
+def choose_next(current_node, graph, route_fn, query, visited):
+    edges = graph.outgoing(current_node)
+    candidates, suppressed = [], set()
+    for edge in edges:
+        if edge.weight <= -0.01:
+            suppressed.add(edge.target)
+            continue
+        if edge.weight >= 0.6 and edge.target not in visited:
+            candidates.append((edge.target, edge.weight))
+        if 0.2 <= edge.weight < 0.6 and edge.target not in visited:
+            candidates.append((edge.target, edge.weight))
+
+    habitual = [t for t, w in candidates if 0.2 <= w < 0.6]
+    auto = [t for t, w in candidates if w >= 0.6]
+    selected = route_fn(query, habitual) if route_fn else auto
+    return [n for n in auto + selected if n not in suppressed and n not in visited]</code></pre>
+
+  <h2 id="how-it-learns">3. Learning Rule and Dynamics</h2>
+
+  <p>A production-oriented objective is:</p>
+
+  <p class="math-block">\[\min_{W}\; \mathbb{E}_{q\sim\mathcal{D}}[\mathrm{tokens}(F(q;W))] \;\text{s.t.}\; \mathbb{E}_{q\sim\mathcal{D}}[\tilde z(q)]\ge \rho,\; |F|\le B,\]</p>
+  <p class="math-block">\[\tilde z\in\{0,1\},\quad z=2\tilde z-1\in\{-1,+1\}\]</p>
+  <p>In plain terms: minimize context tokens while maintaining retrieval success, with signed outcome \(z\) used in updates.</p>
+
+  <h3>How the Policy Gradient Actually Works</h3>
+
+  <p>For a fixed-node softmax policy, each chosen action increases its own logit and decreases competing logits in proportion to their current probability mass.</p>
+
+  <p>v12.2.1 also adds an autonomous <code>self_learn</code> daemon path: agents can emit outcome-driven trajectories, and <code>self_learn</code> converts them into internal updates using existing <code>TEACHING</code>/<code>CORRECTION</code> flows without human feedback.</p>
+
+  <h3>The accessible math</h3>
+  <p class="math-block">\[\pi_W(a\mid s=i)=\frac{\exp\bigl((r_{ia}+w_{ia})/\tau\bigr)}{\sum_{j\in\mathcal{N}(i)\cup\{\texttt{STOP}\}}\exp\bigl((r_{ij}+w_{ij})/\tau\bigr)}\]</p>
+
+  <p>At node \(i\), write \(\boldsymbol{\pi}_i\) for the full action distribution and \(\mathbf{e}_a\) for the one-hot vector at the chosen action. The true score function is:</p>
+
+  <p class="math-block">\[\nabla \log \pi_W(a\mid i)=\frac{1}{\tau}(\mathbf{e}_a-\boldsymbol{\pi}_i)\]</p>
+
+  <ul>
+    <li><strong>“what I chose” minus “what I expected to choose”:</strong> the term \(\mathbf{e}_a-\boldsymbol{\pi}_i\) compares action intent to policy mass.</li>
+    <li><strong>Chosen action:</strong> update size is \((1-\pi(a\mid i))/\tau\), so surprises get bigger updates.</li>
+    <li><strong>Non-chosen actions:</strong> each gets \(-\pi(j\mid i)/\tau\), i.e., proportional suppression.</li>
+    <li><strong>Conservation:</strong> component sums are zero, so this is redistribution, not global inflation.</li>
+  </ul>
+
+  <h3>Numerical example</h3>
+  <p>Suppose one node has three outgoing edges plus STOP, with \(w = [0.5, 0.3, -0.2, 0.0]\), \(\tau=1\), and chosen action \(A\).</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Target</th><th>Weight</th><th>Softmax \\(\pi(j\mid i)\\)</th></tr></thead>
+      <tbody>
+        <tr><td>A (chosen)</td><td>0.500</td><td>0.342</td></tr>
+        <tr><td>B</td><td>0.300</td><td>0.280</td></tr>
+        <tr><td>C</td><td>-0.200</td><td>0.170</td></tr>
+        <tr><td>STOP</td><td>0.000</td><td>0.208</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>With \(z=+1\), baseline \(b=0\), \(\eta=0.1\), \(\gamma=1\), and \(\tau=1\):</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Target</th><th>True PG update</th><th>Old heuristic update</th><th>Sum</th></tr></thead>
+      <tbody>
+        <tr><td>A (chosen)</td><td>\(+0.066\)</td><td>\(+0.100\)</td><td rowspan="5">\(\sum \Delta W_{\text{true}}=0.000,\ \sum \Delta W_{\text{heuristic}}=+0.100\)</td></tr>
+        <tr><td>B</td><td>\(-0.028\)</td><td>\(0\)</td></tr>
+        <tr><td>C</td><td>\(-0.017\)</td><td>\(0\)</td></tr>
+        <tr><td>STOP</td><td>\(-0.021\)</td><td>\(0\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>True PG reallocates probability mass: the +0.066 gain on A is exactly offset by -0.066 across alternatives. The heuristic only adds to A and drifts the local mass upward.</p>
+
+  <h3>Why this update matters</h3>
+  <ul>
+    <li>The old heuristic is sign-correct but magnitude-wrong: it keeps direction on easy cases but over-updates too aggressively.</li>
+    <li>True PG naturally stops updating when the policy is certain: \(\pi(a\mid i)\approx 1\Rightarrow 1-\pi(a\mid i)\approx 0\).</li>
+    <li>True PG gives a usable negative signal too: on bad outcomes, it pushes alternatives up, not just penalizes the chosen edge.</li>
+    <li>Temperature \(\tau\) scales all magnitudes via \(1/\tau\), matching exploration sharpness to learning step size.</li>
+  </ul>
+
+  <h3>Connection to Gu (2016): full-trajectory credit</h3>
+  <p>The corrected part is not just “use a better formula at one step.” We sum gradients across the full trajectory, not just the last transition:</p>
+
+  <p class="math-block">\[\Delta W=\eta(z-b)\sum_{\ell=0}^{T}\gamma^\ell\nabla_W\log\pi_W(a_\ell\mid s_\ell)\]</p>
+
+  <p>Updates are applied to every trajectory step, including early hops, when only terminal outcome is observed.</p>
+
+  <p>In practical deployments, a strong early hop can still receive positive credit when a later branch fails; a bad mid-route branch can receive negative credit without requiring extra internal simulation.</p>
+
+  <p>In addition to policy updates, traversal updates include decay and bounded autotuning. This keeps edge weights interpretable and keeps the graph reusable across changing workloads.</p>
+
+  <p>Traversal uses episode-local attenuation for repeated loops. For edge \(e\), within-episode effective weight is:</p>
+
+  <p class="math-block">\[\tilde w = w\cdot \lambda^k,\quad \lambda\in(0,1),\ k=\text{reuses in episode}\]</p>
+  <p>A separate visit-penalty factor can be modeled as \(\tilde w \leftarrow \tilde w - \alpha v_j\) with \(\alpha\) separate from \(\lambda\).</p>
+
+  <p>When an edge is reused repeatedly in one route, its effective influence is reduced, reducing lock-in while preserving recoverability.</p>
+
+  <h2 id="two-timescale-architecture">4. Two-Timescale Architecture</h2>
+  <p>OpenClawBrain runs on two explicit timescales: online learning per query, and scheduled structural maintenance.</p>
+
+  <h3>Online learning (fast loop)</h3>
+  <p>Each query performs:</p>
+  <pre>query → traverse → log trace → feedback → learn</pre>
+  <ul>
+    <li>Per-query updates use <code>apply_outcome()</code> or <code>apply_outcome_pg()</code>.</li>
+    <li>Learned edges steer next-hop probabilities and inhibitory routing.</li>
+    <li>No structural mutations occur on the request path.</li>
+  </ul>
+
+  <h3>Maintenance (slow loop)</h3>
+  <p>Periodic maintenance runs structural operators outside request latency:</p>
+  <pre>run_maintenance()</pre>
+  <ul>
+    <li>health</li>
+    <li>decay</li>
+    <li>merge</li>
+    <li>prune</li>
+    <li>compact</li>
+  </ul>
+  <p><code>run_maintenance()</code> is scheduler-agnostic (cron, timer, CI, ad-hoc orchestration).</p>
+
+  <h3>Persistent worker (<code>openclawbrain daemon</code>)</h3>
+  <p>For production, <code>openclawbrain daemon --state PATH</code> starts a long-lived process that loads state once and accepts JSON-RPC over stdin/stdout. Eliminates per-call state reload (~100-800ms savings).</p>
+  <p>Production timing (Mac Mini M4 Pro, OpenAI embeddings):</p>
+  <ul>
+    <li>MAIN (1,158 nodes): 397ms embed + 107ms traverse = <strong>504ms</strong></li>
+    <li>PELICAN (582 nodes): 634ms embed + 51ms traverse = <strong>685ms</strong></li>
+    <li>BOUNTIFUL (285 nodes): 404ms embed + 27ms traverse = <strong>431ms</strong></li>
+  </ul>
+
+  <h3>Constitutional anchors</h3>
+  <ul>
+    <li><strong>constitutional</strong>: never decay, never prune, never merge.</li>
+    <li><strong>canonical</strong>: slower decay and merge-gated behavior.</li>
+    <li><strong>overlay</strong>: default operational behavior for normal learned nodes.</li>
+  </ul>
+
+  <h2 id="context-lifecycle">Context Lifecycle</h2>
+  <p>Files (edit) → Sync (re-embed) → Graph (learn) → Maintain (prune/merge) → Compact (shrink files)</p>
+  <p>This matches the operational flow used in setup-runbook automation.</p>
+
+  <h2 id="results">4. Simulation Results</h2>
+
+  <p>The following results are reproducible from 15 scripts in <code>openclawbrain/sims</code> and their generated figures.</p>
+
+  <h3>4.1 Deploy Pipeline Compilation</h3>
+
+  <p><strong>Axis:</strong> Context efficiency (Axis 2). The 4-hop deployment chain reaches reflex (1.0) by Q10 and stays there, turning procedural traversal into near-reflex execution.</p>
+
+  <p>Measured: in 50 repeated deploy-route queries, edges move from habitual to reflex regime, with final weights at the reflex threshold.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Query</th><th>deploy_query→check_ci</th><th>check_ci→inspect_manifest</th><th>inspect_manifest→rollback</th><th>rollback→verify</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>0.425</td><td>0.420</td><td>0.416</td><td>0.411</td></tr>
+        <tr><td>10</td><td>1.000</td><td>1.000</td><td>1.000</td><td>1.000</td></tr>
+        <tr><td>25</td><td>1.000</td><td>1.000</td><td>1.000</td><td>1.000</td></tr>
+        <tr><td>50</td><td>1.000</td><td>1.000</td><td>1.000</td><td>1.000</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="fig">
+    <img src="deploy_pipeline.png" alt="Deploy pipeline edge weights across 50 queries." loading="lazy">
+    <figcaption>Figure 2. Deploy pipeline: edge strengths climb to reflex weights.</figcaption>
+  </figure>
+
+  <h3>4.2 Negation Learning</h3>
+
+  <p><strong>Axis:</strong> Retrieval accuracy (Axis 1). Bad edge reaches -0.940 while the good edge remains 1.0, so stale wrong guidance is suppressed.</p>
+
+  <p>Measured: inhibitory learning reaches \\(-0.940\\) on a deprecated path under negative outcomes.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Phase</th><th>Good edge</th><th>Bad edge</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Q1</td><td>1.0</td><td>0.45</td></tr>
+        <tr><td>Q11</td><td>1.0</td><td>-0.44</td></tr>
+        <tr><td>Q12</td><td>1.0</td><td>-0.94</td></tr>
+        <tr><td>Q20</td><td>1.0</td><td>-0.94</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="fig">
+    <img src="figures/negation.png" alt="Good and bad edge weights over 20 queries" loading="lazy">
+    <figcaption>Figure 3. Negation path suppressed after repeated negative feedback.</figcaption>
+  </figure>
+
+  <h3>4.3 Context Reduction</h3>
+
+  <p><strong>Axis:</strong> Context efficiency (Axis 2). Nodes fired drop from 30 on Q1 to 2.7 on average (Q91-100), a 91% reduction.</p>
+
+  <p>Measured: context consumption in a focused workload drops from 30 nodes on first query to <strong>2.7 nodes on average</strong> in the final 10 queries.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Value</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Nodes fired (query 1)</td><td>30</td></tr>
+        <tr><td>Avg nodes fired (queries 91–100)</td><td>2.7</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="fig">
+    <img src="figures/context_reduction.png" alt="Nodes fired per query in context reduction simulation" loading="lazy">
+    <figcaption>Figure 4. Selective context reduction from broad initial retrieval to focused routing.</figcaption>
+  </figure>
+
+  <h3>4.4 Forgetting Dynamics</h3>
+
+  <p><strong>Axis:</strong> Context efficiency (Axis 2). Selective forgetting reaches 93.3% dormant by Q25, leaving 6.7% active.</p>
+
+  <p>Measured: selective forgetting produces high dormant mass after adaptation: <strong>93.3%</strong> dormant by 100 queries.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Query</th><th>Dormant</th><th>Habitual</th><th>Reflex</th><th>Dormant %</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>0</td><td>149</td><td>1</td><td>0.0%</td></tr>
+        <tr><td>25</td><td>140</td><td>0</td><td>10</td><td>93.3%</td></tr>
+        <tr><td>50</td><td>140</td><td>0</td><td>10</td><td>93.3%</td></tr>
+        <tr><td>100</td><td>140</td><td>0</td><td>10</td><td>93.3%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="fig">
+    <img src="figures/forgetting.png" alt="Dormant/habitual/reflex edge proportions across 100 queries" loading="lazy">
+    <figcaption>Figure 5. Edge tier distribution: most edges become dormant while useful edges remain reflex.</figcaption>
+  </figure>
+
+  <h3>4.5 Edge Damping vs Undamped Traversal</h3>
+
+  <p><strong>Axis:</strong> Retrieval accuracy (Axis 1). Without damping, the toy cycle loops; with \\(\lambda=0.3\\), the target is reached in 4 hops.</p>
+
+  <p>Measured: with damping \\(\lambda=0.3\\), a branch to a target is reached; with undamped dynamics \\(\lambda=1.0\\), the traversal loops.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Config</th><th>Reached D</th><th>Observed steps to D</th><th>Observed issue</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Damped \\(\lambda=0.3\\)</td><td>Yes</td><td>4</td><td>Branch discovered</td></tr>
+        <tr><td>Undamped \\(\lambda=1.0\\)</td><td>No</td><td>—</td><td>Looping through A→B→C→A</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="fig">
+    <img src="figures/edge_damping.png" alt="Edge damping comparison" loading="lazy">
+    <figcaption>Figure 6. Edge damping enables branch exploration under repeated traversal.</figcaption>
+  </figure>
+
+  <h3>4.6 Domain Separation and Bridges</h3>
+
+  <p><strong>Axis:</strong> Retrieval accuracy (Axis 1). Only 5 cross-file edges emerge across 2 clusters, limiting irrelevant-domain bleed-through.</p>
+
+  <p>Measured: mixed query patterns induce sparse cross-file connectivity. The simulation produces <strong>5 cross-file edges</strong> and two major clusters.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Query Count</th><th>Cross-file Edges</th><th>Clusters</th><th>Representative Cross-edge Count</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>50</td><td>5</td><td>2</td><td>5</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="fig">
+    <img src="figures/domain_separation.png" alt="Cross-file bridge emergence across simulated files" loading="lazy">
+    <figcaption>Figure 7. Domain separation with sparse bridges between groups.</figcaption>
+  </figure>
+
+  <h3>4.7 Brain-death Recovery</h3>
+
+  <p><strong>Axis:</strong> Context efficiency (Axis 2). Recovery controls detect dormant-heavy states (>90%) and return the graph to recoverable routing dynamics.</p>
+
+  <p>Measured: in recovery conditions with aggressive decay, the autotune diagnostics identify and correct unhealthy dynamics. Dormancy is detected at \\(&gt;90\%\\) and the system proposes control updates.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Measure</th><th>Initial</th><th>After Recovery Sequence</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Dormant %</td><td>100.0%</td><td>97.5%</td></tr>
+        <tr><td>Autotune signal</td><td>Absent</td><td>Active (decay, Hebbian, promotion)</td></tr>
+        <tr><td>Status</td><td>Dormant-dominant</td><td>Recoverable and moving</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="fig">
+    <img src="figures/brain_death.png" alt="Health trajectory under brain-death and recovery" loading="lazy">
+    <figcaption>Figure 8. Health tracking over recovery rounds.</figcaption>
+  </figure>
+
+  <h3>4.8 Individuation Across Workloads</h3>
+
+  <p><strong>Axis:</strong> Context efficiency (Axis 2). Same workload starts with shared structure; after updates, 27 edges differ by more than 0.05.</p>
+
+  <p>Measured: starting from identical graph state, different workloads produce structurally distinct outcomes. The number of edges that differ by more than 0.05 after 50 queries is <strong>27</strong>.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Graph A</th><th>Graph B</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Nodes</td><td>18</td><td>18</td></tr>
+        <tr><td>Edges</td><td>306</td><td>306</td></tr>
+        <tr><td>Mean abs diff</td><td colspan="2">0.0358</td></tr>
+        <tr><td>Edges with diff > 0.05</td><td colspan="2">27</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="fig">
+    <img src="figures/individuation.png" alt="Final graph weight matrices for coding versus safety workloads" loading="lazy">
+    <figcaption>Figure 9. Individuation: workload-specific graph topology after 50 updates.</figcaption>
+  </figure>
+
+  <h3>4.9 Simulation Protocol</h3>
+
+  <p>All eight reported studies share a single reproducibility convention: fixed random seeds within each script, one output JSON file per script, and one dedicated figure output generated from that JSON.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Result</th><th>Script</th><th>Claim Output</th><th>Figure</th><th>Query Budget</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Deploy pipeline</td><td><code>deploy_pipeline.py</code></td><td><code>deploy_pipeline_results.json</code></td><td><code>deploy_pipeline.png</code></td><td>50</td></tr>
+        <tr><td>Negation</td><td><code>negation.py</code></td><td><code>negation_results.json</code></td><td><code>negation.png</code></td><td>20</td></tr>
+        <tr><td>Context reduction</td><td><code>context_reduction.py</code></td><td><code>context_reduction_results.json</code></td><td><code>context_reduction.png</code></td><td>100</td></tr>
+        <tr><td>Selective forgetting</td><td><code>forgetting.py</code></td><td><code>forgetting_results.json</code></td><td><code>forgetting.png</code></td><td>100</td></tr>
+        <tr><td>Edge damping</td><td><code>edge_damping.py</code></td><td><code>edge_damping_results.json</code></td><td><code>edge_damping.png</code></td><td>1 traversal run</td></tr>
+        <tr><td>Domain separation</td><td><code>domain_separation.py</code></td><td><code>domain_separation_results.json</code></td><td><code>domain_separation.png</code></td><td>50</td></tr>
+        <tr><td>PG vs Heuristic</td><td><code>pg_vs_heuristic.py</code></td><td><code>pg_vs_heuristic_results.json</code></td><td>-</td><td>100</td></tr>
+        <tr><td>Noise robustness</td><td><code>noise_robustness.py</code></td><td><code>noise_robustness_results.json</code></td><td>-</td><td>100</td></tr>
+        <tr><td>Static vs learning</td><td><code>static_vs_learning.py</code></td><td><code>static_vs_learning_results.json</code></td><td>-</td><td>100</td></tr>
+        <tr><td>Scaling analysis</td><td><code>scaling_analysis.py</code></td><td><code>scaling_analysis_results.json</code></td><td>-</td><td>50 (per graph size)</td></tr>
+        <tr><td>Brain death recovery</td><td><code>brain_death.py</code></td><td><code>brain_death_results.json</code></td><td><code>brain_death.png</code></td><td>30 rounds</td></tr>
+        <tr><td>Individuation</td><td><code>individuation.py</code></td><td><code>individuation_results.json</code></td><td><code>individuation.png</code></td><td>50 per workload</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>One command runs all 15:</p>
+
+<pre><code>cd openclawbrain/sims
+python generate_figures.py
+python run_all.py</code></pre>
+
+  <p>Result claims in this page are extracted from the stored JSON records and are intentionally limited to fields that can be traced to deterministic outputs.</p>
+
+  <h3>4.10 Provenance of the Claim Set</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Claim</th><th>Evidence</th><th>Evidence Anchor</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Pipeline edges compile to reflex in 50 queries</td><td>Final edge map weight 1.0 across four edges</td><td>deploy_pipeline.json</td></tr>
+        <tr><td>Inhibitory edge reaches <strong>-0.940</strong></td><td>Bad edge final weight field</td><td>negation_results.json</td></tr>
+        <tr><td>Context drops 30→2.7 fired nodes</td><td>Final 10-query average field</td><td>context_reduction_results.json</td></tr>
+        <tr><td>93.3% dormant after forgetting run</td><td>Final dormant percentage field</td><td>forgetting_results.json</td></tr>
+        <tr><td>Damped branch reached, undamped loops</td><td>Boolean reached_D flags</td><td>edge_damping_results.json</td></tr>
+        <tr><td>5 cross-file edges emerge</td><td>Final cross-file edge count</td><td>domain_separation_results.json</td></tr>
+        <tr><td>Autotune flags dormant failure and suggests recovery</td><td>Autotune suggestion list non-empty</td><td>brain_death_results.json</td></tr>
+        <tr><td>27 edges differ by >0.05</td><td>Structural distinctness diff count</td><td>individuation_results.json</td></tr>
+        <tr><td>PG vs heuristic keeps lower overall edge mass than heuristic</td><td>53.68 vs 71.20 total mass</td><td>pg_vs_heuristic_results.json</td></tr>
+        <tr><td>Noise robustness collapses near 30% noise</td><td>Reflex at 30% is false by Q100</td><td>noise_robustness_results.json</td></tr>
+        <tr><td>Scaling remains stable route length</td><td>5 fired nodes from 50 to 2000 nodes</td><td>scaling_analysis_results.json</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.11 New Results (Ablations)</h3>
+
+  <div class="table-wrap">
+    <p><strong>Axis:</strong> Context efficiency (Axis 2). True PG vs heuristic show 53.68 vs 71.20 total edge weight and 0.3124 vs 0.4226 distractor average.</p>
+    <p><strong>True PG vs heuristic:</strong> both methods reach the target by query 2; true PG has lower total weight and lower distractor edge weight in this run.</p>
+    <table>
+      <thead>
+        <tr><th>Method</th><th>Convergence</th><th>Total edge weight</th><th>Avg. distractor edge</th><th>Comment</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Heuristic PG</td><td>Q2</td><td>71.20</td><td>0.4226</td><td>Higher mass growth</td></tr>
+        <tr><td>True PG</td><td>Q2</td><td>53.68</td><td>0.3124</td><td>Less global inflation</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-wrap">
+    <p><strong>Axis:</strong> Retrieval accuracy (Axis 1). Correct path remains reflex through 0%, 10%, and 20% noise; degradation accelerates at 30%.</p>
+    <p><strong>Noise robustness:</strong> degradation is gradual until it becomes sharp at 30%.</p>
+    <table>
+      <thead>
+        <tr><th>Noise rate</th><th>Reflex by Q100</th><th>Avg nodes fired (last 10)</th><th>Correct-minus-distractor gap</th><th>Inhibitory risk</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0%</td><td>Yes</td><td>5.0</td><td>0.5650</td><td>none</td></tr>
+        <tr><td>10%</td><td>Yes</td><td>4.0</td><td>0.4625</td><td>low</td></tr>
+        <tr><td>20%</td><td>Yes</td><td>5.0</td><td>0.4622</td><td>low</td></tr>
+        <tr><td>30%</td><td>No</td><td>4.0</td><td>0.3072</td><td>moderate</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-wrap">
+    <p><strong>Axis:</strong> Retrieval accuracy + Context efficiency (Axes 1+2). Static, heuristic, and PG all converge to stable paths; learned methods strengthen path confidence.</p>
+    <p><strong>Static vs learning baseline:</strong> static traversal is stable but does not raise the same route confidence.</p>
+    <table>
+      <thead>
+        <tr><th>Method</th><th>Converges to stable path</th><th>Final correct-path weights</th><th>Avg fired nodes</th><th>Queries until &lt;5 nodes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Static traversal</td><td>Q1</td><td>0.40, 0.40, 0.40, 0.40</td><td>5.0</td><td>Not reached in 100</td></tr>
+        <tr><td>Heuristic learning</td><td>Q1</td><td>1.00, 1.00, 1.00, 1.00</td><td>5.0</td><td>Not reached in 100</td></tr>
+        <tr><td>True PG</td><td>Q1</td><td>1.00, 1.00, 1.00, 1.00</td><td>5.0</td><td>Not reached in 100</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-wrap">
+    <p><strong>Axis:</strong> Context efficiency (Axis 2). Traversal remains at 5 fired nodes while graph size grows 50 &rarr; 2000 and time 0.0962 &rarr; 1.8766 ms.</p>
+    <p><strong>Scaling:</strong> fixed hop/beam settings keep route length at 5 while traversal time grows sublinearly.</p>
+    <table>
+      <thead>
+        <tr><th>Graph size</th><th>Avg traversal (ms)</th><th>Avg nodes fired</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>50</td><td>0.0962</td><td>5</td></tr>
+        <tr><td>100</td><td>0.1432</td><td>5</td></tr>
+        <tr><td>250</td><td>0.2814</td><td>5</td></tr>
+        <tr><td>500</td><td>0.5169</td><td>5</td></tr>
+        <tr><td>1000</td><td>0.9657</td><td>5</td></tr>
+        <tr><td>2000</td><td>1.8766</td><td>5</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Benchmark comparison (expanded ablations)</h3>
+  <p>This benchmark run includes 45 queries and covers baseline baselines and ablations, including <code>static_traverse</code> and <code>no_inhibition</code>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Method</th><th>Recall@3</th><th>Recall@5</th><th>Precision@3</th><th>MRR</th><th>Latency p50 / p95 (ms)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>static_traverse</td><td>0.270</td><td>0.304</td><td>0.170</td><td>0.381</td><td>46.27 / 47.79</td></tr>
+        <tr><td>keyword_overlap</td><td>0.289</td><td>0.515</td><td>0.163</td><td>0.295</td><td>10.74 / 11.11</td></tr>
+        <tr><td>hash_embed_similarity</td><td>0.270</td><td>0.433</td><td>0.170</td><td>0.428</td><td>44.81 / 46.51</td></tr>
+        <tr><td>ocb_traverse</td><td>0.270</td><td>0.304</td><td>0.170</td><td>0.381</td><td>46.73 / 48.07</td></tr>
+        <tr><td>ocb_no_inhibition</td><td>0.270</td><td>0.304</td><td>0.170</td><td>0.381</td><td>46.46 / 47.93</td></tr>
+        <tr><td>ocb_pg</td><td>0.270</td><td>0.304</td><td>0.170</td><td>0.381</td><td>45.98 / 47.64</td></tr>
+        <tr><td>ocb_with_replay</td><td>0.289</td><td>0.437</td><td>0.163</td><td>0.246</td><td>20.86 / 22.98</td></tr>
+        <tr><td>ocb_pg_with_replay</td><td>0.289</td><td>0.437</td><td>0.163</td><td>0.246</td><td>20.77 / 23.23</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+  Results are reproducible from the 15 simulation scripts and local benchmark harness in this repository.
+  </div>
+
+  <h2 id="structural-maintenance-results">4.14 Structural Maintenance Results</h2>
+
+  <p>OpenClawBrain separates per-query learning from periodic structural maintenance.</p>
+  <p>Maintenance runs through <code>health</code> → <code>decay</code> → <code>merge</code> → <code>prune</code> and can be scheduled with any workflow.</p>
+  <p>All maintained brains use OpenAI <code>text-embedding-3-small</code> (1536-dim).</p>
+
+  <h3>4.14.1 Merge Compression</h3>
+  <p>Merge compression reduced active nodes from 40 to 32 and fired value from 2.0 to 1.0 (50% reduction).</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Before</th><th>After</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Nodes fired</td><td>40</td><td>32</td></tr>
+        <tr><td>Fired value</td><td>2.0</td><td>1.0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.14.2 Prune Health</h3>
+  <p>Prune-health dropped edges from 870 to 24, while dormant moved from 98% to 29% and traversal still worked after prune.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Before</th><th>After</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Edges</td><td>870</td><td>24</td></tr>
+        <tr><td>Dormant</td><td>98%</td><td>29%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.14.3 Full Maintain vs Edge-Only (200 queries)</h3>
+  <p>Full maintenance is 12% cheaper in total context cost than edge-only (1,815 → 1,598).</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Strategy</th><th>Total context cost</th><th>Cost delta</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Edge-only</td><td>1,815</td><td>baseline</td></tr>
+        <tr><td>Full maintain</td><td>1,598</td><td>-12%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.14.4 Production Maintenance (first cycle)</h3>
+  <p class="insight">Merged nodes are larger due to context combination, so context chars do not always shrink; routing becomes materially sparser.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Brain</th><th>Nodes</th><th>Edges</th><th>Pruned</th><th>Merged</th><th>Learnings</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>MAIN</td><td>1,160</td><td>2,551</td><td>70</td><td>2</td><td>43</td></tr>
+        <tr><td>PELICAN</td><td>555</td><td>2,211</td><td>271</td><td>1</td><td>181</td></tr>
+        <tr><td>BOUNTIFUL</td><td>289</td><td>1,101</td><td>450</td><td>2</td><td>35</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Maintenance schedule and configuration is documented in <a href="docs/setup-guide.md">docs/setup-guide.md</a>.</p>
+
+  <h3>4.12 External Benchmarks: MultiHop-RAG (n=1000)</h3>
+  <p><strong>Axis:</strong> Retrieval accuracy (Axis 1). Cold traversal is +7.7% over embedding on full hit (0.6430 vs 0.5660), while learning drops to 0.4770 (-16.6% at 1000).</p>
+  <p>
+    Corpus: dataset facts and paragraphs from MultiHop-RAG facts. For each query, labels define evidence paragraphs to retrieve.
+    Method set: embedding top-k and three OpenClawBrain variants with cold and online updates.
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Method</th><th>Full hit rate</th><th>Partial hit rate</th><th>Evidence recall@10</th><th>MRR</th><th>Nodes fired</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>embedding_topk</td><td>0.5660</td><td>0.9800</td><td>0.8058</td><td>0.7942</td><td>10.000</td></tr>
+        <tr><td>ocb_cold</td><td>0.6430</td><td>0.9770</td><td>0.8224</td><td>0.7933</td><td>10.599</td></tr>
+        <tr><td>ocb_learning</td><td>0.4770</td><td>0.8530</td><td>0.6658</td><td>0.6916</td><td>9.982</td></tr>
+        <tr><td>ocb_pg_learning</td><td>0.4070</td><td>0.7890</td><td>0.5900</td><td>0.6534</td><td>9.871</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="insight">
+    Cold traversal improves immediate evidence recall over embedding-only retrieval. Online updates on a non-repeating stream reduce final full-hit rate, which matches the repeated-task assumption for sustained gains.
+  </p>
+
+  <h3>4.13 External Benchmarks: HotPotQA distractor (n=500)</h3>
+  <p><strong>Axis:</strong> Retrieval accuracy (Axis 1). Cold traversal improves SP@5 by +33.6% (0.9700 vs 0.6340); learning is roughly neutral over early checks.</p>
+  <p>Corpus: dataset passages and labeled evidence for distractor suppression evaluation.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Method</th><th>SP recall@5</th><th>SP recall@10</th><th>Single SP hit@5</th><th>Distractor suppression</th><th>MRR</th><th>Nodes fired</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>embedding_topk</td><td>0.6340</td><td>0.8080</td><td>0.9760</td><td>0.8202</td><td>0.8969</td><td>10.000</td></tr>
+        <tr><td>ocb_cold</td><td>0.9700</td><td>0.9840</td><td>0.9740</td><td>0.7623</td><td>0.8961</td><td>8.764</td></tr>
+        <tr><td>ocb_learning</td><td>0.9520</td><td>0.9840</td><td>0.9740</td><td>0.7656</td><td>0.8961</td><td>8.948</td></tr>
+        <tr><td>ocb_pg_learning</td><td>0.8980</td><td>0.9780</td><td>0.9740</td><td>0.7519</td><td>0.8945</td><td>8.316</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="insight">
+    Cold traversal is strongest at low and late checkpoints, while learned variants can improve early checkpoints and weaken under longer, diverse query streams.
+  </p>
+  <p><strong>Axis framing:</strong> These external benchmarks are Axis 1 only. They use unique, non-repeating queries, so Axis 2 (repetition-driven context compression) is not testable.</p>
+
+  <h2 id="production">5. Production Deployment</h2>
+  <p>Three production brains run on a Mac Mini M4 Pro, each built from workspace markdown files, session replay, and a learning database of human corrections:</p>
+  <p><strong>Axis framing:</strong> Context efficiency on Axis 2. Startup context moved from 52--66KB to 3--13KB per query through on-demand graph routing after repeated task use.</p>
+  <table>
+    <thead>
+      <tr><th>Brain</th><th>Nodes</th><th>Edges</th><th>Learning Corrections</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>MAIN</td><td>1,160</td><td>2,551</td><td>43</td></tr>
+      <tr><td>PELICAN</td><td>555</td><td>2,211</td><td>181</td></tr>
+      <tr><td>BOUNTIFUL</td><td>289</td><td>1,101</td><td>35</td></tr>
+    </tbody>
+  </table>
+  <p>All 2,004 nodes have real OpenAI <code>text-embedding-3-small</code> embeddings (1536-dim). Existing embeddings are cached and reused across rebuilds — only new nodes require API calls.</p>
+  <p>Learning corrections (259 active) are injected as first-class graph nodes and connected to relevant workspace nodes via cosine similarity. This means the graph retrieves not just workspace content but <em>how to avoid past mistakes</em>.</p>
+
+  <h2 id="how-it-compares">6. How It Compares</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th></th><th>Plain RAG</th><th>OpenClawBrain</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Retrieval</strong></td><td>Similarity search</td><td>Learned graph traversal</td></tr>
+        <tr><td><strong>Feedback</strong></td><td>None</td><td>+1/-1 outcomes update edge weights</td></tr>
+        <tr><td><strong>Wrong answers</strong></td><td>Keep resurfacing</td><td>Inhibitory edges suppress them</td></tr>
+        <tr><td><strong>Over time</strong></td><td>Same results</td><td>Routes compile to reflex behavior</td></tr>
+        <tr><td><strong>Dependencies</strong></td><td>Vector DB</td><td>Python core; optional embedding/LLM callbacks</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Positioning against related systems</h3>
+  <p><strong>MemGPT:</strong> a runtime memory operating-system stack, while OpenClawBrain is a routing layer. Think of it as a graph policy for what to retrieve and feed next, not a replacement memory system.</p>
+  <p><strong>Reflexion:</strong> textual reflection over time, whereas OpenClawBrain stores learned routing decisions as numeric edge weights over a graph.</p>
+  <p><strong>Self-RAG:</strong> generation-level self-critique and revision; OpenClawBrain is retrieval-routing-level learning that shapes traversal before generation.</p>
+  <p><strong>Related family:</strong> bandit-style routing and learning-to-rank ideas motivate the same principle in other forms — choose actions with feedback; OpenClawBrain applies it inside a sparse document graph with explicit STOP and edge-level inhibition.</p>
+
+  <h2 id="limitations-and-conclusion">7. Limitations and Conclusion</h2>
+
+    <h3>Limitations</h3>
+  <ol>
+    <li>The current paper page presents the 15 reproducible simulation classes listed above, including ablations and robustness checks.</li>
+    <li>Routing quality depends on seeding quality: poor embeddings or weak seeders produce weak starting routes, and we do not yet have a formal open benchmark gap-filling procedure for seeding failure modes.</li>
+    <li>Absolute magnitudes depend on synthetic setup and parameter choices in each simulator.</li>
+    <li>Autotune and traversal behavior should still be treated as adaptive heuristics for further real-workload calibration.</li>
+  </ol>
+
+  <h3>Conclusion</h3>
+  <p>OpenClawBrain improves retrieval accuracy through graph-structured traversal (+7.7% on MultiHop-RAG, +33.6% on HotPotQA versus embedding-only baselines) and compresses context on repeated tasks through trajectory-level learning (30→2.7 nodes in simulation, 52--66KB→3--13KB in production).</p>
+  <p>The true REINFORCE policy gradient keeps edge weights bounded (53.68 vs 71.20 total weight) and suppresses distractor edges more effectively (0.3124 vs 0.4226 average distractor weight). Benefits depend on graph structure and repeated-query patterns; with diverse one-off queries, learning can add little or degrade accuracy.</p>
+  <div class="insight">This version is scoped to provable outputs: 15 deterministic simulations and the benchmark harness in this repo, with updated ablations and noise robustness.</div>
+
+  <h2 id="references">References</h2>
+  <ol class="references">
+    <li>Gu, J. (2016). <span class="ref-title">Corrected policy-gradient update rules for reinforcement learning.</span> UCLA Econometrics Field Paper. <a href="/gu2016/">[Background and derivation]</a></li>
+    <li>Gu, J. (2016). <span class="ref-title">Corrected policy-gradient update for recurrent action sequences.</span> UCLA Econometrics Field Paper. <a href="/papers/rl-corrected-update-2016.pdf">[PDF]</a></li>
+    <li>Williams, R. J. (1992). <span class="ref-title">Simple statistical gradient-following algorithms for connectionist reinforcement learning.</span> Machine Learning, 8(3–4), 229–256.</li>
+    <li>Collins, A. M. &amp; Loftus, E. F. (1975). <span class="ref-title">A spreading-activation theory of semantic processing.</span> Psychological Review, 82(6), 407–428.</li>
+    <li>Graves, A., Wayne, G. &amp; Danihelka, I. (2014). <span class="ref-title">Neural Turing Machines.</span> arXiv:1410.5401.</li>
+    <li>Graves, A. et al. (2016). <span class="ref-title">Hybrid computing using a neural network with dynamic external memory.</span> Nature, 538, 471–476.</li>
+    <li>Park, J. S. et al. (2023). <span class="ref-title">Generative agents: Interactive simulacra of human behavior.</span> UIST 2023.</li>
+    <li>Wang, G. et al. (2023). <span class="ref-title">Voyager: An open-ended embodied agent with large language models.</span> arXiv:2305.16291.</li>
+    <li>Packer, C. et al. (2023). <span class="ref-title">MemGPT: Towards LLMs as operating systems.</span> arXiv:2310.08560.</li>
+    <li>Shinn, N. et al. (2023). <span class="ref-title">Reflexion: Language agents with verbal reinforcement learning.</span> NeurIPS 2023.</li>
+    <li>Yao, S. et al. (2023). <span class="ref-title">ReAct: Synergizing reasoning and acting in language models.</span> ICLR 2023.</li>
+    <li>Asai, A. et al. (2024). <span class="ref-title">Self-RAG: Learning to retrieve, generate, and critique through self-reflection.</span> ICLR 2024.</li>
+    <li>Sun, J. et al. (2024). <span class="ref-title">Think-on-Graph: Deep and responsible reasoning of large language model on knowledge graph.</span> ICLR 2024.</li>
+  </ol>
+
+  <footer class="paper-footer">
+    Open source page for OpenClawBrain.
+  </footer>
+
+</article>
+</body>
+</html>

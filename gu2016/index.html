@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Corrected Policy Gradients: From Gu (2016) to OpenClawBrain</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    name="description"
+    content="An accessible derivation of corrected policy gradients from Gu (2016), from one-step REINFORCE to trajectory-level updates and OpenClawBrain implementation."
+  >
+  <link rel="canonical" href="https://jonathangu.com/openclawbrain/gu2016/">
+  <!-- Main site CSS removed — this page is self-contained to avoid style collisions -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #111111;
+      --bg-code: #161616;
+      --text: #d4d4d4;
+      --text-bright: #f0f0f0;
+      --text-muted: #777;
+      --accent: #4a9eff;
+      --accent-dim: rgba(74, 158, 255, 0.15);
+      --green: #3fb950;
+      --orange: #e3955c;
+      --border: #1e1e1e;
+      --serif: 'Crimson Pro', Georgia, serif;
+      --sans: 'Inter', -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', 'Menlo', monospace;
+    }
+
+    * { box-sizing: border-box; }
+    body { background: var(--bg); margin: 0; padding: 0; }
+    .paper {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+      font-family: var(--serif);
+      color: var(--text);
+      line-height: 1.8;
+      font-size: 1.05rem;
+    }
+    .paper-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .back-link-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.8rem;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .back-link-group a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .back-link-group a:hover { text-decoration: underline; }
+    .paper-title {
+      font-family: var(--sans);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      line-height: 1.35;
+      margin-bottom: 1rem;
+    }
+    .paper-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+    .paper-meta {
+      font-family: var(--sans);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+    }
+    h2 {
+      font-family: var(--sans);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 {
+      font-family: var(--sans);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-top: 2rem;
+      margin-bottom: 0.65rem;
+    }
+    p { margin-bottom: 1.25rem; }
+    ul, ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+    li { margin-bottom: 0.4rem; }
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+    }
+    th {
+      text-align: left;
+      padding: 0.6rem 0.8rem;
+      background: var(--bg-card);
+      color: var(--text-bright);
+      font-weight: 600;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: 0.5rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: top;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 0.85em;
+      background: var(--bg-code);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      color: var(--orange);
+    }
+    .math-block { overflow-x: auto; margin: 2rem 0; padding: 1rem 0; font-size: 1.1rem; }
+    .paper-footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--sans);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .note {
+      margin: 2rem 0;
+      padding: 1.25rem 1.5rem;
+      border-left: 3px solid var(--orange);
+      background: rgba(227,149,92,0.09);
+      border-radius: 6px;
+      color: var(--text-bright);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+    .math-inline { font-family: var(--mono); }
+    .references {
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+    .references li { margin-bottom: 0.75rem; }
+    .references .ref-title { color: var(--text); font-weight: 500; }
+    @media (max-width: 600px) {
+      .paper { padding: 2rem 1rem 4rem; }
+      .paper-title { font-size: 1.65rem; }
+      body { font-size: 16px; }
+    }
+  </style>
+</head>
+<body style="margin:0; background:#0a0a0a;">
+<article class="paper">
+  <header class="paper-header">
+
+    <div class="back-link-group">
+      <a href="/">jonathangu.com</a>
+      <a href="/openclawbrain/">OpenClawBrain</a>
+      <a href="/openclawbrain/#references">OpenClawBrain references</a>
+      <a href="/">Contact</a>
+    </div>
+    <h1 class="paper-title">Corrected Policy Gradients: From Gu (2016) to OpenClawBrain</h1>
+    <p class="paper-subtitle">A practical derivation from the classic REINFORCE fix to trajectory-aware graph routing.</p>
+    <div class="paper-meta">
+      Jonathan Gu · February 2026
+    </div>
+  </header>
+
+  <h2 id="introduction">Introduction</h2>
+  <p>In 2016, I proved that the standard REINFORCE update used in Williams (1992) was only a one-step approximation and did not by itself optimize the value of the current state for all future steps. The corrected rule I derived requires the score term to be summed over the remainder of the trajectory, not only multiplied by the reward at a single time step.</p>
+  <p class="note">In modern language: the original rule was myopic. It rewarded what you just did. The corrected rule correctly rewards what you did and everything that can still happen after that in that same rollout.</p>
+
+  <h2 id="original-paper">The Original Paper</h2>
+  <p>Gu (2016) shows that the conventional REINFORCE rule is:</p>
+  <div class="math-block">
+    \[
+    \Delta \rho \propto \frac{\partial \log P_\rho(a_t\mid s_t)}{\partial \rho} z_t
+    \]
+  </div>
+  <p>and argues this updates toward a high-probability action for the immediate move, but it does not represent the right objective gradient for state-wise value maximization. The corrected update is</p>
+  <div class="math-block">
+    \[
+    \frac{\partial v_\rho(s_t)}{\partial \rho}
+    = E\!\left[
+    z_T\sum_{l=t}^{T}\frac{\partial\log P_\rho(a_l\mid s_l)}{\partial \rho}
+    \right]
+    \]
+  </div>
+  <p>The key difference is the sum over the tail of the trajectory \(l=t,\dots,T\). That sum makes the update aware of how each earlier choice affects all future decisions and outcomes.</p>
+  <p>So the corrected rule is the one that maximizes the value function at state \(s_t\), not only the immediate one-step contribution.</p>
+
+  <h2 id="policy-gradient-from-scratch">Policy Gradient From Scratch</h2>
+  <h3>Start with a concrete picture: one node, three doors, and a STOP sign</h3>
+  <p>Imagine a node \(i\), and three outgoing actions \(A,B,C\), plus \(\text{STOP}\). OpenClawBrain chooses an action stochastically via a softmax policy:</p>
+  <div class="math-block">
+    \[
+    \pi(a\mid i)= \frac{\exp\left((r_{ia}+w_{ia})/\tau\right)}{\sum_{j\in \text{neighbors}(i)\cup\{\text{STOP}\}} \exp\left((r_{ij}+w_{ij})/\tau\right)}
+    \]
+  </div>
+  <p>Here \(r_{ia}\) is a fixed relevance term, \(w_{ia}\) is the trainable parameter, and \(\tau\) controls entropy.</p>
+
+  <p>Now, if the episode outcome is good, we should increase the chance of the chosen action and decrease the chance of the alternatives so that the total probability at node \(i\) stays normalized. That is the conservation intuition behind policy gradients.</p>
+
+  <h3>Step 1: write \(\log \pi(a\mid i)\)</h3>
+  <p>Let \(S_i\) be the set of actions at node \(i\) and \(Z_i=\sum_{j\in S_i}\exp((r_{ij}+w_{ij})/\tau)\). Then:</p>
+  <div class="math-block">
+    \[
+    \log \pi(a\mid i)=\frac{r_{ia}+w_{ia}}{\tau}-\log Z_i
+    \]
+  </div>
+
+  <h3>Step 2: gradients w.r.t. learned logits</h3>
+  <p>For the selected action \(a\):</p>
+  <div class="math-block">
+    \[
+    \frac{\partial \log \pi(a\mid i)}{\partial w_{ia}}=\frac{1}{\tau}\left(1-\pi(a\mid i)\right)
+    \]
+  </div>
+  <p>For any \(j\neq a\):</p>
+  <div class="math-block">
+    \[
+    \frac{\partial \log \pi(a\mid i)}{\partial w_{ij}}=-\frac{1}{\tau}\pi(j\mid i)
+    \]
+  </div>
+  <p>In vector form:</p>
+  <div class="math-block">
+    \[
+    \nabla_{\mathbf{w}_i}\log \pi(a\mid i)=\frac{1}{\tau}\left(\mathbf e_a-\boldsymbol\pi_i\right)
+    \]
+  </div>
+  <p>Summing components gives \(\sum_j (e_a(j)-\pi(j\mid i))=0\), so this is always a reallocation of mass.</p>
+
+  <h3>Numerical example</h3>
+  <p>Take \(S_i=\{A,B,C,\text{STOP}\}\), \(\tau=1\), and combined scores \(2.0,1.0,0.0,0.5\). Then</p>
+  <ul>
+    <li>\(\pi(A\mid i)\approx0.579\)</li>
+    <li>\(\pi(B\mid i)\approx0.213\)</li>
+    <li>\(\pi(C\mid i)\approx0.078\)</li>
+    <li>\(\pi(\text{STOP}\mid i)\approx0.129\)</li>
+  </ul>
+  <p>If we chose \(B\) and got positive outcome:</p>
+  <div class="math-block">
+    \[
+    \Delta w_{iB}\propto1-\pi(B\mid i)\approx0.787,\quad
+    \Delta w_{iA}\propto-\pi(A\mid i)\approx-0.579,\quad
+    \Delta w_{iC}\propto-\pi(C\mid i)\approx-0.078,\quad
+    \Delta w_{iS}\propto-\pi(S\mid i)\approx-0.129
+    \]
+  </div>
+  <p class="note">Chosen action goes up, all others go down in proportion to their current mass. Sum is approximately zero.</p>
+
+  <h3>Full trajectory update</h3>
+  <div class="math-block">
+    \[
+    \nabla J(\mathbf w)=\mathbb E\left[G\sum_{t=0}^{T-1}\nabla\log\pi(a_t\mid i_t)\right]
+    \]
+  </div>
+  <p>If a baseline \(b(i_t)\) is used:</p>
+  <div class="math-block">
+    \[
+    \Delta\mathbf w\propto\sum_{t=0}^{T-1}(G_t-b(i_t))\nabla_{\mathbf w}\log\pi(a_t\mid i_t)
+    \]
+  </div>
+
+  <h3>Why old heuristic updates are directionally right but incomplete</h3>
+  <p>The heuristic “reward the chosen edge only” can increase the chosen edge’s logit by \(\delta\), but it does not explicitly reduce competing actions.</p>
+  <p>In softmax-based policies, increasing one edge and leaving others unchanged violates the coupling imposed by the normalizer. True policy gradient does both operations together: increase chosen mass and reallocate what was allocated elsewhere.</p>
+
+  <h3>Comparison: true PG vs. heuristic</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>\(\pi(j\mid i)\)</th>
+          <th>True PG update \(\Delta w_{ij}\propto e_B(j)-\pi(j\mid i)\)</th>
+          <th>Heuristic update</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>A</td><td>0.579</td><td>-0.579</td><td>0</td></tr>
+        <tr><td>B</td><td>0.213</td><td>+0.787</td><td>+\(\delta\)</td></tr>
+        <tr><td>C</td><td>0.078</td><td>-0.078</td><td>0</td></tr>
+        <tr><td>STOP</td><td>0.129</td><td>-0.129</td><td>0</td></tr>
+        <tr><td><strong>Sum</strong></td><td>1.000</td><td>~0</td><td>+\(\delta\)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="from-theory-to-production">From Theory to Production: OpenClawBrain</h2>
+  <p>In OpenClawBrain, we walk a document graph under a stochastic policy
+    \[
+    \pi_W(a\mid i)=\frac{\exp\left((r_{ia}+w_{ia})/\tau\right)}{\sum_{j\in\text{out}(i)}\exp\left((r_{ij}+w_{ij})/\tau\right)}.
+    \]
+    The implementation logs one full trajectory of visited states and actions. The corrected rollout-level update applies across that full path, which is the same structure as the Gu (2016) correction.</p>
+
+  <div class="math-block">
+    \[
+    \Delta W \propto z_T \sum_{\ell=t}^{T}\nabla_W\log\pi_W(a_\ell\mid s_\ell)
+    \]
+  </div>
+
+  <p>That is exactly what <code>apply_outcome_pg</code> implements. For each visited node, it updates the whole local action vector with \(\frac1\tau(\mathbf e_{a_\ell}-\boldsymbol\pi_{s_\ell})\), so updates at each node sum to zero:</p>
+  <div class="math-block">
+    \[
+    \sum_{j\in\text{out}(i)}\Delta w_{ij}=0
+    \]
+  </div>
+  <p>The legacy <code>apply_outcome</code> update used only the myopic piece (pushing the chosen edge), which is directionally right but misses the competition term. In production this shows up as unbalanced mass shifts over repeated traversals.</p>
+  <ul>
+    <li>OpenClawBrain sums \(\nabla\log\pi\) across the full traversal, not just the last action.</li>
+    <li>The softmax policy stays normalized and interpretable as routing probability at each node.</li>
+    <li>Updates are signed redistributions at each node, not one-sided inflation.</li>
+  </ul>
+
+  <p>See the open paper and code references here:
+    <a href="/openclawbrain/">OpenClawBrain project page</a> and
+    <a href="/papers/rl-corrected-update-2016.pdf">the 2016 PDF</a>.
+  </p>
+
+  <h2 id="references">References</h2>
+  <ol class="references">
+    <li>Williams, R. J. (1992). <span class="ref-title">Simple statistical gradient-following algorithms for connectionist reinforcement learning.</span> <i>Machine Learning</i>, 8(3–4), 229–256.</li>
+    <li>Gu, J. (2016). <span class="ref-title">Corrected Policy-Gradient Update Rules for Reinforcement Learning.</span> UCLA Econometrics Field Paper. <a href="/papers/rl-corrected-update-2016.pdf">[PDF]</a></li>
+    <li>Gu, J. (2026). <span class="ref-title">OpenClawBrain: Learned Graph Traversal for Retrieval Routing.</span> <a href="/openclawbrain/">[Paper/implementation page]</a></li>
+  </ol>
+
+  <footer class="paper-footer">
+    A companion explanation page for policy-gradient correction and OpenClawBrain routing updates.
+  </footer>
+</article>
+</body>
+</html>

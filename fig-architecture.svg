@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" font-family="Inter, -apple-system, sans-serif">
+  <defs>
+    <filter id="glow2">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4a9eff"/>
+    </marker>
+    <marker id="arr-green" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#3fb950"/>
+    </marker>
+    <marker id="arr-dim" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#444"/>
+    </marker>
+    <linearGradient id="pulse-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4a9eff;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#3fb950;stop-opacity:0.8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="520" fill="#0a0a0a" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" fill="#f0f0f0" font-size="16" font-weight="700">NAM Architecture: Query → Activation → Context Assembly</text>
+
+  <!-- ===== QUERY BOX ===== -->
+  <rect x="280" y="50" width="240" height="42" rx="8" fill="#1a1a2e" stroke="#4a9eff" stroke-width="1.5"/>
+  <text x="400" y="67" text-anchor="middle" fill="#4a9eff" font-size="11" font-weight="600">QUERY</text>
+  <text x="400" y="82" text-anchor="middle" fill="#d4d4d4" font-size="10" font-family="JetBrains Mono, monospace">"Debug the deployment failure"</text>
+
+  <!-- Arrow down -->
+  <line x1="400" y1="92" x2="400" y2="115" stroke="#4a9eff" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ===== MEMORY GRAPH ===== -->
+  <rect x="50" y="120" width="700" height="280" rx="12" fill="#111" stroke="#1e1e1e"/>
+  <text x="75" y="145" fill="#777" font-size="11" font-weight="600" text-transform="uppercase" letter-spacing="0.08em">MEMORY GRAPH</text>
+
+  <!-- Root nodes (Layer 0) -->
+  <text x="75" y="172" fill="#555" font-size="9">LAYER 0 — ROOTS</text>
+
+  <!-- Identity -->
+  <rect x="80" y="180" width="100" height="36" rx="6" fill="#1e1e1e" stroke="#444"/>
+  <text x="130" y="195" text-anchor="middle" fill="#888" font-size="10" font-weight="500">🪪 Identity</text>
+  <text x="130" y="208" text-anchor="middle" fill="#555" font-size="8">α = 0.1</text>
+
+  <!-- Projects -->
+  <rect x="200" y="180" width="100" height="36" rx="6" fill="#1e1e1e" stroke="#4a9eff" stroke-opacity="0.8"/>
+  <text x="250" y="195" text-anchor="middle" fill="#4a9eff" font-size="10" font-weight="500">📁 Projects</text>
+  <text x="250" y="208" text-anchor="middle" fill="#4a9eff" font-size="8" opacity="0.7">α = 0.8</text>
+
+  <!-- Infra - ACTIVATED -->
+  <rect x="320" y="180" width="100" height="36" rx="6" fill="rgba(74,158,255,0.15)" stroke="#4a9eff" stroke-width="2" filter="url(#glow2)"/>
+  <text x="370" y="195" text-anchor="middle" fill="#4a9eff" font-size="10" font-weight="600">🔧 Infra</text>
+  <text x="370" y="208" text-anchor="middle" fill="#4a9eff" font-size="8" font-weight="600">α = 0.95</text>
+
+  <!-- People -->
+  <rect x="440" y="180" width="100" height="36" rx="6" fill="#1e1e1e" stroke="#444"/>
+  <text x="490" y="195" text-anchor="middle" fill="#888" font-size="10" font-weight="500">👥 People</text>
+  <text x="490" y="208" text-anchor="middle" fill="#555" font-size="8">α = 0.05</text>
+
+  <!-- Learnings -->
+  <rect x="560" y="180" width="110" height="36" rx="6" fill="#1e1e1e" stroke="#4a9eff" stroke-opacity="0.5"/>
+  <text x="615" y="195" text-anchor="middle" fill="#4a9eff" font-size="10" font-weight="500" opacity="0.7">📚 Learnings</text>
+  <text x="615" y="208" text-anchor="middle" fill="#4a9eff" font-size="8" opacity="0.5">α = 0.6</text>
+
+  <!-- Layer 1 -->
+  <text x="75" y="248" fill="#555" font-size="9">LAYER 1 — φ ACTIVATED</text>
+
+  <!-- Deploy config - HIGH -->
+  <rect x="200" y="258" width="130" height="40" rx="6" fill="rgba(63,185,80,0.15)" stroke="#3fb950" stroke-width="2" filter="url(#glow2)"/>
+  <text x="265" y="275" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600">⚙️ Deploy Config</text>
+  <text x="265" y="289" text-anchor="middle" fill="#3fb950" font-size="8" font-weight="600">α = 0.92 ✓ LOADED</text>
+
+  <!-- Recent changes - HIGH -->
+  <rect x="350" y="258" width="130" height="40" rx="6" fill="rgba(63,185,80,0.12)" stroke="#3fb950" stroke-width="1.5"/>
+  <text x="415" y="275" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600">📅 Changes (3d)</text>
+  <text x="415" y="289" text-anchor="middle" fill="#3fb950" font-size="8">α = 0.87 ✓ LOADED</text>
+
+  <!-- Server logs -->
+  <rect x="500" y="258" width="120" height="40" rx="6" fill="rgba(74,158,255,0.08)" stroke="#4a9eff" stroke-opacity="0.4"/>
+  <text x="560" y="275" text-anchor="middle" fill="#4a9eff" font-size="10" font-weight="500" opacity="0.7">📋 Server Logs</text>
+  <text x="560" y="289" text-anchor="middle" fill="#4a9eff" font-size="8" opacity="0.5">α = 0.45</text>
+
+  <!-- Layer 2 -->
+  <text x="75" y="328" fill="#555" font-size="9">LAYER 2 — DEEP TRAVERSAL</text>
+
+  <!-- The config change! -->
+  <rect x="230" y="338" width="160" height="40" rx="6" fill="rgba(63,185,80,0.2)" stroke="#3fb950" stroke-width="2" filter="url(#glow2)"/>
+  <text x="310" y="353" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="700">🎯 Config Change Feb 21</text>
+  <text x="310" y="368" text-anchor="middle" fill="#3fb950" font-size="8" font-weight="600">α = 0.89 ✓ KEY MEMORY</text>
+
+  <!-- Previous deploy -->
+  <rect x="420" y="338" width="130" height="40" rx="6" fill="rgba(74,158,255,0.06)" stroke="#333"/>
+  <text x="485" y="353" text-anchor="middle" fill="#888" font-size="10">🚀 Deploy Feb 20</text>
+  <text x="485" y="368" text-anchor="middle" fill="#555" font-size="8">α = 0.32 — below τ</text>
+
+  <!-- ===== EDGES ===== -->
+  <!-- Infra → Deploy Config (strong) -->
+  <path d="M 370 216 L 280 258" stroke="#3fb950" stroke-width="2" fill="none" marker-end="url(#arr-green)" opacity="0.8"/>
+  <!-- Infra → Recent Changes -->
+  <path d="M 380 216 L 410 258" stroke="#3fb950" stroke-width="1.5" fill="none" marker-end="url(#arr-green)" opacity="0.6"/>
+  <!-- Projects → Server Logs -->
+  <path d="M 280 216 L 540 258" stroke="#4a9eff" stroke-width="1" fill="none" marker-end="url(#arr)" opacity="0.3"/>
+  <!-- Learnings → Server Logs -->
+  <path d="M 615 216 L 570 258" stroke="#4a9eff" stroke-width="1" fill="none" marker-end="url(#arr)" opacity="0.2"/>
+  <!-- Deploy Config → Config Change (strong) -->
+  <path d="M 270 298 L 295 338" stroke="#3fb950" stroke-width="2" fill="none" marker-end="url(#arr-green)" opacity="0.9"/>
+  <!-- Recent Changes → Config Change -->
+  <path d="M 400 298 L 330 338" stroke="#3fb950" stroke-width="1.5" fill="none" marker-end="url(#arr-green)" opacity="0.6"/>
+  <!-- Server Logs → Previous Deploy -->
+  <path d="M 555 298 L 500 338" stroke="#444" stroke-width="1" fill="none" marker-end="url(#arr-dim)" opacity="0.3"/>
+
+  <!-- ===== LLM ACTIVATION CALLS ===== -->
+  <!-- phi calls -->
+  <g opacity="0.7">
+    <rect x="640" y="160" width="95" height="22" rx="4" fill="#1a1a2e" stroke="#4a9eff" stroke-opacity="0.5"/>
+    <text x="688" y="175" text-anchor="middle" fill="#4a9eff" font-size="9" font-weight="500">φ(v, q, C)</text>
+  </g>
+  <g opacity="0.7">
+    <rect x="640" y="250" width="95" height="22" rx="4" fill="#1a1a2e" stroke="#4a9eff" stroke-opacity="0.5"/>
+    <text x="688" y="265" text-anchor="middle" fill="#4a9eff" font-size="9" font-weight="500">φ(v, q, C)</text>
+  </g>
+  <g opacity="0.7">
+    <rect x="640" y="340" width="95" height="22" rx="4" fill="#1a1a2e" stroke="#4a9eff" stroke-opacity="0.5"/>
+    <text x="688" y="355" text-anchor="middle" fill="#4a9eff" font-size="9" font-weight="500">φ(v, q, C)</text>
+  </g>
+  <text x="688" y="382" text-anchor="middle" fill="#555" font-size="8">~400 tokens each</text>
+  <text x="688" y="393" text-anchor="middle" fill="#555" font-size="8">~$0.0003/call</text>
+
+  <!-- ===== OUTPUT ===== -->
+  <line x1="400" y1="400" x2="400" y2="430" stroke="#3fb950" stroke-width="1.5" marker-end="url(#arr-green)"/>
+
+  <!-- Context Assembly -->
+  <rect x="180" y="435" width="440" height="70" rx="10" fill="#0d1a0d" stroke="#3fb950" stroke-opacity="0.6"/>
+  <text x="400" y="457" text-anchor="middle" fill="#3fb950" font-size="12" font-weight="600">ASSEMBLED CONTEXT (top-K by activation)</text>
+  <text x="400" y="475" text-anchor="middle" fill="#d4d4d4" font-size="10">⚙️ Deploy Config (0.92) + 📅 Changes (0.87) + 🎯 Config Change Feb 21 (0.89)</text>
+  <text x="400" y="490" text-anchor="middle" fill="#777" font-size="9">~8K tokens loaded (vs. ~33K static) — 75% reduction</text>
+</svg>
