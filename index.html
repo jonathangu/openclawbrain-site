@@ -114,6 +114,17 @@
         <li><a href="/docs/openclaw-integration.md">OpenClaw integration guide</a></li>
       </ul>
     </div>
+
+    <div style="text-align: left; max-width: 520px; margin: 0.9rem auto 0; padding: 0.9rem 1rem; border: 1px solid var(--border); border-radius: 10px; background: rgba(41, 166, 255, 0.07);">
+      <p style="margin: 0 0 0.5rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Start here (OpenClaw)</p>
+      <ol style="margin: 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.6;">
+        <li><code>openclawbrain init --workspace ~/.openclaw/workspace --output ~/.openclawbrain/main</code></li>
+        <li><code>openclawbrain serve --state ~/.openclawbrain/main/state.json</code></li>
+        <li><code>openclawbrain replay --state ~/.openclawbrain/main/state.json --sessions ~/.openclaw/agents/main/sessions --fast-learning --stop-after-fast-learning --resume --checkpoint ~/.openclawbrain/main/replay_checkpoint.json</code></li>
+      </ol>
+      <p style="margin: 0.6rem 0 0; font-family: var(--sans); font-size: 0.9rem; color: var(--text-muted);">Check progress/resume: <a href="/docs/ops-recipes.md">ops-recipes</a> · <code>openclawbrain replay --state ~/.openclawbrain/main/state.json --show-checkpoint --resume</code></p>
+    </div>
+
     </div>
   </header>
 
