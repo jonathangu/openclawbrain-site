@@ -119,8 +119,15 @@
       <ol style="margin: 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.6;">
         <li><code>openclawbrain init --workspace ~/.openclaw/workspace --output ~/.openclawbrain/main</code></li>
         <li><code>openclawbrain serve --state ~/.openclawbrain/main/state.json</code></li>
-        <li><code>openclawbrain replay --state ~/.openclawbrain/main/state.json --sessions ~/.openclaw/agents/main/sessions --fast-learning --stop-after-fast-learning --resume --checkpoint ~/.openclawbrain/main/replay_checkpoint.json</code></li>
+        <li>Add one <code>Query</code> line to <code>AGENTS.md</code>: <code>python3 ~/openclawbrain/examples/openclaw_adapter/query_brain.py ~/.openclawbrain/main/state.json '&lt;summary&gt;' --chat-id '&lt;chat_id&gt;' --json --compact --no-include-node-ids --exclude-bootstrap --max-prompt-context-chars 12000</code></li>
+        <li>Optional quick cutover: <code>openclawbrain replay --state ~/.openclawbrain/main/state.json --sessions ~/.openclaw/agents/main/sessions --fast-learning --stop-after-fast-learning --resume --checkpoint ~/.openclawbrain/main/replay_checkpoint.json</code></li>
       </ol>
+      <ul style="margin: 0.55rem 0 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.88rem; line-height: 1.55; color: var(--text-muted);">
+        <li>Avoids duplicating bootstrap files already in OpenClaw context.</li>
+        <li>Keeps the prompt appendix deterministic and bounded (tight and right).</li>
+        <li>Repeated workflows should shrink context over time (paper/blog claims).</li>
+      </ul>
+      <p style="margin: 0.55rem 0 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">If you see bloat, read <a href="/docs/openclaw-integration.md">openclaw integration guide</a> and <a href="/docs/operator-guide.md">operator guide</a>.</p>
       <p style="margin: 0.6rem 0 0; font-family: var(--sans); font-size: 0.9rem; color: var(--text-muted);">Check progress/resume: <a href="/docs/ops-recipes.md">ops-recipes</a> · <code>openclawbrain replay --state ~/.openclawbrain/main/state.json --show-checkpoint --resume</code></p>
     </div>
 

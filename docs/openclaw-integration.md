@@ -1,5 +1,3 @@
-> Canonical docs live on GitHub; this page is a snapshot.
-
 # OpenClaw Integration (OpenClawBrain)
 
 OpenClawBrain is built to be the long-term memory layer for **OpenClaw agents**.
@@ -157,9 +155,10 @@ Paste this block into your OpenClaw workspace `AGENTS.md` (edit `AGENT` and path
 
 **Query** (before answering questions about prior work, context, decisions, corrections, lessons):
 ```bash
-python3 ~/openclawbrain/examples/openclaw_adapter/query_brain.py ~/.openclawbrain/AGENT/state.json '<summary of user message>' --chat-id '<chat_id from inbound metadata>' --json
+python3 ~/openclawbrain/examples/openclaw_adapter/query_brain.py ~/.openclawbrain/AGENT/state.json '<summary of user message>' --chat-id '<chat_id from inbound metadata>' --json --compact --no-include-node-ids --exclude-bootstrap --max-prompt-context-chars 12000
 ```
 Always pass `--chat-id` so fired nodes are logged for later corrections.
+Use `--exclude-recent-memory <today-note> <yesterday-note>` only when those files are already loaded by OpenClaw in the same prompt and you want to avoid duplication.
 
 **Learn** (after each response, using fired node IDs from query output):
 - Good: `openclawbrain learn --state ~/.openclawbrain/AGENT/state.json --outcome 1.0 --fired-ids <ids>`
@@ -198,6 +197,22 @@ openclawbrain compact --state ~/.openclawbrain/AGENT/state.json --memory-dir /pa
 ```
 
 That block is intentionally boring: it’s the contract OpenClaw already supports.
+
+### Prompt-context duplication control (recommended)
+
+OpenClaw already loads bootstrap files (`AGENTS.md`, `SOUL.md`, `USER.md`, `MEMORY.md`, `active-tasks.md`) into the base prompt. If you also include them again from brain retrieval, token usage grows quickly with little value.
+
+Use adapter compact mode and exclusions to keep context “tight and right”:
+
+- Prefer `--json --compact` for deterministic prompt appendices only.
+- Compact JSON is minified by default (single-line, no indentation). Use `--pretty-json` when you need human-readable formatting.
+- In compact mode, node id lines are omitted by default (`--no-include-node-ids` behavior). Use `--include-node-ids` only when operators need explicit IDs in prompt context.
+- Compact JSON returns only `state`, `query`, `fired_nodes`, and `prompt_context` by default. Add `--include-stats` only when you need lightweight scalar stats/timings.
+- Keep `--exclude-bootstrap` enabled (default in the adapter).
+- Start with `--max-prompt-context-chars 8000` to `12000`; only increase when needed.
+- Use `--exclude-recent-memory ...` only for explicit daily notes already injected into the same OpenClaw turn.
+
+This aligns retrieval output with OpenClawBrain’s context-efficiency goal: preserve high-value retrieved nodes while minimizing repeated bootstrap content.
 
 ---
 
@@ -507,6 +522,74 @@ Two practical options:
 
 - That’s normal with real embeddings.
 - Run `maintain` (prune/merge) and optionally `compact` old notes.
+
+---
+
+## Native OpenClaw Tool (opencormorant fork)
+
+If you run the **opencormorant** fork of OpenClaw (`github.com/jonathangu/opencormorant`), there is a built-in `openclawbrain` tool that agents can call directly — no shell exec needed.
+
+### What it provides
+The tool connects to the daemon Unix socket (`~/.openclawbrain/<agent>/daemon.sock`) and routes to the correct agent automatically (main/pelican/bountiful).
+
+It supports **all OpenClawBrain daemon methods** (plus a safe generic passthrough):
+
+| Action | Description |
+|---|---|
+| `query` | Retrieve context + fired node IDs |
+| `learn` | Apply numeric outcome to fired IDs (weight updates) |
+| `inject` | Inject TEACHING/CORRECTION/DIRECTIVE nodes |
+| `maintain` | Run structural maintenance tasks |
+| `health` | Health summary |
+| `info` | Node/edge counts + embedder |
+| `save` | Persist state immediately |
+| `reload` | Reload state from disk |
+| `correction` | Penalize recent fired path for `chat_id` + inject correction node |
+| `self_learn` / `self_correct` | Autonomous learning/correction helpers |
+| `shutdown` | Stop the daemon (**requires** `confirm="shutdown"`) |
+| `call` | Generic validated passthrough: provide `method` + `params` |
+
+### How to use it (agent perspective)
+The tool is registered automatically. Agents can call it like any other tool.
+
+Query:
+```
+openclawbrain(action="query", query="how do we deploy", chat_id="telegram:123", top_k=4)
+```
+
+Correction:
+```
+openclawbrain(action="correction", chat_id="telegram:123", content="Actually we use blue-green deploys, not rolling")
+```
+
+Generic call (validated passthrough):
+```
+openclawbrain(action="call", method="maintain", params={"tasks":["health","decay"]})
+```
+
+Shutdown (explicit guard):
+```
+openclawbrain(action="shutdown", confirm="shutdown")
+```
+
+### Requirements
+- OpenClawBrain daemon must be running (`openclawbrain serve --state ...`)
+- The `daemon.sock` file must be accessible from the OpenClaw process
+
+### Media understanding synergy
+OpenClaw's built-in `tools.media` pipeline (audio transcription, image description) runs *before* the agent responds. When enabled, audio/image content is extracted to text and stored in session logs, so OpenClawBrain replay/full-learning can learn from media messages naturally.
+
+To enable in your OpenClaw config:
+```json
+{
+  "tools": {
+    "media": {
+      "audio": { "enabled": true },
+      "image": { "enabled": true }
+    }
+  }
+}
+```
 
 ---
 
