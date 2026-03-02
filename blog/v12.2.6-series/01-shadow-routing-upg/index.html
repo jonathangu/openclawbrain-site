@@ -12,6 +12,9 @@
     h1,h2 { font-family:var(--sans); color:var(--bright); }
     .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.84rem; }
     .box { border:1px solid var(--border); border-radius:10px; background:#161d2c; padding:.9rem 1rem; margin:1rem 0; }
+    figure { margin:1.2rem 0 1.5rem; }
+    figure img { width:100%; border:1px solid var(--border); border-radius:12px; background:#0f1420; }
+    figcaption { font-family:var(--sans); color:var(--muted); font-size:.82rem; margin-top:.45rem; }
     a { color:var(--accent); }
   </style>
 </head>
@@ -29,6 +32,10 @@
       Hot path: embedding lookup -> local route policy -> bounded context output.<br />
       Cold path: replay -> teacher labels -> distillation + policy-gradient updates.
     </div>
+    <figure>
+      <img src="/figures/eval/shadow_routing_hotpath_loop.svg" alt="Shadow routing hot path and background loop diagram" loading="lazy" />
+      <figcaption>Hot-path routing remains local while teacher supervision stays in the asynchronous shadow loop.</figcaption>
+    </figure>
 
     <h2>Ultimate Policy Gradient</h2>
     <p>All supervision enters one update stack with an explicit authority order:</p>

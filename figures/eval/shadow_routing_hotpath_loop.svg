@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560" role="img" aria-label="Shadow routing hot path vs background loop">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1E3E72"/>
+    </marker>
+  </defs>
+  <rect width="1100" height="560" fill="#F8FAFD"/>
+  <text x="60" y="58" font-family="Helvetica, Arial, sans-serif" font-size="33" fill="#152946" font-weight="700">Shadow Routing: Production Path vs Background Learning Loop</text>
+
+  <rect x="60" y="95" width="480" height="390" rx="16" fill="#FFFFFF" stroke="#97B1D8" stroke-width="2.5"/>
+  <text x="90" y="136" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#1A355E" font-weight="700">Hot Path (latency critical)</text>
+
+  <rect x="95" y="165" width="410" height="72" rx="10" fill="#EAF3FF" stroke="#90AEDC"/>
+  <text x="115" y="209" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#1A355E">Query + local retrieval</text>
+
+  <rect x="95" y="260" width="410" height="72" rx="10" fill="#EAF3FF" stroke="#90AEDC"/>
+  <text x="115" y="304" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#1A355E">Current route policy decision</text>
+
+  <rect x="95" y="355" width="410" height="72" rx="10" fill="#EAF3FF" stroke="#90AEDC"/>
+  <text x="115" y="399" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#1A355E">Response emitted</text>
+
+  <line x1="300" y1="237" x2="300" y2="260" stroke="#1E3E72" stroke-width="3.4" marker-end="url(#arrow)"/>
+  <line x1="300" y1="332" x2="300" y2="355" stroke="#1E3E72" stroke-width="3.4" marker-end="url(#arrow)"/>
+
+  <rect x="580" y="95" width="460" height="390" rx="16" fill="#FFFFFF" stroke="#BEADD8" stroke-width="2.5"/>
+  <text x="610" y="136" font-family="Helvetica, Arial, sans-serif" font-size="26" fill="#402860" font-weight="700">Background loop (asynchronous)</text>
+
+  <rect x="615" y="165" width="390" height="72" rx="10" fill="#F6EEFF" stroke="#BEADD8"/>
+  <text x="635" y="209" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#402860">Replay + teacher labeling</text>
+
+  <rect x="615" y="260" width="390" height="72" rx="10" fill="#F6EEFF" stroke="#BEADD8"/>
+  <text x="635" y="304" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#402860">Distillation + PG updates</text>
+
+  <rect x="615" y="355" width="390" height="72" rx="10" fill="#F6EEFF" stroke="#BEADD8"/>
+  <text x="635" y="399" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#402860">Deploy next policy window</text>
+
+  <line x1="810" y1="237" x2="810" y2="260" stroke="#5E3E86" stroke-width="3.4" marker-end="url(#arrow)"/>
+  <line x1="810" y1="332" x2="810" y2="355" stroke="#5E3E86" stroke-width="3.4" marker-end="url(#arrow)"/>
+
+  <path d="M505 298 C555 298, 565 203, 615 203" fill="none" stroke="#355D98" stroke-width="3.2" marker-end="url(#arrow)"/>
+  <text x="526" y="252" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#355D98">shadow traces</text>
+</svg>

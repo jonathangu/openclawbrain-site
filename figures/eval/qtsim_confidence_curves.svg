@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" role="img" aria-label="Confidence gate response curves">
+  <rect width="1000" height="560" fill="#FAFBFD"/>
+  <text x="70" y="62" font-family="Helvetica, Arial, sans-serif" font-size="33" fill="#1D2D45" font-weight="700">Confidence Gate Response (Illustrative)</text>
+
+  <rect x="80" y="110" width="850" height="390" rx="12" fill="#FFFFFF" stroke="#C4D1E3"/>
+  <line x1="155" y1="450" x2="860" y2="450" stroke="#4A5A76" stroke-width="2"/>
+  <line x1="155" y1="450" x2="155" y2="160" stroke="#4A5A76" stroke-width="2"/>
+  <text x="455" y="495" font-family="Helvetica, Arial, sans-serif" font-size="20" fill="#31415D">Margin / Entropy signal strength</text>
+  <text x="55" y="305" transform="rotate(-90 55 305)" font-family="Helvetica, Arial, sans-serif" font-size="20" fill="#31415D">lambda weight on QTsim</text>
+
+  <path d="M170 435 C240 405, 300 365, 365 300 C430 235, 500 195, 565 180 C640 163, 730 168, 850 180" fill="none" stroke="#E68A00" stroke-width="4"/>
+  <text x="610" y="210" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#A85F00">high-margin / low-entropy regime</text>
+
+  <path d="M170 255 C255 245, 320 240, 390 238 C470 236, 550 250, 615 280 C700 320, 780 375, 850 435" fill="none" stroke="#4B7AC2" stroke-width="4"/>
+  <text x="560" y="345" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#2F5C9F">high-entropy / ambiguous regime</text>
+</svg>
