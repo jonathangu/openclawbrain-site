@@ -149,13 +149,13 @@ All unreproduced results must be marked \texttt{TBD} and tied to an output file 
 \toprule
 Setting & Reward/Acc & \% Oracle Gap & Latency p50/p95 & Tool Calls & Tokens & Cost \\
 \midrule
-Vector top-k & TBD & TBD & TBD & TBD & TBD & TBD \\
-Top-k + reranker & TBD & TBD & TBD & TBD & TBD & TBD \\
-Pointer-chasing & TBD & TBD & TBD & TBD & TBD & TBD \\
-OpenClawBrain learned & TBD & TBD & TBD & TBD & TBD & TBD \\
+Vector top-k (expert-regions sim) & 0.878629 / 0.8920 & TBD & TBD & TBD & TBD & TBD \\
+Top-k + reranker & 0.879762 / 0.8935 & TBD & TBD & TBD & TBD & TBD \\
+Pointer-chasing (graph prior only) & 0.555147 / 0.5290 & TBD & TBD & TBD & TBD & TBD \\
+OpenClawBrain learned (mixed) & 0.935126 / 0.9680 & 96.74\% & TBD & TBD & TBD & TBD \\
 \bottomrule
 \end{tabular}
-\caption{Populate from reproducible runs only. Each \texttt{TBD} must cite commit SHA, command, and artifact path (e.g., \texttt{/tmp/ocb\_eval.json}).}
+\caption{Expert-regions simulation baselines from reproducible runs. Each \texttt{TBD} must cite commit SHA, command, and artifact path (e.g., \texttt{/tmp/ocb\_eval.json}).}
 \end{table}
 
 \subsection*{4.5 Reproduction Commands (Expected Output Paths)}

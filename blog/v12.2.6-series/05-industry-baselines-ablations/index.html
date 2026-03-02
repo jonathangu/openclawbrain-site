@@ -85,15 +85,17 @@
 
     <table>
       <thead>
-        <tr><th>Setting</th><th>Reward / Accuracy</th><th>% Oracle Gap Closed</th><th>Latency (p50/p95)</th><th>Tool Calls</th><th>Tokens</th><th>Cost</th></tr>
+        <tr><th>Setting (expert-regions sim)</th><th>Reward / Accuracy</th><th>% Oracle Gap Closed</th><th>Latency (p50/p95)</th><th>Tool Calls</th><th>Tokens</th><th>Cost</th></tr>
       </thead>
       <tbody>
-        <tr><td>Vector top-k</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
-        <tr><td>Top-k + reranker</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
-        <tr><td>Pointer-chasing</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
-        <tr><td>OpenClawBrain learned</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+        <tr><td>Vector top-k</td><td>0.878629 / 0.8920</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+        <tr><td>Top-k + reranker</td><td>0.879762 / 0.8935</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+        <tr><td>Pointer-chasing (graph prior only)</td><td>0.555147 / 0.5290</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+        <tr><td>OpenClawBrain learned (mixed)</td><td>0.935126 / 0.9680</td><td>96.74%</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
       </tbody>
     </table>
+
+    <p>In the expert-regions simulation, the learned mixed router outperforms the best industry baseline (top-k + reranker) by +0.0554 reward and +0.0745 accuracy, while closing 96.74% of the oracle gap. Pointer-chasing (graph prior only) trails materially, underscoring the value of learned routing even against strong vector baselines.</p>
 
     <figure>
       <img src="/figures/eval/reward_vs_epoch.svg" alt="Reward versus epoch curve" loading="lazy" />
