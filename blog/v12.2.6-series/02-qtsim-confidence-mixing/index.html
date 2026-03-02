@@ -13,6 +13,9 @@
     .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.84rem; }
     code { background:#2d201c; border-radius:4px; padding:.1rem .35rem; }
     .eq { border:1px solid var(--border); border-radius:10px; background:#241915; padding:.9rem 1rem; margin:1rem 0; font-family:monospace; }
+    figure { margin:1.2rem 0 1.5rem; }
+    figure img { width:100%; border:1px solid var(--border); border-radius:12px; background:#1f1714; }
+    figcaption { font-family:var(--sans); color:var(--muted); font-size:.82rem; margin-top:.45rem; }
     a { color:var(--accent); }
   </style>
 </head>
@@ -33,6 +36,14 @@
       lambda = sigmoid(a0 + a1 * margin - a2 * entropy)<br/>
       pi = lambda * QTsim + (1 - lambda) * graph_prior
     </div>
+    <figure>
+      <img src="/figures/eval/qtsim_confidence_mixing.svg" alt="QTsim and graph prior confidence mixing diagram" loading="lazy" />
+      <figcaption>The confidence gate adjusts routing trust between QTsim and graph prior on each decision.</figcaption>
+    </figure>
+    <figure>
+      <img src="/figures/eval/qtsim_confidence_curves.svg" alt="Illustrative confidence gate response curves" loading="lazy" />
+      <figcaption>Illustrative response curves: sharper QTsim evidence increases lambda, ambiguity shifts weight to graph prior.</figcaption>
+    </figure>
     <p>High margin + low entropy increases trust in QTsim. Low margin + high entropy shifts weight back to graph_prior.</p>
 
     <h2>Why It Matters</h2>

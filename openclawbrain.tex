@@ -3,6 +3,8 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
 \usepackage{hyperref}
 
 \title{OpenClawBrain v12.2.6+: Shadow Routing with QTsim Confidence Mixing and Unified Policy Learning}
@@ -27,6 +29,13 @@ OpenClawBrain is designed around a strict split:
   \item \textbf{Cold path:} asynchronous learning and structure updates.
 \end{itemize}
 This split keeps production latency stable while allowing large-volume policy updates in the background.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.76\textwidth]{architecture-vertical.jpg}
+\caption{System diagram: latency-critical hot path stays local and bounded, while shadow replay and policy updates run asynchronously in the cold path.}
+\label{fig:system-diagram}
+\end{figure}
 
 \subsection*{1.1 Routing Inputs}
 At each route decision over candidate targets $\mathcal{A}(s)$ from state $s$:
@@ -117,6 +126,22 @@ Minimum ablations to report:
   \item distillation only vs policy gradient only vs combined
   \item no-maintain vs connect-only vs connect+split+merge (as phases ship)
 \end{itemize}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/eval/reward_vs_epoch.png}
+\vspace{0.4em}
+\includegraphics[width=0.95\textwidth]{figures/eval/oracle_gap_closed.png}
+\caption{Expert-regions simulation learning behavior: reward trajectory and fraction of oracle gap closed across training epochs.}
+\label{fig:expert-regions-learning}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/eval/ablation_bar_chart.png}
+\caption{Ablation comparison across vector\_only, graph\_prior\_only, qtsim\_only, and learned routing. Placeholder bars are used until reproducible ablation CSV outputs are published.}
+\label{fig:ablation-bar}
+\end{figure}
 
 \subsection*{4.4 Reporting Template (Do Not Invent Numbers)}
 All unreproduced results must be marked \texttt{TBD}. Example table:

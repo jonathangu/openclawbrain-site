@@ -14,6 +14,9 @@
     table { width:100%; border-collapse:collapse; margin:1rem 0; font-family:var(--sans); }
     th,td { border:1px solid var(--border); padding:.55rem .65rem; text-align:left; }
     th { color:var(--bright); }
+    figure { margin:1.2rem 0 1.5rem; }
+    figure img { width:100%; border:1px solid var(--border); border-radius:12px; background:#12201c; }
+    figcaption { font-family:var(--sans); color:var(--muted); font-size:.82rem; margin-top:.45rem; }
     a { color:var(--accent); }
   </style>
 </head>
@@ -32,6 +35,14 @@
       <li>Distillation only vs policy gradient only vs combined</li>
       <li>No maintain vs connect-only vs connect+split+merge (as phases ship)</li>
     </ul>
+    <figure>
+      <img src="/figures/eval/reward_vs_epoch.svg" alt="Reward versus epoch learning curve" loading="lazy" />
+      <figcaption>Learning curve from generated eval artifacts. Replace placeholder output with run-linked CSV data.</figcaption>
+    </figure>
+    <figure>
+      <img src="/figures/eval/oracle_gap_closed.svg" alt="Oracle gap closed versus epoch curve" loading="lazy" />
+      <figcaption>Fraction of oracle gap closed over training epochs.</figcaption>
+    </figure>
 
     <h2>Reporting Contract</h2>
     <table>
@@ -44,6 +55,10 @@
         <tr><td>mixed with confidence gate</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
       </tbody>
     </table>
+    <figure>
+      <img src="/figures/eval/ablation_bar_chart.svg" alt="Ablation bar chart comparing routing variants" loading="lazy" />
+      <figcaption>Ablation summary for <code>vector_only</code>, <code>graph_prior_only</code>, <code>qtsim_only</code>, and <code>learned</code>.</figcaption>
+    </figure>
 
     <p>Fill every <code>TBD</code> with commit SHA, exact command, seed, and artifact links.</p>
 

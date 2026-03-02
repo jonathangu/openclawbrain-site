@@ -34,6 +34,20 @@
       </ul>
     </div>
 
+    <h2 style="font-family:var(--sans); color:var(--bright); margin-top:1.4rem;">Evaluation Figures</h2>
+    <div class="card">
+      <ul>
+        <li><a href="/figures/eval/reward_vs_epoch.svg">reward_vs_epoch.svg</a></li>
+        <li><a href="/figures/eval/accuracy_vs_epoch.svg">accuracy_vs_epoch.svg</a></li>
+        <li><a href="/figures/eval/oracle_gap_closed.svg">oracle_gap_closed.svg</a></li>
+        <li><a href="/figures/eval/alpha_router_conf_hist.svg">alpha_router_conf_hist.svg</a></li>
+        <li><a href="/figures/eval/ablation_bar_chart.svg">ablation_bar_chart.svg</a></li>
+      </ul>
+      <p style="margin:.5rem 0 0;">Regenerate from repo root:</p>
+      <pre style="overflow:auto; white-space:pre-wrap; margin:.4rem 0 0; background:#111827; border:1px solid var(--border); border-radius:8px; padding:.75rem; color:#c7d2fe; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">python3 -m pip install -r scripts/requirements.txt
+python3 scripts/plot_eval.py --input-dir path/to/two-cluster-output --input-dir path/to/expert-regions-output --out-dir figures/eval</pre>
+    </div>
+
     <p class="meta" style="margin-top:1rem;">If a file moves, update this page to the new canonical doc path in the code repository.</p>
   </main>
 </body>
