@@ -99,33 +99,29 @@ Planned phases extend action space with explicit graph edits:
 \end{itemize}
 Each action class is expected to use conservative thresholds, rollback support, and offline shadow evaluation before broad enablement.
 
-\section{4. Evaluation Plan (Aligned to \texttt{docs/evaluation-plan.md})}
-Evaluation is organized around reproducible, decision-driving checks.
+\section{4. Evaluation: Industry Baselines + Ablations}
+Evaluation is organized around industry-standard baselines and fully reproducible artifacts.
 
-\subsection*{4.1 Primary Questions}
+\subsection*{4.1 Baselines (Why These Comparisons)}
+We compare against three industry baselines plus the learned router:
 \begin{itemize}
-  \item Does QTsim confidence mixing outperform fixed-weight or single-signal routing?
-  \item Does distillation+policy-gradient outperform either component alone?
-  \item Do RL-native maintenance actions improve long-run retrieval quality without instability?
+  \item \textbf{Vector top-k} (\texttt{vector\_only}): plain embedding retrieval, no traversal.
+  \item \textbf{Top-k + reranker} (\texttt{edge\_sim\_legacy}): deterministic re-ranking with \texttt{route\_mode=edge+sim}.
+  \item \textbf{Pointer-chasing} (\texttt{edge\_sim\_legacy} with multi-hop traversal): iterative retrieval without learned routing.
+  \item \textbf{OpenClawBrain learned} (\texttt{learned}) with ablation bounds \texttt{graph\_prior\_only} and \texttt{qtsim\_only}.
 \end{itemize}
+These modes are exposed in the evaluation harness in the main \texttt{openclawbrain} repo.
 
 \subsection*{4.2 Core Metrics}
 \begin{itemize}
-  \item Task success / correctness rate (dataset-dependent)
-  \item Retrieval precision/recall over required context nodes
-  \item Token/context budget per task and latency impact
-  \item Route stability (variance, oscillation, regression rate)
-  \item Maintenance safety (rollback rate, bad-edit incidence)
+  \item \textbf{Reward / accuracy}: task success or correctness rate (dataset dependent).
+  \item \textbf{\% oracle gap closed}: fraction of the oracle gap closed over training epochs (expert-regions simulation).
+  \item \textbf{Latency}: p50/p95 end-to-end query time from the eval harness.
+  \item \textbf{Tool calls, tokens, cost}: measured in downstream agent runs; report as \texttt{TBD} if not available.
 \end{itemize}
 
-\subsection*{4.3 Ablations}
-Minimum ablations to report:
-\begin{itemize}
-  \item graph\_prior only vs QTsim only vs mixed policy
-  \item fixed mix vs entropy/margin confidence gating
-  \item distillation only vs policy gradient only vs combined
-  \item no-maintain vs connect-only vs connect+split+merge (as phases ship)
-\end{itemize}
+\subsection*{4.3 Figures (SVGs in \texttt{figures/eval})}
+SVG sources live in \texttt{figures/eval/*.svg}; the PDF renders the PNG versions below.
 
 \begin{figure}[t]
 \centering
@@ -139,33 +135,48 @@ Minimum ablations to report:
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/eval/ablation_bar_chart.png}
-\caption{Ablation comparison across vector\_only, graph\_prior\_only, qtsim\_only, and learned routing. Placeholder bars are used until reproducible ablation CSV outputs are published.}
+\caption{Ablation comparison across \texttt{vector\_only}, \texttt{graph\_prior\_only}, \texttt{qtsim\_only}, and learned routing.}
 \label{fig:ablation-bar}
 \end{figure}
 
 \subsection*{4.4 Reporting Template (Do Not Invent Numbers)}
-All unreproduced results must be marked \texttt{TBD}. Example table:
+All unreproduced results must be marked \texttt{TBD} and tied to an output file path.
+
 \begin{table}[h]
 \centering
-\begin{tabular}{lccc}
+\small
+\begin{tabular}{lcccccc}
 \toprule
-Setting & Success (\%) & Avg Context Tokens & Latency (ms) \\
+Setting & Reward/Acc & \% Oracle Gap & Latency p50/p95 & Tool Calls & Tokens & Cost \\
 \midrule
-graph\_prior only & TBD & TBD & TBD \\
-QTsim only & TBD & TBD & TBD \\
-mixed (entropy+margin gate) & TBD & TBD & TBD \\
+Vector top-k & TBD & TBD & TBD & TBD & TBD & TBD \\
+Top-k + reranker & TBD & TBD & TBD & TBD & TBD & TBD \\
+Pointer-chasing & TBD & TBD & TBD & TBD & TBD & TBD \\
+OpenClawBrain learned & TBD & TBD & TBD & TBD & TBD & TBD \\
 \bottomrule
 \end{tabular}
-\caption{Populate from reproducible runs only. Replace each \texttt{TBD} with run ID, date, and command reference.}
+\caption{Populate from reproducible runs only. Each \texttt{TBD} must cite commit SHA, command, and artifact path (e.g., \texttt{/tmp/ocb\_eval.json}).}
 \end{table}
 
-\noindent When filling \texttt{TBD} values:
-\begin{itemize}
-  \item record exact commit SHA,
-  \item include command lines and seed settings,
-  \item link run artifacts/logs,
-  \item report confidence intervals where supported.
-\end{itemize}
+\subsection*{4.5 Reproduction Commands (Expected Output Paths)}
+Commands (from \texttt{openclawbrain} repo) and expected outputs:
+\begin{verbatim}
+cd /path/to/openclawbrain
+python examples/eval/run_eval.py \
+  --state /path/to/state.json \
+  --queries /path/to/queries.jsonl \
+  --modes vector_only,edge_sim_legacy,graph_prior_only,qtsim_only,learned \
+  --output /tmp/ocb_eval.json \
+  --print-per-query
+
+python examples/eval/simulate_expert_regions.py --output-dir /tmp/ocb_expert_regions
+python examples/eval/simulate_two_cluster_routing.py --output-dir /tmp/ocb_two_cluster
+
+python3 /path/to/openclawbrain-site/scripts/plot_eval.py \
+  --inputs /tmp/ocb_expert_regions /tmp/ocb_two_cluster \
+  --out figures/eval
+\end{verbatim}
+Expected outputs include \texttt{/tmp/ocb\_eval.json}, \texttt{/tmp/ocb\_expert\_regions/simulation\_curve.csv}, and regenerated SVGs in \texttt{figures/eval/}.
 
 \section{5. Operational Notes}
 OpenClawBrain now supports local embeddings out-of-the-box for operator-first deployment. This enables deterministic bootstrap and private/offline-friendly operation while keeping optional teacher workflows in asynchronous jobs.
