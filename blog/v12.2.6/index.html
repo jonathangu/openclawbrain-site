@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shadow routing + Ultimate Policy Gradient</title>
+  <meta name="description" content="OpenClawBrain v12.2.6: async teacher routing produces dense labels; ultimate policy gradient updates edge weights while keeping query-time fast and local." />
+  <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6/" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --card: #111111;
+      --text: #d4d4d4;
+      --muted: #8e8e8e;
+      --bright: #f3f3f3;
+      --border: #232323;
+      --accent: #6eb2ff;
+      --mono: "JetBrains Mono", Menlo, monospace;
+      --sans: Inter, -apple-system, sans-serif;
+      --serif: "Crimson Pro", Georgia, serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 20% 0%, #171717 0%, var(--bg) 44%), var(--bg);
+      color: var(--text);
+      font-family: var(--serif);
+      line-height: 1.8;
+    }
+    main { max-width: 860px; margin: 0 auto; padding: 2.7rem 1.2rem 4rem; }
+    .nav { font-family: var(--sans); font-size: 0.84rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .nav a { color: var(--muted); text-decoration: none; }
+    .nav a:hover { text-decoration: underline; }
+    h1 { font-family: var(--sans); line-height: 1.3; color: var(--bright); margin-bottom: 0.8rem; }
+    h2 { font-family: var(--sans); margin-top: 2rem; color: var(--bright); border-bottom: 1px solid var(--border); padding-bottom: 0.35rem; }
+    p { margin: 0 0 1rem; }
+    ul { padding-left: 1.35rem; }
+    li { margin-bottom: 0.45rem; }
+    code {
+      font-family: var(--mono);
+      font-size: 0.85em;
+      color: #ffbe85;
+      background: #171717;
+      border-radius: 4px;
+      padding: 0.1rem 0.3rem;
+    }
+    pre {
+      margin: 1rem 0 1.2rem;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      background: #101010;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+      color: #c6f0a3;
+    }
+    .note {
+      border-left: 3px solid #d49a6a;
+      background: rgba(212, 154, 106, 0.09);
+      padding: 0.9rem 1rem;
+      border-radius: 6px;
+      margin: 1.2rem 0;
+    }
+    .box {
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 8px;
+      padding: 1rem 1.1rem;
+      margin: 1.1rem 0;
+    }
+    .meta { font-family: var(--sans); font-size: 0.82rem; color: var(--muted); margin-bottom: 1.3rem; }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav">
+      <a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a>
+    </div>
+
+    <h1>Shadow routing + Ultimate Policy Gradient</h1>
+    <p class="meta">OpenClawBrain v12.2.6 · March 2026 · Jonathan Gu</p>
+
+    <p>OpenClawBrain now prioritizes one operating rule: keep query-time retrieval fast, then learn better routing asynchronously.</p>
+
+    <div class="box">
+      <strong>Hot path stays local:</strong>
+      <pre>embed(query) -&gt; local traversal -&gt; prompt_context -&gt; answer</pre>
+      <p>No teacher LLM call runs on this path.</p>
+    </div>
+
+    <div class="box">
+      <strong>Background learning loop:</strong>
+      <pre>sample recent route decisions
+-&gt; ask teacher (gpt-5-mini) what it would choose
+-&gt; apply policy-gradient updates to edge weights + relevance metadata
+-&gt; feed improved signals into split/merge/prune/connect</pre>
+    </div>
+
+    <h2>Ultimate Policy Gradient (the central claim)</h2>
+    <p>All routing supervision is turned into the same kind of policy update. The only difference is weight and volume:</p>
+    <ul>
+      <li><strong>Human feedback:</strong> highest authority, highest weight per sample.</li>
+      <li><strong>Self-learning outcomes:</strong> strong signal (works even when the teacher is off).</li>
+      <li><strong>Harvester signals:</strong> medium strength (coverage across many conversations).</li>
+      <li><strong>Async teacher labels:</strong> lowest weight per label, but massive volume via replay.</li>
+    </ul>
+
+    <h2>Why this shift matters</h2>
+    <ul>
+      <li>Better routing quality without adding hot-path latency.</li>
+      <li>Fewer turns and fewer prompt tokens on repeated workflows.</li>
+      <li>Cleaner context blocks because weak routes are gradually down-weighted.</li>
+      <li>Structural learning remains core: split/merge/prune/connect + injection, now fed by cleaner routing signals.</li>
+    </ul>
+
+    <div class="note">
+      This is a design update and operational architecture statement. Claims of benchmark improvements should be supported by measured evals.
+    </div>
+
+    <h2>How to run</h2>
+    <pre># Dry-run by default (no writes)
+openclawbrain async-route-pg --state /tmp/brain/state.json --json
+
+# Apply updates (writes state)
+openclawbrain async-route-pg --state /tmp/brain/state.json --apply --json</pre>
+
+    <p>Dry-run first, inspect proposed route updates, then apply.</p>
+  </main>
+</body>
+</html>
