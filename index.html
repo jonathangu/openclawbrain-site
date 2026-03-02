@@ -108,10 +108,12 @@
     <div style="text-align: left; max-width: 520px; margin: 1rem auto 0; padding: 0.8rem 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card);">
       <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Quick Links</p>
       <ul style="margin: 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.6;">
-        <li><a href="/docs/operator-guide.md">Operator guide</a></li>
-        <li><a href="/docs/setup-guide.md">Setup guide</a></li>
-        <li><a href="/docs/openclaw-integration.md">OpenClaw integration guide</a></li>
-        <li><a href="/docs/new-agent-sop.md">New-agent SOP (canonical flow)</a></li>
+        <li><a href="/openclawbrain.pdf">Paper PDF (v12.2.6+)</a></li>
+        <li><a href="/blog/v12.2.6-series/">Blog series (v12.2.6+)</a></li>
+        <li><a href="/materials/">Additional materials</a></li>
+        <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/operator-quickstart.md">GitHub docs: operator quickstart</a></li>
+        <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/ultimate-policy-gradient-routing-math.md">GitHub docs: math appendix</a></li>
+        <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/evaluation-plan.md">GitHub docs: evaluation plan</a></li>
       </ul>
     </div>
 
@@ -142,14 +144,14 @@
     <div class="tag">Core Thesis</div>
     <p style="margin-bottom: 0.6rem;"><strong>Shadow routing + Ultimate Policy Gradient</strong> is the heart of OpenClawBrain.</p>
     <ul style="margin-bottom: 0;">
-      <li><strong>Runtime route_fn (money-maker):</strong> deterministic, query-conditioned edge selection with no LLM calls (uses the embedding you already computed).</li>
-      <li><strong>Async route_fn (teacher):</strong> replay recent decisions, ask a teacher model what it would have chosen, and turn that into dense labels.</li>
+      <li><strong>Runtime QTsim router (money-maker):</strong> deterministic, query-conditioned edge selection with no LLM calls (uses the embedding you already computed).</li>
+      <li><strong>Async QTsim teacher:</strong> replay recent decisions, ask a teacher model what it would have chosen, and turn that into dense labels.</li>
       <li><strong>Ultimate policy gradient:</strong> unify label sources into one update rule with a clear hierarchy: human feedback (highest weight) → self-learning → harvester → async teacher (lowest weight per sample, highest volume).</li>
     </ul>
     <p style="margin: 0.75rem 0 0; font-family: var(--sans); font-size: 0.9rem; color: var(--text-muted);">
-      Read the latest: <a href="/blog/v12.2.6/" style="color: var(--text-bright);">Shadow routing + Ultimate Policy Gradient</a>.
+      Read the latest: <a href="/blog/v12.2.6-series/" style="color: var(--text-bright);">v12.2.6+ series: QTsim, policy learning, and evals</a>.
       <span style="color: var(--text-muted);">·</span>
-      <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/ultimate-policy-gradient-routing-math.md" style="color: var(--text-bright);">Math: labels → learned route_fn</a>
+      <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/ultimate-policy-gradient-routing-math.md" style="color: var(--text-bright);">Math appendix: labels → learned QTsim router</a>
       <span style="color: var(--text-muted);">·</span>
       <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/core-thesis-ultimate-policy-gradient.md" style="color: var(--text-bright);">Full writeup</a>
     </p>
@@ -193,8 +195,8 @@ python3 -m openclawbrain inject --state /tmp/brain/state.json \
   <div style="margin: 2rem 0; padding: 1.25rem 1.5rem; border: 1px solid rgba(74,158,255,0.3); border-radius: 10px; background: rgba(74,158,255,0.06);">
     <p style="margin: 0 0 0.5rem; font-family: var(--sans); font-weight: 600; color: #94c7ff; font-size: 0.9rem;">📝 NEW: Blog Post</p>
     <p style="margin: 0; font-family: var(--serif); font-size: 1.05rem; line-height: 1.6;">
-      <a href="/blog/" style="color: var(--text-bright); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2);">We Shipped the Correct REINFORCE Update — and the Graph Started Behaving</a>
-      <br><span style="color: var(--text-muted); font-size: 0.88rem;">Policy gradients, self-learning agents, biological self-regulation, and interactive simulation charts. February 2026.</span>
+      <a href="/blog/v12.2.6-series/" style="color: var(--text-bright); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2);">New series: QTsim confidence mixing, ultimate policy gradient, and evaluation ablations</a>
+      <br><span style="color: var(--text-muted); font-size: 0.88rem;">Four posts covering architecture, mechanism, proof plan, and operator rollout. March 2026.</span>
     </p>
   </div>
 
@@ -224,7 +226,7 @@ For efficiency, repeated outcomes compress context from 30 nodes to 2.7 in deplo
       </tbody>
     </table>
   </div>
-  <p><strong>Key differences (OpenClawBrain):</strong> persistent outcome learning; mistake suppression; multi-step retrieval as primitive; context gets cheaper on repeated tasks; cache-friendly deterministic <code>prompt_context</code>. See <a href="/docs/operator-guide.md">operator guide</a>, <a href="/docs/ops-recipes.md">ops recipes</a>, <a href="/gu2016/">Gu (2016) derivation</a>, and <a href="/blog/v12.2.0/">v12.2.0 post</a>.</p>
+  <p><strong>Key differences (OpenClawBrain):</strong> persistent outcome learning; mistake suppression; multi-step retrieval as primitive; context gets cheaper on repeated tasks; cache-friendly deterministic <code>prompt_context</code>. See <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/operator-quickstart.md">operator quickstart</a>, <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/ultimate-policy-gradient-routing-math.md">math appendix</a>, <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/evaluation-plan.md">evaluation plan</a>, and <a href="/blog/v12.2.6-series/">v12.2.6+ series</a>.</p>
 
   <div class="note">
     This page is the companion guide to the formal paper (<a href="/openclawbrain.pdf" style="color: var(--text-bright);">openclawbrain.pdf</a>). The paper contains the reference definitions, equations, and benchmarks; this page presents the same claims with implementation context.
@@ -336,14 +338,14 @@ class Edge:
 
   <p>The graph is deliberately sparse in active retrieval because routing should remain selective. Dormant edges are not deleted; they can recover if feedback returns.</p>
 
-  <pre><code>def route_fn(query, candidate_targets):
+  <pre><code>def qtsim_router(query, candidate_targets):
     """Policy hook for selecting habitual actions."""
 
     ...
     return selected_targets
 
 
-def choose_next(current_node, graph, route_fn, query, visited):
+def choose_next(current_node, graph, qtsim_router, query, visited):
     edges = graph.outgoing(current_node)
     candidates, suppressed = [], set()
     for edge in edges:
@@ -357,7 +359,7 @@ def choose_next(current_node, graph, route_fn, query, visited):
 
     habitual = [t for t, w in candidates if 0.2 <= w < 0.6]
     auto = [t for t, w in candidates if w >= 0.6]
-    selected = route_fn(query, habitual) if route_fn else auto
+    selected = qtsim_router(query, habitual) if qtsim_router else auto
     return [n for n in auto + selected if n not in suppressed and n not in visited]</code></pre>
 
   <h2 id="how-it-learns">3. Learning Rule and Dynamics</h2>

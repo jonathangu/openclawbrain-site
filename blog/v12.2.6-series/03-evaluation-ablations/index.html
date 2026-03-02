@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Post 3: Evaluation and Ablations</title>
+  <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/03-evaluation-ablations/" />
+  <style>
+    :root { --bg:#0f1916; --text:#d9e9e4; --muted:#9fb8b0; --bright:#f4fffb; --border:#34544a; --accent:#7ae2bf; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; }
+    body { margin:0; background:radial-gradient(circle at 85% 0%,#1b2d27,#0f1916 52%); color:var(--text); font-family:var(--serif); line-height:1.8; }
+    main { max-width:860px; margin:0 auto; padding:2.5rem 1.2rem 3rem; }
+    h1,h2 { font-family:var(--sans); color:var(--bright); }
+    .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.84rem; }
+    table { width:100%; border-collapse:collapse; margin:1rem 0; font-family:var(--sans); }
+    th,td { border:1px solid var(--border); padding:.55rem .65rem; text-align:left; }
+    th { color:var(--bright); }
+    a { color:var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a> · <a href="/blog/v12.2.6-series/">series</a></div>
+    <h1>Post 3: Evaluation and Ablations</h1>
+    <p class="meta">March 2026 · v12.2.6+ series</p>
+
+    <p>Claims for the current system should follow the evaluation plan in <code>docs/evaluation-plan.md</code> and avoid unreproducible benchmark numbers.</p>
+
+    <h2>Core Ablations</h2>
+    <ul>
+      <li><code>graph_prior</code> only vs <code>QTsim</code> only vs mixed policy</li>
+      <li>Fixed mixer vs entropy/margin confidence gate</li>
+      <li>Distillation only vs policy gradient only vs combined</li>
+      <li>No maintain vs connect-only vs connect+split+merge (as phases ship)</li>
+    </ul>
+
+    <h2>Reporting Contract</h2>
+    <table>
+      <thead>
+        <tr><th>Setting</th><th>Success (%)</th><th>Context Tokens</th><th>Latency (ms)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>graph_prior only</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+        <tr><td>QTsim only</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+        <tr><td>mixed with confidence gate</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+      </tbody>
+    </table>
+
+    <p>Fill every <code>TBD</code> with commit SHA, exact command, seed, and artifact links.</p>
+
+    <p>Next: <a href="/blog/v12.2.6-series/04-operator-local-embeddings/">Post 4 on operator rollout with local embeddings OOTB</a>.</p>
+  </main>
+</body>
+</html>

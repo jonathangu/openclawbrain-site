@@ -4,81 +4,106 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain Blog</title>
-  <meta name="description" content="OpenClawBrain blog: shadow routing, ultimate policy gradient, and learned memory graphs." />
+  <meta name="description" content="OpenClawBrain blog series and release notes." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/" />
   <style>
     :root {
-      --bg: #0a0a0a;
-      --card: #111111;
-      --text: #d4d4d4;
-      --muted: #8e8e8e;
-      --bright: #f3f3f3;
-      --border: #232323;
-      --accent: #6eb2ff;
-      --sans: Inter, -apple-system, sans-serif;
-      --serif: "Crimson Pro", Georgia, serif;
+      --bg:#0a0f17;
+      --card:#111a27;
+      --text:#d6dfed;
+      --muted:#93a1b7;
+      --bright:#f5f8ff;
+      --border:#26344a;
+      --accent:#79b7ff;
+      --sans:Inter,system-ui,sans-serif;
+      --serif:"Crimson Pro",Georgia,serif;
     }
-    * { box-sizing: border-box; }
+    * { box-sizing:border-box; }
     body {
-      margin: 0;
-      background: radial-gradient(circle at 20% 0%, #171717 0%, var(--bg) 44%), var(--bg);
-      color: var(--text);
-      font-family: var(--serif);
-      line-height: 1.75;
+      margin:0;
+      background:radial-gradient(circle at 15% 0%,#152137,#0a0f17 45%);
+      color:var(--text);
+      font-family:var(--serif);
+      line-height:1.75;
     }
-    main { max-width: 900px; margin: 0 auto; padding: 2.8rem 1.2rem 4rem; }
-    .nav { font-family: var(--sans); font-size: 0.86rem; color: var(--muted); margin-bottom: 1.5rem; }
-    .nav a { color: var(--muted); text-decoration: none; }
-    .nav a:hover { text-decoration: underline; }
-    h1 { font-family: var(--sans); color: var(--bright); margin: 0 0 0.75rem; }
-    p { margin: 0 0 1rem; }
-    .grid { display: grid; grid-template-columns: 1fr; gap: 0.9rem; margin-top: 1.3rem; }
+    main { max-width:920px; margin:0 auto; padding:2.8rem 1.2rem 4rem; }
+    h1,h2 { font-family:var(--sans); color:var(--bright); margin:0 0 .8rem; }
+    p { margin:0 0 1rem; }
+    a { color:var(--accent); }
+    .nav { font-family:var(--sans); color:var(--muted); font-size:.86rem; margin-bottom:1.4rem; }
+    .grid { display:grid; grid-template-columns:1fr; gap:.8rem; }
     .post {
-      display: block;
-      padding: 1rem 1.1rem;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--card);
-      text-decoration: none;
-      color: var(--text);
+      display:block;
+      text-decoration:none;
+      color:inherit;
+      padding:1rem 1.1rem;
+      border:1px solid var(--border);
+      border-radius:10px;
+      background:var(--card);
     }
-    .post:hover { border-color: rgba(110,178,255,0.6); }
-    .title { font-family: var(--sans); font-weight: 700; color: var(--bright); margin-bottom: 0.25rem; }
-    .meta { font-family: var(--sans); font-size: 0.82rem; color: var(--muted); margin-bottom: 0.35rem; }
-    .desc { color: var(--text); }
-    a { color: var(--accent); }
+    .post:hover { border-color:#5384c3; }
+    .title { font-family:var(--sans); font-weight:700; color:var(--bright); }
+    .meta { font-family:var(--sans); color:var(--muted); font-size:.82rem; margin:.2rem 0 .3rem; }
+    .section { margin-top:2rem; }
   </style>
 </head>
 <body>
   <main>
-    <div class="nav">
-      <a href="/">openclawbrain.ai</a>
-    </div>
-
+    <div class="nav"><a href="/">openclawbrain.ai</a></div>
     <h1>OpenClawBrain Blog</h1>
-    <p>Design notes on learned memory graphs, shadow routing, and policy-gradient learning. Latest posts first.</p>
+    <p>Current writing tracks the v12.2.6+ architecture: local embeddings OOTB, QTsim confidence mixing, distillation + policy gradient, and formal evaluation.</p>
 
-    <div class="grid">
-      <a class="post" href="/blog/v12.2.6/">
-        <div class="title">Shadow routing + Ultimate Policy Gradient</div>
-        <div class="meta">v12.2.6 · March 2026</div>
-        <div class="desc">Keep query-time retrieval fast and local; learn routing offline from massive teacher supervision; unify everything with policy gradient. Includes math appendix: labels → learned route_fn.</div>
-      </a>
-
-      <a class="post" href="/blog/v12.2.1/">
-        <div class="title">We shipped the correct REINFORCE update — and the graph started behaving</div>
-        <div class="meta">v12.2.1 · February 2026</div>
-        <div class="desc">Policy gradients, self-learning agents, and biological self-regulation for memory routing.</div>
-      </a>
-
-      <a class="post" href="/blog/v12.2.0/">
-        <div class="title">CrabPath → OpenClawBrain: learned retrieval routing for agents</div>
-        <div class="meta">v12.2.0 · February 2026</div>
-        <div class="desc">How the memory graph learns to suppress recurring mistakes and surface the right context.</div>
-      </a>
+    <div class="section">
+      <h2>Series: OpenClawBrain v12.2.6+</h2>
+      <div class="grid">
+        <a class="post" href="/blog/v12.2.6-series/">
+          <div class="title">Series Index: OpenClawBrain v12.2.6+</div>
+          <div class="meta">March 2026</div>
+          <div>Start here for the full sequence and links.</div>
+        </a>
+        <a class="post" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
+          <div class="title">Post 1: Shadow Routing + Ultimate Policy Gradient</div>
+          <div class="meta">March 2026</div>
+          <div>High-level architecture and reward-source hierarchy.</div>
+        </a>
+        <a class="post" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
+          <div class="title">Post 2: QTsim + Confidence Mixing</div>
+          <div class="meta">March 2026</div>
+          <div>Mechanism details: graph_prior vs QTsim with entropy/margin gating.</div>
+        </a>
+        <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
+          <div class="title">Post 3: Evaluation and Ablations</div>
+          <div class="meta">March 2026</div>
+          <div>How claims are measured and what ablations are required.</div>
+        </a>
+        <a class="post" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
+          <div class="title">Post 4: Operator Guide for Local Embeddings OOTB</div>
+          <div class="meta">March 2026</div>
+          <div>Practical operator flow and rollout guardrails.</div>
+        </a>
+      </div>
     </div>
 
-    <p style="margin-top: 1.6rem; color: var(--muted); font-family: var(--sans); font-size: 0.88rem;">More: <a href="https://github.com/jonathangu/openclawbrain">GitHub repo</a> · <a href="/openclawbrain.pdf">paper (PDF)</a></p>
+    <div class="section">
+      <h2>Legacy Posts</h2>
+      <div class="grid">
+        <a class="post" href="/blog/v12.2.6/">
+          <div class="title">Shadow routing + Ultimate Policy Gradient</div>
+          <div class="meta">v12.2.6 · March 2026</div>
+          <div>Earlier single-post summary of the same release family.</div>
+        </a>
+        <a class="post" href="/blog/v12.2.1/">
+          <div class="title">We shipped the correct REINFORCE update</div>
+          <div class="meta">v12.2.1 · February 2026</div>
+          <div>Policy-gradient correction and self-learning behavior changes.</div>
+        </a>
+        <a class="post" href="/blog/v12.2.0/">
+          <div class="title">CrabPath -> OpenClawBrain</div>
+          <div class="meta">v12.2.0 · February 2026</div>
+          <div>Transition notes and early retrieval-routing framing.</div>
+        </a>
+      </div>
+    </div>
   </main>
 </body>
 </html>

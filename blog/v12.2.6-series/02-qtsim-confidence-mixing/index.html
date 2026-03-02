@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Post 2: QTsim + Confidence Mixing</title>
+  <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/02-qtsim-confidence-mixing/" />
+  <style>
+    :root { --bg:#17110f; --text:#eadfdb; --muted:#c9aea5; --bright:#fff7f3; --border:#5a3d35; --accent:#ffb18e; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; }
+    body { margin:0; background:linear-gradient(150deg,#2b1d18,#17110f 50%); color:var(--text); font-family:var(--serif); line-height:1.8; }
+    main { max-width:860px; margin:0 auto; padding:2.5rem 1.2rem 3rem; }
+    h1,h2 { font-family:var(--sans); color:var(--bright); }
+    .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.84rem; }
+    code { background:#2d201c; border-radius:4px; padding:.1rem .35rem; }
+    .eq { border:1px solid var(--border); border-radius:10px; background:#241915; padding:.9rem 1rem; margin:1rem 0; font-family:monospace; }
+    a { color:var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a> · <a href="/blog/v12.2.6-series/">series</a></div>
+    <h1>Post 2: QTsim + Confidence Mixing</h1>
+    <p class="meta">March 2026 · v12.2.6+ series</p>
+
+    <p>The router combines two policies: <code>graph_prior</code> and <code>QTsim</code>. The mix is dynamic, not fixed.</p>
+
+    <h2>Signals</h2>
+    <p><code>graph_prior</code> captures durable structure. <code>QTsim</code> captures query-conditioned compatibility for the current turn.</p>
+
+    <h2>Confidence Gate</h2>
+    <p>The mixer uses uncertainty features from QTsim, especially entropy and margin.</p>
+    <div class="eq">
+      lambda = sigmoid(a0 + a1 * margin - a2 * entropy)<br/>
+      pi = lambda * QTsim + (1 - lambda) * graph_prior
+    </div>
+    <p>High margin + low entropy increases trust in QTsim. Low margin + high entropy shifts weight back to graph_prior.</p>
+
+    <h2>Why It Matters</h2>
+    <p>This avoids brittle behavior from fixed routing weights and makes fallback behavior explicit under uncertainty.</p>
+
+    <p>Next: <a href="/blog/v12.2.6-series/03-evaluation-ablations/">Post 3 on evaluation and ablations</a>.</p>
+  </main>
+</body>
+</html>
