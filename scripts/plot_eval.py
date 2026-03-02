@@ -72,7 +72,16 @@ def _extract_series(
     headers, rows = _read_csv(path)
     if not headers or not rows:
         return None
+    return _extract_series_from_rows(headers, rows, y_candidates, x_candidates, default_label=path.stem.replace("_", " "))
 
+
+def _extract_series_from_rows(
+    headers: Sequence[str],
+    rows: Sequence[Dict[str, str]],
+    y_candidates: Sequence[str],
+    x_candidates: Sequence[str] = ("epoch", "step", "iteration", "iter", "t", "time"),
+    default_label: str = "",
+) -> Optional[Series]:
     x_col = _first_matching(headers, x_candidates)
     y_col = _first_matching(headers, y_candidates)
     if not y_col:
@@ -96,13 +105,21 @@ def _extract_series(
     x = np.array(x_vals, dtype=float)
     y = np.array(y_vals, dtype=float)
     order = np.argsort(x)
-    return Series(label=path.stem.replace("_", " "), x=x[order], y=y[order])
+    return Series(label=default_label, x=x[order], y=y[order])
 
 
 def _extract_gap_closed(path: Path) -> Optional[Series]:
     headers, rows = _read_csv(path)
     if not headers or not rows:
         return None
+    return _extract_gap_closed_from_rows(headers, rows, default_label=path.stem.replace("_", " "))
+
+
+def _extract_gap_closed_from_rows(
+    headers: Sequence[str],
+    rows: Sequence[Dict[str, str]],
+    default_label: str = "",
+) -> Optional[Series]:
 
     x_col = _first_matching(headers, ("epoch", "step", "iteration", "iter", "t"))
 
@@ -171,7 +188,7 @@ def _extract_gap_closed(path: Path) -> Optional[Series]:
     x = np.array(x_vals, dtype=float)
     y = np.array(y_vals, dtype=float)
     order = np.argsort(x)
-    return Series(label=path.stem.replace("_", " "), x=x[order], y=y[order])
+    return Series(label=default_label, x=x[order], y=y[order])
 
 
 def _extract_alpha_values(path: Path) -> Optional[np.ndarray]:
@@ -257,7 +274,7 @@ def _plot_line(
     y_lim: Optional[Tuple[float, float]] = None,
 ) -> None:
     fig, ax = plt.subplots(figsize=(8.4, 4.6), dpi=150)
-    palette = ["#005A9C", "#E07A00", "#2A9D8F", "#7A5195"]
+    palette = ["#005A9C", "#E07A00", "#2A9D8F", "#7A5195", "#5F6F94", "#B95F89", "#3D8B5F"]
 
     if series_list:
         for idx, s in enumerate(series_list):
@@ -379,22 +396,72 @@ def main() -> None:
     acc_series: List[Series] = []
     gap_series: List[Series] = []
     alpha_values: List[np.ndarray] = []
+    selected_policies = [
+        "learned_mixed",
+        "vector_topk",
+        "vector_topk_rerank",
+        "pointer_chase",
+        "graph_prior_only",
+        "random",
+        "oracle",
+    ]
+    policy_norm_map = {_norm(p): p for p in selected_policies}
 
     for csv_path in csv_paths:
-        reward = _extract_series(csv_path, ("reward", "mean_reward", "avg_reward", "return", "episode_reward"))
-        if reward:
-            reward.label = _pick_label(csv_path)
-            reward_series.append(reward)
+        headers, rows = _read_csv(csv_path)
+        if not headers or not rows:
+            continue
+        policy_col = _first_matching(headers, ("policy", "mode", "router", "setting", "arm"))
+        if policy_col:
+            grouped: Dict[str, List[Dict[str, str]]] = {p: [] for p in selected_policies}
+            for row in rows:
+                raw_policy = (row.get(policy_col) or "").strip()
+                norm_policy = _norm(raw_policy)
+                canonical = policy_norm_map.get(norm_policy)
+                if canonical:
+                    grouped[canonical].append(row)
 
-        acc = _extract_series(csv_path, ("accuracy", "acc", "success_rate", "task_success", "correctness"))
-        if acc:
-            acc.label = _pick_label(csv_path)
-            acc_series.append(acc)
+            for policy in selected_policies:
+                policy_rows = grouped.get(policy) or []
+                if not policy_rows:
+                    continue
+                label = policy.replace("_", " ")
+                reward = _extract_series_from_rows(
+                    headers,
+                    policy_rows,
+                    ("reward", "mean_reward", "avg_reward", "return", "episode_reward"),
+                    default_label=label,
+                )
+                if reward:
+                    reward_series.append(reward)
 
-        gap = _extract_gap_closed(csv_path)
-        if gap:
-            gap.label = _pick_label(csv_path)
-            gap_series.append(gap)
+                acc = _extract_series_from_rows(
+                    headers,
+                    policy_rows,
+                    ("accuracy", "acc", "success_rate", "task_success", "correctness"),
+                    default_label=label,
+                )
+                if acc:
+                    acc_series.append(acc)
+
+                gap = _extract_gap_closed_from_rows(headers, policy_rows, default_label=label)
+                if gap:
+                    gap_series.append(gap)
+        else:
+            reward = _extract_series(csv_path, ("reward", "mean_reward", "avg_reward", "return", "episode_reward"))
+            if reward:
+                reward.label = _pick_label(csv_path)
+                reward_series.append(reward)
+
+            acc = _extract_series(csv_path, ("accuracy", "acc", "success_rate", "task_success", "correctness"))
+            if acc:
+                acc.label = _pick_label(csv_path)
+                acc_series.append(acc)
+
+            gap = _extract_gap_closed(csv_path)
+            if gap:
+                gap.label = _pick_label(csv_path)
+                gap_series.append(gap)
 
         alpha = _extract_alpha_values(csv_path)
         if alpha is not None:
