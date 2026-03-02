@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Post 4: Operator Guide for Local Embeddings OOTB</title>
+  <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/04-operator-local-embeddings/" />
+  <style>
+    :root { --bg:#17131d; --text:#e2dcec; --muted:#b6abc9; --bright:#f8f4ff; --border:#4b4160; --accent:#caa7ff; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; --mono:"JetBrains Mono",monospace; }
+    body { margin:0; background:linear-gradient(135deg,#201a2d,#17131d 48%); color:var(--text); font-family:var(--serif); line-height:1.82; }
+    main { max-width:860px; margin:0 auto; padding:2.5rem 1.2rem 3rem; }
+    h1,h2 { font-family:var(--sans); color:var(--bright); }
+    .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.84rem; }
+    pre { border:1px solid var(--border); border-radius:10px; background:#221c30; padding:.9rem 1rem; overflow:auto; font-family:var(--mono); }
+    a { color:var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a> · <a href="/blog/v12.2.6-series/">series</a></div>
+    <h1>Post 4: Operator Guide for Local Embeddings OOTB</h1>
+    <p class="meta">March 2026 · v12.2.6+ series</p>
+
+    <p>Local embeddings out-of-the-box are the default operating mode for fast, private routing. Teacher models are optional and run asynchronously.</p>
+
+    <h2>Baseline Flow</h2>
+    <pre>openclawbrain init --workspace ./workspace --output ./brain
+openclawbrain query "..." --state ./brain/state.json --json
+openclawbrain async-route-pg --state ./brain/state.json --apply --json</pre>
+
+    <h2>Operational Notes</h2>
+    <ul>
+      <li>Keep hot-path routing deterministic and bounded.</li>
+      <li>Run learning jobs on schedule, not inline with user requests.</li>
+      <li>Gate connect/split/merge actions behind shadow evaluation and rollback support.</li>
+    </ul>
+
+    <p>Series index: <a href="/blog/v12.2.6-series/">OpenClawBrain v12.2.6+ series</a>.</p>
+  </main>
+</body>
+</html>

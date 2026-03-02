@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Post 1: Shadow Routing + Ultimate Policy Gradient</title>
+  <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/01-shadow-routing-upg/" />
+  <style>
+    :root { --bg:#11151f; --text:#d5dbe7; --muted:#97a3b9; --bright:#f4f7fd; --border:#2a3242; --accent:#7ec0ff; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; }
+    body { margin:0; background:radial-gradient(circle at 0% 0%,#1a2233,#11151f 55%); color:var(--text); font-family:var(--serif); line-height:1.78; }
+    main { max-width:860px; margin:0 auto; padding:2.5rem 1.2rem 3rem; }
+    h1,h2 { font-family:var(--sans); color:var(--bright); }
+    .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.84rem; }
+    .box { border:1px solid var(--border); border-radius:10px; background:#161d2c; padding:.9rem 1rem; margin:1rem 0; }
+    a { color:var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a> · <a href="/blog/v12.2.6-series/">series</a></div>
+    <h1>Post 1: Shadow Routing + Ultimate Policy Gradient</h1>
+    <p class="meta">March 2026 · v12.2.6+ series</p>
+
+    <p>The current OpenClawBrain design separates runtime routing from heavy learning. Runtime is local and bounded. Learning happens asynchronously over replay data.</p>
+
+    <h2>Shadow Routing</h2>
+    <p>"Shadow routing" means teacher models do not sit on the query hot path. They run later, label prior decisions, and produce updates for the next deployment window.</p>
+    <div class="box">
+      Hot path: embedding lookup -> local route policy -> bounded context output.<br />
+      Cold path: replay -> teacher labels -> distillation + policy-gradient updates.
+    </div>
+
+    <h2>Ultimate Policy Gradient</h2>
+    <p>All supervision enters one update stack with an explicit authority order:</p>
+    <ol>
+      <li>Human feedback</li>
+      <li>Self-learning outcomes</li>
+      <li>Harvested weak signals</li>
+      <li>Async teacher labels</li>
+    </ol>
+    <p>The hierarchy ensures high-authority corrections can override volume-driven but weaker labels.</p>
+
+    <p>Next: <a href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">Post 2 on QTsim confidence mixing</a>.</p>
+  </main>
+</body>
+</html>
