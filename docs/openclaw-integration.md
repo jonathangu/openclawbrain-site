@@ -16,6 +16,73 @@ If you’re already running OpenClaw, this guide shows the fastest path to:
 
 ---
 
+## Brain-first mode (recommended)
+
+Brain-first mode is the recommended OpenClaw path if you want fewer retrieval-debug turns and less manual context engineering.
+
+It is opt-in and fail-open:
+
+- If OpenClawBrain is healthy and reachable, your turn is enriched with learned context.
+- If lookup fails, OpenClaw continues with its existing flow.
+- No OpenClaw core rewrite is needed to disable it again.
+
+### What changes in practice when enabled
+
+- Before answering, each relevant turn runs a `query_brain` call using the inbound message summary and stable `chat_id`.
+- The model sees a dedicated, data-only append block: `<code>[BRAIN_CONTEXT v1]...[/BRAIN_CONTEXT]</code>`.
+- Corrections/teachings are handled through the same chat-aware feedback methods (`capture_feedback`, `learn_by_chat_id`).
+- Nothing else in your AGENTS prompt logic changes unless you choose to remove those lines.
+
+### Installation and enablement
+
+1. Run daemon (or keep your launchd/systemd service running):
+
+```bash
+openclawbrain serve --state ~/.openclawbrain/main/state.json
+```
+
+2. Install hook lines in workspace `AGENTS.md`:
+
+```md
+## Brain-first retrieval (opt-in)
+
+python3 -m openclawbrain.openclaw_adapter.query_brain "$STATE" "$(printf '%s' "$USER_MESSAGE")" --chat-id "$CHAT_ID" --format prompt --exclude-bootstrap --max-prompt-context-chars 12000
+```
+
+3. Enable in the message handler / correction path (same-turn if possible):
+
+```md
+python3 -m openclawbrain.openclaw_adapter.capture_feedback --state "$STATE" --chat-id "$CHAT_ID" --kind CORRECTION --content "$CORRECTION_TEXT" --lookback 1 --message-id "$MSG_ID" --json
+```
+
+To toggle off without undoing files, stop calling these lines from your runtime hook and fallback logic.
+
+### Tuning: budgets + keywords
+
+- Query budget baseline: `--max-prompt-context-chars 12000`.
+- Deep media/tool-result path (optional): `--tool-result-max-chars 20000`.
+- Keep `--exclude-bootstrap` enabled in adapters to avoid repeating files OpenClaw already injects.
+- For sensitive text suppression, use local wrapper logic with redaction keywords/patterns before forwarding payloads (for example `api_key`, `token`, `secret`, `private_key`).
+
+### Security and guardrails
+
+- Data-only delimiter: only append retrieved memory as `<code>[BRAIN_CONTEXT v1]...[/BRAIN_CONTEXT]</code>` and avoid injecting raw retrieval JSON into the final prompt.
+- Exclude paths where your org already stores secrets, credentials, or ephemeral artifacts.
+- Add redaction for sensitive token-like terms in hook wrapper logic so they never reach `query_brain` input.
+- Keep fail-open semantics in your hook wrapper: if query/daemon errors, continue with normal OpenClaw context and continue serving.
+
+### How this interacts with learn/harvest
+
+Brain-first does not replace your learning contracts:
+
+- Existing learning/replay/harvest still operate on `sessions`, `state.json`, and `learning_events.jsonl`.
+- `capture_feedback` / `learn_by_chat_id` still write outcomes through standard paths.
+- Harvester cadence and maintenance remain unchanged.
+
+This preserves OOTB behavior for every non-opted-in workflow and gives you a clean rollback path.
+
+---
+
 ## What OpenClawBrain does (and why you want it)
 
 OpenClawBrain is a Python memory graph library that turns your workspace into a **learned retrieval policy**.
