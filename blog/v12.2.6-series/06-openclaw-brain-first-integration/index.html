@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Post 6: Brain-first OpenClaw Integration</title>
+  <meta name="description" content="What changes when OpenClaw runs in brain-first mode, and how to run it safely with optional budgets and guardrails." />
+  <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/06-openclaw-brain-first-integration/" />
+  <style>
+    :root { --bg:#0e1118; --text:#e3ecf8; --muted:#99a6bc; --bright:#f4f8ff; --border:#2b3a52; --accent:#6ac4ff; --card:#131c29; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; --mono:"JetBrains Mono",monospace; }
+    body { margin:0; background:radial-gradient(circle at 30% 0%,#192843,#0e1118 58%); color:var(--text); font-family:var(--serif); line-height:1.78; }
+    main { max-width:900px; margin:0 auto; padding:2.4rem 1.2rem 3.2rem; }
+    h1,h2 { font-family:var(--sans); color:var(--bright); }
+    .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.84rem; }
+    a { color:var(--accent); }
+    pre,code { font-family:var(--mono); }
+    pre { border:1px solid var(--border); border-radius:10px; background:#0f1726; padding:.85rem 1rem; overflow:auto; }
+    .callout { border:1px solid var(--border); border-radius:12px; background:var(--card); padding:1rem 1.1rem; margin:1rem 0; }
+    ul { padding-left:1.1rem; }
+    .compare { border:1px solid var(--border); border-radius:12px; background:#121c2a; padding:1rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a> · <a href="/blog/v12.2.6-series/">series</a></div>
+    <h1>Post 6: Brain-first OpenClaw Integration</h1>
+    <p class="meta">March 2026 · v12.2.6+ series</p>
+
+    <p>Brain-first mode is the recommended OpenClaw integration pattern. It is optional, and it is safe to run as a gradual rollout. Enabling it does not replace OpenClaw behavior — it adds one additional <strong>preference-aware context retrieval step</strong> before model generation and keeps learning wired through the same correction loop.</p>
+
+    <h2>What exactly changes when enabled?</h2>
+    <div class="compare">
+      <h3>Before brain-first (OOTB OpenClaw)</h3>
+      <pre>User message
+  ↓
+OpenClaw loads AGENTS/role + local files
+  ↓
+Model answers directly from loaded context
+  ↓
+Response sent
+  ↓
+Manual teach/correction workflow (if you built one)</pre>
+
+      <h3>After brain-first</h3>
+      <pre>User message
+  ↓
+OpenClaw calls adapter hook (query_brain) with chat_id
+  ↓
+Brain returns [BRAIN_CONTEXT] candidates (cap-limited)
+  ↓
+Hook appends <code>[BRAIN_CONTEXT v1]...[/BRAIN_CONTEXT]</code> to prompt
+  ↓
+Model answers with stronger task-relevant prior
+  ↓
+Same-turn corrections -> capture_feedback -> correction node + context learning</pre>
+    </div>
+
+    <h2>Why this changes outcomes</h2>
+    <ul>
+      <li><strong>Fewer turns:</strong> model gets structured memory context before asking for clarification.</li>
+      <li><strong>Less manual context engineering:</strong> repeated file-and-history reconstruction is replaced by learned routing signals.</li>
+      <li><strong>Cleaner correction loop:</strong> `chat_id` lets correction updates target recent fired route candidates, not generic free-form memory logs.</li>
+    </ul>
+
+    <h2>Flow, budgets, and safety defaults</h2>
+    <div class="callout">
+      <p style="margin:0 0 .6rem;"><strong>Safe defaults:</strong></p>
+      <ul style="margin:0 0 .4rem 1rem;">
+        <li><code>--max-prompt-context-chars 12000</code> for query context (default recommendation for OpenClaw hooks).</li>
+        <li>Use the <code>[BRAIN_CONTEXT v1]</code> delimiter, not raw JSON or extra metadata.</li>
+        <li>Start with bootstrap exclusions enabled so duplicated AGENTS/SOUL/USER/MEMORY material is not re-sent.</li>
+      </ul>
+      <p style="margin:0 0 .6rem;"><strong>Deep path:</strong></p>
+      <ul style="margin:0;">
+        <li>For tool-output ingestion (e.g., media transcripts) keep <code>--tool-result-max-chars 20000</code> as a practical cap.</li>
+      </ul>
+    </div>
+
+    <h2>Security checklist (optional but recommended)</h2>
+    <ol>
+      <li>Install the hook through a shell wrapper instead of embedding logic directly in AGENTS.md.</li>
+      <li>In the wrapper, block sensitive paths from ever reaching retrieval context.</li>
+      <li>Apply redaction for keyword matches before any query payload leaves the wrapper.</li>
+      <li>Keep output as data-only brain context and do not pass full tool traces into user prompt.</li>
+    </ol>
+
+    <pre>export OPENCLAWBRAIN_EXCLUDE_PATHS=".env,.openclawbrain,dist,build"
+export OPENCLAWBRAIN_REDACT_KEYWORDS="api_key,secret,token,password,private_key"
+export OPENCLAWBRAIN_MAX_PROMPT_CONTEXT_CHARS=12000</pre>
+
+    <p>OpenClaw hook behavior should remain <strong>fail-open</strong> by default: if brain lookup fails, continue on with the normal OpenClaw flow. That preserves availability while still benefiting from the memory path whenever it works.</p>
+
+    <h2>How this interacts with learning and harvester</h2>
+    <ul>
+      <li>The learning model is unchanged: corrections still resolve by <code>chat_id</code> through <code>capture_feedback</code> and replay paths.</li>
+      <li>Harvester + maintenance schedules keep running exactly as before.</li>
+      <li>Brain data becomes higher quality faster because retrieval and correction are linked to actual session flow instead of manual reminders.</li>
+    </ul>
+
+    <h2>Why this does not break OpenClaw OOTB</h2>
+    <p>Brain-first is <strong>opt-in</strong>; OpenClaw defaults remain untouched. If you remove the hook lines from <code>AGENTS.md</code> or disable their execution flag, the agent returns to existing OpenClaw flow immediately. No schema, config, or storage migration is required to turn it off.</p>
+
+    <p>Enablement details and operational defaults are documented in the canonical integration guide: <a href="/docs/openclaw-integration.md">docs/openclaw-integration.md</a>.</p>
+
+    <p>Series index: <a href="/blog/v12.2.6-series/">OpenClawBrain v12.2.6+ series</a>.</p>
+  </main>
+</body>
+</html>
