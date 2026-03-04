@@ -98,24 +98,24 @@
     <p class="paper-subtitle">Human feedback is highest authority; teacher labels provide volume; policy gradient unifies it all.</p>
     <p class="authors"><span class="name">Jonathan Gu</span> · <a href="mailto:jonathangu@gmail.com" style="color: var(--text-muted); font-size: 0.85rem;">jonathangu@gmail.com</a></p>
     <div style="text-align: left; max-width: 720px; margin: 1.1rem auto 0; padding: 1.1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card);">
-      <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">OpenClawBrain for OpenClaw</p>
-      <p style="margin: 0 0 0.7rem; font-family: var(--sans); font-size: 1rem; color: var(--text);">
-        OpenClawBrain is the memory + cost-control substrate for OpenClaw.
+      <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Why engineers ship this</p>
+      <p style="margin: 0 0 0.6rem; font-family: var(--sans); font-size: 1.25rem; font-weight: 700; color: var(--text-bright); line-height: 1.25;">
+        Fewer calls. Bounded memory. Less doctoring.
+      </p>
+      <p style="margin: 0 0 0.75rem; font-family: var(--sans); font-size: 0.98rem; color: var(--text);">
+        OpenClawBrain gives your agent durable memory and cost control — without adding completion-model calls to the hot path. Retrieval and routing run locally and in bounded time. The agent still uses an LLM to answer; the brain just makes it cheaper and sharper.
       </p>
       <ul style="margin: 0 0 0.75rem; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.55;">
-        <li>Fewer calls per user-visible exchange (measurable; benchmark harness included)</li>
-        <li>Bounded remembering via <code>[BRAIN_CONTEXT]</code> (20k default / 80k deep)</li>
-        <li>Always-learning loop (captures corrections/preferences; replay/maintenance offline)</li>
+        <li>↓ Fewer calls per exchange — Brain context is injected before the completion call, not in addition to it. Measure the reduction in completion-model calls per user-visible exchange with the included benchmark harness.</li>
+        <li>📐 Bounded token budgets — <code>[BRAIN_CONTEXT]</code> ships 20k default / 80k deep. You control prompt + completion tokens per exchange; no runaway context windows.</li>
+        <li>🔁 Always-on learning, zero doctoring — Corrections, preferences, and self-learning capture live, replay offline. No manual prompt surgery to make the agent remember.</li>
       </ul>
-      <p style="margin: 0 0 0.75rem; font-family: var(--sans); font-size: 0.92rem; color: var(--text);">
-        <strong>Hot-path guarantee:</strong> routing/retrieval is local + bounded; no additional completion-model calls required (agent still uses a model to answer).
-      </p>
-      <p style="margin: 0 0 0.75rem; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
-        Proof + measurement: <a href="/docs/reproduce-eval.md">benchmark harness + baselines (calls/exchange + tokens)</a> · <a href="/docs/brains-dashboard/">brains dashboard</a>
-      </p>
       <a href="/docs/openclaw-integration.md" style="display: inline-block; padding: 0.55rem 0.95rem; border-radius: 8px; background: var(--accent); color: #0a0f17; font-family: var(--sans); font-size: 0.9rem; font-weight: 600; text-decoration: none;">
-        Enable in OpenClaw (5 min)
+        Enable in OpenClaw — 5 min setup
       </a>
+      <p style="margin: 0.55rem 0 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
+        Measure calls/exchange and tokens/exchange in your own logs — no trust required. <a href="/docs/reproduce-eval.md">Run the benchmark harness →</a>
+      </p>
     </div>
     <div class="paper-meta">
       <span class="badge badge-repo"><a href="https://pypi.org/project/openclawbrain/" style="color: inherit; text-decoration: none;">📦 PyPI</a></span>
