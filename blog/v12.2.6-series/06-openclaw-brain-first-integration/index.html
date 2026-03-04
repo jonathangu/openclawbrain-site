@@ -44,7 +44,7 @@ Manual teach/correction workflow (if you built one)</pre>
       <h3>After brain-first</h3>
       <pre>User message
   ↓
-OpenClaw calls adapter hook (query_brain) with chat_id
+OpenClaw internal hook (message:preprocessed) calls query_brain with chat_id
   ↓
 Brain returns [BRAIN_CONTEXT] candidates (cap-limited)
   ↓
@@ -78,9 +78,9 @@ Same-turn corrections -> capture_feedback -> correction node + context learning<
 
     <h2>Security checklist (optional but recommended)</h2>
     <ol>
-      <li>Install the hook through a shell wrapper instead of embedding logic directly in AGENTS.md.</li>
-      <li>In the wrapper, block sensitive paths from ever reaching retrieval context.</li>
-      <li>Apply redaction for keyword matches before any query payload leaves the wrapper.</li>
+      <li>Install the OpenClaw internal hook pack instead of embedding logic directly in AGENTS.md.</li>
+      <li>In the hook configuration, block sensitive paths from ever reaching retrieval context.</li>
+      <li>Apply redaction for keyword matches before any query payload is sent to the brain.</li>
       <li>Keep output as data-only brain context and do not pass full tool traces into user prompt.</li>
     </ol>
 
@@ -90,6 +90,12 @@ export OPENCLAWBRAIN_MAX_PROMPT_CONTEXT_CHARS=12000</pre>
 
     <p>OpenClaw hook behavior should remain <strong>fail-open</strong> by default: if brain lookup fails, continue on with the normal OpenClaw flow. That preserves availability while still benefiting from the memory path whenever it works.</p>
 
+    <h2>How to enable (recommended)</h2>
+    <pre>openclawbrain serve --state ~/.openclawbrain/main/state.json
+openclaw hooks install /path/to/openclawbrain/integrations/openclaw/hooks/openclawbrain-context-injector
+openclaw hooks enable openclawbrain-context-injector
+openclaw gateway restart</pre>
+
     <h2>How this interacts with learning and harvester</h2>
     <ul>
       <li>The learning model is unchanged: corrections still resolve by <code>chat_id</code> through <code>capture_feedback</code> and replay paths.</li>
@@ -98,7 +104,7 @@ export OPENCLAWBRAIN_MAX_PROMPT_CONTEXT_CHARS=12000</pre>
     </ul>
 
     <h2>Why this does not break OpenClaw OOTB</h2>
-    <p>Brain-first is <strong>opt-in</strong>; OpenClaw defaults remain untouched. If you remove the hook lines from <code>AGENTS.md</code> or disable their execution flag, the agent returns to existing OpenClaw flow immediately. No schema, config, or storage migration is required to turn it off.</p>
+    <p>Brain-first is <strong>opt-in</strong>; OpenClaw defaults remain untouched. Rollback is immediate: disable the hook and restart the gateway, and the agent returns to existing OpenClaw flow. No schema, config, or storage migration is required to turn it off.</p>
 
     <p>Enablement details and operational defaults are documented in the canonical integration guide: <a href="/docs/openclaw-integration.md">docs/openclaw-integration.md</a>.</p>
 
