@@ -66,15 +66,16 @@ Same-turn corrections -> capture_feedback -> correction node + context learning<
     <div class="callout">
       <p style="margin:0 0 .6rem;"><strong>Safe defaults:</strong></p>
       <ul style="margin:0 0 .4rem 1rem;">
-        <li><code>--max-prompt-context-chars 12000</code> for query context (default recommendation for OpenClaw hooks).</li>
+        <li><code>--max-prompt-context-chars 20000</code> for query context (default recommendation for OpenClaw hooks).</li>
         <li>Use the <code>[BRAIN_CONTEXT v1]</code> delimiter, not raw JSON or extra metadata.</li>
         <li>Start with bootstrap exclusions enabled so duplicated AGENTS/SOUL/USER/MEMORY material is not re-sent.</li>
       </ul>
       <p style="margin:0 0 .6rem;"><strong>Deep path:</strong></p>
       <ul style="margin:0;">
-        <li>For tool-output ingestion (e.g., media transcripts) keep <code>--tool-result-max-chars 20000</code> as a practical cap.</li>
+        <li>For tool-output ingestion (e.g., media transcripts) keep <code>--tool-result-max-chars 80000</code> as a practical cap.</li>
       </ul>
     </div>
+    <p>For fairness in comparisons, cap tool-result output sizes too; letting tool outputs run unbounded defeats the point of brain-first budgets, which is to keep retrieval context bounded and measurable.</p>
 
     <h2>Security checklist (optional but recommended)</h2>
     <ol>
@@ -86,7 +87,7 @@ Same-turn corrections -> capture_feedback -> correction node + context learning<
 
     <pre>export OPENCLAWBRAIN_EXCLUDE_PATHS=".env,.openclawbrain,dist,build"
 export OPENCLAWBRAIN_REDACT_KEYWORDS="api_key,secret,token,password,private_key"
-export OPENCLAWBRAIN_MAX_PROMPT_CONTEXT_CHARS=12000</pre>
+export OPENCLAWBRAIN_MAX_PROMPT_CONTEXT_CHARS=20000</pre>
 
     <p>OpenClaw hook behavior should remain <strong>fail-open</strong> by default: if brain lookup fails, continue on with the normal OpenClaw flow. That preserves availability while still benefiting from the memory path whenever it works.</p>
 

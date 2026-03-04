@@ -178,7 +178,7 @@ openclawbrain replay \
   --sessions ~/.openclaw/agents/main/sessions \
   --include-tool-results \
   --tool-result-allowlist image,openai-whisper,openai-whisper-api,openai-whisper-local,summarize \
-  --tool-result-max-chars 20000
+  --tool-result-max-chars 80000
 ```
 
 Flags:
