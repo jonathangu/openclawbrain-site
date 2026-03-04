@@ -1,5 +1,7 @@
 # Brains Dashboard
 
+Note: HTML version at `/docs/brains-dashboard/`.
+
 This dashboard summarizes per-agent brain graph size and edge composition for a single snapshot.
 
 Snapshot date: **2026-03-03**.

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Brains Dashboard</title>
+  <meta name="description" content="Brains dashboard snapshot for OpenClawBrain operator visuals." />
+  <link rel="canonical" href="https://openclawbrain.ai/docs/brains-dashboard/" />
+  <style>
+    :root {
+      --bg:#0a0f17;
+      --card:#111a27;
+      --text:#d6dfed;
+      --muted:#93a1b7;
+      --bright:#f5f8ff;
+      --border:#26344a;
+      --accent:#79b7ff;
+      --sans:Inter,system-ui,sans-serif;
+      --serif:"Crimson Pro",Georgia,serif;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      background:radial-gradient(circle at 15% 0%,#152137,#0a0f17 45%);
+      color:var(--text);
+      font-family:var(--serif);
+      line-height:1.75;
+    }
+    main { max-width:980px; margin:0 auto; padding:2.8rem 1.2rem 4rem; }
+    h1,h2 { font-family:var(--sans); color:var(--bright); margin:0 0 .8rem; }
+    p { margin:0 0 1rem; }
+    a { color:var(--accent); }
+    ul { margin:0 0 1.2rem; padding-left:1.2rem; }
+    .nav { font-family:var(--sans); color:var(--muted); font-size:.86rem; margin-bottom:1.4rem; }
+    .meta { font-family:var(--sans); color:var(--muted); font-size:.9rem; margin:0 0 1.4rem; }
+    .card {
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:var(--card);
+      padding:1.2rem;
+      margin:1.6rem 0;
+    }
+    img {
+      display:block;
+      width:100%;
+      max-width:100%;
+      height:auto;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:#0c121c;
+    }
+    .img-block { margin:1.4rem 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/operator-guide.md">operator guide</a></div>
+    <h1>Brains Dashboard</h1>
+    <p class="meta">Snapshot date: <strong>2026-03-03</strong></p>
+    <div class="card">
+      <h2>What this shows</h2>
+      <ul>
+        <li>Nodes + edges per agent brain graph.</li>
+        <li>Edge tier split: reflex, habitual, dormant.</li>
+        <li>Inhibitory edge counts per agent.</li>
+      </ul>
+    </div>
+
+    <div class="img-block">
+      <img src="/assets/brains-dashboard/brains_dashboard_nodes_edges.png" alt="Brains dashboard nodes and edges" />
+    </div>
+    <div class="img-block">
+      <img src="/assets/brains-dashboard/brains_dashboard_tiers.png" alt="Brains dashboard tiers" />
+    </div>
+    <div class="img-block">
+      <img src="/assets/brains-dashboard/brains_dashboard_inhibitory.png" alt="Brains dashboard inhibitory edges" />
+    </div>
+  </main>
+</body>
+</html>
