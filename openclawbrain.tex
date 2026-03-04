@@ -17,7 +17,8 @@
 \noindent\textbf{Version: v12.2.6+}
 
 \section{Abstract}
-OpenClawBrain is a retrieval-routing system for long-lived agents. Query-time retrieval stays local and deterministic, then offline learning updates routing policy from multiple supervision sources.
+OpenClawBrain is a retrieval-routing system for long-lived agents built around a strict hot/cold path split. The hot path is local and bounded for latency-critical routing; the cold path runs asynchronous learning and structure updates.
+We define a \emph{turn} as a single LLM API call. End-to-end cost is $C=\sum_{i=1}^{T} \mathrm{tokens}_i \cdot \mathrm{price}_i$, and the system targets lower $T$ (fewer calls per user-visible request) and lower per-call token counts on the hot path.
 The current system uses two route signals: a structural prior ($\mathrm{graph\_prior}$) and a query-time compatibility signal (QTsim). A confidence mixer combines those signals using uncertainty features, including entropy and margin, to decide how much weight each source gets per decision.
 Learning is performed through teacher distillation plus policy-gradient updates under a reward-source hierarchy. Human corrections have highest authority, then self-learning outcomes, then harvested signals, then high-volume teacher labels.
 This release also starts RL-native maintenance of graph structure: Phase 2a is shipped and follow-on phases cover connect/split/merge actions under policy control.
@@ -28,7 +29,11 @@ OpenClawBrain is designed around a strict split:
   \item \textbf{Hot path:} local embedding retrieval and bounded traversal only.
   \item \textbf{Cold path:} asynchronous learning and structure updates.
 \end{itemize}
-This split keeps production latency stable while allowing large-volume policy updates in the background.
+We define a \emph{turn} as a single LLM API call. Total cost can be written as
+\[
+C=\sum_{i=1}^{T} \mathrm{tokens}_i \cdot \mathrm{price}_i
+\]
+and OpenClawBrain reduces $T$ and per-call token counts by keeping routing local and context bounded on the hot path, while allowing optional teacher calls only in the cold path.
 
 \begin{figure}[t]
 \centering

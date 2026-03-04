@@ -97,6 +97,15 @@
     <p class="paper-subtitle">Query-time stays fast and local. The brain learns routing offline from massive weak supervision.</p>
     <p class="paper-subtitle">Human feedback is highest authority; teacher labels provide volume; policy gradient unifies it all.</p>
     <p class="authors"><span class="name">Jonathan Gu</span> · <a href="mailto:jonathangu@gmail.com" style="color: var(--text-muted); font-size: 0.85rem;">jonathangu@gmail.com</a></p>
+    <div style="text-align: left; max-width: 520px; margin: 0.9rem auto 0; padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: 10px; background: rgba(120, 180, 255, 0.08);">
+      <p style="margin: 0 0 0.45rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Why engineers ship this</p>
+      <ul style="margin: 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.55;">
+        <li><strong>Hot-path guarantee:</strong> query routing is local and bounded; no remote LLM required on the critical path by default.</li>
+        <li><strong>Turn reduction:</strong> fewer calls per user-visible request and fewer retries/clarifications.</li>
+        <li><strong>Don’t repeat mistakes:</strong> inhibitory suppression blocks known-bad routes.</li>
+      </ul>
+      <p style="margin: 0.45rem 0 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">Turn = LLM API call.</p>
+    </div>
     <div class="paper-meta">
       <span class="badge badge-repo"><a href="https://pypi.org/project/openclawbrain/" style="color: inherit; text-decoration: none;">📦 PyPI</a></span>
       <span class="badge badge-repo"><a href="https://clawhub.ai/skills/openclawbrain" style="color: inherit; text-decoration: none;">🦞 ClawHub</a></span>
@@ -123,15 +132,16 @@
       <ol style="margin: 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.6;">
         <li><code>openclawbrain init --workspace ~/.openclaw/workspace --output ~/.openclawbrain/main</code></li>
         <li><code>openclawbrain serve --state ~/.openclawbrain/main/state.json</code></li>
-        <li>Add one <code>Query</code> line to <code>AGENTS.md</code> (prompt-only, tight + right): <code>python3 -m openclawbrain.openclaw_adapter.query_brain ~/.openclawbrain/main/state.json '&lt;summary&gt;' --chat-id '&lt;chat_id&gt;' --format prompt --exclude-bootstrap --max-prompt-context-chars 12000</code></li>
-        <li>Enable always-on self-learning (recommended): <code>python3 -m openclawbrain.openclaw_adapter.capture_feedback --state ~/.openclawbrain/main/state.json --chat-id '&lt;chat_id&gt;' --kind CORRECTION --content '&lt;correction&gt;' --lookback 1 --message-id '&lt;stable-message-id&gt;' --json</code></li>
+        <li><code>openclaw hooks install /path/to/openclawbrain/integrations/openclaw/hooks/openclawbrain-context-injector</code></li>
+        <li><code>openclaw hooks enable openclawbrain-context-injector</code></li>
+        <li><code>openclaw gateway restart</code></li>
         <li>Optional quick cutover: <code>openclawbrain replay --state ~/.openclawbrain/main/state.json --sessions ~/.openclaw/agents/main/sessions --fast-learning --stop-after-fast-learning --resume --checkpoint ~/.openclawbrain/main/replay_checkpoint.json</code></li>
       </ol>
       <ul style="margin: 0.55rem 0 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.88rem; line-height: 1.55; color: var(--text-muted);">
-        <li>Avoids duplicating bootstrap files already in OpenClaw context.</li>
-        <li>Keeps the prompt appendix deterministic and bounded (tight and right).</li>
+        <li>Hook pack injects brain context automatically (no manual <code>AGENTS.md</code> wiring).</li>
+        <li>Keep prompt appendix deterministic and bounded (tight and right).</li>
         <li>Repeated workflows should shrink context over time (paper/blog claims).</li>
-        <li>Always-on self-learning: same-turn <code>capture_feedback</code> (deduped by message_id) prevents repeated mistakes.</li>
+        <li>Use <code>capture_feedback</code> or <code>learn_by_chat_id</code> for correction-driven learning.</li>
         <li>Canonical new-agent setup flow: <a href="/docs/new-agent-sop.md">docs/new-agent-sop.md</a></li>
       </ul>
       <p style="margin: 0.55rem 0 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">If you see bloat, read <a href="/docs/openclaw-integration.md">openclaw integration guide</a> and <a href="/docs/operator-guide.md">operator guide</a>.</p>
