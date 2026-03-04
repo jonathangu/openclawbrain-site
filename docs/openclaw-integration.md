@@ -63,13 +63,13 @@ If you cannot use the hook pack yet, you can wire the adapters directly in `AGEN
 ```md
 ## Brain-first retrieval (opt-in)
 
-python3 -m openclawbrain.openclaw_adapter.query_brain "$STATE" "$(printf '%s' "$USER_MESSAGE")" --chat-id "$CHAT_ID" --format prompt --exclude-bootstrap --max-prompt-context-chars 12000
+python3 -m openclawbrain.openclaw_adapter.query_brain "$STATE" "$(printf '%s' "$USER_MESSAGE")" --chat-id "$CHAT_ID" --format prompt --exclude-bootstrap --max-prompt-context-chars 20000
 python3 -m openclawbrain.openclaw_adapter.capture_feedback --state "$STATE" --chat-id "$CHAT_ID" --kind CORRECTION --content "$CORRECTION_TEXT" --lookback 1 --message-id "$MSG_ID" --json
 ```
 
 ### Tuning: budgets + keywords
 
-- Query budget default: `12000` (default), `20000` for deep recall.
+- Query budget default: `20000` (default), `80000` for deep recall.
 - Keep `--exclude-bootstrap` enabled in adapters to avoid repeating files OpenClaw already injects.
 - Redaction and `exclude-paths` are built into the adapter; keep them configured for sensitive data suppression.
 
@@ -243,7 +243,7 @@ Paste this block into your OpenClaw workspace `AGENTS.md` (edit `AGENT` and path
 
 **Query** (before answering questions about prior work, context, decisions, corrections, lessons):
 ```bash
-python3 -m openclawbrain.openclaw_adapter.query_brain ~/.openclawbrain/AGENT/state.json '<summary of user message>' --chat-id '<chat_id from inbound metadata>' --format prompt --exclude-bootstrap --max-prompt-context-chars 12000
+python3 -m openclawbrain.openclaw_adapter.query_brain ~/.openclawbrain/AGENT/state.json '<summary of user message>' --chat-id '<chat_id from inbound metadata>' --format prompt --exclude-bootstrap --max-prompt-context-chars 20000
 ```
 Always pass `--chat-id` so fired nodes are logged for later learning/corrections.
 Use `--exclude-recent-memory <today-note> <yesterday-note>` only when those files are already loaded by OpenClaw in the same prompt and you want to avoid duplication.
@@ -316,7 +316,7 @@ Use prompt format and exclusions to keep context “tight and right”:
 
 - Prefer `--format prompt` so only `[BRAIN_CONTEXT]` is appended to the model prompt.
 - Keep `--exclude-bootstrap` enabled (default in the adapter).
-- Start with `--max-prompt-context-chars 8000` to `12000`; only increase when needed.
+- Start with `--max-prompt-context-chars 20000`; only move to `80000` for deep recall.
 - Use `--exclude-recent-memory ...` only for explicit daily notes already injected into the same OpenClaw turn.
 
 This aligns retrieval output with OpenClawBrain’s context-efficiency goal: preserve high-value retrieved nodes while minimizing repeated bootstrap content.
@@ -498,7 +498,7 @@ openclawbrain replay \
   --sessions /path/to/sessions \
   --include-tool-results \
   --tool-result-allowlist image,openai-whisper,openai-whisper-api,openai-whisper-local,summarize \
-  --tool-result-max-chars 20000
+  --tool-result-max-chars 80000
 ```
 
 This does:
