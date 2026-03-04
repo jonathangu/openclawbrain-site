@@ -97,6 +97,47 @@
     <p class="paper-subtitle">Query-time stays fast and local. The brain learns routing offline from massive weak supervision.</p>
     <p class="paper-subtitle">Human feedback is highest authority; teacher labels provide volume; policy gradient unifies it all.</p>
     <p class="authors"><span class="name">Jonathan Gu</span> · <a href="mailto:jonathangu@gmail.com" style="color: var(--text-muted); font-size: 0.85rem;">jonathangu@gmail.com</a></p>
+    <div id="why-this-exists" style="text-align: left; max-width: 720px; margin: 1.1rem auto 0; padding: 1.1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card);">
+      <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Why this exists</p>
+      <h2 style="margin: 0 0 0.6rem; font-size: 1.15rem; border-bottom: 0; padding-bottom: 0;">The problem OpenClaw users hit</h2>
+      <p style="margin: 0 0 0.9rem; font-family: var(--sans); font-size: 0.92rem; color: var(--text);">
+        OpenClawBrain’s promise: fewer LLM calls per user-visible exchange, bounded <code>[BRAIN_CONTEXT]</code>, and an always-on learning loop so agents stop forgetting and you stop doctoring runs.
+      </p>
+      <div class="table-wrap" style="margin: 0 0 0.9rem;">
+        <table>
+          <thead>
+            <tr>
+              <th>Pain</th>
+              <th>Fix in OpenClawBrain</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>High token burn / too many calls per exchange.</td>
+              <td>Fewer calls per exchange + budgeting + measurement (see benchmark harness + baseline numbers).</td>
+            </tr>
+            <tr>
+              <td>Amnesia / retcon after compaction.</td>
+              <td>Bounded <code>[BRAIN_CONTEXT]</code> + always-on learning capture/replay.</td>
+            </tr>
+            <tr>
+              <td>Time spent doctoring or babysitting runs.</td>
+              <td>Loop install + fail-open defaults to keep agents moving safely.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin: 0 0 0.75rem; font-family: var(--sans); font-size: 0.85rem; color: var(--text-muted);">
+        User pain is visible in the wild: “burning tokens re-reading everything or losing context after compaction.” <a href="https://github.com/openclaw/openclaw/discussions/25633">Source</a>
+        A week-long test reports “I spent approximately $47 in API costs” and “Every time OpenClaw takes a screenshot to ‘see’ what’s on a page, that’s a vision model API call.” <a href="https://medium.com/@likhitkumarvp/i-spent-47-testing-openclaw-for-a-week-heres-what-s-actually-happening-c274dc26a3fd">Source</a>
+      </p>
+      <p style="margin: 0 0 0.75rem; font-family: var(--sans); font-size: 0.85rem; color: var(--text-muted);">
+        We’re not claiming a percent cost reduction yet; use the benchmark harness and baseline numbers to evaluate in your environment.
+      </p>
+      <p style="margin: 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
+        Start here: <a href="/docs/openclaw-integration.md">openclaw integration</a> · <a href="/docs/brains-dashboard/">brains dashboard</a> · <a href="/docs/reproduce-eval.md">benchmark harness + baselines</a>
+      </p>
+    </div>
     <div style="text-align: left; max-width: 520px; margin: 0.9rem auto 0; padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: 10px; background: rgba(120, 180, 255, 0.08);">
       <p style="margin: 0 0 0.45rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Why engineers ship this</p>
       <ul style="margin: 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.55;">
