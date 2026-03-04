@@ -41,35 +41,44 @@ It is opt-in and fail-open:
 openclawbrain serve --state ~/.openclawbrain/main/state.json
 ```
 
-2. Install hook lines in workspace `AGENTS.md`:
+2. Install and enable the OpenClaw internal hook pack (recommended):
+
+```bash
+openclaw hooks install /path/to/openclawbrain/integrations/openclaw/hooks/openclawbrain-context-injector
+openclaw hooks enable openclawbrain-context-injector
+openclaw gateway restart
+```
+
+To toggle off without undoing files:
+
+```bash
+openclaw hooks disable openclawbrain-context-injector
+openclaw gateway restart
+```
+
+### Manual integration (fallback)
+
+If you cannot use the hook pack yet, you can wire the adapters directly in `AGENTS.md`.
 
 ```md
 ## Brain-first retrieval (opt-in)
 
 python3 -m openclawbrain.openclaw_adapter.query_brain "$STATE" "$(printf '%s' "$USER_MESSAGE")" --chat-id "$CHAT_ID" --format prompt --exclude-bootstrap --max-prompt-context-chars 12000
-```
-
-3. Enable in the message handler / correction path (same-turn if possible):
-
-```md
 python3 -m openclawbrain.openclaw_adapter.capture_feedback --state "$STATE" --chat-id "$CHAT_ID" --kind CORRECTION --content "$CORRECTION_TEXT" --lookback 1 --message-id "$MSG_ID" --json
 ```
 
-To toggle off without undoing files, stop calling these lines from your runtime hook and fallback logic.
-
 ### Tuning: budgets + keywords
 
-- Query budget baseline: `--max-prompt-context-chars 12000`.
-- Deep media/tool-result path (optional): `--tool-result-max-chars 20000`.
+- Query budget default: `12000` (default), `20000` for deep recall.
 - Keep `--exclude-bootstrap` enabled in adapters to avoid repeating files OpenClaw already injects.
-- For sensitive text suppression, use local wrapper logic with redaction keywords/patterns before forwarding payloads (for example `api_key`, `token`, `secret`, `private_key`).
+- Redaction and `exclude-paths` are built into the adapter; keep them configured for sensitive data suppression.
 
 ### Security and guardrails
 
 - Data-only delimiter: only append retrieved memory as `<code>[BRAIN_CONTEXT v1]...[/BRAIN_CONTEXT]</code>` and avoid injecting raw retrieval JSON into the final prompt.
 - Exclude paths where your org already stores secrets, credentials, or ephemeral artifacts.
-- Add redaction for sensitive token-like terms in hook wrapper logic so they never reach `query_brain` input.
-- Keep fail-open semantics in your hook wrapper: if query/daemon errors, continue with normal OpenClaw context and continue serving.
+- Add redaction for sensitive token-like terms in hook configuration so they never reach `query_brain` input.
+- Keep fail-open semantics in your hook: if query/daemon errors, continue with normal OpenClaw context and continue serving.
 
 ### How this interacts with learn/harvest
 
