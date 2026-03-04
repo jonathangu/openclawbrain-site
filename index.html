@@ -100,7 +100,7 @@
     <div style="text-align: left; max-width: 520px; margin: 0.9rem auto 0; padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: 10px; background: rgba(120, 180, 255, 0.08);">
       <p style="margin: 0 0 0.45rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Why engineers ship this</p>
       <ul style="margin: 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.55;">
-        <li><strong>Hot-path guarantee:</strong> query routing is local and bounded; no remote LLM required on the critical path by default.</li>
+        <li><strong>Hot-path guarantee (routing):</strong> routing is local + bounded; no additional completion-model calls are required for retrieval/routing. (The agent still uses an LLM to answer.)</li>
         <li><strong>Turn reduction:</strong> fewer calls per user-visible request and fewer retries/clarifications.</li>
         <li><strong>Don’t repeat mistakes:</strong> inhibitory suppression blocks known-bad routes.</li>
       </ul>
