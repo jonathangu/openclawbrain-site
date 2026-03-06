@@ -76,6 +76,23 @@
 
     <p>The learning curve is the second half of the comparison. <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs, while <code>learned</code> first reaches 4/4 at epoch 14. That is the current concrete evidence for the product framing: useful from graph priors first, better later via background learning.</p>
 
+    <h2>10-seed ground-zero comparison (March 2026)</h2>
+    <p>The ground-zero harness scales the baseline comparison to 800 queries&nbsp;&times;&nbsp;10 seeds with mid-run relation drift. Cost and accuracy now sit side by side:</p>
+
+    <table>
+      <thead>
+        <tr><th>Baseline</th><th>Accuracy</th><th>Context used</th><th>Traversal cost</th><th>Win rate vs full_brain</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>full_brain</code></td><td><strong>0.9723</strong></td><td>800</td><td>800</td><td>&mdash;</td></tr>
+        <tr><td><code>vector_rag_rerank</code></td><td>0.8901</td><td>4 000</td><td>6 400</td><td>1/10</td></tr>
+        <tr><td><code>vector_rag</code></td><td>0.7966</td><td>800</td><td>800</td><td>0/10</td></tr>
+        <tr><td><code>heuristic_stateful</code></td><td>0.7943</td><td>800</td><td>800</td><td>0/10</td></tr>
+      </tbody>
+    </table>
+
+    <p><code>vector_rag_rerank</code> is the nearest competitor but uses 5&times; the context and 8&times; the traversal cost for lower accuracy. <code>full_brain</code> wins in 10/10 seeds against <code>vector_rag</code> and <code>heuristic_stateful</code>, and 9/10 against <code>vector_rag_rerank</code>.</p>
+
     <h2>Why these baselines belong</h2>
     <table>
       <thead>
@@ -101,8 +118,8 @@
     <div class="card">
       <ul>
         <li>The workflow-proof slice cleanly separates cold-start semantic retrieval, deterministic traversal, durable graph priors, and the learned policy.</li>
-        <li>On this fixed slice, graph priors already outperform the simpler baselines, and the learned policy improves beyond the prior later.</li>
-        <li>The site still does <strong>not</strong> publish broad operator wins from real OpenClaw traffic.</li>
+        <li>The 10-seed ground-zero harness extends this to 800 queries per seed with relation drift: <code>full_brain</code> reaches 0.9723 accuracy at 800 context / 800 traversal cost, while <code>vector_rag_rerank</code> reaches 0.8901 at 4&thinsp;000 context / 6&thinsp;400 traversal cost.</li>
+        <li>The site still does <strong>not</strong> publish broad operator wins from real OpenClaw traffic. This is bounded benchmark evidence, not recorded-session or production proof.</li>
       </ul>
     </div>
 

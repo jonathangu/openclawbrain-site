@@ -163,7 +163,36 @@ OpenClawBrain learned (mixed) & 0.935126 / 0.9680 & 96.74\% & TBD & TBD & TBD & 
 \caption{Expert-regions simulation baselines from reproducible runs. Each \texttt{TBD} must cite commit SHA, command, and artifact path (e.g., \texttt{/tmp/ocb\_eval.json}).}
 \end{table}
 
-\subsection*{4.5 Reproduction Commands (Expected Output Paths)}
+\subsection*{4.5 10-Seed Ground-Zero Proof (March 2026)}
+The ground-zero harness scales evaluation to 800 queries per seed across 10
+independent seeds, with relation drift injected mid-run. Table~\ref{tab:ground-zero}
+shows the core comparison.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lcccc}
+\toprule
+Baseline & Accuracy & Context Used & Traversal Cost & Win Rate vs \texttt{full\_brain} \\
+\midrule
+\texttt{full\_brain}         & \textbf{0.9723} & 800   & 800   & --- \\
+\texttt{vector\_rag\_rerank} & 0.8901          & 4\,000 & 6\,400 & 1/10 \\
+\texttt{vector\_rag}         & 0.7966          & 800   & 800   & 0/10 \\
+\texttt{heuristic\_stateful} & 0.7943          & 800   & 800   & 0/10 \\
+\bottomrule
+\end{tabular}
+\caption{Ground-zero 10-seed proof (\texttt{proof\_10seed\_20260306}). \texttt{full\_brain} wins 10/10 seeds vs \texttt{vector\_rag} and \texttt{heuristic\_stateful}, 9/10 vs \texttt{vector\_rag\_rerank}. The nearest competitor uses $5\times$ the context and $8\times$ the traversal cost for lower accuracy.}
+\label{tab:ground-zero}
+\end{table}
+
+\paragraph{Worked example: E048\,{::}\,E001.}
+The ground-truth relation changes from \texttt{manages} to \texttt{depends\_on}
+at step~22. \texttt{full\_brain} tracks the change at steps~22 and~38;
+\texttt{heuristic\_stateful} stays stale; the vector baselines stay wrong or lag.
+This is bounded benchmark evidence---mechanism proof, not a claim of
+recorded-session, shadow, or online production superiority.
+
+\subsection*{4.6 Reproduction Commands (Expected Output Paths)}
 Commands (from \texttt{openclawbrain} repo) and expected outputs:
 \begin{verbatim}
 cd /path/to/openclawbrain

@@ -48,6 +48,19 @@
       </ul>
     </div>
 
+    <h2 style="font-family:var(--sans); color:var(--bright); margin-top:1.4rem;">10-Seed Ground-Zero Proof Artifacts</h2>
+    <div class="card">
+      <p style="margin:0 0 .5rem; font-family:var(--sans); color:var(--muted); font-size:.86rem;">From <code>proof_10seed_20260306</code> &mdash; 800 queries &times; 10 seeds, relation drift mid-run.</p>
+      <ul>
+        <li><strong>full_brain</strong> accuracy 0.9723 (800 context / 800 traversal cost)</li>
+        <li><strong>vector_rag_rerank</strong> 0.8901 (4 000 context / 6 400 traversal cost)</li>
+        <li><strong>vector_rag</strong> 0.7966 &middot; <strong>heuristic_stateful</strong> 0.7943</li>
+        <li>full_brain wins 10/10 seeds vs vector_rag and heuristic_stateful; 9/10 vs vector_rag_rerank</li>
+        <li>Worked example E048::E001 &mdash; truth drifts at step 22; full_brain tracks it, heuristic stays stale, vector baselines lag</li>
+      </ul>
+      <p style="margin:.5rem 0 0;">Source artifacts: <code>summary_table.md</code>, <code>pairwise_accuracy_delta.md</code>, <code>win_rate_matrix.md</code>, <code>worked_example_trace.md</code></p>
+    </div>
+
     <h2 style="font-family:var(--sans); color:var(--bright); margin-top:1.4rem;">Evaluation Figures</h2>
     <div class="card">
       <ul>

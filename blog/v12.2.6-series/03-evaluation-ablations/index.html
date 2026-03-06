@@ -51,7 +51,7 @@
     <div class="grid">
       <div class="card">
         <h3>Proven now</h3>
-        <p>On the same 4 fixed workflow queries: <code>vector_topk</code> 0/4, <code>pointer_chase</code> 1/4, <code>graph_prior_only</code> 2/4, <code>learned</code> 4/4.</p>
+        <p><code>full_brain</code> 0.9723 accuracy across 10 seeds, beating <code>vector_rag</code> and <code>heuristic_stateful</code> in 10/10 seeds and <code>vector_rag_rerank</code> in 9/10&mdash;at 5&times; lower context cost.</p>
       </div>
       <div class="card">
         <h3>Needs head-to-head</h3>
@@ -105,6 +105,39 @@
       <img src="/figures/eval/workflow_proof_learning_curve.svg" alt="Line chart showing graph_prior_only exact-target success staying at fifty percent while learned routing reaches one hundred percent at epoch fourteen" loading="lazy" />
       <figcaption>Useful fast with graph priors, better later via background learning: <code>graph_prior_only</code> stays at 2/4 for all 16 epochs, while <code>learned</code> reaches 4/4 at epoch 14. That is still deterministic harness evidence, not recorded-session or live-traffic proof.</figcaption>
     </figure>
+
+    <h2>10-seed ground-zero proof (March 2026)</h2>
+    <p>The ground-zero harness scales the evidence beyond the narrow 4-query slice. It runs 800 queries per seed across 10 independent seeds, with relation drift injected mid-run, and scores every baseline on accuracy, staleness, and traversal cost.</p>
+
+    <table>
+      <thead>
+        <tr><th>Baseline</th><th>Accuracy</th><th>Context used</th><th>Traversal cost</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>full_brain</code></td><td><strong>0.9723</strong></td><td>800</td><td>800</td></tr>
+        <tr><td><code>vector_rag_rerank</code></td><td>0.8901</td><td>4 000</td><td>6 400</td></tr>
+        <tr><td><code>vector_rag</code></td><td>0.7966</td><td>800</td><td>800</td></tr>
+        <tr><td><code>heuristic_stateful</code></td><td>0.7943</td><td>800</td><td>800</td></tr>
+      </tbody>
+    </table>
+
+    <p><code>full_brain</code> beats <code>vector_rag</code> and <code>heuristic_stateful</code> in 10/10 seeds, and <code>vector_rag_rerank</code> in 9/10. The nearest competitor (<code>vector_rag_rerank</code>) uses 5&times; the context and 8&times; the traversal cost to reach lower accuracy.</p>
+
+    <h2>Worked example: E048&thinsp;::&thinsp;E001</h2>
+    <p>The ground-truth relation between entities E048 and E001 changes from <code>manages</code> to <code>depends_on</code> at step&nbsp;22. This table shows how each baseline tracks the drift:</p>
+
+    <table>
+      <thead>
+        <tr><th>Step</th><th>Truth</th><th>full_brain</th><th>heuristic_stateful</th><th>vector_rag</th><th>vector_rag_rerank</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>13</td><td>manages</td><td>manages (ok)</td><td>manages (ok)</td><td>owns (WRONG)</td><td>manages (ok)</td></tr>
+        <tr><td>22</td><td>depends_on</td><td>depends_on (ok)</td><td>manages (STALE)</td><td>manages (STALE)</td><td>manages (STALE)</td></tr>
+        <tr><td>38</td><td>depends_on</td><td>depends_on (ok)</td><td>manages (STALE)</td><td>owns (WRONG)</td><td>depends_on (ok)</td></tr>
+      </tbody>
+    </table>
+
+    <p><code>full_brain</code> tracks the relation change at steps 22 and 38. <code>heuristic_stateful</code> stays stale. The vector baselines stay wrong or lag behind. This is bounded benchmark evidence&mdash;mechanism proof, not a claim of recorded-session or production superiority.</p>
 
     <h2>Mechanism proof versus product proof</h2>
     <p>This slice proves something real but limited: durable structure already helps on fixed workflow retrieval, and learned routing can improve later without claiming that the hot path retrains itself inline. It does <strong>not</strong> prove that operators complete real OpenClaw tasks faster, with fewer corrections, or at lower cost in production.</p>
