@@ -453,10 +453,10 @@
           </div>
 
           <figure class="figure-card">
-            <div class="kicker">Mechanism artifact</div>
-            <img src="../figures/eval/oracle_gap_closed.svg" alt="Simulation figure showing the learned route policy closing the gap to an oracle over training">
+            <div class="kicker">Workflow-proof artifact</div>
+            <img src="../figures/eval/workflow_proof_exact_target_success.svg" alt="Bar chart showing exact-target success across the deterministic workflow proof modes: vector_topk zero out of four, pointer_chase one out of four, graph_prior_only two out of four, and learned four out of four">
             <figcaption>
-              Existing simulation plots are evidence that the learning rule can move the router in controlled settings. They are not, by themselves, proof of field performance.
+              Exact-target success on the same 4 deterministic workflow queries: <code>vector_topk</code> 0/4, <code>pointer_chase</code> 1/4, <code>graph_prior_only</code> 2/4, <code>learned</code> 4/4. Source: <code>baseline_eval/summary.csv</code>. Reproduce from <a href="../docs/reproduce-eval.md">docs/reproduce-eval.md</a>; compare the turn-level contract in the <a href="../docs/worked-example.md">worked example</a>.
             </figcaption>
           </figure>
 
@@ -468,6 +468,37 @@
               <li><strong>Needs head-to-head</strong>: the claim depends on fixed recorded sessions or shadow traffic.</li>
               <li><strong>Not claimed</strong>: there is no matching artifact yet, so the site should not imply certainty.</li>
             </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="workflow-proof">
+        <div class="section-head">
+          <div>
+            <h2>Current workflow-proof slice</h2>
+            <p class="section-intro">This deterministic harness is narrow on purpose: it checks whether the router retrieves the exact required history or runbook nodes for 4 fixed workflow queries, then shows whether background teacher supervision improves the served <code>route_fn</code>.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <figure class="figure-card">
+            <div class="kicker">Learning curve</div>
+            <img src="../figures/eval/workflow_proof_learning_curve.svg" alt="Line chart showing graph_prior_only exact-target success staying at fifty percent while learned routing reaches one hundred percent at epoch fourteen">
+            <figcaption>
+              <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs. <code>learned</code> stays at 2/4 through epoch 13, reaches 4/4 at epoch 14, and stays there through epoch 16. Source: <code>learning_curve.csv</code>. Reproduce from <a href="../docs/reproduce-eval.md">docs/reproduce-eval.md</a>; keep the product boundary aligned with the <a href="../docs/worked-example.md">worked example</a>.
+            </figcaption>
+          </figure>
+
+          <article class="status-card">
+            <div class="kicker">What this proves now</div>
+            <h2>Useful from graph priors, better after background learning</h2>
+            <ul>
+              <li>Cold-start graph priors already recover both required nodes on 2 of the 4 fixed workflow queries.</li>
+              <li>The learned runtime <code>route_fn</code> improves later, off the hot path, and reaches exact-target success 4/4 by epoch 14 with required coverage 1.00.</li>
+              <li><code>pointer_chase</code> averages 1.25 turns and still only reaches 1/4 exact-target success in this harness.</li>
+            </ul>
+            <p class="meta">
+              Not proven yet: recorded-session task success, shadow-mode disagreement rates, or production latency and cost on served OpenClaw traffic. Those still need stronger evidence than this deterministic slice.
+            </p>
           </article>
         </div>
       </section>

@@ -408,6 +408,16 @@
       text-decoration: none;
       border-color: rgba(121, 211, 255, 0.32);
     }
+    .proof-summary {
+      margin-bottom: 1rem;
+    }
+    .proof-summary p {
+      margin: 0.45rem 0 0;
+      color: var(--muted);
+    }
+    .proof-summary strong {
+      color: var(--bright);
+    }
     .callout {
       padding: 1rem 1.1rem;
       border-radius: 18px;
@@ -702,13 +712,20 @@ python3 -m openclawbrain.openclaw_adapter.query_brain \
             <p class="section-intro">The current site should distinguish mechanism proof from product proof. Both matter, and they are not the same.</p>
           </div>
         </div>
+        <div class="panel proof-summary">
+          <div class="kicker">Current deterministic workflow proof</div>
+          <h3>Exact-target success moves from 0/4 to 4/4 on the same 4-query slice.</h3>
+          <p><strong>Current figures:</strong> <code>vector_topk</code> 0/4, <code>pointer_chase</code> 1/4, <code>graph_prior_only</code> 2/4, <code>learned</code> 4/4. Graph prior stays at 2/4 across all 16 epochs; learned first reaches 4/4 at epoch 14.</p>
+          <p>This is mechanism proof from the current workflow harness, not a live production eval.</p>
+          <a class="resource-link" href="/proof/#workflow-proof">See the figures and proof boundary -&gt;</a>
+        </div>
         <div class="proof-grid">
           <a class="proof-card" href="/proof/#proven-now">
             <div class="kicker">Proven now</div>
             <h3>Mechanism and local reproducibility</h3>
             <ul>
               <li>Deterministic simulations and ablations that exercise the routing policy and its training loop.</li>
-              <li>Reproducible harness commands for comparing <code>vector_only</code>, <code>graph_prior_only</code>, <code>qtsim_only</code>, and mixed learned routing on your own state.</li>
+              <li>Current workflow-proof artifacts compare <code>vector_topk</code>, <code>pointer_chase</code>, <code>graph_prior_only</code>, and <code>learned</code> on the same fixed query slice.</li>
               <li>Generated figures and artifact paths that can be checked locally before any claim is published.</li>
             </ul>
           </a>

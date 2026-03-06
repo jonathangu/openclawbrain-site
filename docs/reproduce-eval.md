@@ -131,6 +131,29 @@ Expected figure outputs:
 - `figures/eval/alpha_router_conf_hist.svg`
 - `figures/eval/ablation_bar_chart.svg`
 
+Current workflow-proof figures used on `/proof/`:
+
+```bash
+python3 scripts/generate_workflow_proof_figures.py \
+  --baseline /private/tmp/ocb-proof-sims/scratch/workflow-proof/latest/baseline_eval/summary.csv \
+  --curve /private/tmp/ocb-proof-sims/scratch/workflow-proof/latest/learning_curve.csv \
+  --outdir figures/eval
+```
+
+Current cited metrics from that artifact bundle:
+
+- exact-target success: `vector_topk` 0/4, `pointer_chase` 1/4, `graph_prior_only` 2/4, `learned` 4/4
+- graph prior stays flat at 2/4 across all 16 epochs
+- learned first reaches 4/4 at epoch 14
+- worked retrieval example source: `/private/tmp/ocb-proof-sims/scratch/workflow-proof/latest/worked_example.md`
+
+Expected workflow-proof outputs:
+
+- `figures/eval/workflow_proof_exact_target_success.svg`
+- `figures/eval/workflow_proof_learning_curve.svg`
+
+These figures are still mechanism proof only. They make the current deterministic retrieval result concrete; they do not replace recorded-session, shadow, or online product evidence.
+
 ## Reporting contract
 
 Use these labels consistently:
