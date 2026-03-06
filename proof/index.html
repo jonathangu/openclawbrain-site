@@ -290,6 +290,12 @@
       font-family: var(--sans);
       font-size: 0.98rem;
     }
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+      gap: 1rem;
+      align-items: start;
+    }
     .ladder-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -359,6 +365,7 @@
     @media (max-width: 980px) {
       .hero,
       .status-grid,
+      .two-col,
       .ladder-grid,
       .check-grid,
       .kit-grid {
