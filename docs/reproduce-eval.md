@@ -8,6 +8,11 @@ The short version:
 - simulations alone are not enough for product proof
 - strong claims need offline recorded-session eval, shadow traffic, and narrow online rollout
 
+Smallest useful proof unit:
+
+- one traceable turn with a stable `chat_id`, saved `query_brain` output, and any same-turn feedback artifacts
+- canonical example: [docs/worked-example.md](worked-example.md)
+
 ## Evidence ladder
 
 ### 1. Mechanism proof: deterministic simulations
@@ -88,6 +93,16 @@ Track at least:
 - cost or token spend
 
 This is the first step that starts to answer whether the learned runtime `route_fn` is helping the real OpenClaw workflow.
+
+## Artifact checklist
+
+Use this as the minimum retention policy for anything cited on the site.
+
+| Evaluation type | Save at minimum |
+| --- | --- |
+| deterministic sim run | exact command, commit SHA, seed or config, output directory, and generated JSON/SVG/PNG artifacts |
+| recorded-session eval | frozen query or session-set path plus digest, state path or snapshot identifier, rubric version, per-mode outputs, per-query judgments, and sampled turn bundles in the [worked-example format](worked-example.md) |
+| shadow-mode comparison | traffic slice definition and dates, brain-off and brain-on outputs for the same turns, output-budget rules, prompt/latency/cost logs, and saved disagreement traces with `chat_id` plus bounded `[BRAIN_CONTEXT]` |
 
 ## 4. Narrow online rollout
 
