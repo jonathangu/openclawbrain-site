@@ -3,26 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OpenClawBrain Materials</title>
-  <meta name="description" content="Additional OpenClawBrain materials: thesis, math appendix, evaluation plan, reproduce-eval steps, simulations, and operator quickstart." />
+  <title>OpenClawBrain Supporting Materials</title>
+  <meta name="description" content="Supporting materials for OpenClawBrain: canonical paper route, direct PDF, reproduce-eval steps, figures, and repository references." />
   <link rel="canonical" href="https://openclawbrain.ai/materials/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
   <style>
-    :root { --bg:#0f1219; --card:#171d29; --text:#d8dfec; --muted:#98a4b8; --bright:#f4f8ff; --border:#2a364c; --accent:#7db9ff; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; }
-    body { margin:0; background:linear-gradient(145deg,#121a2a,#0f1219 48%); color:var(--text); font-family:var(--serif); line-height:1.75; }
+    :root { --bg:#09111a; --card:#111d2b; --text:#dce8f1; --muted:#97afbf; --bright:#f7fbff; --border:#274156; --accent:#7dd6ff; --sans:"Space Grotesk",sans-serif; --serif:"Newsreader",serif; --mono:"IBM Plex Mono",monospace; }
+    body { margin:0; background:radial-gradient(circle at 0% 0%, rgba(125,214,255,0.12), transparent 28%), linear-gradient(145deg,#0b1622,#09111a 52%); color:var(--text); font-family:var(--serif); line-height:1.75; }
     main { max-width:860px; margin:0 auto; padding:2.6rem 1.2rem 3.4rem; }
     h1 { font-family:var(--sans); color:var(--bright); margin:.4rem 0 .8rem; }
     .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.86rem; }
     a { color:var(--accent); }
     ul { padding-left:1.2rem; }
     li { margin:.6rem 0; }
-    .card { border:1px solid var(--border); border-radius:10px; background:var(--card); padding:1rem 1.1rem; margin-top:1rem; }
+    .card { border:1px solid var(--border); border-radius:18px; background:var(--card); padding:1rem 1.1rem; margin-top:1rem; box-shadow:0 18px 56px rgba(0,0,0,.24); }
+    code, pre { font-family:var(--mono); }
   </style>
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a></div>
-    <h1>Additional Materials</h1>
-    <p>Canonical docs and references for the current OpenClawBrain system.</p>
+    <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/proof/">proof</a> · <a href="/paper/">paper</a> · <a href="/blog/">blog</a></div>
+    <h1>Supporting Materials</h1>
+    <p>Canonical docs and references for the current OpenClawBrain system. If you want the current paper first, use <a href="/paper/">/paper/</a> for the landing page and <a href="/openclawbrain.pdf">/openclawbrain.pdf</a> for the direct artifact.</p>
+
+    <div class="card">
+      <ul>
+        <li><a href="/paper/">Canonical paper page</a></li>
+        <li><a href="/openclawbrain.pdf">Current PDF</a></li>
+        <li><a href="/proof/">Proof package</a></li>
+        <li><a href="/blog/v12.2.6-series/">Current blog series</a></li>
+      </ul>
+    </div>
 
     <div class="card">
       <ul>
@@ -45,7 +58,7 @@
         <li><a href="/figures/eval/ablation_bar_chart.svg">ablation_bar_chart.svg</a></li>
       </ul>
       <p style="margin:.5rem 0 0;">Regenerate from repo root (see <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>):</p>
-      <pre style="overflow:auto; white-space:pre-wrap; margin:.4rem 0 0; background:#111827; border:1px solid var(--border); border-radius:8px; padding:.75rem; color:#c7d2fe; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">python3 -m pip install -r scripts/requirements.txt
+      <pre style="overflow:auto; white-space:pre-wrap; margin:.4rem 0 0; background:#111827; border:1px solid var(--border); border-radius:8px; padding:.75rem; color:#c7d2fe;">python3 -m pip install -r scripts/requirements.txt
 python3 scripts/plot_eval.py --inputs /tmp/ocb_expert_regions /tmp/ocb_two_cluster --out figures/eval</pre>
     </div>
 
