@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain: Shadow Routing + Ultimate Policy Gradient</title>
+  <title>OpenClawBrain: Durable Local Memory for OpenClaw</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain keeps query-time retrieval fast with local traversal, then learns routing offline from massive teacher supervision. Ultimate policy gradient unifies human feedback, self-learning, harvesters, and async teacher labels.">
-  <meta property="og:title" content="OpenClawBrain: Shadow Routing + Ultimate Policy Gradient">
-  <meta property="og:description" content="Fast local traversal on the hot path; async teacher labeling + policy-gradient updates offline. Human feedback remains highest authority.">
+  <meta name="description" content="OpenClawBrain is the durable local memory and learning layer for ongoing OpenClaw use: bounded local retrieval on the hot path, async route learning offline, and explicit workflow-shaped proof.">
+  <meta property="og:title" content="OpenClawBrain: Durable Local Memory for OpenClaw">
+  <meta property="og:description" content="Keep GPT-5.4 and OpenClaw for generic agent work. OpenClawBrain adds durable local memory, bounded context, and offline route learning for repeated workflows.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary">
@@ -26,7 +26,7 @@
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   <script type="application/ld+json">
   { "@context": "https://schema.org", "@type": "ScholarlyArticle",
-    "headline": "OpenClawBrain: self-learning memory for OpenClaw agents",
+    "headline": "OpenClawBrain: durable local memory for OpenClaw agents",
     "author": [{"@type": "Person", "name": "Jonathan Gu", "email": "jonathangu@gmail.com", "url": "https://jonathangu.com"}],
     "datePublished": "2026-02-27", "url": "https://openclawbrain.ai/" }
   </script>
@@ -84,6 +84,25 @@
     .insight { margin: 1.5rem 0; padding: 0.9rem 1.1rem; background: rgba(63, 185, 80, 0.08); border: 1px solid rgba(63, 185, 80, 0.25); border-radius: 7px; color: var(--text-bright); }
     .note { margin: 1.5rem 0; padding: 0.95rem 1rem; border-left: 3px solid var(--orange); background: rgba(227,149,92,0.09); border-radius: 6px; color: var(--text-bright); }
     .tag { font-size: 0.76rem; font-family: var(--sans); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+    .proof-card { max-width: 720px; margin: 1rem auto 0; padding: 1rem 1.1rem; border: 1px solid rgba(74, 158, 255, 0.28); border-radius: 12px; background: linear-gradient(180deg, rgba(74, 158, 255, 0.10), rgba(17, 17, 17, 0.96)); }
+    .proof-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; margin: 0.9rem 0 0.8rem; }
+    .proof-step { padding: 0.8rem 0.9rem; border: 1px solid var(--border); border-radius: 10px; background: rgba(10, 10, 10, 0.55); text-align: left; }
+    .proof-step.active { border-color: rgba(74, 158, 255, 0.48); background: rgba(74, 158, 255, 0.10); }
+    .proof-step.pending { border-style: dashed; }
+    .proof-step-label { margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .proof-step-title { margin: 0 0 0.25rem; font-family: var(--sans); font-size: 0.95rem; font-weight: 600; color: var(--text-bright); line-height: 1.35; }
+    .proof-step-copy { margin: 0; font-family: var(--sans); font-size: 0.86rem; line-height: 1.5; color: var(--text); }
+    .proof-metrics { margin: 0.85rem 0 0.65rem; }
+    .proof-metrics table { font-size: 0.8rem; }
+    .proof-metrics th, .proof-metrics td { padding: 0.45rem 0.55rem; }
+    .proof-notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; margin-top: 0.7rem; }
+    .proof-note { padding: 0.75rem 0.85rem; border: 1px solid var(--border); border-radius: 10px; background: rgba(10, 10, 10, 0.55); text-align: left; }
+    .proof-note-title { margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .proof-note p { margin: 0; font-family: var(--sans); font-size: 0.88rem; line-height: 1.55; }
+    .proof-meta { margin: 0.8rem 0 0; font-family: var(--sans); font-size: 0.84rem; line-height: 1.6; color: var(--text-muted); text-align: left; }
+    @media (max-width: 720px) {
+      .proof-grid, .proof-notes { grid-template-columns: 1fr; }
+    }
     @media (max-width: 600px) { .paper { padding: 2rem 1rem 4rem; } .paper-title { font-size: 1.5rem; } body { font-size: 16px; } }
   </style>
 </head>
@@ -93,28 +112,82 @@
   <header class="paper-header">
 
     <a href="https://www.jonathangu.com/" class="back-link">← jonathangu.com</a>
-    <h1 class="paper-title">OpenClawBrain: Shadow Routing + Ultimate Policy Gradient</h1>
-    <p class="paper-subtitle">Query-time stays fast and local. The brain learns routing offline from massive weak supervision.</p>
-    <p class="paper-subtitle">Human feedback is highest authority; teacher labels provide volume; policy gradient unifies it all.</p>
+    <h1 class="paper-title">OpenClawBrain: Durable Local Memory for OpenClaw</h1>
+    <p class="paper-subtitle">Keep GPT-5.4 + OpenClaw for generic agent work. OpenClawBrain adds bounded local memory and route learning for repeated workflows.</p>
+    <p class="paper-subtitle">Shadow routing stays on the hot path; async supervision trains a better route policy offline.</p>
     <p class="authors"><span class="name">Jonathan Gu</span> · <a href="mailto:jonathangu@gmail.com" style="color: var(--text-muted); font-size: 0.85rem;">jonathangu@gmail.com</a></p>
     <div style="text-align: left; max-width: 720px; margin: 1.1rem auto 0; padding: 1.1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card);">
-      <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Why engineers ship this</p>
+      <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Where it fits</p>
       <p style="margin: 0 0 0.6rem; font-family: var(--sans); font-size: 1.25rem; font-weight: 700; color: var(--text-bright); line-height: 1.25;">
-        Fewer calls. Bounded memory. Less doctoring.
+        Keep OpenClaw. Add memory that sticks and routing that learns.
       </p>
       <p style="margin: 0 0 0.75rem; font-family: var(--sans); font-size: 0.98rem; color: var(--text);">
-        OpenClawBrain gives your agent durable memory and cost control — without adding completion-model calls to the hot path. Retrieval and routing run locally and in bounded time. The agent still uses an LLM to answer; the brain just makes it cheaper and sharper.
+        Assume you already have GPT-5.4 and OpenClaw handling generic agent workflows. OpenClawBrain is the durable local memory and learning layer beside that stack: bounded retrieval on the hot path, persistent corrections and traces across sessions, and offline route learning for repeated work.
       </p>
       <ul style="margin: 0 0 0.75rem; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.55;">
-        <li>↓ Fewer calls per exchange — Brain context is injected before the completion call, not in addition to it. Measure the reduction in completion-model calls per user-visible exchange with the included benchmark harness.</li>
-        <li>📐 Bounded token budgets — <code>[BRAIN_CONTEXT]</code> ships 20k default / 80k deep. You control prompt + completion tokens per exchange; no runaway context windows.</li>
-        <li>🔁 Always-on learning, zero doctoring — Corrections, preferences, and self-learning capture live, replay offline. No manual prompt surgery to make the agent remember.</li>
+        <li>OpenClaw keeps planning and execution; OpenClawBrain injects relevant local context before the model call.</li>
+        <li>Durable memory stays bounded: <code>[BRAIN_CONTEXT]</code> ships 20k default / 80k deep, with replayable corrections and traces instead of prompt doctoring.</li>
+        <li>Repeated workflows get better routing over time without adding extra completion-model calls to the hot path.</li>
       </ul>
       <a href="/docs/openclaw-integration.md" style="display: inline-block; padding: 0.55rem 0.95rem; border-radius: 8px; background: var(--accent); color: #0a0f17; font-family: var(--sans); font-size: 0.9rem; font-weight: 600; text-decoration: none;">
         Enable in OpenClaw — 5 min setup
       </a>
       <p style="margin: 0.55rem 0 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
-        Measure calls/exchange and tokens/exchange in your own logs — no trust required. <a href="/docs/reproduce-eval.md">Run the benchmark harness →</a>
+        Reproduce the workflow proof and baseline harness in your own checkout — no trust required. <a href="/docs/reproduce-eval.md">Run the canonical eval docs →</a>
+      </p>
+    </div>
+    <div class="proof-card">
+      <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; text-align: left;">Current proof ladder</p>
+      <p style="margin: 0; font-family: var(--sans); font-size: 1.02rem; color: var(--text-bright); text-align: left;">
+        The strongest current evidence is a deterministic workflow-shaped harness: cold-start graph priors are already somewhat useful, and async supervision trains a learned runtime route policy that solves held-out workflow-shaped queries.
+      </p>
+      <div class="proof-grid">
+        <div class="proof-step">
+          <p class="proof-step-label">Step 1</p>
+          <p class="proof-step-title">Synthetic sims</p>
+          <p class="proof-step-copy">Mechanism-level checks for reward shaping, routing dynamics, inhibition, and learning curves.</p>
+        </div>
+        <div class="proof-step active">
+          <p class="proof-step-label">Step 2</p>
+          <p class="proof-step-title">Workflow proof</p>
+          <p class="proof-step-copy">Deterministic OpenClaw-shaped tasks with held-out queries, trace labels, and a learned-vs-baseline routing comparison.</p>
+        </div>
+        <div class="proof-step pending">
+          <p class="proof-step-label">Step 3</p>
+          <p class="proof-step-title">Live production eval</p>
+          <p class="proof-step-copy">Not claimed here yet. This page does not present live production OpenClaw answer-quality proof.</p>
+        </div>
+      </div>
+      <div class="table-wrap proof-metrics">
+        <table>
+          <thead>
+            <tr>
+              <th>Mode</th>
+              <th>Exact target success</th>
+              <th>Required-node coverage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>vector_topk</code></td><td>0.00</td><td>0.00</td></tr>
+            <tr><td><code>pointer_chase</code></td><td>0.25</td><td>0.38</td></tr>
+            <tr><td><code>graph_prior_only</code></td><td>0.50</td><td>0.50</td></tr>
+            <tr><td><code>learned</code></td><td>1.00</td><td>1.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="proof-notes">
+        <div class="proof-note">
+          <p class="proof-note-title">What This Proves</p>
+          <p>OpenClawBrain can learn a better route policy than vector retrieval, pointer chasing, or cold-start graph priors alone on held-out workflow-shaped queries.</p>
+        </div>
+        <div class="proof-note">
+          <p class="proof-note-title">What This Does Not Prove</p>
+          <p>It is not a live production OpenClaw eval, and it does not directly prove downstream answer quality on user tasks yet.</p>
+        </div>
+      </div>
+      <p class="proof-meta">
+        Command: <code>python3 -m examples.eval.simulate_openclaw_workflows --output-dir scratch/workflow-proof/latest</code><br>
+        Artifacts: <code>workflow_state.json</code>, <code>train_traces.jsonl</code>, <code>train_labels.jsonl</code>, <code>eval_queries.jsonl</code>, <code>learning_curve.csv</code>, <code>baseline_eval/summary.json</code>, <code>report.md</code>, <code>worked_example.md</code>. <a href="/docs/reproduce-eval.md">Full reproduce instructions →</a>
       </p>
     </div>
     <div class="paper-meta">
@@ -131,7 +204,7 @@
         <li><a href="/openclawbrain.pdf">Paper PDF (v12.2.6+)</a></li>
         <li><a href="/blog/v12.2.6-series/">Blog series (v12.2.6+)</a></li>
         <li><a href="/materials/">Additional materials</a></li>
-        <li><a href="/docs/reproduce-eval.md">Reproduce eval + figures (canonical)</a></li>
+        <li><a href="/docs/reproduce-eval.md">Reproduce workflow proof + evals (canonical)</a></li>
         <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/operator-quickstart.md">GitHub docs: operator quickstart</a></li>
         <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/ultimate-policy-gradient-routing-math.md">GitHub docs: math appendix</a></li>
         <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/evaluation-plan.md">GitHub docs: evaluation plan</a></li>
@@ -221,7 +294,7 @@
       We’re not claiming a percent cost reduction yet; use the benchmark harness and baseline numbers to evaluate in your environment.
     </p>
     <p style="margin: 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
-      Start here: <a href="/docs/openclaw-integration.md">openclaw integration</a> · <a href="/docs/brains-dashboard/">brains dashboard</a> · <a href="/docs/reproduce-eval.md">benchmark harness + baselines</a>
+      Start here: <a href="/docs/openclaw-integration.md">openclaw integration</a> · <a href="/docs/brains-dashboard/">brains dashboard</a> · <a href="/docs/reproduce-eval.md">workflow proof + benchmark harnesses</a>
     </p>
   </div>
 
