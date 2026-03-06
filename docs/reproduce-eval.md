@@ -1,10 +1,40 @@
-# Reproduce Evaluation + Figures (Canonical)
+# Prove It: Canonical Evaluation Path
 
-This is the single source of truth for reproducing evaluation metrics and figures referenced on the OpenClawBrain site and paper.
+This page is the contract for what OpenClawBrain can claim and how those claims should be proven.
 
-## 1) Run the baseline + ablation harness (real query set)
+The short version:
 
-Use the evaluation harness in the main `openclawbrain` code repo.
+- simulations are useful for mechanism proof
+- simulations alone are not enough for product proof
+- strong claims need offline recorded-session eval, shadow traffic, and narrow online rollout
+
+## Evidence ladder
+
+### 1. Mechanism proof: deterministic simulations
+
+Use the simulation scripts to show that the routing and learning mechanism behaves as expected.
+
+```bash
+cd /path/to/openclawbrain
+python examples/eval/simulate_expert_regions.py --output-dir /tmp/ocb_expert_regions
+python examples/eval/simulate_two_cluster_routing.py --output-dir /tmp/ocb_two_cluster
+```
+
+What this proves:
+
+- the learned route policy can improve in controlled settings
+- the confidence gate and ablations behave as expected
+- the figure-generation path is reproducible
+
+What this does **not** prove:
+
+- superiority on real OpenClaw traffic
+- cost wins in production
+- universal gains across one-off workloads
+
+## 2. Offline head-to-head: recorded queries or sessions
+
+Run the harness on a fixed query set against the same state and the same evaluation rubric.
 
 ```bash
 cd /path/to/openclawbrain
@@ -16,31 +46,59 @@ python examples/eval/run_eval.py \
   --print-per-query
 ```
 
-Expected output:
-- `/tmp/ocb_eval.json` (per-mode summaries + optional per-query rows)
+Baseline mapping used by the site:
 
-Baseline mapping used in the paper/blog:
-- **Vector top-k** → `vector_only`
-- **Top-k + reranker** → `edge_sim_legacy` (deterministic `route_mode=edge+sim` rerank)
-- **Pointer-chasing** → `edge_sim_legacy` with multi-hop traversal enabled (default in the harness)
+- vector top-k -> `vector_only`
+- deterministic rerank / legacy edge similarity -> `edge_sim_legacy`
+- graph prior only -> `graph_prior_only`
+- query-conditioned route component only -> `qtsim_only`
+- learned runtime route policy -> `learned`
 
-If you add a dedicated pointer-chasing mode in the harness, include it in `--modes` and document it in the report.
+What this adds beyond simulations:
 
-## 2) Run synthetic simulations (reward/accuracy/oracle-gap curves)
+- same recorded workload across all modes
+- same success criteria across all modes
+- real state and real query artifacts
 
-```bash
-cd /path/to/openclawbrain
-python examples/eval/simulate_expert_regions.py --output-dir /tmp/ocb_expert_regions
-python examples/eval/simulate_two_cluster_routing.py --output-dir /tmp/ocb_two_cluster
-```
+Minimum artifacts to keep:
 
-Expected outputs:
-- `/tmp/ocb_expert_regions/simulation_curve.csv` (columns: `epoch,reward,accuracy,oracle_gap_fraction,...`)
-- `/tmp/ocb_expert_regions/report.md`
-- `/tmp/ocb_two_cluster/simulation_curve.csv` (columns: `epoch,ce_loss,cluster_accuracy,top1_accuracy`)
-- `/tmp/ocb_two_cluster/report.md`
+- exact command
+- commit SHA
+- output JSON path
+- query set path
+- seed, if applicable
 
-## 3) Generate site/paper figures from CSVs
+## 3. Shadow-mode proof: real OpenClaw traffic without serving it yet
+
+Before making strong product claims, compare brain-off and brain-on on recorded or mirrored OpenClaw traffic.
+
+Minimum requirements:
+
+- same traffic slice
+- same scoring rubric
+- same output budget rules
+- side-by-side artifact retention
+
+Track at least:
+
+- task success or correctness
+- correction rate
+- prompt size
+- latency
+- cost or token spend
+
+This is the first step that starts to answer whether the learned runtime `route_fn` is helping the real OpenClaw workflow.
+
+## 4. Narrow online rollout
+
+Only after shadow-mode evidence exists:
+
+- enable for a narrow slice of traffic
+- keep fail-open behavior
+- compare success, correction rate, prompt size, latency, and cost
+- publish only the claims that the artifacts support
+
+## Figure generation for the site
 
 From this website repo:
 
@@ -50,13 +108,25 @@ python3 scripts/plot_eval.py \
   --out figures/eval
 ```
 
-Expected outputs in `figures/eval/`:
-- `reward_vs_epoch.svg` + `reward_vs_epoch.png`
-- `accuracy_vs_epoch.svg` + `accuracy_vs_epoch.png`
-- `oracle_gap_closed.svg` + `oracle_gap_closed.png`
-- `alpha_router_conf_hist.svg` + `alpha_router_conf_hist.png` (if data present)
-- `ablation_bar_chart.svg` + `ablation_bar_chart.png`
+Expected figure outputs:
 
-## 4) Paper table placeholders
+- `figures/eval/reward_vs_epoch.svg`
+- `figures/eval/accuracy_vs_epoch.svg`
+- `figures/eval/oracle_gap_closed.svg`
+- `figures/eval/alpha_router_conf_hist.svg`
+- `figures/eval/ablation_bar_chart.svg`
 
-If you do not have the outputs above, leave paper/blog tables as `TBD` and cite the exact command + output path you plan to fill (for example, `/tmp/ocb_eval.json` and `/tmp/ocb_expert_regions/simulation_curve.csv`).
+## Reporting contract
+
+Use these labels consistently:
+
+- `proven now` for deterministic local artifacts that exist
+- `needs head-to-head` for claims that require recorded-session or shadow-mode evidence
+- `not claimed` for anything without artifacts
+
+If an artifact does not exist yet:
+
+- leave the table cell as `TBD`
+- cite the exact command and output path you intend to fill later
+
+Do not backfill narrative certainty ahead of the evidence.

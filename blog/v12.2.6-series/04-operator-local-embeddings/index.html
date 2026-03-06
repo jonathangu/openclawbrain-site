@@ -3,40 +3,100 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Post 4: Operator Guide for Local Embeddings OOTB</title>
+  <title>Post 4: Local-First Operator Rollout</title>
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/04-operator-local-embeddings/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
   <style>
-    :root { --bg:#17131d; --text:#e2dcec; --muted:#b6abc9; --bright:#f8f4ff; --border:#4b4160; --accent:#caa7ff; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; --mono:"JetBrains Mono",monospace; }
-    body { margin:0; background:linear-gradient(135deg,#201a2d,#17131d 48%); color:var(--text); font-family:var(--serif); line-height:1.82; }
-    main { max-width:860px; margin:0 auto; padding:2.5rem 1.2rem 3rem; }
+    :root { --bg:#15111b; --panel:rgba(28,22,36,0.86); --line:rgba(205,167,255,0.18); --text:#e4dff0; --muted:#b8aecb; --bright:#faf6ff; --accent:#d0aaff; --sans:"Space Grotesk",sans-serif; --serif:"Newsreader",serif; --mono:"IBM Plex Mono",monospace; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(circle at 0% 0%, rgba(208,170,255,0.16), transparent 30%), linear-gradient(180deg,#15111b 0%,#17131e 55%,#15111b 100%); color:var(--text); font-family:var(--serif); line-height:1.82; }
+    a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+    main { width:min(900px,calc(100vw - 32px)); margin:0 auto; padding:2rem 0 3rem; }
+    .nav,.meta,.eyebrow { font-family:var(--sans); }
+    .nav { color:var(--muted); font-size:.88rem; margin-bottom:1rem; }
+    .eyebrow { display:inline-flex; padding:.38rem .68rem; border-radius:999px; border:1px solid rgba(208,170,255,0.18); background:rgba(208,170,255,0.08); color:var(--accent); font-size:.76rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; }
     h1,h2 { font-family:var(--sans); color:var(--bright); }
-    .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.84rem; }
-    pre { border:1px solid var(--border); border-radius:10px; background:#221c30; padding:.9rem 1rem; overflow:auto; font-family:var(--mono); }
-    a { color:var(--accent); }
+    h1 { margin:.95rem 0 .4rem; font-size:clamp(2rem,4vw,3.2rem); line-height:1.02; letter-spacing:-.04em; max-width:14ch; }
+    h2 { margin:1.5rem 0 .6rem; font-size:1.24rem; }
+    p { margin:0 0 1rem; }
+    .meta { color:var(--muted); font-size:.84rem; margin-bottom:1rem; }
+    .box { border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 56px rgba(0,0,0,.28); padding:1rem 1.05rem; margin:1rem 0; }
+    pre,code { font-family:var(--mono); }
+    code { color:#f3d7ff; background:rgba(243,215,255,0.08); padding:.12rem .32rem; border-radius:6px; }
+    pre { margin:0; padding:.95rem 1rem; overflow:auto; border-radius:16px; background:rgba(19,15,26,0.9); border:1px solid rgba(208,170,255,0.14); color:#efe0ff; font-size:.86rem; line-height:1.65; }
+    ul,ol { padding-left:1.2rem; }
+    @media (max-width: 760px) { main { width:min(100vw - 24px,900px); } }
   </style>
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a> · <a href="/blog/v12.2.6-series/">series</a></div>
-    <h1>Post 4: Operator Guide for Local Embeddings OOTB</h1>
-    <p class="meta">March 2026 · v12.2.6+ series</p>
+    <div class="nav"><a href="/">openclawbrain.ai</a> | <a href="/blog/">blog</a> | <a href="/blog/v12.2.6-series/">series</a></div>
+    <div class="eyebrow">Post 4</div>
+    <h1>Local-first operator rollout</h1>
+    <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>Local embeddings out-of-the-box are the default operating mode for fast, private routing. Teacher models are optional and run asynchronously.</p>
+    <p>OpenClawBrain should not require a complicated remote stack before it becomes useful. The default operating shape is local-first: local embedder, local async teacher, fast daemon query path, and background training that can start after first use.</p>
 
-    <h2>Baseline Flow</h2>
-    <pre>openclawbrain init --workspace ./workspace --output ./brain
-openclawbrain query "..." --state ./brain/state.json --json
-openclawbrain async-route-pg --state ./brain/state.json --apply --json</pre>
+    <h2>Default stack</h2>
+    <div class="box">
+      <ul>
+        <li>local embedder: <code>BAAI/bge-large-en-v1.5</code></li>
+        <li>local async teacher: <code>Ollama qwen3.5:35b</code></li>
+        <li>runtime path: <code>openclawbrain serve</code> plus the OpenClaw adapter or hook pack</li>
+      </ul>
+    </div>
 
-    <h2>Operational Notes</h2>
+    <h2>Use it first</h2>
+    <pre>WORKSPACE=~/.openclaw/workspace
+BRAIN_DIR=~/.openclawbrain/main
+
+mkdir -p "$BRAIN_DIR"
+openclawbrain init --workspace "$WORKSPACE" --output "$BRAIN_DIR"
+openclawbrain serve --state "$BRAIN_DIR/state.json"
+
+python3 -m openclawbrain.openclaw_adapter.query_brain \
+  "$BRAIN_DIR/state.json" \
+  "what are the current operating rules?" \
+  --chat-id smoke-test \
+  --format prompt \
+  --exclude-bootstrap</pre>
+
+    <p>This is the point of the product direction: you can start using the brain before replay, harvest, or teacher labeling has finished.</p>
+
+    <h2>Train it in the background</h2>
+    <pre>openclawbrain replay \
+  --state "$BRAIN_DIR/state.json" \
+  --sessions ~/.openclaw/agents/main/sessions \
+  --fast-learning \
+  --resume \
+  --checkpoint "$BRAIN_DIR/replay_checkpoint.json"
+
+openclawbrain harvest \
+  --state "$BRAIN_DIR/state.json" \
+  --events "$BRAIN_DIR/learning_events.jsonl" \
+  --tasks split,merge,prune,connect,scale \
+  --json</pre>
+
+    <p>The scanner/harvester layer and the async teacher both belong here, not in the live request path.</p>
+
+    <h2>What should stay off the hot path</h2>
+    <ol>
+      <li>teacher labeling</li>
+      <li>historical replay</li>
+      <li>structural graph surgery</li>
+      <li>anything that turns a live query into a long workflow job</li>
+    </ol>
+
+    <h2>Why this local-first shape matters</h2>
     <ul>
-      <li>Keep hot-path routing deterministic and bounded.</li>
-      <li>Run learning jobs on schedule, not inline with user requests.</li>
-      <li>Gate connect/split/merge actions behind shadow evaluation and rollback support.</li>
+      <li>privacy and lower operational friction for the default deployment story</li>
+      <li>fast first-use path for OpenClaw operators</li>
+      <li>a clearer product claim: the live value comes from the learned runtime router, not from an inline teacher call</li>
     </ul>
 
-    <p>Next: <a href="/blog/v12.2.6-series/05-industry-baselines-ablations/">Post 5 on industry baselines + ablation study</a>.</p>
-    <p>Series index: <a href="/blog/v12.2.6-series/">OpenClawBrain v12.2.6+ series</a>.</p>
+    <p>Next: <a href="/blog/v12.2.6-series/05-industry-baselines-ablations/">Post 5 on baselines and the comparison contract</a>.</p>
   </main>
 </body>
 </html>

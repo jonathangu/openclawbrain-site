@@ -4,133 +4,279 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain Blog</title>
-  <meta name="description" content="OpenClawBrain blog series and release notes." />
+  <meta name="description" content="OpenClawBrain writing on OpenClaw integration, learned routing, Ultimate Policy Gradient, and proof discipline." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:#0a0f17;
-      --card:#111a27;
-      --text:#d6dfed;
-      --muted:#93a1b7;
-      --bright:#f5f8ff;
-      --border:#26344a;
-      --accent:#79b7ff;
-      --sans:Inter,system-ui,sans-serif;
-      --serif:"Crimson Pro",Georgia,serif;
+      --bg:#08111a;
+      --panel:rgba(11,22,33,0.86);
+      --line:rgba(137,191,226,0.18);
+      --text:#dce8f1;
+      --muted:#98aebe;
+      --bright:#f5fbff;
+      --accent:#7dd6ff;
+      --accent-strong:#46b8ff;
+      --warm:#ffbe78;
+      --sans:"Space Grotesk",sans-serif;
+      --serif:"Newsreader",serif;
+      --mono:"IBM Plex Mono",monospace;
     }
     * { box-sizing:border-box; }
     body {
       margin:0;
-      background:radial-gradient(circle at 15% 0%,#152137,#0a0f17 45%);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(70,184,255,0.16), transparent 32%),
+        radial-gradient(circle at 100% 0%, rgba(255,190,120,0.12), transparent 24%),
+        linear-gradient(180deg, #08111a 0%, #09131c 52%, #08111a 100%);
       color:var(--text);
       font-family:var(--serif);
       line-height:1.75;
     }
-    main { max-width:920px; margin:0 auto; padding:2.8rem 1.2rem 4rem; }
-    h1,h2 { font-family:var(--sans); color:var(--bright); margin:0 0 .8rem; }
-    p { margin:0 0 1rem; }
-    a { color:var(--accent); }
-    .nav { font-family:var(--sans); color:var(--muted); font-size:.86rem; margin-bottom:1.4rem; }
-    .grid { display:grid; grid-template-columns:1fr; gap:.8rem; }
-    .post {
-      display:block;
-      text-decoration:none;
-      color:inherit;
-      padding:1rem 1.1rem;
-      border:1px solid var(--border);
-      border-radius:10px;
-      background:var(--card);
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    main { width:min(1040px,calc(100vw - 32px)); margin:0 auto; padding:2rem 0 4rem; }
+    .nav,.meta,.eyebrow { font-family:var(--sans); }
+    .nav { color:var(--muted); font-size:.88rem; margin-bottom:1rem; }
+    .hero, .card {
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:var(--panel);
+      box-shadow:0 22px 70px rgba(0,0,0,.28);
+      backdrop-filter:blur(12px);
     }
-    .post:hover { border-color:#5384c3; }
-    .title { font-family:var(--sans); font-weight:700; color:var(--bright); }
-    .meta { font-family:var(--sans); color:var(--muted); font-size:.82rem; margin:.2rem 0 .3rem; }
-    .section { margin-top:2rem; }
+    .hero {
+      padding:1.5rem;
+      margin-bottom:1.2rem;
+    }
+    .eyebrow {
+      display:inline-flex;
+      padding:.4rem .72rem;
+      border-radius:999px;
+      background:rgba(125,214,255,0.09);
+      border:1px solid rgba(125,214,255,0.18);
+      color:var(--accent);
+      font-size:.76rem;
+      font-weight:600;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    h1,h2,h3 { font-family:var(--sans); color:var(--bright); }
+    h1 {
+      margin:.95rem 0 .8rem;
+      font-size:clamp(2.15rem,4.6vw,3.7rem);
+      line-height:1;
+      letter-spacing:-.04em;
+      max-width:12ch;
+    }
+    h2 { margin:0 0 .7rem; font-size:1.35rem; }
+    p { margin:0 0 1rem; }
+    .hero p { max-width:39rem; font-size:1.08rem; color:#c9dbe7; }
+    .hero-actions {
+      display:flex;
+      gap:.7rem;
+      flex-wrap:wrap;
+      margin-top:1.2rem;
+    }
+    .btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:44px;
+      padding:.72rem 1rem;
+      border-radius:999px;
+      font-family:var(--sans);
+      font-size:.92rem;
+      font-weight:600;
+      border:1px solid rgba(125,214,255,0.18);
+      background:rgba(125,214,255,0.08);
+      color:var(--bright);
+    }
+    .btn.primary {
+      border-color:transparent;
+      background:linear-gradient(135deg,var(--accent-strong),#7bdcff);
+      color:#04111b;
+    }
+    .section { margin-top:1.5rem; }
+    .section-head {
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:1rem;
+      margin-bottom:.8rem;
+    }
+    .section-head p {
+      margin:0;
+      color:var(--muted);
+      font-family:var(--sans);
+      font-size:.92rem;
+      max-width:34rem;
+    }
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:1rem;
+    }
+    .card {
+      display:block;
+      padding:1.1rem 1.15rem;
+      color:inherit;
+    }
+    .card:hover {
+      border-color:rgba(125,214,255,0.32);
+      text-decoration:none;
+    }
+    .card .meta {
+      color:var(--muted);
+      font-size:.82rem;
+      margin-bottom:.35rem;
+    }
+    .card h3 {
+      margin:0;
+      font-size:1.08rem;
+    }
+    .card p {
+      margin:.55rem 0 0;
+      color:var(--muted);
+    }
+    .tag-row {
+      display:flex;
+      gap:.45rem;
+      flex-wrap:wrap;
+      margin-top:.8rem;
+    }
+    .tag {
+      font-family:var(--sans);
+      font-size:.76rem;
+      color:var(--muted);
+      border:1px solid rgba(137,191,226,0.16);
+      border-radius:999px;
+      padding:.35rem .58rem;
+      background:rgba(7,15,23,.65);
+    }
+    @media (max-width: 760px) {
+      main { width:min(100vw - 24px,1040px); }
+      .grid { grid-template-columns:1fr; }
+    }
   </style>
 </head>
 <body>
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a></div>
-    <h1>OpenClawBrain Blog</h1>
-    <p>Current writing tracks the v12.2.6+ architecture: local embeddings OOTB, QTsim confidence mixing, distillation + policy gradient, and formal evaluation.</p>
 
-    <div class="section">
-      <h2>Start here</h2>
-      <div class="grid">
-        <div class="post">
-          <div class="title">Start here: Brain-first integration + pain points</div>
-          <div class="meta">March 2026</div>
-          <div>
-            <a href="/blog/v12.2.6-series/06-openclaw-brain-first-integration/">Brain-first integration post</a>
-            and
-            <a href="/#why-this-exists">Why this exists</a>.
-            <br />
-            <a href="/docs/reproduce-eval.md">Benchmarks: calls/exchange + tokens</a>.
-          </div>
+    <section class="hero">
+      <div class="eyebrow">Writing for operators</div>
+      <h1>Routing, learning, and proof for OpenClawBrain.</h1>
+      <p>
+        This blog explains OpenClawBrain as it actually ships: tight OpenClaw integration, fast local startup, continuous background learning, and a learned runtime <code style="font-family:var(--mono); color:var(--warm);">route_fn</code> trained with Ultimate Policy Gradient from scanner/harvester labels, async teacher labels, and user feedback.
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="/blog/v12.2.6-series/">Read the current series</a>
+        <a class="btn" href="/docs/openclaw-integration.md">OpenClaw integration guide</a>
+        <a class="btn" href="/docs/reproduce-eval.md">Proof path</a>
+      </div>
+      <div class="tag-row">
+        <span class="tag">OpenClaw-native memory</span>
+        <span class="tag">Local hot path</span>
+        <span class="tag">Continuous background training</span>
+        <span class="tag">No fake benchmark wins</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Read first</h2>
+          <p>The shortest path from first impression to actual rollout and verification.</p>
         </div>
-        <a class="post" href="/docs/openclaw-integration.md">
-          <div class="title">Start here: OpenClaw Integration Doc</div>
+      </div>
+      <div class="grid">
+        <a class="card" href="/docs/openclaw-integration.md">
           <div class="meta">Operator docs</div>
-          <div>Step-by-step setup, toggles, and guardrails.</div>
+          <h3>OpenClaw integration</h3>
+          <p>Brain-first mode, fail-open wiring, bounded prompt context, and the continuous training loop.</p>
+        </a>
+        <a class="card" href="/docs/setup-guide.md">
+          <div class="meta">Quick start</div>
+          <h3>Use the brain first, train it second</h3>
+          <p>Start with a workspace build and daemon query, then add replay, harvest, and maintenance in the background.</p>
+        </a>
+        <a class="card" href="/docs/reproduce-eval.md">
+          <div class="meta">Proof discipline</div>
+          <h3>What is proven now vs what still needs head-to-head baselines</h3>
+          <p>Mechanism proof, offline recorded-session eval, shadow traffic, and narrow online rollout.</p>
+        </a>
+        <a class="card" href="/openclawbrain.pdf">
+          <div class="meta">Reference</div>
+          <h3>Paper and materials</h3>
+          <p>The formal paper is still the reference for equations and deeper technical background. The site should stay more direct.</p>
         </a>
       </div>
-    </div>
+    </section>
 
-    <div class="section">
-      <h2>Series: OpenClawBrain v12.2.6+</h2>
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Current series: v12.2.6+</h2>
+          <p>The current series explains the product direction end to end, with the learned runtime router and proof boundary stated explicitly.</p>
+        </div>
+      </div>
       <div class="grid">
-        <a class="post" href="/blog/v12.2.6-series/">
-          <div class="title">Series Index: OpenClawBrain v12.2.6+</div>
-          <div class="meta">March 2026</div>
-          <div>Start here for the full sequence and links.</div>
+        <a class="card" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
+          <div class="meta">Post 1</div>
+          <h3>Shadow routing + Ultimate Policy Gradient</h3>
+          <p>Why the live path stays local while the learning path collects labels and updates the router asynchronously.</p>
         </a>
-        <a class="post" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
-          <div class="title">Post 1: Shadow Routing + Ultimate Policy Gradient</div>
-          <div class="meta">March 2026</div>
-          <div>High-level architecture and reward-source hierarchy.</div>
+        <a class="card" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
+          <div class="meta">Post 2</div>
+          <h3>The learned runtime <code style="font-family:var(--mono); color:var(--warm);">route_fn</code></h3>
+          <p>How `graph_prior` and query-conditioned signals combine into the policy that actually runs during a live query.</p>
         </a>
-        <a class="post" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
-          <div class="title">Post 2: QTsim + Confidence Mixing</div>
-          <div class="meta">March 2026</div>
-          <div>Mechanism details: graph_prior vs QTsim with entropy/margin gating.</div>
+        <a class="card" href="/blog/v12.2.6-series/03-evaluation-ablations/">
+          <div class="meta">Post 3</div>
+          <h3>Evaluation: prove it without pretending</h3>
+          <p>What simulations prove, what they do not, and what stronger evidence should look like.</p>
         </a>
-        <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
-          <div class="title">Post 3: Evaluation and Ablations</div>
-          <div class="meta">March 2026</div>
-          <div>How claims are measured and what ablations are required.</div>
+        <a class="card" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
+          <div class="meta">Post 4</div>
+          <h3>Local-first rollout</h3>
+          <p>Default stack, fast startup, and how to keep replay and teacher labeling off the hot path.</p>
         </a>
-        <a class="post" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
-          <div class="title">Post 4: Operator Guide for Local Embeddings OOTB</div>
-          <div class="meta">March 2026</div>
-          <div>Practical operator flow and rollout guardrails.</div>
+        <a class="card" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
+          <div class="meta">Post 5</div>
+          <h3>Baselines and the comparison contract</h3>
+          <p>The right baseline set for OpenClawBrain and the artifact discipline required for any claim.</p>
         </a>
-        <a class="post" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
-          <div class="title">Post 5: Industry Baselines + Ablation Study</div>
-          <div class="meta">March 2026</div>
-          <div>Why vector top-k, top-k+reranker, and pointer-chasing are the comparison set.</div>
+        <a class="card" href="/blog/v12.2.6-series/06-openclaw-brain-first-integration/">
+          <div class="meta">Post 6</div>
+          <h3>Brain-first OpenClaw integration</h3>
+          <p>What changes when the brain is on, what stays fail-open, and how feedback ties back to the fired route.</p>
         </a>
       </div>
-    </div>
+    </section>
 
-    <div class="section">
-      <h2>Legacy Posts</h2>
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Legacy notes</h2>
+          <p>Earlier posts are still useful for release history, but the current positioning is the v12.2.6+ series plus the operator docs.</p>
+        </div>
+      </div>
       <div class="grid">
-        <a class="post" href="/blog/v12.2.6/">
-          <div class="title">Shadow routing + Ultimate Policy Gradient</div>
-          <div class="meta">v12.2.6 · March 2026</div>
-          <div>Earlier single-post summary of the same release family.</div>
+        <a class="card" href="/blog/v12.2.6/">
+          <div class="meta">March 2026</div>
+          <h3>v12.2.6 summary</h3>
+          <p>A concise release framing for shadow learning, the runtime route policy, and the OpenClaw-first story.</p>
         </a>
-        <a class="post" href="/blog/v12.2.1/">
-          <div class="title">We shipped the correct REINFORCE update</div>
-          <div class="meta">v12.2.1 · February 2026</div>
-          <div>Policy-gradient correction and self-learning behavior changes.</div>
-        </a>
-        <a class="post" href="/blog/v12.2.0/">
-          <div class="title">CrabPath -> OpenClawBrain</div>
-          <div class="meta">v12.2.0 · February 2026</div>
-          <div>Transition notes and early retrieval-routing framing.</div>
+        <a class="card" href="/blog/v12.2.1/">
+          <div class="meta">February 2026</div>
+          <h3>REINFORCE update correction</h3>
+          <p>Historical release notes on the policy-gradient correction that led into the current routing story.</p>
         </a>
       </div>
-    </div>
+    </section>
   </main>
 </body>
 </html>

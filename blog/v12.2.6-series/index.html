@@ -4,69 +4,140 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain v12.2.6+ Series</title>
-  <meta name="description" content="OpenClawBrain v12.2.6+ series: shadow routing, QTsim confidence mixing, distillation+policy gradient, and industry baseline evaluation." />
+  <meta name="description" content="OpenClawBrain v12.2.6+ series: OpenClaw integration, the learned runtime route_fn, Ultimate Policy Gradient, and the evaluation contract." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
   <style>
-    :root { --bg:#0c1018; --card:#141b27; --text:#d8deea; --muted:#92a0b8; --bright:#f6f8fc; --border:#273347; --accent:#73b4ff; --sans:"Inter",system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; }
-    body { margin:0; background:linear-gradient(160deg,#111a2b,#0c1018 45%); color:var(--text); font-family:var(--serif); line-height:1.75; }
-    main { max-width:900px; margin:0 auto; padding:2.6rem 1.2rem 3.2rem; }
-    a { color:var(--accent); }
-    .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.85rem; }
-    .card { display:block; text-decoration:none; color:inherit; border:1px solid var(--border); border-radius:12px; background:var(--card); padding:1rem 1.1rem; margin-top:.8rem; }
-    .card:hover { border-color:#4f7bb8; }
-    .title { font-family:var(--sans); color:var(--bright); font-weight:700; }
-    .kicker { font-family:var(--sans); color:var(--muted); font-size:.82rem; margin-top:.2rem; }
-    h1 { font-family:var(--sans); color:var(--bright); margin:.4rem 0 .7rem; }
-    p { margin:0 0 .9rem; }
+    :root { --bg:#09111a; --panel:rgba(11,22,33,0.86); --line:rgba(137,191,226,0.18); --text:#dce8f1; --muted:#99afbf; --bright:#f6fbff; --accent:#7bd4ff; --sans:"Space Grotesk",sans-serif; --serif:"Newsreader",serif; --mono:"IBM Plex Mono",monospace; }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      background:radial-gradient(circle at 20% 0%, rgba(123,212,255,0.16), transparent 28%), linear-gradient(180deg,#09111a 0%,#0a141d 56%,#09111a 100%);
+      color:var(--text);
+      font-family:var(--serif);
+      line-height:1.75;
+    }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    main { width:min(980px,calc(100vw - 32px)); margin:0 auto; padding:2rem 0 3.5rem; }
+    .nav,.eyebrow,.meta { font-family:var(--sans); }
+    .nav { color:var(--muted); font-size:.88rem; margin-bottom:1rem; }
+    .hero,.card {
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:var(--panel);
+      box-shadow:0 22px 70px rgba(0,0,0,.28);
+      backdrop-filter:blur(12px);
+    }
+    .hero { padding:1.45rem; margin-bottom:1.2rem; }
+    .eyebrow {
+      display:inline-flex;
+      padding:.4rem .7rem;
+      border-radius:999px;
+      background:rgba(123,212,255,0.08);
+      border:1px solid rgba(123,212,255,0.18);
+      color:var(--accent);
+      font-size:.76rem;
+      font-weight:600;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    h1,h2,h3 { font-family:var(--sans); color:var(--bright); }
+    h1 {
+      margin:.95rem 0 .85rem;
+      font-size:clamp(2rem,4.4vw,3.55rem);
+      line-height:1;
+      letter-spacing:-.04em;
+      max-width:13ch;
+    }
+    p { margin:0 0 1rem; }
+    .hero p { max-width:42rem; color:#c8dae6; font-size:1.05rem; }
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:1rem;
+    }
+    .card {
+      display:block;
+      padding:1.1rem 1.15rem;
+      color:inherit;
+    }
+    .card:hover {
+      border-color:rgba(123,212,255,0.3);
+      text-decoration:none;
+    }
+    .meta { color:var(--muted); font-size:.82rem; margin-bottom:.35rem; }
+    h3 { margin:0; font-size:1.06rem; }
+    .kicker { margin-top:.45rem; color:var(--muted); }
+    .callout {
+      margin:1rem 0 1.2rem;
+      padding:1rem 1.05rem;
+      border-radius:18px;
+      border:1px solid rgba(123,212,255,0.16);
+      background:rgba(9,18,28,0.78);
+      color:#cddfeb;
+      font-family:var(--sans);
+    }
+    @media (max-width: 760px) {
+      main { width:min(100vw - 24px,980px); }
+      .grid { grid-template-columns:1fr; }
+    }
   </style>
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a></div>
-    <h1>OpenClawBrain v12.2.6+ Blog Series</h1>
-    <p>This series explains the current system end-to-end: fast local routing, QTsim confidence mixing, distillation plus policy-gradient learning, and how evaluation is run against industry baselines.</p>
+    <div class="nav"><a href="/">openclawbrain.ai</a> | <a href="/blog/">blog</a></div>
 
-    <a class="card" href="/blog/v12.2.6-series/06-openclaw-brain-first-integration/">
-      <div class="title">Start here: Brain-first OpenClaw Integration</div>
-      <div class="kicker">Hook-pack setup, hot/cold path behavior, and rollout notes</div>
-    </a>
+    <section class="hero">
+      <div class="eyebrow">Current series</div>
+      <h1>OpenClawBrain v12.2.6+</h1>
+      <p>
+        This series explains the current product shape end to end: OpenClaw-first rollout, the learned runtime <code style="font-family:var(--mono);">route_fn</code>, Ultimate Policy Gradient, the async teacher and scanner/harvester label sources, and the proof path that should exist before strong claims are made.
+      </p>
+      <div class="callout">
+        Read this series if you want the shortest technical explanation of what OpenClawBrain is actually trying to ship: a runtime router for OpenClaw that starts useful fast and improves continuously in the background.
+      </div>
+    </section>
 
-    <a class="card" href="/docs/openclaw-integration.md">
-      <div class="title">Start here: OpenClaw Integration Doc</div>
-      <div class="kicker">Operator checklist, toggles, and guardrails</div>
-    </a>
+    <div class="grid">
+      <a class="card" href="/blog/v12.2.6-series/06-openclaw-brain-first-integration/">
+        <div class="meta">Start here</div>
+        <h3>Brain-first OpenClaw integration</h3>
+        <div class="kicker">What changes when the brain is enabled, and how to keep the rollout fail-open.</div>
+      </a>
 
-    <a class="card" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
-      <div class="title">Post 1: Shadow Routing + Ultimate Policy Gradient</div>
-      <div class="kicker">High-level architecture and learning hierarchy</div>
-    </a>
+      <a class="card" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
+        <div class="meta">Post 1</div>
+        <h3>Shadow routing + Ultimate Policy Gradient</h3>
+        <div class="kicker">The split between local runtime routing and asynchronous learning.</div>
+      </a>
 
-    <a class="card" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
-      <div class="title">Post 2: QTsim + Confidence Mixing</div>
-      <div class="kicker">Entropy/margin gating between graph_prior and QTsim</div>
-    </a>
+      <a class="card" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
+        <div class="meta">Post 2</div>
+        <h3>The learned runtime route function</h3>
+        <div class="kicker">How `graph_prior` and query-conditioned evidence combine on a live turn.</div>
+      </a>
 
-    <a class="card" href="/blog/v12.2.6-series/03-evaluation-ablations/">
-      <div class="title">Post 3: Evaluation and Ablations</div>
-      <div class="kicker">How results are proven and reported</div>
-    </a>
+      <a class="card" href="/blog/v12.2.6-series/03-evaluation-ablations/">
+        <div class="meta">Post 3</div>
+        <h3>Evaluation: what is proven now</h3>
+        <div class="kicker">Mechanism proof vs recorded-session and shadow-traffic proof.</div>
+      </a>
 
-    <a class="card" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
-      <div class="title">Post 4: Operator Guide for Local Embeddings OOTB</div>
-      <div class="kicker">Practical setup and rollout notes</div>
-    </a>
+      <a class="card" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
+        <div class="meta">Post 4</div>
+        <h3>Local-first operator flow</h3>
+        <div class="kicker">Default stack, fast startup, and what should stay off the hot path.</div>
+      </a>
 
-    <a class="card" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
-      <div class="title">Post 5: Industry Baselines + Ablation Study</div>
-      <div class="kicker">Vector top-k, top-k+reranker, and pointer-chasing comparisons</div>
-    </a>
-
-    <a class="card" href="/blog/v12.2.6-series/06-openclaw-brain-first-integration/">
-      <div class="title">Post 6: Brain-first OpenClaw Integration</div>
-      <div class="kicker">What changes when brain-first mode is enabled</div>
-    </a>
-
-    <p class="meta" style="margin-top:1.2rem;">Version track: v12.2.6+ · March 2026</p>
+      <a class="card" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
+        <div class="meta">Post 5</div>
+        <h3>Baselines and the comparison contract</h3>
+        <div class="kicker">The baseline set that matters and the artifacts required for any comparison claim.</div>
+      </a>
+    </div>
   </main>
 </body>
 </html>

@@ -1,311 +1,153 @@
-# OpenClawBrain Principal Operator Guide
+# OpenClawBrain Operator Guide
 
-## 1) What OpenClawBrain is
-OpenClawBrain is the long-term memory layer for OpenClaw agents: it builds a learned graph from your workspace (`~/.openclaw/workspace`) plus session feedback (`~/.openclaw/agents/<agent>/sessions`), then serves fast query/learn operations from a persistent daemon state file (`~/.openclawbrain/<agent>/state.json`).
+This guide is for the day-2 question: once OpenClawBrain is integrated, what should stay running and what should be scheduled?
 
-Operator visuals:
-- [Brains dashboard](/docs/brains-dashboard/)
+Default stack assumed here:
 
-## New agent recipe
-Use the canonical bootstrap SOP when creating a brand-new OpenClaw profile-style setup (new workspace + dedicated brain + launchd + routing):
-- [docs/new-agent-sop.md](new-agent-sop.md)
-Use packaged adapter CLIs for agent hooks (no `~/openclawbrain` clone required):
-- `python3 -m openclawbrain.openclaw_adapter.query_brain ...`
-- `python3 -m openclawbrain.openclaw_adapter.capture_feedback ...`
+- local embedder: `BAAI/bge-large-en-v1.5`
+- local async teacher: `Ollama qwen3.5:35b`
 
-## 2) Turn brain ON
-Canonical run command:
+## 1. What should be on all the time
+
+### Daemon
 
 ```bash
 openclawbrain serve --state ~/.openclawbrain/main/state.json
 ```
 
-What `serve` does:
-- Starts the long-lived `openclawbrain daemon` worker.
-- Exposes a Unix socket at `~/.openclawbrain/main/daemon.sock` (for agent `main`).
-- Keeps the daemon hot in memory and restarts it if needed.
-
-## 3) Confirm it's ON
+### Health checks
 
 ```bash
 openclawbrain status --state ~/.openclawbrain/main/state.json
-ls -l ~/.openclawbrain/main/daemon.sock
+openclawbrain doctor --state ~/.openclawbrain/main/state.json
+openclawbrain info --state ~/.openclawbrain/main/state.json
 ```
 
-Healthy signal:
-- `status` shows `Daemon: running ~/.openclawbrain/main/daemon.sock`
-- `daemon.sock` exists as a Unix socket (`-S` / `srw...`).
+Healthy shape:
 
-## 4) Safe rebuild paths
+- the daemon socket exists
+- the brain answers `query_brain` requests quickly
+- `doctor` and `info` do not show obvious corruption or drift
 
-### quick cutover
-Use when you need improvements now and can defer full replay/harvest.
+## 2. What should run in the background
+
+### Replay new session data
 
 ```bash
 openclawbrain replay \
   --state ~/.openclawbrain/main/state.json \
   --sessions ~/.openclaw/agents/main/sessions \
   --fast-learning \
-  --stop-after-fast-learning \
   --resume \
   --checkpoint ~/.openclawbrain/main/replay_checkpoint.json
 ```
 
-Then keep serving from the daemon state.
-
-### no-drama rebuild_then_cutover
-Use when you need single-writer safety during rebuild and minimal cutover downtime.
+### Harvest replay output
 
 ```bash
-examples/ops/rebuild_then_cutover.sh main ~/.openclaw/workspace \
-  ~/.openclaw/agents/main/sessions
+openclawbrain harvest \
+  --state ~/.openclawbrain/main/state.json \
+  --events ~/.openclawbrain/main/learning_events.jsonl \
+  --tasks split,merge,prune,connect,scale \
+  --json
 ```
 
-This rebuilds into a fresh directory, verifies it, stops daemon briefly at cutover, swaps dirs atomically, then restarts.
+### Maintain graph health
 
-### full-learning guidance + when to schedule it
-Use full-learning (`--full-learning`) off-peak (nightly/low traffic, and after large session growth or major workspace changes).  
-Single-writer rule still applies: either run full-learning on a NEW state before cutover, or stop daemon writes before replaying LIVE.
+```bash
+openclawbrain maintain \
+  --state ~/.openclawbrain/main/state.json \
+  --tasks health,decay,prune,merge \
+  --json
+```
 
-## 5) Checkpoints & resume
-Default checkpoint path is next to state: `~/.openclawbrain/main/replay_checkpoint.json`.
+Recommended cadence:
 
-Inspect checkpoint state (recommended):
+- replay after new session batches
+- harvest after replay
+- maintain on a regular schedule
+
+## 3. What should stay off the hot path
+
+Do not put these in the live OpenClaw request path:
+
+- historical replay
+- scanner / harvester processing
+- async teacher labeling
+- heavy structural updates
+
+The live request path should stay:
+
+1. summarize the turn
+2. `query_brain`
+3. append bounded `[BRAIN_CONTEXT]`
+4. answer
+5. capture feedback
+
+## 4. Why the learned route policy matters operationally
+
+The operator goal is not "more memory files."
+
+The operator goal is:
+
+- the runtime `route_fn` gets better over time
+- the labels for that policy come from real OpenClaw work
+- the hot path stays local while training happens asynchronously
+
+Ultimate Policy Gradient is the policy update that combines:
+
+- human feedback
+- self-learning outcomes
+- scanner / harvester labels
+- async teacher labels
+
+Human corrections stay highest authority.
+
+## 5. Rebuild and cutover
+
+Use a quick replay on the current state when you need small improvements fast.
 
 ```bash
 openclawbrain replay \
   --state ~/.openclawbrain/main/state.json \
-  --show-checkpoint \
-  --resume
-```
-
-Machine-readable checkpoint status:
-
-```bash
-openclawbrain replay \
-  --state ~/.openclawbrain/main/state.json \
-  --show-checkpoint \
+  --sessions ~/.openclaw/agents/main/sessions \
+  --fast-learning \
   --resume \
-  --json
+  --checkpoint ~/.openclawbrain/main/replay_checkpoint.json
 ```
 
-Direct file inspection is still useful for debugging:
+Use rebuild-then-cutover when you want stronger single-writer hygiene.
 
 ```bash
-jq . ~/.openclawbrain/main/replay_checkpoint.json
+examples/ops/rebuild_then_cutover.sh main ~/.openclaw/workspace ~/.openclaw/agents/main/sessions
 ```
 
-Flag meanings:
-- `--checkpoint <path>`: checkpoint file location.
-- `--resume`: continue from saved per-session line offsets.
-- `--ignore-checkpoint`: start from scratch even if checkpoint exists.
-- `--checkpoint-every-seconds N`: periodic time-based checkpointing.
-- `--checkpoint-every N`: checkpoint every N replay windows/merge batches.
-- `--stop-after-fast-learning`: end after fast-learning phase (for quick cutover).
+## 6. Troubleshooting
 
-## 6) Progress: expected output by phase
-- Fast-learning prints progress and completes with `Completed fast-learning; stopped before replay/harvest.` when `--stop-after-fast-learning` is set.
-- Replay emits a progress heartbeat every 30 seconds by default; add `--progress-every N` for per-item cadence.
-- Use `--quiet` to suppress replay banners/progress when scripting.
-- Replay phase: stderr shows `Loaded <N> interactions from session files`; with `--progress-every`, shows `[replay] <done>/<total> (<pct>%)`.
-- Replay completion: `Replayed <n>/<total> queries, <m> cross-file edges created`
-- Full-learning completion (`--full-learning`): final line includes harvest summary, e.g. `harvest: tasks=<k>, damped_edges=<x>`.
+| Symptom | Likely cause | Action |
+| --- | --- | --- |
+| `status` says the daemon is not running | service not started or wrong state path | start `openclawbrain serve` with the intended `--state` |
+| `query_brain` is slow | daemon not used, wrong socket path, or state reload on each call | confirm the daemon is running and the adapter is using the same state |
+| replay starts from old work | checkpoint missing or not used | add `--resume --checkpoint ~/.openclawbrain/main/replay_checkpoint.json` |
+| corrections do not target recent routes | missing or unstable `chat_id` | pass the same `chat_id` through query and feedback |
+| the brain is in the prompt twice | bootstrap files were already injected by OpenClaw | keep `--exclude-bootstrap` enabled |
 
-## 7) Concurrency rules (single writer)
-Only one process should write a given `state.json` at a time.
+## 7. The proof discipline operators should keep
 
-Writers include:
-- daemon learning/injection flows
-- `openclawbrain replay`
-- maintenance/harvest operations that persist state
+Use three layers of evidence:
 
-If violated, writes can clobber each other (lost updates, split/corrupted operational state, stale checkpoints).  
-OpenClawBrain enforces this with `state.json.lock` next to your state file.
+1. local reproducibility for the mechanism
+2. offline head-to-head on recorded OpenClaw sessions
+3. shadow traffic and narrow online rollout
 
-If a lock is active and you still need to proceed, override only when you are certain there is no conflicting writer:
-- `--force`
-- `OPENCLAWBRAIN_STATE_LOCK_FORCE=1`
+Do not skip from simulations straight to broad product claims.
 
-Recommended production path: use `examples/ops/rebuild_then_cutover.sh` so rebuild/replay happens on a fresh state and cutover is atomic.
+Canonical proof path:
 
-## 8) Troubleshooting
+- [docs/reproduce-eval.md](reproduce-eval.md)
 
-| Symptom | Likely cause | Commands |
-|---|---|---|
-| `status` says `Daemon: not running` | service not started, crashed, or wrong state path | `openclawbrain serve --state ~/.openclawbrain/main/state.json` then `openclawbrain status --state ~/.openclawbrain/main/state.json` |
-| `daemon.sock` missing | service never started or wrong agent/state directory | `ls -la ~/.openclawbrain/main` and restart `openclawbrain serve` with the same `--state` |
-| Replay fails with lock/single-writer message | another process holds `state.json.lock` | stop the other writer, use `examples/ops/rebuild_then_cutover.sh ...`, or expert override with `--force` / `OPENCLAWBRAIN_STATE_LOCK_FORCE=1` |
-| Replay restarts from old work | checkpoint not used, wrong path, or intentionally ignored | run with `--resume --checkpoint ~/.openclawbrain/main/replay_checkpoint.json`; inspect with `openclawbrain replay --state ~/.openclawbrain/main/state.json --show-checkpoint --resume` |
-| `LLM required for fast-learning` | no OpenAI client/key configured for fast-learning mining | set `OPENAI_API_KEY` or run `--edges-only` replay path |
-| CLI says invalid sessions path | wrong sessions directory/file path | `ls -la ~/.openclaw/agents/main/sessions` and pass existing dir/files to `--sessions` |
+## 8. Use these next
 
-## 9) Prompt-context trim eval (offline)
-Use the lightweight harness to measure trim rate and dropped-authority distribution at common caps (`20k`/`30k`) directly from `state.json`:
-
-```bash
-python examples/eval/prompt_context_eval.py \
-  --state ~/.openclawbrain/main/state.json \
-  --queries-file /path/to/queries.txt
-```
-
-If no `--queries-file` is provided, a small built-in sample query set is used.
-
-## 10) Defaults that matter (v12.2.5+)
-- `max_prompt_context_chars` default: **30000** (daemon)
-- `max_fired_nodes` default: **30** (daemon)
-- prompt context is ordered deterministically but importance-first: **authority → score → stable source order**.
-
-Useful telemetry fields (daemon `query` response + journal metadata):
-- `prompt_context_len`, `prompt_context_max_chars`, `prompt_context_trimmed`
-- `prompt_context_included_node_ids`
-- `prompt_context_dropped_node_ids` (capped) + `prompt_context_dropped_count`
-- `prompt_context_dropped_authority_counts`
-
-## 11) OpenClaw adapter defaults for context efficiency
-For OpenClaw integration, keep prompts token-tight and avoid re-sending files OpenClaw already loads:
-
-- Use `python3 -m openclawbrain.openclaw_adapter.query_brain ... --format prompt`.
-- Learn/inject in one canonical call with `python3 -m openclawbrain.openclaw_adapter.capture_feedback --state ... --chat-id ... --kind ... --content ... [--outcome ...] [--dedup-key ...]`.
-- Keep `--exclude-bootstrap` enabled (adapter default) so `AGENTS.md`, `SOUL.md`, `USER.md`, `MEMORY.md`, and `active-tasks.md` are not duplicated in `prompt_context`.
-- Start with `--max-prompt-context-chars 20000`; increase to `80000` only when retrieval quality requires deep recall.
-- Use `--exclude-recent-memory <today> <yesterday>` only when those daily notes are already loaded elsewhere in the same turn.
-
-This preserves deterministic `prompt_context` while cutting duplicate tokens, matching the project’s “context efficiency/compression” operating model.
-
-### Recipe: always-on same-turn self-learning
-For the canonical policy text, use:
-- `docs/openclaw-integration.md` → `Always-on self-learning (default)`
-- `docs/new-agent-sop.md` → `Always-on self-learning policy (recommended)` (SOUL.md snippet)
-
-Why this matters:
-- Same-turn `capture_feedback` injects correction/teaching/directive immediately and can reinforce/penalize the just-fired route for that `chat_id`.
-- `--dedup-key` (or `--message-id`) makes harvest/replay retries idempotent so feedback is not double-injected.
-
-## 12) Bootstrap files + memory notes are always indexed (v12.2.5+)
-Even if your OpenClaw workspace `.gitignore` excludes local operator files (common), OpenClawBrain will still index:
-- `SOUL.md`, `AGENTS.md`, `USER.md`, `TOOLS.md`, `MEMORY.md`, `IDENTITY.md`, `HEARTBEAT.md`
-- `active-tasks.md`, `WORKFLOW_AUTO.md`
-- everything under `memory/`
-
-This is intentional: these files are the “constitution + history” of your agent.
-
-## 13) OpenClaw media understanding (audio/image) → better memory
-OpenClaw has a built-in **media-understanding** pipeline that can:
-- transcribe audio/voice notes
-- describe images
-- extract text from files
-
-When enabled in OpenClaw config, it will set `ctx.Transcript` and/or append extracted blocks to `ctx.Body`, so the resulting session logs contain the actual text (not only `[media attached: ...]` stubs). OpenClawBrain replay/full-learning can then learn from that text.
-
-If you rely on toolResult-only transcripts/OCR, keep `openclawbrain replay --include-tool-results` enabled (default).
-
-## 14) Correction wiring: what exists vs what you still need
-OpenClawBrain supports `correction(chat_id, lookback=N)` (it remembers recent fired paths per `chat_id`). To get *automatic* corrections in live chat, OpenClaw must:
-1) pass a stable `chat_id` into each brain query
-2) detect correction messages
-3) call `correction(...)`
-
-If you don't have that OpenClaw integration yet, you can still apply corrections manually via `openclawbrain self-learn` (offline) or daemon `correction` calls.
-
-## 15) Operator audit: detect path leaks & config drift
-Run this first (safe: does not print env var values or full file contents):
-
-```bash
-if [ -x examples/ops/audit_openclawbrain.sh ]; then
-  examples/ops/audit_openclawbrain.sh
-else
-  files=(
-    "$HOME/Library/LaunchAgents/com.openclawbrain.main.plist"
-    "$HOME/Library/LaunchAgents/com.openclawbrain.pelican.plist"
-    "$HOME/Library/LaunchAgents/com.openclawbrain.bountiful.plist"
-    "$HOME/.openclaw/cron/jobs.json"
-    "$HOME/.openclaw/config.yaml"
-  )
-  existing=()
-  for f in "${files[@]}"; do [ -f "$f" ] && existing+=("$f"); done
-  if [ "${#existing[@]}" -eq 0 ]; then
-    echo "PASS no key files present to scan"
-  elif command -v rg >/dev/null 2>&1; then
-    rg -l -e '/Users/[^[:space:]"]+/worktrees|/private/var/folders' "${existing[@]}" \
-      && echo "FAIL transient path leak pattern detected" \
-      || echo "PASS no transient path leak pattern found"
-  else
-    grep -E -l '/Users/[^[:space:]"]+/worktrees|/private/var/folders' "${existing[@]}" \
-      && echo "FAIL transient path leak pattern detected" \
-      || echo "PASS no transient path leak pattern found"
-  fi
-fi
-```
-
-Full audit script:
-
-```bash
-examples/ops/audit_openclawbrain.sh
-echo "exit_code=$?"  # number of FAIL checks; WARNs do not fail
-```
-
-What it checks:
-- transient path leak patterns in LaunchAgents, cron jobs, and OpenClaw config
-- launchd drift hints (missing plist files, missing env key names, missing workspace-root hints)
-- per-brain sanity for `~/.openclawbrain/{main,pelican,bountiful}`: `state.json`, `daemon.sock`, and a backup directory summary (count + total size)
-
-How to respond when it flags:
-- `FAIL transient path leak pattern detected`: replace transient paths with stable operator-managed roots, then reload launchd/cron as needed
-- `FAIL missing state.json`: restore from known-good backup or rebuild state, then restart daemon
-- `WARN daemon.sock missing`: start or restart `openclawbrain serve` for that brain and re-check status
-- `WARN missing env/workspace hints`: align LaunchAgent plists with your standard template, then `launchctl unload/load` and rerun the audit
-
-## 16) Secret pointers recipe: harvest + audit
-Use this to track capabilities and key pointers without ever storing values:
-
-```bash
-python3 -m openclawbrain.ops.harvest_secret_pointers \
-  --workspace ~/.openclaw/workspace \
-  --out ~/.openclaw/workspace/docs/secret-pointers.md
-```
-
-To include centralized env files (for example `~/.openclaw/credentials/env/*.env`), repeat `--extra-env-file`:
-
-```bash
-python3 -m openclawbrain.ops.harvest_secret_pointers \
-  --workspace ~/.openclaw/workspace \
-  --extra-env-file ~/.openclaw/credentials/env/backyard-ripe.env \
-  --extra-env-file ~/.openclaw/credentials/env/quant-research.env \
-  --out ~/.openclaw/workspace/docs/secret-pointers.md
-```
-
-By default, harvest also inventories local credential files from `~/.openclaw/credentials` (if present) and records only filename/path/mode pointers. It never reads or prints file contents. Override or disable as needed:
-
-```bash
-python3 -m openclawbrain.ops.harvest_secret_pointers \
-  --workspace ~/.openclaw/workspace \
-  --credentials-dir ~/.openclaw/credentials \
-  --no-include-credentials
-```
-
-FULL accounting example (workspace + centralized env files + default credentials inventory):
-
-```bash
-python3 -m openclawbrain.ops.harvest_secret_pointers \
-  --workspace ~/.openclaw/workspace \
-  --extra-env-file ~/.openclaw/credentials/env/backyard-ripe.env \
-  --extra-env-file ~/.openclaw/credentials/env/quant-research.env \
-  --out ~/.openclaw/workspace/docs/secret-pointers.md
-```
-
-Optional JSON output for automation:
-
-```bash
-python3 -m openclawbrain.ops.harvest_secret_pointers \
-  --workspace ~/.openclaw/workspace \
-  --json
-```
-
-Run leak audit (path + line only, no secret echo):
-
-```bash
-python3 -m openclawbrain.ops.audit_secret_leaks \
-  --workspace ~/.openclaw/workspace \
-  --state ~/.openclawbrain/main/state.json \
-  --strict
-```
+- [docs/openclaw-integration.md](openclaw-integration.md)
+- [docs/setup-guide.md](setup-guide.md)
+- [docs/new-agent-sop.md](new-agent-sop.md)

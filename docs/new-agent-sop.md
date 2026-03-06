@@ -1,13 +1,13 @@
-# SOP: Create a new OpenClaw agent + dedicated OpenClawBrain (best-practice)
+# SOP: Create a New OpenClaw Agent + Dedicated OpenClawBrain
 
-Canonical operator flow for a new profile-style setup:
+Use this when you are creating a new OpenClaw agent and want the brain in the loop from the start.
 
-- one OpenClaw agent workspace
-- one dedicated OpenClawBrain `state.json`
-- one dedicated `openclawbrain serve` daemon
-- one explicit OpenClaw routing binding
+Default stack assumed here:
 
-## A) Decide IDs and paths
+- local embedder: `BAAI/bge-large-en-v1.5`
+- local async teacher: `Ollama qwen3.5:35b`
+
+## A. Decide IDs and paths
 
 ```bash
 agentId="pelican"
@@ -17,15 +17,13 @@ brainDir="$HOME/.openclawbrain/$agentId"
 statePath="$brainDir/state.json"
 ```
 
-Conventions:
+Rules:
 
-- `agentId` is lowercase and stable (`main`, `pelican`, `bountiful`, ...)
-- workspace is per-agent (do not share one workspace across agents)
-- brain path is `~/.openclawbrain/<agentId>/state.json`
+- one OpenClaw workspace per agent
+- one dedicated brain per agent
+- one daemon per brain
 
-## B) Create workspace skeleton
-
-Create a minimal OpenClaw-ready workspace skeleton:
+## B. Create the workspace skeleton
 
 ```bash
 mkdir -p "$workspaceDir/memory"
@@ -40,60 +38,46 @@ mkdir -p "$workspaceDir/memory"
 : > "$workspaceDir/memory/$(date +%F).md"
 ```
 
-Add your agent-specific instructions in `AGENTS.md` and persona/policy files before production traffic.
-
-## C) Init brain (`openclawbrain init`)
+## C. Build the brain and use it immediately
 
 ```bash
 mkdir -p "$brainDir"
+
 openclawbrain init --workspace "$workspaceDir" --output "$brainDir"
 openclawbrain doctor --state "$statePath"
+openclawbrain serve --state "$statePath"
 ```
 
-Expected result: `statePath` exists and doctor output is healthy.
+Smoke test:
 
-## D) Start daemon in production (launchd)
+```bash
+python3 -m openclawbrain.openclaw_adapter.query_brain \
+  "$statePath" \
+  "what are this agent's standing rules?" \
+  --chat-id smoke-test \
+  --format prompt \
+  --exclude-bootstrap
+```
 
-1. Generate a filled plist from the packaged template writer:
+Do this before you schedule replay or harvesting. The first milestone is a working query path.
+
+## D. Start the daemon in production
 
 ```bash
 mkdir -p "$HOME/Library/LaunchAgents"
+
 python3 -m openclawbrain.ops.write_launchd_plist \
   --agent-id "$agentId" \
   --state-path "$statePath" \
   --out-path "$HOME/Library/LaunchAgents/com.openclawbrain.${agentId}.plist" \
   --log-path "$HOME/.openclawbrain/${agentId}/daemon.log"
-```
 
-2. Load and verify:
-
-```bash
 launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/com.openclawbrain.${agentId}.plist"
 launchctl kickstart -k "gui/$(id -u)/com.openclawbrain.${agentId}"
 launchctl print "gui/$(id -u)/com.openclawbrain.${agentId}"
 ```
 
-Security note: if plist contains secrets, set `chmod 600 "$HOME/Library/LaunchAgents/com.openclawbrain.${agentId}.plist"` and prefer secure key-loading over inline secrets.
-
-## E) Patch OpenClaw routing config (safe, idempotent)
-
-Use the provided ops utility to patch `~/.openclaw/openclaw.json` with the real schema safely:
-
-- `agents.list` is a list of dicts.
-- `bindings` is a list of dicts like:
-  - `{"agentId":"family","match":{"channel":"telegram","accountId":"family"}}`
-- Telegram accounts live at `channels.telegram.accounts[accountId]`.
-
-Create a stable token file (avoid `/tmp`):
-
-```bash
-mkdir -p "$HOME/.openclaw/tokens"
-# paste token into file and lock permissions
-printf '%s' "PASTE_TELEGRAM_BOT_TOKEN_HERE" > "$HOME/.openclaw/tokens/telegram-${agentId}.token"
-chmod 600 "$HOME/.openclaw/tokens/telegram-${agentId}.token"
-```
-
-Then run:
+## E. Bind the new agent in OpenClaw
 
 ```bash
 python3 -m openclawbrain.ops.patch_openclaw_config \
@@ -104,127 +88,77 @@ python3 -m openclawbrain.ops.patch_openclaw_config \
   --telegram-token-file "$HOME/.openclaw/tokens/telegram-${agentId}.token"
 ```
 
-Optional allow-list (repeat `--allow-from`):
+## F. Put the brain in `AGENTS.md`
 
-```bash
-python3 -m openclawbrain.ops.patch_openclaw_config \
-  --agent-id "$agentId" \
-  --agent-name "$agentName" \
-  --workspace "$workspaceDir" \
-  --telegram-account-id "$agentId" \
-  --telegram-token-file "$HOME/.openclaw/tokens/telegram-${agentId}.token" \
-  --allow-from "telegram:111111" \
-  --allow-from "telegram:222222"
-```
+```md
+## OpenClawBrain
 
-Short inline schema snippet (reference only):
-
-```json
-{
-  "agents": {
-    "list": [
-      {"id": "pelican", "name": "Pelican", "workspace": "~/.openclaw/workspace-pelican"}
-    ]
-  },
-  "channels": {
-    "telegram": {
-      "accounts": {
-        "pelican": {
-          "tokenFile": "~/.openclaw/tokens/telegram-pelican.token",
-          "enabled": true,
-          "dmPolicy": "pairing",
-          "groupPolicy": "disabled"
-        }
-      }
-    }
-  },
-  "bindings": [
-    {"agentId": "pelican", "match": {"channel": "telegram", "accountId": "pelican"}}
-  ]
-}
-```
-
-## Secrets: pointers only + run harvest
-
-Secrets policy:
-
-- Never store secret values in workspace memory files, prompts, or brain state.
-- Store only pointers: env key names and local `tokenFile` paths.
-- Recommended local pattern on Mac mini:
-  - Keep secret values in `~/.openclaw/credentials/env/<project>.env` (`chmod 600`).
-  - Keep repo/workspace `.env` as a symlink to that centralized file.
-  - Keep token files in `~/.openclaw/credentials/*.token` (`chmod 600`).
-- Verify only with boolean presence checks.
-
-Run capability/secret-pointer harvest after setup:
-
-```bash
-python3 -m openclawbrain.ops.harvest_secret_pointers \
-  --workspace "$workspaceDir"
-```
-
-Optional strict leak audit:
-
-```bash
-python3 -m openclawbrain.ops.audit_secret_leaks \
-  --workspace "$workspaceDir" \
-  --strict
-```
-
-## F) Pin the query command in workspace `AGENTS.md`
-
-Use packaged CLI module invocation (no `~/openclawbrain` clone required):
-
-```bash
+Before answering memory-sensitive turns:
 python3 -m openclawbrain.openclaw_adapter.query_brain ~/.openclawbrain/<agentId>/state.json '<summary>' --chat-id '<chat_id>' --format prompt --exclude-bootstrap --max-prompt-context-chars 20000
-```
 
-Learn command (no fired node IDs in prompt payload):
+For corrections:
+python3 -m openclawbrain.openclaw_adapter.capture_feedback --state ~/.openclawbrain/<agentId>/state.json --chat-id '<chat_id>' --kind CORRECTION --content '<correction text>' --lookback 1 --message-id '<stable-message-id>' --json
 
-```bash
+For positive or negative outcomes:
 python3 -m openclawbrain.openclaw_adapter.learn_by_chat_id --state ~/.openclawbrain/<agentId>/state.json --chat-id '<chat_id>' --outcome 1.0 --lookback 1 --json
 ```
 
-Canonical feedback command:
+## G. Turn on background learning
+
+Historical replay:
 
 ```bash
-python3 -m openclawbrain.openclaw_adapter.capture_feedback --state ~/.openclawbrain/<agentId>/state.json --chat-id '<chat_id>' --kind CORRECTION --content '<correction text>' --lookback 1 --message-id '<stable-message-id>' --json
+openclawbrain replay \
+  --state "$statePath" \
+  --sessions "$HOME/.openclaw/agents/$agentId/sessions" \
+  --fast-learning \
+  --resume \
+  --checkpoint "$brainDir/replay_checkpoint.json"
 ```
 
-## Always-on self-learning policy (recommended)
+Harvest the replay output:
 
-Copy/paste into workspace `SOUL.md`:
+```bash
+openclawbrain harvest \
+  --state "$statePath" \
+  --events "$brainDir/learning_events.jsonl" \
+  --tasks split,merge,prune,connect,scale \
+  --json
+```
+
+This is the intended order:
+
+1. make the brain usable immediately
+2. wire it into OpenClaw
+3. replay history
+4. keep training in the background
+
+## H. Verification checklist
+
+- `openclawbrain status --state "$statePath"` shows a running daemon
+- `query_brain` returns a bounded `[BRAIN_CONTEXT]` block
+- OpenClaw still works if the brain path is disabled
+- the new agent can accept feedback with the same `chat_id`
+
+## I. Operator policy to copy into `SOUL.md`
 
 ```md
-## Always-on self-learning (default)
+## Always-on self-learning
 
-- Treat clear user corrections as immediate memory updates: run `capture_feedback --kind CORRECTION` in the same turn with `--chat-id '<chat_id>' --lookback 1`.
-- Treat durable user teachings (rules/facts) as memory updates: run `capture_feedback --kind TEACHING` (or update canonical files and `sync`).
-- If correction vs teaching is unclear, ask one clarifying question before writing memory.
-- Never log secrets (tokens, passwords, private keys, sensitive personal data).
-- Use `--dedup-key` (or `--message-id`) whenever available so replay/harvester retries do not double-inject.
-- Keep prompts tight: use `query_brain --format prompt` for retrieval; use `capture_feedback`/`learn_by_chat_id` keyed by `chat_id`; do not add `fired_nodes` to prompts.
+- Treat clear user corrections as immediate memory updates.
+- Use `capture_feedback --kind CORRECTION` in the same turn with the current `chat_id`.
+- Use `learn_by_chat_id` for clear good or bad outcomes.
+- Keep prompts tight: append bounded `[BRAIN_CONTEXT]`, not raw retrieval internals.
+- Never log secrets or sensitive values into memory.
+- Keep the async teacher off the hot path.
 ```
 
-## G) Verification checklist
+## J. What this setup is trying to achieve
 
-- `openclawbrain status --state ~/.openclawbrain/<agentId>/state.json` shows running socket.
-- Adapter prompt output check:
+The point of this SOP is not just "make a new memory file."
 
-```bash
-python3 -m openclawbrain.openclaw_adapter.query_brain \
-  ~/.openclawbrain/<agentId>/state.json "test query" \
-  --chat-id "smoke-test" --format prompt --exclude-bootstrap
-```
+It is to set up the full OpenClawBrain loop correctly from the start:
 
-Verify output is a `[BRAIN_CONTEXT v1]...[/BRAIN_CONTEXT]` block.
-
-- `openclaw channels status --probe` is healthy.
-- Send `/start` to the new bot and confirm route goes to the new agent.
-
-## H) Common footguns
-
-- Using `/tmp` token files (lost on reboot/cleanup).
-- Forgetting daemon restart after `openclawbrain` upgrade.
-- Prompt bloat when `--exclude-bootstrap` is omitted.
-- World-readable secrets (`tokenFile`, plist, config).
+- OpenClaw uses the brain right away
+- the brain learns continuously in the background
+- the learned runtime `route_fn` improves from real agent work over time
