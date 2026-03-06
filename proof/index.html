@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenClawBrain Proof Package</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="OpenClawBrain proof package: what is proven now, what still needs head-to-head and shadow evidence, and the operator artifacts behind each claim.">
+  <meta property="og:title" content="OpenClawBrain Proof Package">
+  <meta property="og:description" content="Mechanism proof, worked turns, evidence ladder, and the proof boundary for OpenClawBrain.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://openclawbrain.ai/proof/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://openclawbrain.ai/proof/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #071019;
+      --panel: rgba(10, 21, 32, 0.86);
+      --panel-soft: rgba(8, 18, 29, 0.78);
+      --line: rgba(144, 192, 222, 0.2);
+      --line-strong: rgba(144, 192, 222, 0.34);
+      --text: #dce8f1;
+      --muted: #97afbf;
+      --bright: #f7fbff;
+      --accent: #79d3ff;
+      --accent-strong: #3eb5ff;
+      --warm: #ffbe72;
+      --green: #9ce0bc;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+      --sans: "Space Grotesk", sans-serif;
+      --serif: "Newsreader", serif;
+      --mono: "IBM Plex Mono", monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(62, 181, 255, 0.18), transparent 32%),
+        radial-gradient(circle at 100% 0%, rgba(255, 190, 114, 0.12), transparent 28%),
+        linear-gradient(180deg, #071019 0%, #08131d 52%, #071019 100%);
+      font-family: var(--serif);
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; display: block; }
+    code {
+      font-family: var(--mono);
+      font-size: 0.88em;
+      color: var(--warm);
+      background: rgba(255, 190, 114, 0.1);
+      padding: 0.12rem 0.34rem;
+      border-radius: 6px;
+    }
+    .shell {
+      width: min(1160px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding-bottom: 4.25rem;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.25rem 0 0.9rem;
+      font-family: var(--sans);
+      font-size: 0.92rem;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: var(--bright);
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .brand-mark {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--warm));
+      box-shadow: 0 0 0 6px rgba(121, 211, 255, 0.11);
+    }
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .nav-links a { color: var(--muted); }
+    .hero,
+    .hero-copy,
+    .hero-panel,
+    .status-card,
+    .figure-card,
+    .ladder-card,
+    .check-card,
+    .kit-card,
+    .callout {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+      gap: 1rem;
+      padding: 1.15rem 0 1.8rem;
+      background: none;
+      border: 0;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+    .hero-copy {
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-copy::after {
+      content: "";
+      position: absolute;
+      inset: auto -18% -34% auto;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(121, 211, 255, 0.18), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-panel {
+      display: grid;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(10, 21, 32, 0.72);
+    }
+    .eyebrow,
+    .kicker,
+    .meta {
+      font-family: var(--sans);
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.42rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(121, 211, 255, 0.09);
+      border: 1px solid rgba(121, 211, 255, 0.22);
+      font-size: 0.76rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--bright);
+    }
+    h1 {
+      margin-top: 1rem;
+      font-size: clamp(2.45rem, 5vw, 4.3rem);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+      max-width: 10.5ch;
+    }
+    .lead {
+      margin: 1rem 0 0;
+      max-width: 34rem;
+      font-size: 1.14rem;
+      color: #c9dae5;
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1.55rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0.75rem 1.05rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-family: var(--sans);
+      font-size: 0.94rem;
+      font-weight: 600;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+    .btn:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-strong), #7ddcff);
+      color: #03111b;
+    }
+    .btn-secondary {
+      background: rgba(121, 211, 255, 0.08);
+      border-color: rgba(121, 211, 255, 0.24);
+      color: var(--bright);
+    }
+    .hero-note {
+      margin: 1rem 0 0;
+      font-family: var(--sans);
+      font-size: 0.92rem;
+      color: var(--muted);
+      max-width: 38rem;
+    }
+    .tag-row {
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .tag {
+      padding: 0.45rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid rgba(144, 192, 222, 0.16);
+      background: rgba(6, 14, 22, 0.72);
+      font-family: var(--sans);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .status-card,
+    .figure-card,
+    .ladder-card,
+    .check-card,
+    .kit-card {
+      padding: 1.1rem 1.15rem 1.05rem;
+      background: var(--panel-soft);
+      box-shadow: none;
+    }
+    .status-card ul,
+    .check-card ul {
+      margin: 0.7rem 0 0;
+      padding-left: 1.15rem;
+    }
+    .figure-card img {
+      border-radius: 18px;
+      border: 1px solid rgba(144, 192, 222, 0.14);
+      background: rgba(6, 14, 22, 0.92);
+    }
+    .figure-card figcaption {
+      margin-top: 0.7rem;
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: 0.84rem;
+    }
+    .kicker {
+      margin-bottom: 0.5rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .section {
+      padding-top: 1.35rem;
+    }
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .section-head h2 {
+      font-size: clamp(1.5rem, 2.6vw, 2.15rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+    .section-intro {
+      max-width: 40rem;
+      margin: 0;
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: 0.98rem;
+    }
+    .ladder-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .step {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 999px;
+      background: rgba(121, 211, 255, 0.1);
+      border: 1px solid rgba(121, 211, 255, 0.24);
+      color: var(--accent);
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+    .ladder-card p,
+    .check-card p,
+    .kit-card p,
+    .status-card p,
+    .callout p {
+      margin: 0.45rem 0 0;
+      color: var(--muted);
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: 0.75rem;
+    }
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .kit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .kit-card {
+      display: block;
+      color: inherit;
+    }
+    .kit-card:hover {
+      border-color: var(--line-strong);
+      text-decoration: none;
+    }
+    .callout {
+      padding: 1rem 1.1rem;
+      background: linear-gradient(135deg, rgba(121, 211, 255, 0.09), rgba(255, 190, 114, 0.06));
+      font-family: var(--sans);
+      color: #cfe2f0;
+    }
+    footer {
+      margin-top: 1.8rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid rgba(144, 192, 222, 0.12);
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    li { margin-bottom: 0.42rem; }
+    @media (max-width: 980px) {
+      .hero,
+      .status-grid,
+      .ladder-grid,
+      .check-grid,
+      .kit-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 640px) {
+      .shell { width: min(100vw - 24px, 1160px); }
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .nav-links { justify-content: flex-start; }
+      .hero-copy,
+      .hero-panel,
+      .status-card,
+      .figure-card,
+      .ladder-card,
+      .check-card,
+      .kit-card,
+      .callout {
+        border-radius: 20px;
+      }
+      .hero-copy { padding: 1.45rem; }
+      h1 { max-width: 100%; }
+      .lead { font-size: 1.08rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>OpenClawBrain</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="../">Home</a>
+        <a href="./">Proof</a>
+        <a href="../blog/">Blog</a>
+        <a href="../docs/worked-example.md">Worked Example</a>
+        <a href="../openclawbrain.pdf">Paper</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">Evidence package</div>
+          <h1>Proof, packaged for operator review.</h1>
+          <p class="lead">
+            OpenClawBrain already has mechanism proof for the product it claims to ship: OpenClaw-native memory, a locally served and bounded hot path, and a learned runtime <code>route_fn</code> improved off the hot path by Ultimate Policy Gradient. What exists today is useful. It is not full product proof yet.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="../docs/worked-example.md">Read the worked turn</a>
+            <a class="btn btn-secondary" href="../docs/openclaw-integration.md">OpenClaw integration</a>
+            <a class="btn btn-secondary" href="../blog/v12.2.6-series/">Current blog series</a>
+            <a class="btn btn-secondary" href="../docs/reproduce-eval.md">Raw reproduce-eval doc</a>
+          </div>
+          <p class="hero-note">
+            Claim boundary: deterministic simulations, reproducible figures, and traceable turn bundles prove the mechanism and integration shape. They do not yet prove head-to-head wins on real OpenClaw traffic.
+          </p>
+          <div class="tag-row">
+            <span class="tag">OpenClaw-native memory</span>
+            <span class="tag">Learned runtime <code>route_fn</code></span>
+            <span class="tag">Continuous background learning</span>
+            <span class="tag">No fake benchmark certainty</span>
+          </div>
+        </div>
+
+        <div class="hero-panel">
+          <div class="status-grid">
+            <article class="status-card" id="proven-now">
+              <div class="kicker">Proven now</div>
+              <h2>Mechanism, integration shape, and local reproducibility</h2>
+              <ul>
+                <li>Deterministic simulations and ablations show the routing and learning loop behaves as intended.</li>
+                <li>A worked OpenClaw turn shows stable <code>chat_id</code>, bounded <code>[BRAIN_CONTEXT]</code>, and feedback captured against the route that fired.</li>
+                <li>The figure-generation and eval harness paths are explicit enough to rerun and inspect locally.</li>
+              </ul>
+            </article>
+
+            <article class="status-card">
+              <div class="kicker">Still needed</div>
+              <h2>Recorded-session, shadow, and online evidence</h2>
+              <ul>
+                <li>Fixed-session head-to-head runs with the same state, query set, and rubric across all modes.</li>
+                <li>Shadow-mode comparisons on mirrored OpenClaw traffic with saved disagreement traces.</li>
+                <li>Narrow online rollout data covering success, corrections, prompt size, latency, and cost.</li>
+              </ul>
+            </article>
+          </div>
+
+          <figure class="figure-card">
+            <div class="kicker">Mechanism artifact</div>
+            <img src="../figures/eval/oracle_gap_closed.svg" alt="Simulation figure showing the learned route policy closing the gap to an oracle over training">
+            <figcaption>
+              Existing simulation plots are evidence that the learning rule can move the router in controlled settings. They are not, by themselves, proof of field performance.
+            </figcaption>
+          </figure>
+
+          <article class="status-card" id="claim-boundary">
+            <div class="kicker">Claim labels</div>
+            <h2>Use the same words everywhere</h2>
+            <ul>
+              <li><strong>Proven now</strong>: the artifact already exists and can be rerun or inspected.</li>
+              <li><strong>Needs head-to-head</strong>: the claim depends on fixed recorded sessions or shadow traffic.</li>
+              <li><strong>Not claimed</strong>: there is no matching artifact yet, so the site should not imply certainty.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="evidence-ladder">
+        <div class="section-head">
+          <div>
+            <h2>Evidence ladder</h2>
+            <p class="section-intro">Each step answers a different question. The honest package is to show the current rung and the next missing rung, not to collapse them together.</p>
+          </div>
+        </div>
+        <div class="ladder-grid">
+          <article class="ladder-card">
+            <div class="step">1</div>
+            <h3>Mechanism proof</h3>
+            <p>Run deterministic simulations and ablations to show the learned router and confidence gate improve under controlled conditions.</p>
+            <div class="meta">This proves the mechanism. It does not prove product superiority.</div>
+          </article>
+          <article class="ladder-card">
+            <div class="step">2</div>
+            <h3>Recorded-session head-to-head</h3>
+            <p>Use a fixed OpenClaw query or session set, the same state, and one rubric to compare <code>vector_only</code>, legacy rerankers, partial components, and the learned runtime policy.</p>
+            <div class="meta">This is the first fair comparison layer.</div>
+          </article>
+          <article class="ladder-card">
+            <div class="step">3</div>
+            <h3>Shadow mode</h3>
+            <p>Mirror real OpenClaw traffic without serving it yet. Keep the same output budget and save disagreement traces, prompt size, latency, and cost logs.</p>
+            <div class="meta">This is where product evidence starts to harden.</div>
+          </article>
+          <article class="ladder-card">
+            <div class="step">4</div>
+            <h3>Narrow online rollout</h3>
+            <p>Enable the brain for a small traffic slice, keep fail-open behavior, and only publish claims backed by the saved artifacts from that slice.</p>
+            <div class="meta">This is product proof, not simulation proof.</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="artifact-checklist">
+        <div class="section-head">
+          <div>
+            <h2>Artifact checklist</h2>
+            <p class="section-intro">If a claim is cited on the site, the matching artifact bundle should exist. This is the minimum useful retention policy.</p>
+          </div>
+        </div>
+        <div class="check-grid">
+          <article class="check-card">
+            <div class="kicker">Worked turn</div>
+            <h3>One traceable operator turn</h3>
+            <ul>
+              <li>Stable <code>chat_id</code> and inbound summary</li>
+              <li>Exact <code>query_brain</code> command</li>
+              <li>Returned bounded <code>[BRAIN_CONTEXT]</code></li>
+              <li>Response trace or answer text</li>
+              <li>Feedback and <code>learn_by_chat_id</code> JSON</li>
+            </ul>
+          </article>
+          <article class="check-card">
+            <div class="kicker">Simulation run</div>
+            <h3>Mechanism artifact bundle</h3>
+            <ul>
+              <li>Exact command and config</li>
+              <li>Commit SHA and seed</li>
+              <li>Output directory</li>
+              <li>Generated JSON, SVG, and PNG artifacts</li>
+              <li>Figure paths cited by the site</li>
+            </ul>
+          </article>
+          <article class="check-card">
+            <div class="kicker">Head-to-head</div>
+            <h3>Frozen recorded-session eval</h3>
+            <ul>
+              <li>Query or session-set path plus digest</li>
+              <li>State snapshot identifier</li>
+              <li>Rubric version and per-mode outputs</li>
+              <li>Per-query judgments</li>
+              <li>Sampled worked-turn bundles</li>
+            </ul>
+          </article>
+          <article class="check-card">
+            <div class="kicker">Shadow or online</div>
+            <h3>Same-turn comparison data</h3>
+            <ul>
+              <li>Traffic slice and dates</li>
+              <li>Brain-off and brain-on outputs</li>
+              <li>Prompt, latency, and cost logs</li>
+              <li>Saved disagreement traces</li>
+              <li>Rollout window and fallback policy</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="proof-kit">
+        <div class="section-head">
+          <div>
+            <h2>Proof kit</h2>
+            <p class="section-intro">The HTML page is the packaged overview. These source docs and references stay intact underneath it.</p>
+          </div>
+        </div>
+        <div class="kit-grid">
+          <a class="kit-card" href="../docs/worked-example.md">
+            <div class="kicker">Concrete trace</div>
+            <h3>Worked example</h3>
+            <p>One OpenClaw turn with stable <code>chat_id</code>, bounded context, same-turn correction capture, and later replay boundaries.</p>
+          </a>
+          <a class="kit-card" href="../docs/openclaw-integration.md">
+            <div class="kicker">Rollout guide</div>
+            <h3>OpenClaw integration</h3>
+            <p>Brain-first mode, fail-open wiring, bounded prompt context, and the background learning loop that serves later turns.</p>
+          </a>
+          <a class="kit-card" href="../openclawbrain.pdf">
+            <div class="kicker">Paper</div>
+            <h3>Research framing</h3>
+            <p>The longer technical framing behind routing, memory structure, and the learning rule used by the product story.</p>
+          </a>
+          <a class="kit-card" href="../blog/v12.2.6-series/">
+            <div class="kicker">Blog series</div>
+            <h3>Current narrative</h3>
+            <p>The current product story, end to end: shadow routing, the learned runtime router, proof boundaries, and operator rollout.</p>
+          </a>
+          <a class="kit-card" href="../docs/reproduce-eval.md">
+            <div class="kicker">Raw commands</div>
+            <h3>Reproduce-eval doc</h3>
+            <p>The step-by-step markdown contract for simulations, fixed-session eval, shadow comparisons, and figure generation.</p>
+          </a>
+          <a class="kit-card" href="../blog/v12.2.6-series/03-evaluation-ablations/">
+            <div class="kicker">Evaluation post</div>
+            <h3>What simulations do and do not prove</h3>
+            <p>The series entry that states the proof boundary directly, without pretending simulation wins are already product wins.</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="callout">
+          <p>
+            This page packages the claim boundary for fast review. The markdown docs remain the canonical step-by-step references. The packaging goal is clarity: what is proven now, what still needs stronger evidence, and which artifacts back each statement.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      OpenClawBrain proof should stay aligned with the actual product: local query-time routing, continuous background learning, and claims that rise only as the evidence ladder rises.
+    </footer>
+  </div>
+</body>
+</html>
