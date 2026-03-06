@@ -46,56 +46,89 @@
     <h1>Evaluation: prove it without pretending</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>OpenClawBrain needs a cleaner evidence story than "the simulations look good." Simulations matter, but they only prove the mechanism. Product claims need a stronger ladder.</p>
+    <p>OpenClawBrain needs a cleaner evidence story than "the simulations look good." The current deterministic workflow-proof slice on <a href="/proof/#workflow-proof">/proof/</a> makes the mechanism proof concrete, but product claims still need a stronger ladder.</p>
 
     <div class="grid">
       <div class="card">
         <h3>Proven now</h3>
-        <p>Deterministic simulations, local ablations, and reproducible figure generation for the routing mechanism and its update path.</p>
+        <p>On the same 4 fixed workflow queries: <code>vector_topk</code> 0/4, <code>pointer_chase</code> 1/4, <code>graph_prior_only</code> 2/4, <code>learned</code> 4/4.</p>
       </div>
       <div class="card">
         <h3>Needs head-to-head</h3>
-        <p>Recorded-session comparisons, shadow traffic, and narrow online rollout before claiming superiority on real OpenClaw workflows.</p>
+        <p>Recorded-session comparisons, shadow traffic, and narrow online rollout before claiming better task outcomes on real OpenClaw workflows.</p>
       </div>
       <div class="card">
         <h3>Not claimed</h3>
-        <p>No blanket benchmark wins, no universal cost cuts, and no production superiority from simulation artifacts alone.</p>
+        <p>No blanket benchmark wins, no production latency or cost win, and no production superiority from deterministic artifacts alone.</p>
       </div>
     </div>
 
-    <h2>What simulations are for</h2>
-    <p>Simulations are still useful. They tell you whether the learned route policy, the confidence gate, and the update rule behave coherently under controlled conditions.</p>
+    <h2>Current workflow-proof slice</h2>
+    <p>The current published slice is intentionally narrow: exact-target retrieval on 4 deterministic workflow queries. It is useful because it tests the product framing directly: can durable graph priors make OpenClawBrain useful before learning, and does background learning later improve the served <code>route_fn</code>?</p>
+
+    <table>
+      <thead>
+        <tr><th>Mode</th><th>Exact-target success</th><th>What this isolates</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>vector_topk</code></td>
+          <td>0/4</td>
+          <td>Semantic retrieval floor with no workflow structure or learned routing.</td>
+        </tr>
+        <tr>
+          <td><code>pointer_chase</code></td>
+          <td>1/4</td>
+          <td>Simple deterministic traversal over explicit links without a learned route policy.</td>
+        </tr>
+        <tr>
+          <td><code>graph_prior_only</code></td>
+          <td>2/4</td>
+          <td>Durable structure before learning; the "start useful fast" part of the story.</td>
+        </tr>
+        <tr>
+          <td><code>learned</code></td>
+          <td>4/4</td>
+          <td>The same memory layer after background learning has improved routing.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The learning curve matters as much as the endpoint. <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs, while <code>learned</code> first reaches 4/4 at epoch 14. Reproduce the figures from <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>; compare the integration-level artifact bundle in <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
 
     <figure>
-      <img src="/figures/eval/reward_vs_epoch.svg" alt="Reward versus epoch curve from simulation outputs" loading="lazy" />
-      <figcaption>Mechanism proof: does the learned routing system improve under controlled conditions and known ablations?</figcaption>
+      <img src="/figures/eval/workflow_proof_exact_target_success.svg" alt="Bar chart showing exact-target success across the deterministic workflow proof modes: vector_topk zero out of four, pointer_chase one out of four, graph_prior_only two out of four, and learned four out of four" loading="lazy" />
+      <figcaption>Current mechanism proof, now tied to the published workflow slice on <a href="/proof/#workflow-proof">/proof/</a>: the same 4 fixed queries, the same scoring rule, and a visible gap between cold-start retrieval, graph priors, and the learned policy.</figcaption>
     </figure>
 
     <figure>
-      <img src="/figures/eval/ablation_bar_chart.svg" alt="Ablation chart comparing routing variants" loading="lazy" />
-      <figcaption>Mechanism proof can compare route variants, but that is still not a substitute for recorded-session or live-traffic evidence.</figcaption>
+      <img src="/figures/eval/workflow_proof_learning_curve.svg" alt="Line chart showing graph_prior_only exact-target success staying at fifty percent while learned routing reaches one hundred percent at epoch fourteen" loading="lazy" />
+      <figcaption>Useful fast with graph priors, better later via background learning: <code>graph_prior_only</code> stays at 2/4 for all 16 epochs, while <code>learned</code> reaches 4/4 at epoch 14. That is still deterministic harness evidence, not recorded-session or live-traffic proof.</figcaption>
     </figure>
 
-    <h2>The stronger proof path</h2>
+    <h2>Mechanism proof versus product proof</h2>
+    <p>This slice proves something real but limited: durable structure already helps on fixed workflow retrieval, and learned routing can improve later without claiming that the hot path retrains itself inline. It does <strong>not</strong> prove that operators complete real OpenClaw tasks faster, with fewer corrections, or at lower cost in production.</p>
+
+    <h2>The stronger evidence path</h2>
     <table>
       <thead>
         <tr><th>Stage</th><th>What it proves</th><th>What artifacts are required</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td>Deterministic simulations</td>
-          <td>The mechanism behaves coherently.</td>
-          <td>Exact commands, seeds, CSVs, generated figures.</td>
+          <td>Deterministic workflow proof</td>
+          <td>The router and learning loop behave coherently on the fixed workflow slice.</td>
+          <td>Exact commands, commit SHA, <code>summary.csv</code>, <code>learning_curve.csv</code>, generated figures.</td>
         </tr>
         <tr>
           <td>Offline recorded-session eval</td>
-          <td>The same workload can be scored head-to-head across routing modes.</td>
-          <td>Query set, scoring rubric, eval JSON, commit SHA.</td>
+          <td>The same OpenClaw workload can be scored head-to-head across routing modes.</td>
+          <td>Query set, scoring rubric, eval JSON, commit SHA, and sampled turn bundles in the <a href="/docs/worked-example.md">worked-example format</a>.</td>
         </tr>
         <tr>
           <td>Shadow traffic</td>
           <td>The brain helps on real OpenClaw traffic without being the only live path yet.</td>
-          <td>Mirrored traffic slice, side-by-side metrics, retained outputs.</td>
+          <td>Mirrored traffic slice, side-by-side metrics, retained outputs, and disagreement traces.</td>
         </tr>
         <tr>
           <td>Narrow online rollout</td>
@@ -109,10 +142,10 @@
     <ol>
       <li>Every nontrivial claim needs a command, an artifact path, and a commit SHA.</li>
       <li>If an artifact does not exist yet, the table cell stays <code>TBD</code>.</li>
-      <li>Do not summarize simulations as product wins on OpenClaw traffic.</li>
+      <li>Do not summarize the 4-query deterministic workflow slice as a product win on OpenClaw traffic.</li>
     </ol>
 
-    <p>The canonical instructions live in <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>.</p>
+    <p>Packaged view: <a href="/proof/">/proof/</a>. Rerun steps: <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>. Smallest real-turn proof unit: <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
 
     <p>Next: <a href="/blog/v12.2.6-series/04-operator-local-embeddings/">Post 4 on local-first rollout</a>.</p>
   </main>

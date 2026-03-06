@@ -39,48 +39,70 @@
     <h1>Baselines and the comparison contract</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>OpenClawBrain should compare itself against the retrieval systems operators would actually use instead of hiding behind vague "AI memory" framing. It also needs a stricter contract for when those comparisons are strong enough to publish.</p>
+    <p>OpenClawBrain should compare itself against retrieval behaviors operators would plausibly use instead of hiding behind vague "AI memory" framing. The current published slice on <a href="/proof/#workflow-proof">/proof/</a> is narrow but concrete: 4 deterministic workflow queries scored with exact-target success.</p>
 
-    <h2>Baseline set</h2>
+    <div class="card">
+      <p>That scope matters. These numbers are strong enough to compare mechanism-level baselines honestly; they are not broad enough to claim real OpenClaw workload wins yet. For that, the next rung is still recorded-session eval, then shadow traffic, then a narrow online rollout.</p>
+    </div>
+
+    <h2>Current published baseline slice</h2>
     <table>
       <thead>
-        <tr><th>Baseline</th><th>Why it belongs</th><th>Harness mode</th></tr>
+        <tr><th>Baseline</th><th>Why it matters</th><th>Current exact-target success</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td>Vector top-k</td>
-          <td>Cold-start floor when there is no learned routing yet.</td>
-          <td><code>vector_only</code></td>
+          <td><code>vector_topk</code></td>
+          <td>Cold-start semantic retrieval floor with no workflow structure and no learned routing.</td>
+          <td>0/4</td>
         </tr>
         <tr>
-          <td>Deterministic rerank / legacy edge similarity</td>
-          <td>Represents classic retrieval-plus-rerank stacks without a learned route policy.</td>
-          <td><code>edge_sim_legacy</code></td>
+          <td><code>pointer_chase</code></td>
+          <td>Simple deterministic traversal over explicit links. It checks whether a plain walk over stored pointers is already enough.</td>
+          <td>1/4</td>
         </tr>
         <tr>
-          <td>Graph prior only</td>
-          <td>Shows what happens when structure exists but the query-conditioned route component is absent.</td>
           <td><code>graph_prior_only</code></td>
+          <td>Durable structure without learned routing. This is the "start useful fast" baseline.</td>
+          <td>2/4</td>
         </tr>
         <tr>
-          <td>QTsim only</td>
-          <td>Shows what happens when the query-conditioned component acts without the durable structural prior.</td>
-          <td><code>qtsim_only</code></td>
-        </tr>
-        <tr>
-          <td>Learned mixed router</td>
-          <td>The actual OpenClawBrain runtime route policy.</td>
           <td><code>learned</code></td>
+          <td>The same memory layer after background learning has improved the runtime route policy.</td>
+          <td>4/4</td>
         </tr>
       </tbody>
     </table>
 
-    <h2>What the current site can say honestly</h2>
+    <p>The learning curve is the second half of the comparison. <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs, while <code>learned</code> first reaches 4/4 at epoch 14. That is the current concrete evidence for the product framing: useful from graph priors first, better later via background learning.</p>
+
+    <h2>Why these baselines belong</h2>
+    <table>
+      <thead>
+        <tr><th>Question</th><th>Why the answer matters</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>If <code>vector_topk</code> were already enough, why add a memory layer?</td>
+          <td>Because a durable memory product should beat a plain semantic floor on workflow retrieval, not just rename it.</td>
+        </tr>
+        <tr>
+          <td>If <code>pointer_chase</code> were enough, why learn anything?</td>
+          <td>Because deterministic link-following is a credible alternative for explicit workflows. It needs to be ruled in or out directly.</td>
+        </tr>
+        <tr>
+          <td>If <code>graph_prior_only</code> matched <code>learned</code>, why keep the learning path?</td>
+          <td>Because the product claim is not just "there is a graph." It is "the graph helps immediately, and background learning improves later."</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>What the current comparison says honestly</h2>
     <div class="card">
       <ul>
-        <li>The mechanism can be reproduced locally with deterministic simulations and ablations.</li>
-        <li>The harness can compare routing modes on recorded query sets.</li>
-        <li>The site does <strong>not</strong> yet publish broad head-to-head operator wins from real OpenClaw traffic.</li>
+        <li>The workflow-proof slice cleanly separates cold-start semantic retrieval, deterministic traversal, durable graph priors, and the learned policy.</li>
+        <li>On this fixed slice, graph priors already outperform the simpler baselines, and the learned policy improves beyond the prior later.</li>
+        <li>The site still does <strong>not</strong> publish broad operator wins from real OpenClaw traffic.</li>
       </ul>
     </div>
 
@@ -91,8 +113,8 @@
       </thead>
       <tbody>
         <tr>
-          <td>Simulation + ablation</td>
-          <td>Mechanism proof</td>
+          <td>Current deterministic workflow proof</td>
+          <td>Mechanism proof on one fixed, reproducible query slice</td>
           <td>Yes</td>
         </tr>
         <tr>
@@ -118,10 +140,10 @@
       <li>Use the same query set, scoring rubric, and prompt budget rules across all modes.</li>
       <li>Keep the command, artifact path, and commit SHA for every published number.</li>
       <li>Leave cells as <code>TBD</code> when the artifact does not exist yet.</li>
-      <li>Do not describe simulation-only results as real operator wins.</li>
+      <li>Do not describe the current 4-query deterministic slice as a real operator win.</li>
     </ul>
 
-    <p>The canonical proof path is in <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>.</p>
+    <p>Packaged proof boundary: <a href="/proof/">/proof/</a>. Reproduction steps: <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>. Turn-level artifact contract: <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
 
     <p>Next: <a href="/blog/v12.2.6-series/06-openclaw-brain-first-integration/">Post 6 on brain-first OpenClaw integration</a>.</p>
   </main>
