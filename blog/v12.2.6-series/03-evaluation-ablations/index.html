@@ -94,7 +94,7 @@
       </tbody>
     </table>
 
-    <p>The learning curve matters as much as the endpoint. <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs, while <code>learned</code> first reaches 4/4 at epoch 14. Reproduce the figures from <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>; compare the integration-level artifact bundle in <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
+    <p>The learning curve matters as much as the endpoint. <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs, while <code>learned</code> first reaches 4/4 at epoch 14. The proof package now also points to <code>per_query_matrix.csv</code> and <code>per_query_matrix.md</code>, the 16-row scenario matrix showing which node IDs reached prompt context under each mode. Reproduce the figures from <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>; compare the integration-level artifact bundle in <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
 
     <figure>
       <img src="/figures/eval/workflow_proof_exact_target_success.svg" alt="Bar chart showing exact-target success across the deterministic workflow proof modes: vector_topk zero out of four, pointer_chase one out of four, graph_prior_only two out of four, and learned four out of four" loading="lazy" />
@@ -118,7 +118,7 @@
         <tr>
           <td>Deterministic workflow proof</td>
           <td>The router and learning loop behave coherently on the fixed workflow slice.</td>
-          <td>Exact commands, commit SHA, <code>summary.csv</code>, <code>learning_curve.csv</code>, generated figures.</td>
+          <td>Exact commands, commit SHA, <code>summary.csv</code>, <code>learning_curve.csv</code>, <code>report.md</code>, <code>per_query_matrix.csv</code>, and <code>per_query_matrix.md</code>.</td>
         </tr>
         <tr>
           <td>Offline recorded-session eval</td>
@@ -145,7 +145,7 @@
       <li>Do not summarize the 4-query deterministic workflow slice as a product win on OpenClaw traffic.</li>
     </ol>
 
-    <p>Packaged view: <a href="/proof/">/proof/</a>. Rerun steps: <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>. Smallest real-turn proof unit: <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
+    <p>Packaged view: <a href="/proof/">/proof/</a>, including the scenario-level matrix references. Rerun steps: <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>. Smallest real-turn proof unit: <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
 
     <p>Next: <a href="/blog/v12.2.6-series/04-operator-local-embeddings/">Post 4 on local-first rollout</a>.</p>
   </main>
