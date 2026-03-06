@@ -164,18 +164,19 @@
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a></div>
+    <div class="nav"><a href="/">openclawbrain.ai</a> | <a href="/proof/">proof</a></div>
 
     <section class="hero">
       <div class="eyebrow">Writing for operators</div>
       <h1>Routing, learning, and proof for OpenClawBrain.</h1>
       <p>
-        This blog explains OpenClawBrain as it actually ships: tight OpenClaw integration, fast local startup, continuous background learning, and a learned runtime <code style="font-family:var(--mono); color:var(--warm);">route_fn</code> trained with Ultimate Policy Gradient from scanner/harvester labels, async teacher labels, and user feedback.
+        This blog explains OpenClawBrain as it actually ships: tight OpenClaw integration, fast local startup, continuous background learning, and a learned runtime <code style="font-family:var(--mono); color:var(--warm);">route_fn</code> trained with Ultimate Policy Gradient from scanner/harvester labels, async teacher labels, and user feedback. The proof boundary is explicit: simulations prove mechanism, not full product performance.
       </p>
       <div class="hero-actions">
         <a class="btn primary" href="/blog/v12.2.6-series/">Read the current series</a>
+        <a class="btn" href="/proof/">Open the proof package</a>
         <a class="btn" href="/docs/openclaw-integration.md">OpenClaw integration guide</a>
-        <a class="btn" href="/docs/reproduce-eval.md">Proof path</a>
+        <a class="btn" href="/docs/worked-example.md">Worked example</a>
       </div>
       <div class="tag-row">
         <span class="tag">OpenClaw-native memory</span>
@@ -193,6 +194,11 @@
         </div>
       </div>
       <div class="grid">
+        <a class="card" href="/proof/">
+          <div class="meta">Proof package</div>
+          <h3>What is proven now vs what still needs stronger evidence</h3>
+          <p>One operator-facing hub for mechanism proof, the evidence ladder, and the artifact checklist behind each claim.</p>
+        </a>
         <a class="card" href="/docs/openclaw-integration.md">
           <div class="meta">Operator docs</div>
           <h3>OpenClaw integration</h3>
@@ -203,15 +209,15 @@
           <h3>Use the brain first, train it second</h3>
           <p>Start with a workspace build and daemon query, then add replay, harvest, and maintenance in the background.</p>
         </a>
-        <a class="card" href="/docs/reproduce-eval.md">
-          <div class="meta">Proof discipline</div>
-          <h3>What is proven now vs what still needs head-to-head baselines</h3>
-          <p>Mechanism proof, offline recorded-session eval, shadow traffic, and narrow online rollout.</p>
+        <a class="card" href="/docs/worked-example.md">
+          <div class="meta">Concrete trace</div>
+          <h3>One OpenClaw turn, fully traced</h3>
+          <p>Inbound summary, stable <code style="font-family:var(--mono); color:var(--warm);">chat_id</code>, bounded <code style="font-family:var(--mono); color:var(--warm);">[BRAIN_CONTEXT]</code>, same-turn correction capture, and what only changes after replay and redeploy.</p>
         </a>
-        <a class="card" href="/openclawbrain.pdf">
-          <div class="meta">Reference</div>
-          <h3>Paper and materials</h3>
-          <p>The formal paper is still the reference for equations and deeper technical background. The site should stay more direct.</p>
+        <a class="card" href="/docs/reproduce-eval.md">
+          <div class="meta">Raw proof doc</div>
+          <h3>Reproduce-eval command path</h3>
+          <p>The underlying markdown contract for simulations, fixed-session eval, shadow comparisons, and figure generation.</p>
         </a>
       </div>
     </section>

@@ -346,6 +346,9 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 1rem;
     }
+    .resource-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
     .path-card ol,
     .proof-card ul,
     .resource-card ul {
@@ -395,6 +398,24 @@
       padding-right: 1rem;
     }
     .proof-card strong {
+      color: var(--bright);
+    }
+    .proof-card {
+      display: block;
+      color: inherit;
+    }
+    .proof-card:hover {
+      text-decoration: none;
+      border-color: rgba(121, 211, 255, 0.32);
+    }
+    .proof-summary {
+      margin-bottom: 1rem;
+    }
+    .proof-summary p {
+      margin: 0.45rem 0 0;
+      color: var(--muted);
+    }
+    .proof-summary strong {
       color: var(--bright);
     }
     .callout {
@@ -490,7 +511,8 @@
       <nav class="nav-links" aria-label="Primary">
         <a href="/docs/openclaw-integration.md">OpenClaw Integration</a>
         <a href="/docs/setup-guide.md">Quick Start</a>
-        <a href="/docs/reproduce-eval.md">Prove It</a>
+        <a href="/docs/worked-example.md">Worked Example</a>
+        <a href="/proof/">Proof</a>
         <a href="/blog/">Blog</a>
         <a href="/openclawbrain.pdf">Paper</a>
       </nav>
@@ -522,12 +544,13 @@
 
           <div class="cta-row">
             <a class="btn btn-primary" href="/docs/openclaw-integration.md">Integrate with OpenClaw</a>
+            <a class="btn btn-secondary" href="/proof/">Review the Proof Package</a>
             <a class="btn btn-secondary" href="/docs/setup-guide.md">Quick Start</a>
-            <a class="btn btn-secondary" href="/docs/reproduce-eval.md">See the Proof Path</a>
+            <a class="btn btn-secondary" href="/docs/worked-example.md">See a Worked Turn</a>
           </div>
 
           <p class="hero-note">
-            Default stack for this site: local embedder <code>BAAI/bge-large-en-v1.5</code> and local async teacher <code>Ollama qwen3.5:35b</code>, unless you intentionally switch.
+            Default stack for this site: local embedder <code>BAAI/bge-large-en-v1.5</code> and local async teacher <code>Ollama qwen3.5:35b</code>. Proof boundary: simulations prove the mechanism; product claims still need recorded-session, shadow, and online evidence in <a href="/proof/">/proof/</a>.
           </p>
         </div>
 
@@ -689,18 +712,25 @@ python3 -m openclawbrain.openclaw_adapter.query_brain \
             <p class="section-intro">The current site should distinguish mechanism proof from product proof. Both matter, and they are not the same.</p>
           </div>
         </div>
+        <div class="panel proof-summary">
+          <div class="kicker">Current deterministic workflow proof</div>
+          <h3>Exact-target success moves from 0/4 to 4/4 on the same 4-query slice.</h3>
+          <p><strong>Current figures:</strong> <code>vector_topk</code> 0/4, <code>pointer_chase</code> 1/4, <code>graph_prior_only</code> 2/4, <code>learned</code> 4/4. Graph prior stays at 2/4 across all 16 epochs; learned first reaches 4/4 at epoch 14.</p>
+          <p>This is mechanism proof from the current workflow harness, not a live production eval.</p>
+          <a class="resource-link" href="/proof/#workflow-proof">See the figures and proof boundary -&gt;</a>
+        </div>
         <div class="proof-grid">
-          <article class="proof-card">
+          <a class="proof-card" href="/proof/#proven-now">
             <div class="kicker">Proven now</div>
             <h3>Mechanism and local reproducibility</h3>
             <ul>
               <li>Deterministic simulations and ablations that exercise the routing policy and its training loop.</li>
-              <li>Reproducible harness commands for comparing <code>vector_only</code>, <code>graph_prior_only</code>, <code>qtsim_only</code>, and mixed learned routing on your own state.</li>
+              <li>Current workflow-proof artifacts compare <code>vector_topk</code>, <code>pointer_chase</code>, <code>graph_prior_only</code>, and <code>learned</code> on the same fixed query slice.</li>
               <li>Generated figures and artifact paths that can be checked locally before any claim is published.</li>
             </ul>
-          </article>
+          </a>
 
-          <article class="proof-card">
+          <a class="proof-card" href="/proof/#evidence-ladder">
             <div class="kicker">Next proof</div>
             <h3>Head-to-head on real OpenClaw traffic</h3>
             <ul>
@@ -708,9 +738,9 @@ python3 -m openclawbrain.openclaw_adapter.query_brain \
               <li>Shadow-mode comparison between brain-off and brain-on runs before rollout.</li>
               <li>Limited online tests tracking task success, correction rate, prompt size, latency, and cost.</li>
             </ul>
-          </article>
+          </a>
 
-          <article class="proof-card">
+          <a class="proof-card" href="/proof/#claim-boundary">
             <div class="kicker">Not claimed</div>
             <h3>What this site does not say</h3>
             <ul>
@@ -718,10 +748,10 @@ python3 -m openclawbrain.openclaw_adapter.query_brain \
               <li>No universal token or cost reduction promises.</li>
               <li>No claim that simulations alone prove production superiority.</li>
             </ul>
-          </article>
+          </a>
         </div>
         <div class="callout" style="margin-top:1rem;">
-          Stronger proof path: use the lab simulations to verify the mechanism, then require offline recorded-session eval, shadow traffic, and only then a narrow online rollout. The canonical instructions are in <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>.
+          Start in <a href="/proof/">the proof package</a> for the packaged view: what is proven now, what still needs head-to-head or shadow evidence, and which artifacts back each claim. Need the raw steps underneath it? Follow <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a> and the <a href="/docs/worked-example.md">worked example</a>.
         </div>
       </section>
 
@@ -733,6 +763,11 @@ python3 -m openclawbrain.openclaw_adapter.query_brain \
           </div>
         </div>
         <div class="resource-grid">
+          <article class="resource-card">
+            <h3>Proof package</h3>
+            <p>Operator-facing overview of the current evidence boundary, the ladder from mechanism proof to online rollout, and the artifact checklist for each claim.</p>
+            <a class="resource-link" href="/proof/">Open the proof package -&gt;</a>
+          </article>
           <article class="resource-card">
             <h3>OpenClaw integration</h3>
             <p>Canonical rollout guide for brain-first mode, fail-open behavior, query hooks, feedback capture, and background learning.</p>

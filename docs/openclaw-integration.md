@@ -18,6 +18,7 @@ Primary companion docs:
 
 - [docs/setup-guide.md](setup-guide.md)
 - [docs/operator-guide.md](operator-guide.md)
+- [docs/worked-example.md](worked-example.md)
 - [docs/reproduce-eval.md](reproduce-eval.md)
 - [docs/new-agent-sop.md](new-agent-sop.md)
 
@@ -42,6 +43,10 @@ The important detail is what does **not** happen:
 - no unbounded prompt dump
 - no requirement to finish replay or harvesting before first use
 
+Concrete turn trace:
+
+- [docs/worked-example.md](worked-example.md)
+
 ## Why this is the recommended path
 
 OpenClaw users want memory that works while the agent is already running.
@@ -52,6 +57,22 @@ OpenClawBrain is designed around that operational reality:
 - feedback stays connected to real sessions via `chat_id`
 - historical replay can happen after the first install
 - continuous learning improves the runtime router over time
+
+## Keep one canonical turn artifact bundle
+
+For rollout proof, save at least one real or recorded OpenClaw turn end to end:
+
+- inbound turn summary plus stable `chat_id`
+- exact `query_brain` command and the bounded `[BRAIN_CONTEXT]` it returned
+- the OpenClaw answer or response trace id
+- same-turn `capture_feedback` and `learn_by_chat_id` JSON, if correction or outcome happened
+- later replay, harvest, and maintain commands plus the state or commit used for the next cutover
+
+That bundle is the minimum operator proof that the integration is real.
+
+Worked example:
+
+- [docs/worked-example.md](worked-example.md)
 
 ## 15-minute rollout
 
@@ -240,6 +261,7 @@ Still needed for strong product claims:
 
 That proof path is the canonical one:
 
+- [docs/worked-example.md](worked-example.md)
 - [docs/reproduce-eval.md](reproduce-eval.md)
 
 ## Next docs

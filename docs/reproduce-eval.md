@@ -8,6 +8,11 @@ The short version:
 - simulations alone are not enough for product proof
 - strong claims need offline recorded-session eval, shadow traffic, and narrow online rollout
 
+Smallest useful proof unit:
+
+- one traceable turn with a stable `chat_id`, saved `query_brain` output, and any same-turn feedback artifacts
+- canonical example: [docs/worked-example.md](worked-example.md)
+
 ## Evidence ladder
 
 ### 1. Mechanism proof: deterministic simulations
@@ -31,6 +36,48 @@ What this does **not** prove:
 - superiority on real OpenClaw traffic
 - cost wins in production
 - universal gains across one-off workloads
+
+### Current workflow-proof slice used on `/proof/`
+
+This is the deterministic mechanism bundle behind the current workflow-proof copy on the site.
+
+```bash
+cd /private/tmp/ocb-proof-sims
+python3 -m examples.eval.simulate_openclaw_workflows \
+  --output-dir scratch/workflow-proof/latest
+```
+
+Key generated files:
+
+- `scratch/workflow-proof/latest/workflow_state.json`
+- `scratch/workflow-proof/latest/train_traces.jsonl`
+- `scratch/workflow-proof/latest/train_labels.jsonl`
+- `scratch/workflow-proof/latest/eval_queries.jsonl`
+- `scratch/workflow-proof/latest/learning_curve.csv`
+- `scratch/workflow-proof/latest/baseline_eval/summary.csv`
+- `scratch/workflow-proof/latest/baseline_eval/summary.json`
+- `scratch/workflow-proof/latest/report.md`
+- `scratch/workflow-proof/latest/per_query_matrix.csv`
+- `scratch/workflow-proof/latest/per_query_matrix.md`
+- `scratch/workflow-proof/latest/worked_example.md`
+
+What the scenario-level matrix adds:
+
+- `per_query_matrix.csv` and `per_query_matrix.md` flatten the workflow slice into 16 rows: 4 held-out scenarios x 4 retrieval modes
+- each row records `query_id`, `scenario`, `category`, `required_node_ids`, `prompt_context_included_node_ids`, `target_success`, `required_node_coverage`, and `pointer_turns` when relevant
+- `report.md` is the compact count table; `per_query_matrix.*` is the citable prompt-context evidence behind those totals
+
+What this proves:
+
+- cold-start graph priors can already recover the required prompt-context nodes on some fixed workflow queries
+- async teacher supervision can improve the served learned `route_fn` later, off the hot path
+- the deterministic harness makes the exact node IDs that reached prompt context inspectable per scenario
+
+What this does **not** prove:
+
+- downstream answer quality
+- real OpenClaw task success or production superiority
+- scanner/harvester label quality on live histories
 
 ## 2. Offline head-to-head: recorded queries or sessions
 
@@ -89,6 +136,16 @@ Track at least:
 
 This is the first step that starts to answer whether the learned runtime `route_fn` is helping the real OpenClaw workflow.
 
+## Artifact checklist
+
+Use this as the minimum retention policy for anything cited on the site.
+
+| Evaluation type | Save at minimum |
+| --- | --- |
+| deterministic sim run | exact command, commit SHA, seed or config, output directory, and generated JSON/SVG/PNG artifacts |
+| recorded-session eval | frozen query or session-set path plus digest, state path or snapshot identifier, rubric version, per-mode outputs, per-query judgments, and sampled turn bundles in the [worked-example format](worked-example.md) |
+| shadow-mode comparison | traffic slice definition and dates, brain-off and brain-on outputs for the same turns, output-budget rules, prompt/latency/cost logs, and saved disagreement traces with `chat_id` plus bounded `[BRAIN_CONTEXT]` |
+
 ## 4. Narrow online rollout
 
 Only after shadow-mode evidence exists:
@@ -115,6 +172,37 @@ Expected figure outputs:
 - `figures/eval/oracle_gap_closed.svg`
 - `figures/eval/alpha_router_conf_hist.svg`
 - `figures/eval/ablation_bar_chart.svg`
+
+Current workflow-proof figures used on `/proof/`:
+
+```bash
+python3 scripts/generate_workflow_proof_figures.py \
+  --baseline /private/tmp/ocb-proof-sims/scratch/workflow-proof/latest/baseline_eval/summary.csv \
+  --curve /private/tmp/ocb-proof-sims/scratch/workflow-proof/latest/learning_curve.csv \
+  --outdir figures/eval
+```
+
+Current cited metrics from that artifact bundle:
+
+- exact-target success: `vector_topk` 0/4, `pointer_chase` 1/4, `graph_prior_only` 2/4, `learned` 4/4
+- graph prior stays flat at 2/4 across all 16 epochs
+- learned first reaches 4/4 at epoch 14
+- scenario summary source: `/private/tmp/ocb-proof-sims/scratch/workflow-proof/latest/report.md`
+- scenario-level prompt-context evidence: `/private/tmp/ocb-proof-sims/scratch/workflow-proof/latest/per_query_matrix.csv` and `/private/tmp/ocb-proof-sims/scratch/workflow-proof/latest/per_query_matrix.md`
+- worked retrieval example source: `/private/tmp/ocb-proof-sims/scratch/workflow-proof/latest/worked_example.md`
+
+Expected workflow-proof outputs:
+
+- `figures/eval/workflow_proof_exact_target_success.svg`
+- `figures/eval/workflow_proof_learning_curve.svg`
+
+These figures are still mechanism proof only. They make the current deterministic retrieval result concrete; they do not replace recorded-session, shadow, or online product evidence.
+
+For the current workflow-proof slice, keep the claim boundary explicit:
+
+- `report.md` and `per_query_matrix.*` show which memory nodes reached prompt context inside the sim
+- they do **not** show downstream answer quality or production operator outcomes
+- the product claim stays narrow: OpenClaw-native memory plus a learned runtime router on a local hot path, with async teacher supervision off that path
 
 ## Reporting contract
 
