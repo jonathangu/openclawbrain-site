@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain: TypeScript-First Brain Packages for OpenClaw</title>
+  <title>OpenClawBrain - Make Your AI Agent Learn From Every Conversation</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain is the TypeScript-first package surface for OpenClaw memory and learning, with published recorded-session and sparse-feedback head-to-head proof bundles.">
-  <meta property="og:title" content="OpenClawBrain: TypeScript-First Brain Packages for OpenClaw">
-  <meta property="og:description" content="OpenClawBrain: TypeScript-first brain packages for OpenClaw with published recorded-session and sparse-feedback head-to-head evidence.">
+  <meta name="description" content="OpenClawBrain makes OpenClaw stateful and self-improving by learning what context to serve at runtime. It watches usage, feedback, and history, then builds better brain packs over time.">
+  <meta property="og:title" content="OpenClawBrain - Make Your AI Agent Learn From Every Conversation">
+  <meta property="og:description" content="OpenClawBrain makes OpenClaw stateful and self-improving by learning what context to serve at runtime.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary">
@@ -242,8 +242,7 @@
     .path-grid,
     .proof-family-grid,
     .status-grid,
-    .route-grid,
-    .package-grid {
+    .route-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0.72rem;
@@ -252,8 +251,7 @@
     .path-step,
     .proof-family,
     .status-card,
-    .route-card,
-    .package-item {
+    .route-card {
       padding: 0.82rem 0.88rem;
       border: 1px solid var(--border);
       border-radius: 11px;
@@ -278,8 +276,7 @@
     .path-step h3,
     .route-card h3,
     .status-card h3,
-    .proof-family h3,
-    .package-item h3 {
+    .proof-family h3 {
       margin: 0;
       font-family: var(--sans);
       font-size: 0.97rem;
@@ -290,8 +287,7 @@
     .path-step p,
     .route-card p,
     .status-card p,
-    .proof-family p,
-    .package-item p {
+    .proof-family p {
       margin: 0;
       font-family: var(--sans);
       font-size: 0.84rem;
@@ -411,25 +407,6 @@
       color: var(--text);
     }
 
-    .package-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      margin-bottom: 0.78rem;
-    }
-
-    .package-item {
-      padding: 0.58rem 0.64rem;
-      background: var(--bg-code);
-      border-color: rgba(125, 157, 198, 0.29);
-    }
-
-    .package-item h3 {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      line-height: 1.45;
-      color: var(--orange);
-      font-weight: 500;
-    }
-
     pre {
       margin: 0;
       padding: 0.95rem 1rem;
@@ -482,8 +459,6 @@
       .status-grid,
       .route-grid,
       .boundary-grid { grid-template-columns: 1fr; }
-
-      .package-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 640px) {
@@ -493,7 +468,6 @@
       .hero-card,
       .section { padding: 1rem 0.95rem; }
       .hero-actions .btn { width: 100%; text-align: center; }
-      .package-grid { grid-template-columns: 1fr; }
       table { min-width: 520px; }
     }
   </style>
@@ -504,36 +478,33 @@
     <div class="utility-row">
       <a class="brand" href="/">openclawbrain.ai</a>
       <nav class="utility-links" aria-label="Primary routes">
+        <a href="/docs/setup-guide.md">Get started</a>
         <a href="/proof/">Proof</a>
         <a href="/paper/">Paper</a>
         <a href="/docs/openclaw-integration.md">Docs</a>
-        <a href="/openclawbrain.pdf">PDF</a>
         <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
       </nav>
     </div>
 
     <div class="hero-card" id="start-here">
-      <p class="eyebrow">Guided review path</p>
-      <h1>OpenClawBrain: TypeScript-first brain stack for OpenClaw</h1>
+      <p class="eyebrow">What is OpenClawBrain?</p>
+      <h1>Your AI agent gets smarter with every conversation</h1>
       <p class="lead">
-        OpenClaw owns runtime orchestration, fail-open behavior, and prompt assembly. OpenClawBrain owns contracts, event and export normalization, provenance, pack artifacts, activation helpers, compiler output, and learner updates.
-        The first read should move from turn-level traceability to benchmark evidence, then to operator integration.
+        OpenClawBrain makes <a href="https://github.com/jonathangu/openclaw">OpenClaw</a> stateful and self-improving.
+        It learns what context your agent should see for a given query &mdash; and gets better at it continuously from real use, feedback, and history.
       </p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#guided-path">Start the 3-step path</a>
-        <a class="btn btn-secondary" href="/proof/">Open the proof package</a>
+        <a class="btn btn-primary" href="/docs/setup-guide.md">Get started</a>
+        <a class="btn btn-secondary" href="#how-it-works">How it works</a>
       </div>
-      <p class="hero-meta">
-        Claim boundary: mechanism, workflow, recorded-session, and sparse-feedback benchmark proof are published. Live production answer-quality proof is not claimed.
-      </p>
     </div>
 
     <nav class="page-nav" aria-label="On this page">
-      <a href="#guided-path">Start path</a>
-      <a href="#proof-snapshot">Proof snapshot</a>
-      <a href="#architecture">Architecture</a>
-      <a href="#quickstart">Quickstart</a>
-      <a href="#route-map">Route map</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#two-systems">Two systems</a>
+      <a href="#quickstart">Quick start</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#links">Docs and links</a>
     </nav>
   </header>
 
@@ -541,186 +512,129 @@
     <img src="hero.png" onerror="this.src='hero-v2.png'" alt="Brain-shaped network of document nodes and weighted edges showing active and dormant routes">
   </figure>
 
-  <section class="section" id="guided-path">
-    <h2>Start here in order</h2>
+  <section class="section" id="how-it-works">
+    <h2>How it works</h2>
     <p class="section-intro">
-      The homepage now routes first-time readers through one narrow funnel instead of a broad menu. Use these steps in order, then branch into docs only after the proof boundary is clear.
+      Most AI agents start every conversation from scratch. OpenClawBrain gives your agent a memory that improves over time. The core idea: a learned routing function that decides which memories and context blocks to surface for each query, and refines that decision from every interaction.
     </p>
     <div class="path-grid">
       <article class="path-step primary">
         <p class="step-index">Step 1</p>
-        <h3>Inspect one worked turn</h3>
-        <p>Verify stable <code>turn_id</code>, bounded compiled context, same-turn correction capture, and replay boundary before reading aggregate benchmark numbers.</p>
-        <a href="/proof/#worked-turn">Open worked-turn evidence</a>
+        <h3>Your agent runs on OpenClaw</h3>
+        <p>OpenClaw handles sessions, tools, prompts, and answers. It is the runtime &mdash; the thing that actually talks to users.</p>
       </article>
       <article class="path-step">
         <p class="step-index">Step 2</p>
-        <h3>Read benchmark proof families</h3>
-        <p>Check recorded-session and sparse-feedback head-to-head artifacts. Keep benchmark proof separate from shadow and online claims.</p>
-        <a href="/proof/#recorded-session">Open recorded-session benchmark</a>
+        <h3>OpenClawBrain watches and learns</h3>
+        <p>Off the hot path, OpenClawBrain turns usage patterns, feedback, and history into structured knowledge called <strong>brain packs</strong> &mdash; bundles of context blocks and routing weights.</p>
       </article>
       <article class="path-step">
         <p class="step-index">Step 3</p>
-        <h3>Wire packages into runtime</h3>
-        <p>After boundary review, integrate the package surface into your OpenClaw runtime and run the reproducibility commands.</p>
-        <a href="/docs/openclaw-integration.md">Open integration docs</a>
+        <h3>Better answers, automatically</h3>
+        <p>At query time, the learned route function picks the right context to serve. Over time, it gets better &mdash; surfacing more relevant information with less noise.</p>
       </article>
     </div>
   </section>
 
-  <section class="section" id="proof-snapshot">
-    <h2>Proof snapshot</h2>
+  <section class="section" id="two-systems">
+    <h2>Two systems, one goal</h2>
     <p class="section-intro">
-      Two benchmark families are now published and reproducible. They prove comparative behavior on frozen workloads, not live production answer quality.
-    </p>
-
-    <div class="proof-family-grid">
-      <article class="proof-family">
-        <h3><code>recorded_h2h_relational_drift_001</code></h3>
-        <p>800 queries, 41 steps, 8 baselines. <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp).</p>
-      </article>
-      <article class="proof-family">
-        <h3><code>proof-results/sparse_feedback_10seed</code></h3>
-        <p><code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), about 5x smaller context per query, and 9-1 head-to-head over <code>vector_rag_rerank</code>.</p>
-      </article>
-    </div>
-
-    <div class="status-grid">
-      <article class="status-card proven">
-        <p class="status-label">Published</p>
-        <h3>Mechanism and workflow proof</h3>
-        <p>Deterministic simulation plus inspectable turn-level artifacts are published and reproducible.</p>
-      </article>
-      <article class="status-card proven">
-        <p class="status-label">Published</p>
-        <h3>Recorded and sparse-feedback H2H</h3>
-        <p>Comparative benchmark bundles are available with explicit top-line metrics and reproducibility routes.</p>
-      </article>
-      <article class="status-card pending">
-        <p class="status-label">Not claimed</p>
-        <h3>Shadow and online product proof</h3>
-        <p>Live production answer-quality claims remain gated until matching shadow and online artifacts are published.</p>
-      </article>
-      <article class="status-card">
-        <p class="status-label">Next route</p>
-        <h3>Proof package and reproduce docs</h3>
-        <p><a href="/proof/">Proof package</a> and <a href="/docs/reproduce-eval.md">reproduce-eval.md</a> remain the canonical operator paths.</p>
-      </article>
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Proof family</th>
-            <th>Topline result</th>
-            <th>Boundary label</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Recorded-session H2H</td>
-            <td><code>full_brain</code> 0.975 vs best baseline 0.896 (+7.9 pp)</td>
-            <td>Published benchmark artifact</td>
-          </tr>
-          <tr>
-            <td>Sparse-feedback (10 seeds)</td>
-            <td><code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp)</td>
-            <td>Published benchmark artifact</td>
-          </tr>
-          <tr>
-            <td>Workflow proof</td>
-            <td><code>learned</code> 1.00 vs <code>graph_prior_only</code> 0.50</td>
-            <td>Mechanism and integration artifact</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="section" id="architecture">
-    <h2>Architecture and package boundary</h2>
-    <p class="section-intro">
-      OpenClawBrain is a package surface, not a runtime replacement. Runtime orchestration stays in OpenClaw while learning contracts and artifacts stay in OpenClawBrain.
+      OpenClaw and OpenClawBrain have distinct jobs. This split is intentional &mdash; it keeps the runtime fast and the learning safe.
     </p>
 
     <div class="boundary-grid">
       <article class="boundary-card">
-        <h3>OpenClaw runtime owns</h3>
-        <p>Session and channel orchestration, fail-open behavior, prompt assembly, diagnostics, and worker lifecycle.</p>
+        <h3>OpenClaw owns runtime</h3>
+        <p>Sessions, tools, prompt assembly, answers, fail-open behavior. If something goes wrong with learning, your agent keeps working.</p>
       </article>
       <article class="boundary-card">
-        <h3>OpenClawBrain packages own</h3>
-        <p>Contracts, typed events, export normalization, provenance, pack format, activation helpers, compiler output, and learner policy updates.</p>
+        <h3>OpenClawBrain owns learning</h3>
+        <p>Watches usage and feedback. Builds brain packs. Trains the route function that decides what context to surface. All of this happens off the hot path &mdash; it never slows down responses.</p>
       </article>
     </div>
-
-    <div class="package-grid" style="margin-top: 0.75rem;">
-      <article class="package-item"><h3>@openclawbrain/contracts</h3></article>
-      <article class="package-item"><h3>@openclawbrain/events</h3></article>
-      <article class="package-item"><h3>@openclawbrain/event-export</h3></article>
-      <article class="package-item"><h3>@openclawbrain/workspace-metadata</h3></article>
-      <article class="package-item"><h3>@openclawbrain/provenance</h3></article>
-      <article class="package-item"><h3>@openclawbrain/pack-format</h3></article>
-      <article class="package-item"><h3>@openclawbrain/activation</h3></article>
-      <article class="package-item"><h3>@openclawbrain/compiler</h3></article>
-      <article class="package-item"><h3>@openclawbrain/learner</h3></article>
-    </div>
-
-    <ul>
-      <li>Start routing immediately from existing files and prior exports while background learning fills historical coverage.</li>
-      <li>Human labels, self labels, and scanner or harvester labels are default-on inputs to learning.</li>
-      <li>Learned route functions stay on hot path; async teacher and graph updates stay off hot path.</li>
-    </ul>
   </section>
 
   <section class="section" id="quickstart">
-    <h2>Quickstart</h2>
+    <h2>Quick start</h2>
     <p class="section-intro">
-      Use this after reviewing the proof boundary. Start local checks, then follow integration and reproduce routes.
+      Build the workspace and produce a brain pack in four commands.
     </p>
     <pre><code>corepack enable
 pnpm install
 pnpm check
 pnpm release:pack</code></pre>
     <p class="quickstart-foot">
-      Integration route: <a href="/docs/openclaw-integration.md">/docs/openclaw-integration.md</a>.
-      Reproduce route: <a href="/docs/reproduce-eval.md">/docs/reproduce-eval.md</a>.
-      Canonical paper route: <a href="/paper/">/paper/</a>.
+      Then connect to OpenClaw runtime: <a href="/docs/setup-guide.md">full setup guide</a>.
     </p>
   </section>
 
-  <section class="section" id="route-map">
-    <h2>Route map</h2>
+  <section class="section" id="evidence">
+    <h2>Evidence</h2>
     <p class="section-intro">
-      Keep these routes clear and separate: proof for claims, paper for long-form framing, docs for implementation and reproducibility.
+      Two benchmark families are published and reproducible. They compare OpenClawBrain's learned routing against standard RAG baselines on frozen workloads.
+    </p>
+
+    <div class="proof-family-grid">
+      <article class="proof-family">
+        <h3>Recorded-session benchmark</h3>
+        <p>800 queries, 8 baselines. Learned routing scores 0.975 vs best RAG baseline 0.896 (+7.9 percentage points).</p>
+      </article>
+      <article class="proof-family">
+        <h3>Sparse-feedback benchmark</h3>
+        <p>Learned routing 91.96% vs best RAG 67.05% (+24.91 pp), with roughly 5x smaller context per query.</p>
+      </article>
+    </div>
+
+    <div class="status-grid">
+      <article class="status-card proven">
+        <p class="status-label">Published</p>
+        <h3>Benchmark and mechanism proof</h3>
+        <p>Deterministic simulation, turn-level artifacts, and head-to-head benchmark bundles are published and reproducible.</p>
+      </article>
+      <article class="status-card pending">
+        <p class="status-label">Not yet claimed</p>
+        <h3>Live production proof</h3>
+        <p>Production answer-quality claims will follow when matching shadow and online artifacts are published.</p>
+      </article>
+    </div>
+
+    <p class="quickstart-foot">
+      Full evidence: <a href="/proof/">proof package</a>.
+      Reproduce benchmarks: <a href="/docs/reproduce-eval.md">reproduce-eval.md</a>.
+    </p>
+  </section>
+
+  <section class="section" id="links">
+    <h2>Docs and links</h2>
+    <p class="section-intro">
+      Everything you need to evaluate, set up, or go deeper.
     </p>
     <div class="route-grid">
       <article class="route-card">
-        <h3><code>/proof/</code></h3>
-        <p>Primary evidence package with worked turn, benchmark ladders, and claim boundary state.</p>
-        <a href="/proof/">Go to proof package</a>
+        <h3>Get started</h3>
+        <p>Install, connect to OpenClaw, confirm it works, and set up fail-open behavior.</p>
+        <a href="/docs/setup-guide.md">Setup guide</a>
       </article>
       <article class="route-card">
-        <h3><code>/paper/</code></h3>
-        <p>Canonical paper route with direct PDF linkage and current comparative benchmark rung context.</p>
-        <a href="/paper/">Go to paper route</a>
+        <h3>Evidence</h3>
+        <p>Worked examples, benchmark results, and claim boundaries.</p>
+        <a href="/proof/">Proof package</a>
       </article>
       <article class="route-card">
-        <h3><code>/docs/openclaw-integration.md</code></h3>
-        <p>Operator integration path for runtime wiring, fail-open rules, and background learning loop setup.</p>
-        <a href="/docs/openclaw-integration.md">Go to integration doc</a>
+        <h3>Paper</h3>
+        <p>Long-form write-up of the approach, architecture, and comparative results.</p>
+        <a href="/paper/">Read the paper</a>
       </article>
       <article class="route-card">
-        <h3><code>/docs/reproduce-eval.md</code></h3>
-        <p>Reproducibility route for deterministic eval harness commands, benchmark artifact generation, and figure outputs.</p>
-        <a href="/docs/reproduce-eval.md">Go to reproduce doc</a>
+        <h3>Integration docs</h3>
+        <p>Runtime wiring, failure semantics, and the package contract between OpenClaw and OpenClawBrain.</p>
+        <a href="/docs/openclaw-integration.md">Integration guide</a>
       </article>
     </div>
   </section>
 
   <footer class="footer">
-    <p>OpenClawBrain: TypeScript-first brain packages for OpenClaw.</p>
+    <p>OpenClawBrain makes OpenClaw stateful and self-improving.</p>
     <p>Jonathan Gu &middot; <a href="mailto:jonathangu@gmail.com">jonathangu@gmail.com</a></p>
     <p><a class="back-link" href="https://www.jonathangu.com/">Author site</a></p>
   </footer>

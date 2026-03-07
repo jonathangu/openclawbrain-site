@@ -1,58 +1,30 @@
-> Canonical docs live on GitHub; this page mirrors the shipped setup path.
+# Getting Started with OpenClawBrain
 
-# OpenClawBrain Setup Guide (TypeScript-first)
+OpenClawBrain learns what context your AI agent should see for each query, and improves that over time from real usage. It works alongside [OpenClaw](https://github.com/jonathangu/openclaw), which handles the runtime (sessions, tools, prompts, answers).
 
-OpenClawBrain is the shipped TypeScript-first, package-first workspace behind an OpenClaw-owned runtime boundary.
+This guide gets you from zero to a working setup.
 
-This guide is the day-0 setup path for operators who want:
-- fast boot from existing files
-- always-on background learning by default
-- default-on labels, scanner, and harvest flow
-- deterministic compile from active packs
-- activation, promotion, and rollback discipline for pack sets
+## What you need
 
-## Prerequisites
+- Node.js 20+ with `corepack`
+- An OpenClaw runtime deployment (OpenClawBrain is a learning layer, not a standalone runtime)
+- Workspace files (markdown, docs, memory files) for your agent to learn from
+- Provider credentials configured in OpenClaw runtime secrets
 
-- Node.js 20+ and `corepack`
-- `pnpm` enabled via `corepack`
-- OpenClaw runtime checkout and deployment access
-- existing agent workspace files (markdown/docs/memory) ready to ingest
-- provider credentials configured in OpenClaw runtime secrets, not in workspace docs
-
-## Step 1: Install and verify the workspace
-
-Run from the OpenClawBrain TypeScript workspace root:
+## 1. Build the workspace
 
 ```bash
 corepack enable
 pnpm install
-pnpm check
-pnpm release:pack
+pnpm check            # type-check, lint, test, and verify package integrity
+pnpm release:pack     # produce a versioned brain pack
 ```
 
-`pnpm check` is the release quality gate for type/lint/test/package integrity. `pnpm release:pack` produces the versioned package/pack set consumed by OpenClaw runtime.
+A **brain pack** is a bundle of context blocks and learned routing weights. It is the artifact OpenClaw loads at runtime to decide what context to surface for a given query.
 
-## Step 2: Pin the canonical package surface
+## 2. Connect to OpenClaw
 
-Use a pinned, versioned package set for runtime wiring:
-
-- `@openclawbrain/contracts`
-- `@openclawbrain/events`
-- `@openclawbrain/event-export`
-- `@openclawbrain/workspace-metadata`
-- `@openclawbrain/provenance`
-- `@openclawbrain/pack-format`
-- `@openclawbrain/activation`
-- `@openclawbrain/compiler`
-- `@openclawbrain/learner`
-
-Promote package sets as a unit. Do not mix ad-hoc local package revisions in production.
-
-## Step 3: Wire OpenClaw runtime to the package set
-
-OpenClaw owns runtime orchestration and fail-open behavior. OpenClawBrain packages provide memory, normalization, provenance, pack lifecycle, and compile/learning components.
-
-Use a runtime profile equivalent to:
+OpenClaw owns runtime orchestration. You tell it where to find the brain pack by setting a runtime profile:
 
 ```json
 {
@@ -64,74 +36,39 @@ Use a runtime profile equivalent to:
       "enabled": true,
       "prioritizeNewEvents": true
     },
-    "labels": {
-      "human": true,
-      "self": true
-    },
-    "scanner": {
-      "enabled": true
-    },
-    "harvest": {
-      "enabled": true
-    },
-    "continuousGraphLearning": {
-      "enabled": true,
-      "decay": true,
-      "hebbianCofiring": true,
-      "structuralUpdates": true
-    },
-    "teacher": {
-      "onHotPath": false
-    }
+    "labels": { "human": true, "self": true },
+    "scanner": { "enabled": true },
+    "harvest": { "enabled": true },
+    "teacher": { "onHotPath": false }
   }
 }
 ```
 
-## Step 4: Activate, promote, and rollback packs
+Key points:
+- `fastBootFromExistingFiles` means OpenClaw starts serving immediately from your existing workspace files, even before background learning finishes processing history.
+- `teacher.onHotPath: false` keeps learning off the serving path. Learning never slows down responses.
+- Labels, scanner, and harvest are on by default to collect feedback and usage signals.
 
-1. Activate candidate pack set in canary runtime scope.
-2. Validate latency, fail-open behavior, and loop health.
-3. Promote candidate globally when canary passes.
-4. Roll back to previous active pack set if health regresses.
+## 3. Confirm it is working
 
-Compilation from the active pack remains deterministic for a fixed state.
+After connecting, verify these behaviors:
 
-## Step 5: Validate first boot behavior
+1. **Agent responds immediately.** OpenClaw boots from existing files without waiting for learning to complete.
+2. **Background learning is running.** New events are learned first; historical backfill continues in the background.
+3. **Fail-open works.** If brain or learning processes are delayed, OpenClaw still serves responses normally. Brain degradation does not block replies.
 
-Expected first-boot behavior:
+## 4. Rollback and fail-open
 
-1. OpenClaw starts serving immediately from existing files and metadata.
-2. Serving starts immediately from existing files and metadata.
-3. New events are learned first; historical backfill continues in background.
-4. Labels/scanner/harvest loops are active by default.
-5. Compiled context size is chosen for task effectiveness, including larger context when it avoids extra model/tool round-trips.
+OpenClaw owns fail-open behavior. If something goes wrong:
 
-## Step 6: Validate runtime boundaries
+- **Brain degradation:** OpenClaw automatically falls back to core runtime behavior. Responses continue without brain-enhanced context.
+- **Bad brain pack:** Roll back to the previous active pack set. Compilation from a given pack is deterministic, so rollback is safe.
+- **Learning delays:** Scanner, harvest, and learner workers run asynchronously. Delays do not affect the hot path.
 
-Operator checks:
+Recovery happens through background loops and pack rollback &mdash; no manual intervention required for fail-open.
 
-- OpenClaw hot path remains available when learner/scanner work is delayed.
-- Runtime fail-open behavior is verified (brain degradation does not block replies).
-- Provenance is preserved for normalized events and generated activations.
-- Teacher logic executes asynchronously and never gates turn latency.
+## Next steps
 
-## Step 7: Day-2 operating model
-
-Default model:
-
-- keep runtime up continuously
-- keep background learning enabled continuously
-- promote package sets intentionally (canary, then broad rollout)
-- measure mechanism/workflow and live product outcomes separately
-
-Mechanism/workflow proof examples:
-- contract integrity
-- normalization/provenance correctness
-- deterministic pack/compiler behavior
-
-Live product proof examples:
-- response quality uplift
-- correction durability
-- retrieval precision/recall at user-visible level
-
-Mechanism/workflow checks are required release evidence, not a substitute for live answer-quality evidence.
+- [Integration docs](openclaw-integration.md) &mdash; detailed runtime wiring and failure semantics
+- [Reproduce benchmarks](reproduce-eval.md) &mdash; run the evaluation harness yourself
+- [Proof package](/proof/) &mdash; worked examples and benchmark evidence

@@ -1,38 +1,32 @@
-# OpenClaw Integration (TypeScript Runtime Boundary)
+# OpenClaw Integration
 
-OpenClawBrain is integrated as a TypeScript package set behind an OpenClaw-owned runtime boundary.
+OpenClawBrain is a learning layer that plugs into OpenClaw. OpenClaw owns the runtime (sessions, tools, prompts, answers). OpenClawBrain owns learning: it turns usage, feedback, and history into brain packs that improve what context gets served at query time.
 
-Primary docs:
-- setup path: [docs/setup-guide.md](setup-guide.md)
-- operator runbook: [docs/operator-guide.md](operator-guide.md)
-- operational playbooks: [docs/ops-recipes.md](ops-recipes.md)
-- new agent onboarding SOP: [docs/new-agent-sop.md](new-agent-sop.md)
+New here? Start with the [setup guide](setup-guide.md).
 
-## Integration contract
+Other docs:
+- [Operator runbook](operator-guide.md)
+- [Operational playbooks](ops-recipes.md)
+- [New agent onboarding](new-agent-sop.md)
 
-OpenClaw and OpenClawBrain have separate responsibilities.
+## Who owns what
 
-### OpenClaw owns
+### OpenClaw (runtime)
 
-- runtime orchestration and lifecycle
-- fail-open behavior on brain degradation
-- request/response hot path and prompt assembly
-- deployment, routing, and rollback controls
+- Sessions, prompt assembly, and serving responses
+- Fail-open behavior: if brain degrades, the agent keeps working
+- Deployment, routing, and rollback controls
 
-### OpenClawBrain owns
+### OpenClawBrain (learning)
 
-- contracts and event schemas
-- event normalization/export boundaries
-- workspace metadata extraction
-- provenance capture
-- pack format + activation helpers
-- compiler and learner behavior
+- Contracts and event schemas
+- Event normalization and export
+- Workspace metadata extraction and provenance
+- Brain pack format, activation helpers, compiler, and learner
 
-This split is intentional: OpenClaw remains the serving runtime; OpenClawBrain provides the memory/learning substrate.
+## Package surface
 
-## Public package surface
-
-Runtime integrations should be built from this package set:
+The integration is built from these packages:
 
 - `@openclawbrain/contracts`
 - `@openclawbrain/events`
@@ -44,9 +38,7 @@ Runtime integrations should be built from this package set:
 - `@openclawbrain/compiler`
 - `@openclawbrain/learner`
 
-## Bring-up sequence
-
-From the TypeScript workspace root:
+## Build and deploy
 
 ```bash
 corepack enable
@@ -57,49 +49,42 @@ pnpm release:pack
 
 OpenClaw runtime then deploys the released pack set in its own environment.
 
-## Runtime behavior (default)
+## Runtime behavior
 
-### Hot path (serving)
+### Serving (hot path)
 
-1. OpenClaw receives a user turn.
-2. OpenClaw calls the learned route function from the deployed pack set.
-3. OpenClaw assembles prompt context from selected activations.
-4. OpenClaw serves response.
+1. OpenClaw receives a query.
+2. The learned route function (from the deployed brain pack) picks which context blocks to surface.
+3. OpenClaw assembles the prompt with that context and serves the response.
 
-### Off path (asynchronous)
+### Learning (off the hot path)
 
-- new events are normalized and harvested continuously
-- scanner flow runs continuously against workspace/event streams
-- human and self labels are harvested by default
-- continuous graph learning runs by default:
-  - decay
-  - Hebbian co-firing
-  - structural graph updates
+These run asynchronously and never slow down responses:
 
-Teacher logic remains off the hot path and updates behavior asynchronously.
+- Events are normalized and harvested continuously
+- Scanner processes workspace and event streams
+- Human and self labels are collected by default
+- Graph learning (decay, co-firing, structural updates) runs continuously
 
-## Fast boot model
+Teacher logic stays off the hot path.
 
-Fast startup from existing files is the default operating mode:
+## Fast boot
 
-- runtime starts from available workspace files and prior exports
-- background learning backfills historical data while new data is prioritized first
+The runtime starts serving immediately from existing workspace files and prior exports. Background learning backfills historical data while prioritizing new events first. This keeps startup fast even with large archives.
 
-This keeps startup practical even with large historical archives.
+## Fail-open behavior
 
-## Failure semantics
+The integration is designed to be fail-open:
 
-Integration must remain fail-open:
+- If learning/scanner/harvest workers are delayed, OpenClaw still serves responses normally
+- If brain quality degrades, OpenClaw falls back to core runtime behavior
+- Recovery happens via background loops and pack rollback
 
-- if a learning/scanner/harvest worker is delayed, OpenClaw still serves
-- if brain quality degrades, OpenClaw falls back to core runtime behavior
-- recovery happens via background loops and pack roll-forward/rollback
+## Proof boundary
 
-## Proof boundary (required)
+Two categories of proof, kept separate:
 
-Keep proofs honest:
-
-- mechanism proof: contracts compile, events normalize correctly, provenance is intact, route function evaluates deterministically
-- product proof: user-visible quality, error reduction, correction retention, and reliability under live traffic
+- **Mechanism proof** (required): contracts compile, events normalize correctly, provenance is intact, route function evaluates deterministically
+- **Product proof** (separate): user-visible quality, error reduction, correction retention under live traffic
 
 Mechanism proof is required but not sufficient for product claims.
