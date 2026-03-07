@@ -26,7 +26,7 @@
     <h1>Post 6: Brain-first OpenClaw Integration</h1>
     <p class="meta">March 2026 · v12.2.6+ series</p>
 
-    <p>Brain-first mode is the recommended OpenClaw integration pattern. It is optional, and it is safe to run as a gradual rollout. Enabling it does not replace OpenClaw behavior — it adds one additional <strong>preference-aware context retrieval step</strong> before model generation and keeps learning wired through the same correction loop.</p>
+    <p>Brain-first integration is the TypeScript-first runtime boundary: OpenClaw owns orchestration, fail-open behavior, and prompt assembly; OpenClawBrain provides normalized contracts/events plus routing and learning packages. The mode is optional and safe for gradual rollout.</p>
 
     <h2>What exactly changes when enabled?</h2>
     <div class="compare">
@@ -44,68 +44,75 @@ Manual teach/correction workflow (if you built one)</pre>
       <h3>After brain-first</h3>
       <pre>User message
   ↓
-OpenClaw internal hook (message:preprocessed) calls query_brain with chat_id
+OpenClaw runtime boundary normalizes events + workspace context
   ↓
-Brain returns [BRAIN_CONTEXT] candidates (cap-limited)
+Learned route function scores candidates from existing files + learned state
   ↓
-Hook appends <code>[BRAIN_CONTEXT v1]...[/BRAIN_CONTEXT]</code> to prompt
+Bounded <code>[BRAIN_CONTEXT v1]...[/BRAIN_CONTEXT]</code> is assembled into prompt
   ↓
 Model answers with stronger task-relevant prior
   ↓
-Same-turn corrections -> capture_feedback -> correction node + context learning</pre>
+Background learner harvests labels and updates routing/graph asynchronously</pre>
     </div>
 
     <h2>Why this changes outcomes</h2>
     <ul>
-      <li><strong>Fewer turns:</strong> model gets structured memory context before asking for clarification.</li>
-      <li><strong>Less manual context engineering:</strong> repeated file-and-history reconstruction is replaced by learned routing signals.</li>
-      <li><strong>Cleaner correction loop:</strong> `chat_id` lets correction updates target recent fired route candidates, not generic free-form memory logs.</li>
+      <li><strong>Fast boot:</strong> context starts from existing files, without a full fresh-state scan gate.</li>
+      <li><strong>Fewer turns:</strong> learned routing sends task-relevant priors into prompt assembly before generation.</li>
+      <li><strong>Teacher stays off hot path:</strong> heavy learning work runs asynchronously while the learned route function serves requests inline.</li>
     </ul>
+
+    <h2>Runtime ownership boundary</h2>
+    <div class="callout">
+      <p style="margin:0 0 .6rem;"><strong>OpenClaw runtime owns:</strong> orchestration, fail-open behavior, and prompt assembly.</p>
+      <p style="margin:0;"><strong>OpenClawBrain owns:</strong> <code>@openclawbrain/contracts</code>, <code>@openclawbrain/events</code>, <code>@openclawbrain/event-export</code>, <code>@openclawbrain/workspace-metadata</code>, <code>@openclawbrain/provenance</code>, <code>@openclawbrain/pack-format</code>, <code>@openclawbrain/activation</code>, <code>@openclawbrain/compiler</code>, and <code>@openclawbrain/learner</code>.</p>
+    </div>
 
     <h2>Flow, budgets, and safety defaults</h2>
     <div class="callout">
       <p style="margin:0 0 .6rem;"><strong>Safe defaults:</strong></p>
       <ul style="margin:0 0 .4rem 1rem;">
-        <li><code>--max-prompt-context-chars 20000</code> for query context (default recommendation for OpenClaw hooks).</li>
-        <li>Use the <code>[BRAIN_CONTEXT v1]</code> delimiter, not raw JSON or extra metadata.</li>
-        <li>Start with bootstrap exclusions enabled so duplicated AGENTS/SOUL/USER/MEMORY material is not re-sent.</li>
+        <li>Keep retrieval context bounded and measurable so comparisons stay fair.</li>
+        <li>Use data-only <code>[BRAIN_CONTEXT v1]</code> blocks, not raw tool traces.</li>
+        <li>Run fail-open by default: if retrieval fails, continue normal OpenClaw flow.</li>
       </ul>
       <p style="margin:0 0 .6rem;"><strong>Deep path:</strong></p>
       <ul style="margin:0;">
-        <li>For tool-output ingestion (e.g., media transcripts) keep <code>--tool-result-max-chars 80000</code> as a practical cap.</li>
+        <li>Prioritize new incoming events first while historical ingestion and graph updates continue in background loops.</li>
       </ul>
     </div>
-    <p>For fairness in comparisons, cap tool-result output sizes too; letting tool outputs run unbounded defeats the point of brain-first budgets, which is to keep retrieval context bounded and measurable.</p>
+    <p>Keep human labels, self-label harvesting, and scanner ingestion default-on; that is how routing quality improves continuously after boot.</p>
 
     <h2>Security checklist (optional but recommended)</h2>
     <ol>
-      <li>Install the OpenClaw internal hook pack instead of embedding logic directly in AGENTS.md.</li>
-      <li>In the hook configuration, block sensitive paths from ever reaching retrieval context.</li>
-      <li>Apply redaction for keyword matches before any query payload is sent to the brain.</li>
-      <li>Keep output as data-only brain context and do not pass full tool traces into user prompt.</li>
+      <li>Block sensitive paths before event/export normalization runs.</li>
+      <li>Apply secret redaction before retrieval payloads are assembled.</li>
+      <li>Keep prompt input data-only and cap retrieval context aggressively.</li>
+      <li>Audit provenance traces for every context payload used on the hot path.</li>
     </ol>
 
-    <pre>export OPENCLAWBRAIN_EXCLUDE_PATHS=".env,.openclawbrain,dist,build"
-export OPENCLAWBRAIN_REDACT_KEYWORDS="api_key,secret,token,password,private_key"
-export OPENCLAWBRAIN_MAX_PROMPT_CONTEXT_CHARS=20000</pre>
-
-    <p>OpenClaw hook behavior should remain <strong>fail-open</strong> by default: if brain lookup fails, continue on with the normal OpenClaw flow. That preserves availability while still benefiting from the memory path whenever it works.</p>
-
-    <h2>How to enable (recommended)</h2>
-    <pre>openclawbrain serve --state ~/.openclawbrain/main/state.json
-openclaw hooks install /path/to/openclawbrain/integrations/openclaw/hooks/openclawbrain-context-injector
-openclaw hooks enable openclawbrain-context-injector
-openclaw gateway restart</pre>
+    <h2>How to enable (package-first)</h2>
+    <pre>corepack enable
+pnpm install
+pnpm check
+pnpm release:pack</pre>
+    <p>Then wire the released OpenClawBrain packages into the OpenClaw runtime boundary and keep fail-open behavior enabled for safe rollout.</p>
 
     <h2>How this interacts with learning and harvester</h2>
     <ul>
-      <li>The learning model is unchanged: corrections still resolve by <code>chat_id</code> through <code>capture_feedback</code> and replay paths.</li>
-      <li>Harvester + maintenance schedules keep running exactly as before.</li>
-      <li>Brain data becomes higher quality faster because retrieval and correction are linked to actual session flow instead of manual reminders.</li>
+      <li>Corrections, human labels, and self-harvested labels are part of the default loop, not optional add-ons.</li>
+      <li>Continuous graph learning runs in the background: structural edits, decay, and co-firing updates happen while serving traffic.</li>
+      <li>Routing quality improves faster because retrieval, labels, and graph updates are tied to real session flow.</li>
+    </ul>
+
+    <h2>Proof boundary (keep claims honest)</h2>
+    <ul>
+      <li><strong>Mechanism proof:</strong> bounded-context routing and learning mechanics improve route quality under controlled tests.</li>
+      <li><strong>Product proof:</strong> end-to-end operator outcomes require full evaluations (turns, quality, latency, spend) and rollout evidence.</li>
     </ul>
 
     <h2>Why this does not break OpenClaw OOTB</h2>
-    <p>Brain-first is <strong>opt-in</strong>; OpenClaw defaults remain untouched. Rollback is immediate: disable the hook and restart the gateway, and the agent returns to existing OpenClaw flow. No schema, config, or storage migration is required to turn it off.</p>
+    <p>Brain-first is <strong>opt-in</strong>; OpenClaw defaults remain untouched. Rollback is immediate: disable runtime-boundary wiring and restart the gateway. Turning it off does not require data-shape rewrites.</p>
 
     <p>Enablement details and operational defaults are documented in the canonical integration guide: <a href="/docs/openclaw-integration.md">docs/openclaw-integration.md</a>.</p>
 

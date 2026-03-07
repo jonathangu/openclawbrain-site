@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain Materials</title>
-  <meta name="description" content="Additional OpenClawBrain materials: thesis, math appendix, evaluation plan, reproduce-eval steps, simulations, and operator quickstart." />
+  <meta name="description" content="Additional OpenClawBrain materials: TypeScript package surface, thesis, evaluation plan, reproduce-eval steps, simulations, and operator quickstart." />
   <link rel="canonical" href="https://openclawbrain.ai/materials/" />
   <style>
     :root { --bg:#0f1219; --card:#171d29; --text:#d8dfec; --muted:#98a4b8; --bright:#f4f8ff; --border:#2a364c; --accent:#7db9ff; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; }
@@ -22,7 +22,7 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a></div>
     <h1>Additional Materials</h1>
-    <p>Canonical docs and references for the current OpenClawBrain system.</p>
+    <p>Canonical docs and references for the TypeScript-first OpenClawBrain replacement: fast boot from existing files, always-on background learning, default-on label harvesting, and continuous graph learning with learned routing on the hot path.</p>
 
     <div class="card">
       <ul>
@@ -35,6 +35,21 @@
       </ul>
     </div>
 
+    <h2 style="font-family:var(--sans); color:var(--bright); margin-top:1.4rem;">TypeScript Package Surface</h2>
+    <div class="card">
+      <ul>
+        <li><code>@openclawbrain/contracts</code></li>
+        <li><code>@openclawbrain/events</code></li>
+        <li><code>@openclawbrain/event-export</code></li>
+        <li><code>@openclawbrain/workspace-metadata</code></li>
+        <li><code>@openclawbrain/provenance</code></li>
+        <li><code>@openclawbrain/pack-format</code></li>
+        <li><code>@openclawbrain/activation</code></li>
+        <li><code>@openclawbrain/compiler</code></li>
+        <li><code>@openclawbrain/learner</code></li>
+      </ul>
+    </div>
+
     <h2 style="font-family:var(--sans); color:var(--bright); margin-top:1.4rem;">Evaluation Figures</h2>
     <div class="card">
       <ul>
@@ -44,9 +59,12 @@
         <li><a href="/figures/eval/alpha_router_conf_hist.svg">alpha_router_conf_hist.svg</a></li>
         <li><a href="/figures/eval/ablation_bar_chart.svg">ablation_bar_chart.svg</a></li>
       </ul>
-      <p style="margin:.5rem 0 0;">Regenerate from repo root (see <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>):</p>
-      <pre style="overflow:auto; white-space:pre-wrap; margin:.4rem 0 0; background:#111827; border:1px solid var(--border); border-radius:8px; padding:.75rem; color:#c7d2fe; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">python3 -m pip install -r scripts/requirements.txt
-python3 scripts/plot_eval.py --inputs /tmp/ocb_expert_regions /tmp/ocb_two_cluster --out figures/eval</pre>
+      <p style="margin:.5rem 0 0;">Mechanism plots are mechanism proof only; product proof requires full end-to-end evaluation. Regenerate from repo root (see <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>):</p>
+      <pre style="overflow:auto; white-space:pre-wrap; margin:.4rem 0 0; background:#111827; border:1px solid var(--border); border-radius:8px; padding:.75rem; color:#c7d2fe; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">corepack enable
+pnpm install
+pnpm check
+pnpm release:pack
+# Then follow docs/reproduce-eval.md for current figure-generation steps.</pre>
     </div>
 
     <p class="meta" style="margin-top:1rem;">If a file moves, update this page to the new canonical doc path in the code repository.</p>

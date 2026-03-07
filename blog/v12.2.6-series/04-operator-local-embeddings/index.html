@@ -21,18 +21,20 @@
     <h1>Post 4: Operator Guide for Local Embeddings OOTB</h1>
     <p class="meta">March 2026 · v12.2.6+ series</p>
 
-    <p>Local embeddings out-of-the-box are the default operating mode for fast, private routing. Teacher models are optional and run asynchronously.</p>
+    <p>Local embeddings out-of-the-box remain the default hot-path routing signal. In the TypeScript-first workspace, boot starts from existing files immediately, while learning keeps chewing through historical data in the background.</p>
 
-    <h2>Baseline Flow</h2>
-    <pre>openclawbrain init --workspace ./workspace --output ./brain
-openclawbrain query "..." --state ./brain/state.json --json
-openclawbrain async-route-pg --state ./brain/state.json --apply --json</pre>
+    <h2>Package-first Baseline Flow</h2>
+    <pre>corepack enable
+pnpm install
+pnpm check
+pnpm release:pack</pre>
 
     <h2>Operational Notes</h2>
     <ul>
-      <li>Keep hot-path routing deterministic and bounded.</li>
-      <li>Run learning jobs on schedule, not inline with user requests.</li>
-      <li>Gate connect/split/merge actions behind shadow evaluation and rollback support.</li>
+      <li>Keep the learned route function deterministic and bounded on the hot path; teacher models stay asynchronous.</li>
+      <li>Leave human labels, self-label harvesting, and scanner ingestion default-on so new signals land continuously.</li>
+      <li>Run continuous graph learning (connect/split/merge/decay/co-firing) in background loops, not inline with user requests.</li>
+      <li>Treat mechanism proof and product proof separately: routing-mechanism wins do not automatically prove end-to-end operator outcomes.</li>
     </ul>
 
     <p>Next: <a href="/blog/v12.2.6-series/05-industry-baselines-ablations/">Post 5 on industry baselines + ablation study</a>.</p>
