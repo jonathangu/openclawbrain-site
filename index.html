@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain: Durable Local Memory for OpenClaw</title>
+  <title>OpenClawBrain: TypeScript-First Brain Packages for OpenClaw</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain is the durable local memory and learning layer for ongoing OpenClaw use: bounded local retrieval on the hot path, async route learning offline, and explicit workflow-shaped proof.">
-  <meta property="og:title" content="OpenClawBrain: Durable Local Memory for OpenClaw">
-  <meta property="og:description" content="Keep GPT-5.4 and OpenClaw for generic agent work. OpenClawBrain adds durable local memory, bounded context, and offline route learning for repeated workflows.">
+  <meta name="description" content="OpenClawBrain is the TypeScript-first package surface for OpenClaw memory and learning: fast boot from existing files, learned routing on the hot path, and async teacher learning off the hot path.">
+  <meta property="og:title" content="OpenClawBrain: TypeScript-First Brain Packages for OpenClaw">
+  <meta property="og:description" content="TypeScript-first replacement for OpenClawBrain: package-first workspace, OpenClaw-owned runtime boundary, fast boot from existing files, and always-on background learning.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary">
@@ -26,7 +26,7 @@
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   <script type="application/ld+json">
   { "@context": "https://schema.org", "@type": "ScholarlyArticle",
-    "headline": "OpenClawBrain: durable local memory for OpenClaw agents",
+    "headline": "OpenClawBrain: TypeScript-first brain packages for OpenClaw agents",
     "author": [{"@type": "Person", "name": "Jonathan Gu", "email": "jonathangu@gmail.com", "url": "https://jonathangu.com"}],
     "datePublished": "2026-02-27", "url": "https://openclawbrain.ai/" }
   </script>
@@ -112,34 +112,34 @@
   <header class="paper-header">
 
     <a href="https://www.jonathangu.com/" class="back-link">← jonathangu.com</a>
-    <h1 class="paper-title">OpenClawBrain: Durable Local Memory for OpenClaw</h1>
-    <p class="paper-subtitle">Keep GPT-5.4 + OpenClaw for generic agent work. OpenClawBrain adds bounded local memory and route learning for repeated workflows.</p>
-    <p class="paper-subtitle">Shadow routing stays on the hot path; async supervision trains a better route policy offline.</p>
+    <h1 class="paper-title">OpenClawBrain: TypeScript-First Brain Stack for OpenClaw</h1>
+    <p class="paper-subtitle">OpenClawBrain is now a TypeScript-first replacement with a package-first workspace and explicit runtime boundary ownership.</p>
+    <p class="paper-subtitle">Fast boot starts from existing files, learned routing stays on the hot path, and async teacher learning runs off the hot path.</p>
     <p class="authors"><span class="name">Jonathan Gu</span> · <a href="mailto:jonathangu@gmail.com" style="color: var(--text-muted); font-size: 0.85rem;">jonathangu@gmail.com</a></p>
     <div style="text-align: left; max-width: 720px; margin: 1.1rem auto 0; padding: 1.1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card);">
-      <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Where it fits</p>
+      <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Runtime boundary</p>
       <p style="margin: 0 0 0.6rem; font-family: var(--sans); font-size: 1.25rem; font-weight: 700; color: var(--text-bright); line-height: 1.25;">
-        Keep OpenClaw. Add memory that sticks and routing that learns.
+        OpenClaw owns runtime. OpenClawBrain owns learning contracts.
       </p>
       <p style="margin: 0 0 0.75rem; font-family: var(--sans); font-size: 0.98rem; color: var(--text);">
-        Assume you already have GPT-5.4 and OpenClaw handling generic agent workflows. OpenClawBrain is the durable local memory and learning layer beside that stack: bounded retrieval on the hot path, persistent corrections and traces across sessions, and offline route learning for repeated work.
+        OpenClaw owns runtime orchestration, fail-open behavior, and prompt assembly. OpenClawBrain owns contracts, event/export normalization, provenance, packs, activation helpers, compiler, and learner packages.
       </p>
       <ul style="margin: 0 0 0.75rem; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.55;">
-        <li>OpenClaw keeps planning and execution; OpenClawBrain injects relevant local context before the model call.</li>
-        <li>Durable memory stays bounded: <code>[BRAIN_CONTEXT]</code> ships 20k default / 80k deep, with replayable corrections and traces instead of prompt doctoring.</li>
-        <li>Repeated workflows get better routing over time without adding extra completion-model calls to the hot path.</li>
+        <li>Boot immediately from existing files; no full pre-scan gate before first useful routing.</li>
+        <li>Human labels, self labels, and scanner/harvester labels are default-on parts of the normal loop.</li>
+        <li>The learned route function runs on the hot path; async teacher updates stay off the hot path.</li>
       </ul>
       <a href="/docs/openclaw-integration.md" style="display: inline-block; padding: 0.55rem 0.95rem; border-radius: 8px; background: var(--accent); color: #0a0f17; font-family: var(--sans); font-size: 0.9rem; font-weight: 600; text-decoration: none;">
-        Enable in OpenClaw — 5 min setup
+        Package Quickstart
       </a>
       <p style="margin: 0.55rem 0 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
-        Reproduce the workflow proof and baseline harness in your own checkout — no trust required. <a href="/docs/reproduce-eval.md">Run the canonical eval docs →</a>
+        Proof boundary is explicit: mechanism-level workflow proof is published; live production answer-quality proof is not claimed yet. <a href="/docs/reproduce-eval.md">Reproduce the proof docs →</a>
       </p>
     </div>
     <div class="proof-card">
       <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; text-align: left;">Current proof ladder</p>
       <p style="margin: 0; font-family: var(--sans); font-size: 1.02rem; color: var(--text-bright); text-align: left;">
-        The strongest current evidence is a deterministic workflow-shaped harness: cold-start graph priors are already somewhat useful, and async supervision trains a learned runtime route policy that solves held-out workflow-shaped queries.
+        The strongest current evidence is still deterministic workflow-shaped: hot-path learned routing beats static baselines on held-out workflow queries, while async supervision and graph learning improve policy quality off the hot path.
       </p>
       <div class="proof-grid">
         <div class="proof-step">
@@ -150,7 +150,7 @@
         <div class="proof-step active">
           <p class="proof-step-label">Step 2</p>
           <p class="proof-step-title">Workflow proof</p>
-          <p class="proof-step-copy">Deterministic OpenClaw-shaped tasks with held-out queries, trace labels, and a learned-vs-baseline routing comparison.</p>
+          <p class="proof-step-copy">Deterministic OpenClaw-shaped tasks with held-out queries, label streams, and learned-vs-baseline route-function comparison.</p>
         </div>
         <div class="proof-step pending">
           <p class="proof-step-label">Step 3</p>
@@ -186,12 +186,12 @@
         </div>
       </div>
       <p class="proof-meta">
-        Command: <code>python3 -m examples.eval.simulate_openclaw_workflows --output-dir scratch/workflow-proof/latest</code><br>
-        Artifacts: <code>workflow_state.json</code>, <code>train_traces.jsonl</code>, <code>train_labels.jsonl</code>, <code>eval_queries.jsonl</code>, <code>learning_curve.csv</code>, <code>baseline_eval/summary.json</code>, <code>report.md</code>, <code>worked_example.md</code>. <a href="/docs/reproduce-eval.md">Full reproduce instructions →</a>
+        Command: <code>corepack enable &amp;&amp; pnpm install &amp;&amp; pnpm check</code><br>
+        Artifacts: deterministic traces, label streams, eval query sets, learning curves, and summary reports. <a href="/docs/reproduce-eval.md">Full reproduce instructions →</a>
       </p>
     </div>
     <div class="paper-meta">
-      <span class="badge badge-repo"><a href="https://pypi.org/project/openclawbrain/" style="color: inherit; text-decoration: none;">📦 PyPI</a></span>
+      <span class="badge badge-repo"><a href="https://github.com/jonathangu/openclawbrain" style="color: inherit; text-decoration: none;">📦 TypeScript Packages</a></span>
       <span class="badge badge-repo"><a href="https://clawhub.ai/skills/openclawbrain" style="color: inherit; text-decoration: none;">🦞 ClawHub</a></span>
       <span class="badge badge-repo"><a href="https://github.com/jonathangu/openclawbrain" style="color: inherit; text-decoration: none;">GitHub</a></span>
       <span class="badge badge-repo"><a href="/openclawbrain.pdf" style="color: inherit; text-decoration: none;">📄 PDF</a></span>
@@ -212,24 +212,23 @@
     </div>
 
     <div style="text-align: left; max-width: 520px; margin: 0.9rem auto 0; padding: 0.9rem 1rem; border: 1px solid var(--border); border-radius: 10px; background: rgba(41, 166, 255, 0.07);">
-      <p style="margin: 0 0 0.5rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Start here (OpenClaw)</p>
+      <p style="margin: 0 0 0.5rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Start here (TypeScript workspace)</p>
       <ol style="margin: 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.6;">
-        <li><code>openclawbrain init --workspace ~/.openclaw/workspace --output ~/.openclawbrain/main</code></li>
-        <li><code>openclawbrain serve --state ~/.openclawbrain/main/state.json</code></li>
-        <li><code>openclaw hooks install /path/to/openclawbrain/integrations/openclaw/hooks/openclawbrain-context-injector</code></li>
-        <li><code>openclaw hooks enable openclawbrain-context-injector</code></li>
-        <li><code>openclaw gateway restart</code></li>
-        <li>Optional quick cutover: <code>openclawbrain replay --state ~/.openclawbrain/main/state.json --sessions ~/.openclaw/agents/main/sessions --fast-learning --stop-after-fast-learning --resume --checkpoint ~/.openclawbrain/main/replay_checkpoint.json</code></li>
+        <li><code>corepack enable</code></li>
+        <li><code>pnpm install</code></li>
+        <li><code>pnpm check</code></li>
+        <li><code>pnpm release:pack</code></li>
+        <li>Wire the published packages into your OpenClaw runtime boundary.</li>
       </ol>
       <ul style="margin: 0.55rem 0 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.88rem; line-height: 1.55; color: var(--text-muted);">
-        <li>Hook pack injects brain context automatically (no manual <code>AGENTS.md</code> wiring).</li>
-        <li>Keep prompt appendix deterministic and bounded (tight and right).</li>
-        <li>Repeated workflows should shrink context over time (paper/blog claims).</li>
-        <li>Use <code>capture_feedback</code> or <code>learn_by_chat_id</code> for correction-driven learning.</li>
-        <li>Canonical new-agent setup flow: <a href="/docs/new-agent-sop.md">docs/new-agent-sop.md</a></li>
+        <li>Fast boot is immediate from existing files, with no full-history scan gate before usable routing.</li>
+        <li>Background learning is always on and prioritizes new incoming data first.</li>
+        <li>Human labels, self labels, and scanner/harvester labels are default behavior.</li>
+        <li>Continuous graph learning includes structural updates, decay, and Hebbian co-firing.</li>
+        <li>Canonical setup details: <a href="/docs/new-agent-sop.md">docs/new-agent-sop.md</a></li>
       </ul>
       <p style="margin: 0.55rem 0 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">If you see bloat, read <a href="/docs/openclaw-integration.md">openclaw integration guide</a> and <a href="/docs/operator-guide.md">operator guide</a>.</p>
-      <p style="margin: 0.6rem 0 0; font-family: var(--sans); font-size: 0.9rem; color: var(--text-muted);">Check progress/resume: <a href="/docs/ops-recipes.md">ops-recipes</a> · <code>openclawbrain replay --state ~/.openclawbrain/main/state.json --show-checkpoint --resume</code></p>
+      <p style="margin: 0.6rem 0 0; font-family: var(--sans); font-size: 0.9rem; color: var(--text-muted);">Operational recipes: <a href="/docs/ops-recipes.md">ops-recipes</a> · <a href="/docs/reproduce-eval.md">proof reproduction docs</a></p>
     </div>
 
     </div>
@@ -237,11 +236,12 @@
 
   <div class="insight">
     <div class="tag">Core Thesis</div>
-    <p style="margin-bottom: 0.6rem;"><strong>Shadow routing + Ultimate Policy Gradient</strong> is the heart of OpenClawBrain.</p>
+    <p style="margin-bottom: 0.6rem;"><strong>TypeScript package contracts + two-timescale learning</strong> are the heart of OpenClawBrain.</p>
     <ul style="margin-bottom: 0;">
-      <li><strong>Runtime QTsim router (money-maker):</strong> deterministic, query-conditioned edge selection with no LLM calls (uses the embedding you already computed).</li>
-      <li><strong>Async QTsim teacher:</strong> replay recent decisions, ask a teacher model what it would have chosen, and turn that into dense labels.</li>
-      <li><strong>Ultimate policy gradient:</strong> unify label sources into one update rule with a clear hierarchy: human feedback (highest weight) → self-learning → harvester → async teacher (lowest weight per sample, highest volume).</li>
+      <li><strong>Learned route function on hot path:</strong> deterministic, query-conditioned edge selection runs in the runtime request path.</li>
+      <li><strong>Async teacher off hot path:</strong> background supervision improves the route policy without adding latency to user-visible requests.</li>
+      <li><strong>Default-on label hierarchy:</strong> human feedback (highest weight) → self labels → scanner/harvester labels → async teacher labels.</li>
+      <li><strong>Continuous graph learning by default:</strong> structural updates, decay, and Hebbian co-firing run as live background behavior.</li>
     </ul>
     <p style="margin: 0.75rem 0 0; font-family: var(--sans); font-size: 0.9rem; color: var(--text-muted);">
       Read the latest: <a href="/blog/v12.2.6-series/" style="color: var(--text-bright);">v12.2.6+ series: QTsim, policy learning, and evals</a>.
@@ -258,9 +258,9 @@
 
   <div id="why-this-exists" style="text-align: left; max-width: 720px; margin: 0 auto 2.5rem; padding: 1.1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card);">
     <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Why this exists</p>
-    <h2 style="margin: 0 0 0.6rem; font-size: 1.15rem; border-bottom: 0; padding-bottom: 0;">The problem OpenClaw users hit</h2>
+    <h2 style="margin: 0 0 0.6rem; font-size: 1.15rem; border-bottom: 0; padding-bottom: 0;">The reset this repo makes</h2>
     <p style="margin: 0 0 0.9rem; font-family: var(--sans); font-size: 0.92rem; color: var(--text);">
-      OpenClawBrain’s promise: fewer calls per user-visible exchange, bounded <code>[BRAIN_CONTEXT]</code>, and an always-on learning loop so agents stop forgetting and you stop doctoring runs.
+      OpenClawBrain is now TypeScript-first and package-first: fast startup from existing workspace files, live background learning, and explicit ownership boundaries between OpenClaw runtime and OpenClawBrain learning infrastructure.
     </p>
     <div class="table-wrap" style="margin: 0 0 0.9rem;">
       <table>
@@ -272,26 +272,22 @@
         </thead>
         <tbody>
           <tr>
-            <td>High token burn / too many calls per exchange.</td>
-            <td>Fewer calls per exchange + budgeting + measurement (see benchmark harness + baseline numbers).</td>
+            <td>Cold starts blocked by full-history prep before usable routing.</td>
+            <td>Boot from existing files immediately, then learn historical context continuously in the background.</td>
           </tr>
           <tr>
-            <td>Amnesia / retcon after compaction.</td>
-            <td>Bounded <code>[BRAIN_CONTEXT]</code> + always-on learning capture/replay.</td>
+            <td>Label collection is inconsistent and often optional.</td>
+            <td>Human labels, self labels, and scanner/harvester labels run as default inputs to learning.</td>
           </tr>
           <tr>
-            <td>Time spent doctoring or babysitting runs.</td>
-            <td>Loop install + fail-open defaults to keep agents moving safely.</td>
+            <td>Learning logic and runtime orchestration are tightly coupled.</td>
+            <td>OpenClaw runtime stays separate while OpenClawBrain packages own contracts, provenance, packs, compiler, and learner behavior.</td>
           </tr>
         </tbody>
       </table>
     </div>
     <p style="margin: 0 0 0.75rem; font-family: var(--sans); font-size: 0.85rem; color: var(--text-muted);">
-      User pain is visible in the wild: “burning tokens re-reading everything or losing context after compaction.” <a href="https://github.com/openclaw/openclaw/discussions/25633">Source</a>
-      A week-long test reports “I spent approximately $47 in API costs” and “Every time OpenClaw takes a screenshot to ‘see’ what’s on a page, that’s a vision model API call.” <a href="https://medium.com/@likhitkumarvp/i-spent-47-testing-openclaw-for-a-week-heres-what-s-actually-happening-c274dc26a3fd">Source</a>
-    </p>
-    <p style="margin: 0 0 0.75rem; font-family: var(--sans); font-size: 0.85rem; color: var(--text-muted);">
-      We’re not claiming a percent cost reduction yet; use the benchmark harness and baseline numbers to evaluate in your environment.
+      Proof boundary remains explicit: this page shows deterministic mechanism and workflow proof; it does not claim complete live production answer-quality proof yet.
     </p>
     <p style="margin: 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
       Start here: <a href="/docs/openclaw-integration.md">openclaw integration</a> · <a href="/docs/brains-dashboard/">brains dashboard</a> · <a href="/docs/reproduce-eval.md">workflow proof + benchmark harnesses</a>
@@ -299,32 +295,27 @@
   </div>
 
   <div id="install" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem 1.75rem; margin-bottom: 2.5rem;">
-    <h3 style="font-family: var(--sans); font-size: 0.95rem; font-weight: 600; color: var(--text-bright); margin-bottom: 1rem;">Install &amp; Run</h3>
-<pre style="background: var(--bg-code); border-radius: 6px; padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; overflow-x: auto; color: var(--text);"><code># Install (stable release from PyPI)
-python3 -m pip install openclawbrain
+    <h3 style="font-family: var(--sans); font-size: 0.95rem; font-weight: 600; color: var(--text-bright); margin-bottom: 1rem;">Quickstart (Package-First)</h3>
+<pre style="background: var(--bg-code); border-radius: 6px; padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; overflow-x: auto; color: var(--text);"><code># Bootstrap the TypeScript workspace
+corepack enable
+pnpm install
+pnpm check
 
-# Install latest main branch (until next release)
-python3 -m pip install git+https://github.com/jonathangu/openclawbrain@main
+# Build and release package artifacts
+pnpm release:pack
 
-# Build a brain
-
-python3 -m openclawbrain init --workspace examples/sample_workspace --output /tmp/brain
-
-# Check state health
-python3 -m openclawbrain doctor --state /tmp/brain/state.json
-# ... summary includes 8/9 checks
-
-# Query (text output includes node IDs)
-python3 -m openclawbrain query "how do I deploy" --state /tmp/brain/state.json --top 3 --json
-
-# Teach positive outcome
-python3 -m openclawbrain learn --state /tmp/brain/state.json --outcome 1.0 --fired-ids "deploy.md::0,deploy.md::1"
-
-# Inject correction
-python3 -m openclawbrain inject --state /tmp/brain/state.json \
-  --id "fix::1" --content "Never skip CI for hotfixes" --type CORRECTION</code></pre>
+# Public package surface
+@openclawbrain/contracts
+@openclawbrain/events
+@openclawbrain/event-export
+@openclawbrain/workspace-metadata
+@openclawbrain/provenance
+@openclawbrain/pack-format
+@openclawbrain/activation
+@openclawbrain/compiler
+@openclawbrain/learner</code></pre>
     <p style="font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.5;">
-      Core graph and traversal are pure Python. The OpenAI SDK is included by default for convenience (hash mode exists if you do not want provider calls), and OpenAI-backed commands require <code>OPENAI_API_KEY</code>.
+      OpenClaw owns runtime orchestration/fail-open/prompt assembly. OpenClawBrain owns contracts, normalized events/exports, provenance, pack format, activation helpers, compiler, and learner packages. Start from current files immediately; continuous learning updates routes in background.
       See <a href="https://github.com/jonathangu/openclawbrain">README</a> and <a href="https://github.com/jonathangu/openclawbrain/blob/main/REPRODUCE.md">REPRODUCE.md</a>.
     </p>
   </div>
@@ -345,25 +336,25 @@ For efficiency, repeated outcomes compress context from 30 nodes to 2.7 in deplo
 
   <h2 id="comparison">OpenClawBrain vs GraphRAG/RAPTOR/Self-RAG</h2>
   <ul>
-    <li><strong>OpenClawBrain:</strong> Learns routing from outcomes so repeated workflows get faster, smaller, and more reliable.</li>
-    <li><strong>GraphRAG:</strong> Excellent for corpus-aware retrieval using graph structure over entities, documents, and relationships.</li>
-    <li><strong>RAPTOR:</strong> Strong for hierarchical chunking and summarization over large corpora.</li>
-    <li><strong>Self-RAG:</strong> Strong for deciding when/how to retrieve during a single response.</li>
+    <li><strong>OpenClawBrain:</strong> TypeScript package-first memory stack for repeated agent workflows, with learned routing on hot path and async teacher learning off path.</li>
+    <li><strong>GraphRAG:</strong> Strong at corpus-aware retrieval over explicit entity/document relationship graphs.</li>
+    <li><strong>RAPTOR:</strong> Strong at hierarchical chunking and summarization across large corpora.</li>
+    <li><strong>Self-RAG:</strong> Strong at deciding retrieval behavior during a single generation loop.</li>
   </ul>
-  <p><strong>Best for:</strong> Use OpenClawBrain when you run repeated agent workflows and can provide outcome feedback; use GraphRAG or RAPTOR when corpus structure and summarization are primary; use Self-RAG when per-response retrieval decisions are the main need.</p>
+  <p><strong>Best for:</strong> Use OpenClawBrain when you need always-on route learning and default-on label harvesting inside an OpenClaw runtime boundary; use GraphRAG/RAPTOR/Self-RAG when your primary requirement is corpus modeling or per-response retrieval control.</p>
   <div class="table-wrap">
     <table>
       <thead>
         <tr><th>System</th><th>Best for</th><th>Key behavior</th></tr>
       </thead>
       <tbody>
-        <tr><td>OpenClawBrain</td><td>Repeated agent workflows with outcomes</td><td>Learns persistent routes and suppresses bad ones over time</td></tr>
-        <tr><td>GraphRAG / RAPTOR</td><td>Corpus structure and summarization</td><td>Improves retrieval quality via graph/hierarchical organization</td></tr>
-        <tr><td>Self-RAG</td><td>Per-response retrieval control</td><td>Decides retrieval behavior within each response</td></tr>
+        <tr><td>OpenClawBrain</td><td>Repeated workflows in OpenClaw runtime</td><td>Hot-path learned route function plus background teacher/graph updates</td></tr>
+        <tr><td>GraphRAG / RAPTOR</td><td>Corpus structure and summarization</td><td>Retrieval quality from explicit graph/hierarchical corpus structure</td></tr>
+        <tr><td>Self-RAG</td><td>Per-response retrieval control</td><td>Retrieval gating and critique in a single response flow</td></tr>
       </tbody>
     </table>
   </div>
-  <p><strong>Key differences (OpenClawBrain):</strong> persistent outcome learning; mistake suppression; multi-step retrieval as primitive; context gets cheaper on repeated tasks; cache-friendly deterministic <code>prompt_context</code>. See <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/operator-quickstart.md">operator quickstart</a>, <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/ultimate-policy-gradient-routing-math.md">math appendix</a>, <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/evaluation-plan.md">evaluation plan</a>, and <a href="/blog/v12.2.6-series/">v12.2.6+ series</a>.</p>
+  <p><strong>Key differences (OpenClawBrain):</strong> fast boot from existing files, default-on human/self/scanner labels, continuous graph learning (structural updates + decay + Hebbian co-firing), and explicit separation between mechanism proof and live product proof. See <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/operator-quickstart.md">operator quickstart</a>, <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/ultimate-policy-gradient-routing-math.md">math appendix</a>, <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/evaluation-plan.md">evaluation plan</a>, and <a href="/blog/v12.2.6-series/">v12.2.6+ series</a>.</p>
 
   <div class="note">
     This page is the companion guide to the formal paper (<a href="/openclawbrain.pdf" style="color: var(--text-bright);">openclawbrain.pdf</a>). The paper contains the reference definitions, equations, and benchmarks; this page presents the same claims with implementation context.
@@ -371,31 +362,32 @@ For efficiency, repeated outcomes compress context from 30 nodes to 2.7 in deplo
 
   <h2>Feature highlights</h2>
   <ul>
-    <li>Two-axis framing: graph structure for retrieval accuracy and learning for repeated-task context compression.</li>
-    <li>Real-time corrections via logged fires (`--chat-id`) and same-turn correction flow.</li>
-    <li>Optional embedder and generation callbacks for user environments; no assumption of a single provider.</li>
-    <li>TEACHING and DIRECTIVE injection for positive knowledge and instructions.</li>
-    <li>Budget-based traversal termination with hard limits for hops, fired-node count, and context budget.</li>
+    <li>TypeScript-first package surface: <code>@openclawbrain/contracts</code>, <code>@openclawbrain/events</code>, <code>@openclawbrain/event-export</code>, <code>@openclawbrain/workspace-metadata</code>, <code>@openclawbrain/provenance</code>, <code>@openclawbrain/pack-format</code>, <code>@openclawbrain/activation</code>, <code>@openclawbrain/compiler</code>, <code>@openclawbrain/learner</code>.</li>
+    <li>Fast boot from existing files without a full-history pre-scan gate.</li>
+    <li>Always-on background learning that prioritizes new incoming data first.</li>
+    <li>Default-on human labels, self labels, and scanner/harvester labels feeding one learner loop.</li>
+    <li>Continuous graph learning with structural modifications, decay, Hebbian co-firing, and bounded hot-path routing budgets.</li>
+    <li>Honest proof boundary: deterministic mechanism/workflow proof now, full live production answer-quality proof not claimed yet.</li>
   </ul>
 
-  <h2 id="whats-new-v12-2-0">What&apos;s new in v12.2.1</h2>
+  <h2 id="whats-new-v12-2-0">What&apos;s new in the TypeScript reset</h2>
   <ul>
-    <li><strong>Policy-gradient learning:</strong> Default learning rule switched from heuristic to <code>apply_outcome_pg</code> (REINFORCE). Redistributes probability mass across all outgoing edges (sum ≈ 0) instead of inflating traversed edges only; 10-15x better branch separation and 24x faster drift recovery in simulation.</li>
-    <li><strong>Self-learning API:</strong> New <code>self_learn</code> daemon method and CLI for autonomous agent learning. Agents detect their own failures/successes and teach themselves without human feedback. Supports <code>CORRECTION</code> (penalize + inhibit) and <code>TEACHING</code> (reinforce + inject).</li>
-    <li><strong>Self-regulation:</strong> Added tier hysteresis (habitual band 0.15-0.6), homeostatic decay (auto-adjusts half-life to maintain 5-15% reflex ratio), and synaptic scaling (soft per-node weight budget to prevent hub domination).</li>
-    <li><strong>Runtime node splitting:</strong> <code>split_node</code> + <code>suggest_splits</code> provide the inverse of merge. Bloated multi-topic nodes split into focused children with embedding-based edge rewiring.</li>
-    <li><strong>Atomic state persistence:</strong> <code>save_state</code> now writes through temp + fsync + rename for crash-safe durability.</li>
-    <li><strong>272 tests</strong>, 10-seed simulation suite, 3 production brains.</li>
+    <li><strong>TypeScript-first replacement:</strong> OpenClawBrain now presents a package-first workspace shape instead of a Python-first operational surface.</li>
+    <li><strong>Immediate boot behavior:</strong> runtime can boot from existing files without waiting for a full historical pre-processing gate.</li>
+    <li><strong>Always-on learning loop:</strong> background learning is default-on and keeps processing historical and incoming data continuously.</li>
+    <li><strong>Default label stack:</strong> human feedback, self labels, and scanner/harvester labels all feed the learner loop by default.</li>
+    <li><strong>Hot/off-path split:</strong> learned route function stays on the hot path while async teacher behavior stays off the hot path.</li>
+    <li><strong>Continuous graph adaptation:</strong> structural updates, decay, and Hebbian co-firing are standard background behavior.</li>
   </ul>
 
-  <h2 id="new-since-v12-2-1-main">New since v12.2.1 (main branch)</h2>
+  <h2 id="new-since-v12-2-1-main">Forward package surface</h2>
   <ul>
-    <li><strong>Replay progress logging:</strong> replay exposes <code>--progress-every</code> and emits JSONL progress events for long-running jobs.</li>
-    <li><strong>Frequent checkpoints + resume:</strong> new <code>--checkpoint-every-seconds</code> and <code>--checkpoint-every</code> options provide more frequent persistence with resumable runs.</li>
-    <li><strong>Cutover mode:</strong> <code>--stop-after-fast-learning</code> supports fast-learning cutover workflows.</li>
-    <li><strong>Parallel replay v0:</strong> <code>--replay-workers</code> adds initial parallel worker support for replay throughput.</li>
-    <li><strong>Deterministic prompt context blocks:</strong> <code>query_brain.py --format prompt</code> and <code>prompt_context</code> provide stable prompt-ready context rendering.</li>
-    <li><strong>Media toolResult ingestion:</strong> <code>--include-tool-results</code> plus allowlist controls let image/voice tool outputs feed memory ingestion.</li>
+    <li><strong>Contracts and events:</strong> <code>@openclawbrain/contracts</code>, <code>@openclawbrain/events</code>, <code>@openclawbrain/event-export</code>.</li>
+    <li><strong>Workspace and provenance:</strong> <code>@openclawbrain/workspace-metadata</code>, <code>@openclawbrain/provenance</code>.</li>
+    <li><strong>Packs and activation:</strong> <code>@openclawbrain/pack-format</code>, <code>@openclawbrain/activation</code>.</li>
+    <li><strong>Compiler and learner:</strong> <code>@openclawbrain/compiler</code>, <code>@openclawbrain/learner</code>.</li>
+    <li><strong>Boundary ownership:</strong> OpenClaw owns runtime/orchestration/fail-open/prompt assembly while OpenClawBrain owns package contracts and learning machinery.</li>
+    <li><strong>Proof boundary:</strong> mechanism/workflow proof is current; full live production answer-quality proof is still pending.</li>
   </ul>
 
   <nav class="toc">
@@ -403,8 +395,8 @@ For efficiency, repeated outcomes compress context from 30 nodes to 2.7 in deplo
     <ol>
     <li><a href="#the-problem">The Problem</a></li>
     <li><a href="#the-graph">The Graph</a></li>
-    <li><a href="#whats-new-v12-2-0">What&apos;s new in v12.2.1</a></li>
-    <li><a href="#new-since-v12-2-1-main">New since v12.2.1 (main branch)</a></li>
+    <li><a href="#whats-new-v12-2-0">What&apos;s new in the TypeScript reset</a></li>
+    <li><a href="#new-since-v12-2-1-main">Forward package surface</a></li>
     <li><a href="#two-timescale-architecture">Two-Timescale Architecture</a></li>
     <li><a href="#context-lifecycle">Context Lifecycle</a></li>
     <li><a href="#how-it-learns">How It Learns</a></li>
@@ -511,7 +503,7 @@ def choose_next(current_node, graph, qtsim_router, query, visited):
 
   <p>For a fixed-node softmax policy, each chosen action increases its own logit and decreases competing logits in proportion to their current probability mass.</p>
 
-  <p>v12.2.1 also adds an autonomous <code>self_learn</code> daemon path: agents can emit outcome-driven trajectories, and <code>self_learn</code> converts them into internal updates using existing <code>TEACHING</code>/<code>CORRECTION</code> flows without human feedback.</p>
+  <p>v12.2.1 also adds an autonomous <code>self_learn</code> path: agents can emit outcome-driven trajectories, and <code>self_learn</code> converts them into internal updates using existing <code>TEACHING</code>/<code>CORRECTION</code> flows without human feedback.</p>
 
   <h3>The accessible math</h3>
   <p class="math-block">\[\pi_W(a\mid s=i)=\frac{\exp\bigl((r_{ia}+w_{ia})/\tau\bigr)}{\sum_{j\in\mathcal{N}(i)\cup\{\texttt{STOP}\}}\exp\bigl((r_{ij}+w_{ij})/\tau\bigr)}\]</p>
@@ -608,8 +600,8 @@ def choose_next(current_node, graph, qtsim_router, query, visited):
   </ul>
   <p><code>run_maintenance()</code> is scheduler-agnostic (cron, timer, CI, ad-hoc orchestration).</p>
 
-  <h3>Persistent worker (<code>openclawbrain daemon</code>)</h3>
-  <p>For production, <code>openclawbrain daemon --state PATH</code> starts a long-lived process that loads state once and accepts JSON-RPC over stdin/stdout. Eliminates per-call state reload (~100-800ms savings).</p>
+  <h3>Persistent worker (runtime worker)</h3>
+  <p>For production, OpenClaw runtime keeps a long-lived worker that loads packages once and serves request traffic through runtime-boundary calls. This removes per-call reload overhead (~100-800ms savings).</p>
   <p>Production timing (Mac Mini M4 Pro, OpenAI embeddings):</p>
   <ul>
     <li>MAIN (1,158 nodes): 397ms embed + 107ms traverse = <strong>504ms</strong></li>
@@ -1081,7 +1073,7 @@ python run_all.py</code></pre>
   <p><strong>Axis framing:</strong> These external benchmarks are Axis 1 only. They use unique, non-repeating queries, so Axis 2 (repetition-driven context compression) is not testable.</p>
 
   <h2 id="production">5. Production Deployment</h2>
-  <p>Three production brains run on a Mac Mini M4 Pro, each built from workspace markdown files, session replay, and a learning database of human corrections:</p>
+  <p>Three production brains run on a Mac Mini M4 Pro, each built from workspace markdown files, historical session traces, and a learning database of human corrections:</p>
   <p><strong>Axis framing:</strong> Context efficiency on Axis 2. Startup context moved from 52--66KB to 3--13KB per query through on-demand graph routing after repeated task use.</p>
   <table>
     <thead>
@@ -1107,7 +1099,7 @@ python run_all.py</code></pre>
         <tr><td><strong>Feedback</strong></td><td>None</td><td>+1/-1 outcomes update edge weights</td></tr>
         <tr><td><strong>Wrong answers</strong></td><td>Keep resurfacing</td><td>Inhibitory edges suppress them</td></tr>
         <tr><td><strong>Over time</strong></td><td>Same results</td><td>Routes compile to reflex behavior</td></tr>
-        <tr><td><strong>Dependencies</strong></td><td>Vector DB</td><td>Python core; optional embedding/LLM callbacks</td></tr>
+        <tr><td><strong>Dependencies</strong></td><td>Vector DB</td><td>TypeScript package surface inside an OpenClaw-owned runtime boundary</td></tr>
       </tbody>
     </table>
   </div>
