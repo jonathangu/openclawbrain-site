@@ -82,6 +82,12 @@
     .section-card { text-align: left; max-width: 720px; margin: 0 auto 2.5rem; padding: 1.1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card); }
     .section-label { margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
     .section-title { margin: 0 0 0.6rem; font-family: var(--sans); font-size: 1.15rem; font-weight: 700; color: var(--text-bright); line-height: 1.3; }
+    .worked-turn-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem; margin: 0.8rem 0 0.75rem; }
+    .worked-turn-step { padding: 0.6rem 0.7rem; border: 1px solid rgba(74, 158, 255, 0.3); border-radius: 8px; background: rgba(10, 10, 10, 0.55); font-family: var(--sans); font-size: 0.83rem; color: var(--text); line-height: 1.45; }
+    .worked-turn-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.85rem; }
+    .worked-turn-actions a { display: inline-block; padding: 0.48rem 0.82rem; border-radius: 8px; font-family: var(--sans); font-size: 0.84rem; font-weight: 600; text-decoration: none; }
+    .worked-turn-actions a.primary { background: var(--accent); color: #0a0f17; }
+    .worked-turn-actions a.secondary { border: 1px solid rgba(74, 158, 255, 0.35); color: var(--accent); }
     .cta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin: 1.5rem 0; }
     .cta-grid a {
       display: flex; align-items: center; gap: 0.6rem;
@@ -89,13 +95,14 @@
       background: var(--bg-card); font-family: var(--sans); font-size: 0.9rem;
       color: var(--text-bright); text-decoration: none; transition: border-color 0.15s;
     }
+    .cta-grid a.cta-strong { border-color: rgba(74, 158, 255, 0.38); background: rgba(74, 158, 255, 0.1); }
     .cta-grid a:hover { border-color: var(--accent); text-decoration: none; }
     .cta-grid .cta-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
     .pkg-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin: 0.75rem 0; }
     .pkg-item { padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-code); font-family: var(--mono); font-size: 0.76rem; color: var(--orange); }
     .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 0 0 0.75rem; }
     @media (max-width: 720px) {
-      .proof-family-grid, .proof-grid, .proof-notes, .cta-grid, .evidence-grid { grid-template-columns: 1fr; }
+      .proof-family-grid, .proof-grid, .proof-notes, .worked-turn-steps, .cta-grid, .evidence-grid { grid-template-columns: 1fr; }
       .pkg-list { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 600px) { .page { padding: 2rem 1rem 4rem; } .page-title { font-size: 1.5rem; } body { font-size: 16px; } .pkg-list { grid-template-columns: 1fr; } }
@@ -158,8 +165,8 @@
         </div>
         <div class="proof-step">
           <p class="proof-step-label">Step 2</p>
-          <p class="proof-step-title">Workflow proof</p>
-          <p class="proof-step-copy">Deterministic OpenClaw-shaped tasks with held-out queries, label streams, and learned-vs-baseline route-function comparison.</p>
+          <p class="proof-step-title">Workflow + worked turn</p>
+          <p class="proof-step-copy">Deterministic workflow tasks plus one inspectable turn with stable <code>turn_id</code>, bounded context, and same-turn correction capture.</p>
         </div>
         <div class="proof-step active">
           <p class="proof-step-label">Step 3</p>
@@ -205,6 +212,7 @@
       </div>
       <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 0.85rem 0 0.65rem;">
         <a href="/proof/" style="display: inline-block; padding: 0.5rem 0.85rem; border-radius: 8px; background: var(--accent); color: #0a0f17; font-family: var(--sans); font-size: 0.85rem; font-weight: 600; text-decoration: none;">View Proof Package</a>
+        <a href="/proof/#worked-turn" style="display: inline-block; padding: 0.5rem 0.85rem; border-radius: 8px; border: 1px solid rgba(74,158,255,0.35); color: var(--accent); font-family: var(--sans); font-size: 0.85rem; font-weight: 600; text-decoration: none;">Inspect Worked Turn</a>
         <a href="/proof/#recorded-session" style="display: inline-block; padding: 0.5rem 0.85rem; border-radius: 8px; border: 1px solid rgba(74,158,255,0.35); color: var(--accent); font-family: var(--sans); font-size: 0.85rem; font-weight: 600; text-decoration: none;">Recorded-session Bundle</a>
         <a href="/proof/#sparse-feedback" style="display: inline-block; padding: 0.5rem 0.85rem; border-radius: 8px; border: 1px solid rgba(74,158,255,0.35); color: var(--accent); font-family: var(--sans); font-size: 0.85rem; font-weight: 600; text-decoration: none;">Sparse-feedback Proof</a>
         <a href="/docs/reproduce-eval.md" style="display: inline-block; padding: 0.5rem 0.85rem; border-radius: 8px; border: 1px solid rgba(74,158,255,0.35); color: var(--accent); font-family: var(--sans); font-size: 0.85rem; font-weight: 600; text-decoration: none;">Reproduce Instructions</a>
@@ -225,6 +233,34 @@
   <!-- Hero image -->
   <div class="fig" style="padding: 0; overflow: hidden; margin-bottom: 2.5rem;">
     <img src="hero.png" onerror="this.src='hero-v2.png'" alt="A brain-shaped neural network of document nodes and weighted edges — green reflex paths, blue habitual, gray dormant" style="width: 100%; display: block; border-radius: 8px;">
+  </div>
+
+  <!-- Worked turn spotlight -->
+  <div class="section-card" style="border-color: rgba(74, 158, 255, 0.32); background: linear-gradient(180deg, rgba(74, 158, 255, 0.08), rgba(17, 17, 17, 0.96));">
+    <p class="section-label">Turn-level evidence</p>
+    <p class="section-title">Inspect one real turn before aggregate benchmark numbers</p>
+    <p style="margin: 0 0 0.8rem; font-family: var(--sans); font-size: 0.9rem; color: var(--text);">
+      The strongest way to verify behavior is a traceable single-turn artifact. The published worked example keeps one stable <code>turn_id</code> across compile, answer, correction capture, and later replay boundaries so you can inspect what changed now vs after background learning.
+    </p>
+    <pre style="margin: 0 0 0.8rem; font-size: 0.8rem; line-height: 1.52;"><code>turn_id: oc-main-2026-03-06-deploy-0142
+summary: deploy note for billing banner patch; need freeze window...
+[COMPILED_CONTEXT v1]
+- freeze window + rollback owner rule
+- prior correction: no auto-approval language for finance impact
+[/COMPILED_CONTEXT]
+same-turn correction: internal-only patch -> no support contact</code></pre>
+    <div class="worked-turn-steps">
+      <div class="worked-turn-step"><strong>Inspectable now:</strong> inbound summary, compile parameters, bounded context block, answer trace, correction event output.</div>
+      <div class="worked-turn-step"><strong>Changes later:</strong> route-policy and structural updates appear only after replay/harvest/maintain + cutover.</div>
+    </div>
+    <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-muted);">
+      Proof flow: worked turn artifact first, then recorded-session and sparse-feedback benchmark ladders.
+    </p>
+    <div class="worked-turn-actions">
+      <a class="primary" href="/proof/#worked-turn">Inspect in proof ladder</a>
+      <a class="secondary" href="/docs/worked-example.md">Open worked example doc</a>
+      <a class="secondary" href="/proof/#recorded-session">Then recorded-session H2H</a>
+    </div>
   </div>
 
   <!-- Why this exists -->
@@ -396,6 +432,12 @@ pnpm release:pack</code></pre>
         Proof Package
       </span>
     </a>
+    <a class="cta-strong" href="/proof/#worked-turn">
+      <span>
+        <span class="cta-label">Step 1</span><br>
+        Inspect One Worked Turn
+      </span>
+    </a>
     <a href="/proof/#recorded-session">
       <span>
         <span class="cta-label">Recorded</span><br>
@@ -412,12 +454,6 @@ pnpm release:pack</code></pre>
       <span>
         <span class="cta-label">Reproduce</span><br>
         Eval Harness &amp; Commands
-      </span>
-    </a>
-    <a href="/docs/worked-example.md">
-      <span>
-        <span class="cta-label">Worked Turn</span><br>
-        One Turn End to End
       </span>
     </a>
     <a href="/docs/openclaw-integration.md">

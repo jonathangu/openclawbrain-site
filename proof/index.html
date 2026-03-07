@@ -250,6 +250,23 @@
       margin: 0.7rem 0 0;
       padding-left: 1.15rem;
     }
+    .trace-snippet {
+      margin: 0.85rem 0 0;
+      padding: 0.85rem 0.95rem;
+      border-radius: 14px;
+      border: 1px solid rgba(144, 192, 222, 0.22);
+      background: rgba(6, 14, 22, 0.92);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 1.56;
+      color: #d6e8f4;
+      overflow-x: auto;
+    }
+    .trace-snippet code {
+      background: none;
+      padding: 0;
+      color: inherit;
+    }
     .figure-card img {
       border-radius: 18px;
       border: 1px solid rgba(144, 192, 222, 0.14);
@@ -420,7 +437,8 @@
             OpenClawBrain ships a settled TypeScript-first architecture: OpenClaw owns the live runtime boundary, while OpenClawBrain owns memory, learning, immutable pack artifacts, and deterministic context compilation. This page publishes the current proof families: recorded-session head-to-head (<code>recorded_h2h_relational_drift_001</code>: 0.975 vs 0.896, +7.9 pp) and sparse-feedback multi-seed (<code>proof-results/sparse_feedback_10seed</code>: 91.96% vs 67.05%, +24.91 pp, ~5x smaller context/query).
           </p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="#recorded-session">Jump to recorded-session proof</a>
+            <a class="btn btn-primary" href="#worked-turn">Start with worked-turn evidence</a>
+            <a class="btn btn-secondary" href="#recorded-session">Jump to recorded-session proof</a>
             <a class="btn btn-secondary" href="#sparse-feedback">Jump to sparse-feedback proof</a>
             <a class="btn btn-secondary" href="../docs/worked-example.md">Read the worked turn</a>
             <a class="btn btn-secondary" href="../docs/openclaw-integration.md">OpenClaw integration</a>
@@ -431,6 +449,7 @@
             Claim boundary: deterministic simulations, reproducible figures, traceable turn bundles, recorded-session benchmarks, and sparse-feedback benchmarks prove mechanism and comparative behavior on frozen workloads. Shadow and online comparative claims are published only with matching production artifacts.
           </p>
           <div class="tag-row">
+            <a class="tag" href="#worked-turn">Worked-turn trace</a>
             <a class="tag" href="#recorded-session">Recorded-session H2H</a>
             <a class="tag" href="#sparse-feedback">Sparse-feedback 10-seed</a>
             <span class="tag">OpenClaw-native memory</span>
@@ -491,6 +510,45 @@
               <li><strong>Requires comparative artifacts</strong>: the claim depends on fixed recorded sessions, shadow traffic, or online slices.</li>
               <li><strong>Not claimed</strong>: there is no matching artifact yet, so the site should not imply certainty.</li>
             </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="worked-turn">
+        <div class="section-head">
+          <div>
+            <h2>Worked-turn artifact (inspectable proof unit)</h2>
+            <p class="section-intro">Before aggregate benchmark numbers, inspect one OpenClaw-shaped turn with stable IDs and saved outputs. This makes the evidence contract concrete at turn level: what was known now, what changed later, and what is not implied.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">Trace from published worked example</div>
+            <h2>Stable <code>turn_id</code>, bounded context, same-turn correction</h2>
+            <pre class="trace-snippet"><code>turn_id: oc-main-2026-03-06-deploy-0142
+summary: deploy note for billing banner patch...
+[COMPILED_CONTEXT v1]
+- freeze window + rollback owner requirement
+- prior correction: no auto-approval language
+[/COMPILED_CONTEXT]
+correction: internal-only patch -> no support contact</code></pre>
+            <p class="meta">
+              Source artifact: <a href="../docs/worked-example.md">docs/worked-example.md</a>. The same <code>turn_id</code> ties compile output, correction event capture, and learner outcome.
+            </p>
+          </article>
+
+          <article class="status-card">
+            <div class="kicker">Proof ladder placement</div>
+            <h2>Turn-level traceability comes before score tables</h2>
+            <ul>
+              <li><strong>Proves now:</strong> one exact turn can be inspected end to end with saved evidence fields.</li>
+              <li><strong>Connects to ladder:</strong> benchmark rows only matter when they can be grounded in this same traceability contract.</li>
+              <li><strong>Does not prove:</strong> live production answer quality, shadow-mode outcomes, or online rollout success.</li>
+              <li><strong>Replay boundary:</strong> route updates from correction capture appear on later served turns only after replay/harvest/maintain and cutover.</li>
+            </ul>
+            <p class="meta">
+              Next steps in this page: <a href="#recorded-session">recorded-session head-to-head</a> and <a href="#sparse-feedback">sparse-feedback 10-seed</a> benchmark artifacts.
+            </p>
           </article>
         </div>
       </section>
@@ -603,10 +661,16 @@
         <div class="section-head">
           <div>
             <h2>Evidence ladder</h2>
-            <p class="section-intro">Each step answers a different question. Publish claims at the rung with matching artifacts, and do not collapse simulation, recorded-session, sparse-feedback, shadow, and online evidence together.</p>
+            <p class="section-intro">Each step answers a different question. Start at turn-level traceability, then move upward to fixed-workload benchmark comparisons. Do not collapse simulation, recorded-session, sparse-feedback, shadow, and online evidence together.</p>
           </div>
         </div>
         <div class="ladder-grid">
+          <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
+            <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">0</div>
+            <h3>Worked-turn trace</h3>
+            <p>One stable-turn artifact with inbound summary, <code>turn_id</code>, bounded compiled context, answer trace, correction capture, and learner outcome linkage.</p>
+            <div class="meta">This rung is reached. Inspect <a href="#worked-turn">worked-turn evidence</a> or open <a href="../docs/worked-example.md">docs/worked-example.md</a>.</div>
+          </article>
           <article class="ladder-card">
             <div class="step">1</div>
             <h3>Mechanism proof</h3>
