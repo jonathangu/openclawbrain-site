@@ -64,50 +64,33 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a></div>
     <h1>OpenClawBrain Blog</h1>
-    <p>These posts document the shipped TypeScript-first system: OpenClaw owns the live runtime, while OpenClawBrain owns immutable packs, promotion/rollback, deterministic compile, fast boot from existing files, and always-on learning. Start with inspectable turn-level evidence, then move to aggregate benchmark families: recorded-session head-to-head <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp), plus sparse-feedback 10-seed <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp, ~5x lower context/query, 9-1 head-to-head).</p>
+    <p>Does learned routing actually beat standard RAG? Start with one inspectable turn, then check the benchmark results. The <a href="/proof/">proof package</a> has the full evidence ladder and numbers.</p>
 
     <div class="section">
       <h2>Proof First</h2>
       <div class="grid">
-        <div class="post featured">
-          <div class="title">Worked-turn artifact: inspect one real OpenClaw turn</div>
-          <div class="meta">Start here · turn-level evidence before score tables</div>
-          <div>
-            Stable <code>turn_id</code> across compile, correction capture, and learner outcome; bounded <code>[COMPILED_CONTEXT]</code>; explicit now-vs-later replay boundary.
-            <br />
-            <a href="/docs/worked-example.md">Open bundle: docs/worked-example.md</a>.
-            <br />
-            Proof ladder placement: <a href="/proof/#worked-turn">/proof/#worked-turn</a> (trace artifact, not live production claim).
-          </div>
-        </div>
-        <div class="post">
-          <div class="title">Recorded-session head-to-head: relational_drift_001</div>
-          <div class="meta">March 2026 · 800 queries · 41 steps · 8 baselines</div>
-          <div>
-            <a href="/proof/#recorded-session">Proof ladder placement</a>:
-            benchmark artifact, not live production claim.
-            <br />
-            <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">Open bundle: recorded_h2h_relational_drift_001</a>.
-            <br />
-            <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp).
-          </div>
-        </div>
-        <div class="post">
-          <div class="title">Sparse-feedback 10-seed proof run</div>
+        <a class="post featured" href="/proof/#worked-turn">
+          <div class="title">Inspect one real turn end-to-end</div>
+          <div class="meta">Start here</div>
+          <div>See exactly what the system compiled, what it answered, and what correction was captured — all tied to one stable <code>turn_id</code>. <span style="color:var(--muted);">Full trace in <code>docs/worked-example.md</code>.</span></div>
+        </a>
+        <a class="post" href="/proof/#recorded-session">
+          <div class="title">Recorded-session benchmark: +7.9 pp over best RAG baseline</div>
+          <div class="meta">March 2026 · 800 queries · 8 baselines</div>
+          <div>Head-to-head on a frozen query set. Full results and bundle links in the <span style="color:var(--accent);">proof package</span>.</div>
+        </a>
+        <a class="post" href="/proof/#sparse-feedback">
+          <div class="title">Sparse-feedback benchmark: +24.9 pp, ~5x smaller context</div>
           <div class="meta">March 2026 · 10 seeds · 8 baselines</div>
-          <div>
-            <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">Open bundle: sparse_feedback_10seed</a>.
-            <br />
-            <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), ~5x lower context/query, 9-1 over <code>vector_rag_rerank</code>.
-          </div>
-        </div>
+          <div>Learned routing under reduced supervision. Results and seed-level data in the <span style="color:var(--accent);">proof package</span>.</div>
+        </a>
         <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
-          <div class="title">Mechanism vs product proof ladder</div>
+          <div class="title">What the benchmarks prove (and what they don't)</div>
           <div class="meta">Post 3</div>
-          <div>Deterministic workflow proof, recorded-session benchmark proof, and explicit non-claims until shadow/online evidence exists.</div>
+          <div>Explicit boundaries: mechanism proof vs. benchmark proof vs. live production claims.</div>
         </a>
         <a class="post" href="/docs/openclaw-integration.md">
-          <div class="title">Operator integration doc</div>
+          <div class="title">Operator integration guide</div>
           <div class="meta">Operational setup</div>
           <div>Step-by-step OpenClaw integration, toggles, and fail-open guardrails.</div>
         </a>
@@ -120,7 +103,7 @@
         <a class="post" href="/blog/v12.2.6-series/">
           <div class="title">Series Index: OpenClawBrain v12.2.6+</div>
           <div class="meta">March 2026</div>
-          <div>Evidence-first map of the shipped architecture, proof ladder, and operator flow.</div>
+          <div>Architecture overview, benchmark results, and operator setup in six posts.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
           <div class="title">Post 1: Shadow Routing + Ultimate Policy Gradient</div>
@@ -135,17 +118,17 @@
         <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
           <div class="title">Post 3: Evaluation and Ablations</div>
           <div class="meta">March 2026</div>
-          <div>Strongest published benchmarks first, then mechanism-vs-product claim boundaries.</div>
+          <div>Benchmark results first, then what they do and don't prove about production use.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
           <div class="title">Post 4: Operator Guide for Local Embeddings OOTB</div>
           <div class="meta">March 2026</div>
-          <div>Package-first operator flow with learned routing hot path and async teacher loop.</div>
+          <div>How to run local embeddings out of the box and wire brain packages into OpenClaw.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
           <div class="title">Post 5: Industry Baselines + Ablation Study</div>
           <div class="meta">March 2026</div>
-          <div>Comparison contract with recorded-session and sparse-feedback head-to-head results.</div>
+          <div>How OpenClawBrain compares against GraphRAG, Self-RAG, and standard vector-rerank baselines.</div>
         </a>
       </div>
     </div>
