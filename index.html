@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="OpenClawBrain is the TypeScript-first package surface for OpenClaw memory and learning: fast boot from existing files, learned routing on the hot path, and async teacher learning off the hot path.">
   <meta property="og:title" content="OpenClawBrain: TypeScript-First Brain Packages for OpenClaw">
-  <meta property="og:description" content="TypeScript-first replacement for OpenClawBrain: package-first workspace, OpenClaw-owned runtime boundary, fast boot from existing files, and always-on background learning.">
+  <meta property="og:description" content="OpenClawBrain: TypeScript-first brain packages for OpenClaw — package-first workspace, OpenClaw-owned runtime boundary, fast boot from existing files, and always-on background learning.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary">
@@ -113,8 +113,8 @@
 
     <a href="https://www.jonathangu.com/" class="back-link">← jonathangu.com</a>
     <h1 class="paper-title">OpenClawBrain: TypeScript-First Brain Stack for OpenClaw</h1>
-    <p class="paper-subtitle">OpenClawBrain is now a TypeScript-first replacement with a package-first workspace and explicit runtime boundary ownership.</p>
-    <p class="paper-subtitle">Fast boot starts from existing files, learned routing stays on the hot path, and async teacher learning runs off the hot path.</p>
+    <p class="paper-subtitle">TypeScript-first brain packages for OpenClaw: package-first workspace, OpenClaw-owned runtime boundary, and durable local memory that learns.</p>
+    <p class="paper-subtitle">Fast boot from existing files. Learned routing on the hot path. Async teacher learning off the hot path.</p>
     <p class="authors"><span class="name">Jonathan Gu</span> · <a href="mailto:jonathangu@gmail.com" style="color: var(--text-muted); font-size: 0.85rem;">jonathangu@gmail.com</a></p>
     <div style="text-align: left; max-width: 720px; margin: 1.1rem auto 0; padding: 1.1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card);">
       <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Runtime boundary</p>
@@ -258,9 +258,9 @@
 
   <div id="why-this-exists" style="text-align: left; max-width: 720px; margin: 0 auto 2.5rem; padding: 1.1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card);">
     <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Why this exists</p>
-    <h2 style="margin: 0 0 0.6rem; font-size: 1.15rem; border-bottom: 0; padding-bottom: 0;">The reset this repo makes</h2>
+    <h2 style="margin: 0 0 0.6rem; font-size: 1.15rem; border-bottom: 0; padding-bottom: 0;">Why this exists</h2>
     <p style="margin: 0 0 0.9rem; font-family: var(--sans); font-size: 0.92rem; color: var(--text);">
-      OpenClawBrain is now TypeScript-first and package-first: fast startup from existing workspace files, live background learning, and explicit ownership boundaries between OpenClaw runtime and OpenClawBrain learning infrastructure.
+      OpenClawBrain is TypeScript-first and package-first: fast startup from existing workspace files, live background learning, and explicit ownership boundaries between OpenClaw runtime and OpenClawBrain learning infrastructure.
     </p>
     <div class="table-wrap" style="margin: 0 0 0.9rem;">
       <table>
@@ -370,11 +370,11 @@ For efficiency, repeated outcomes compress context from 30 nodes to 2.7 in deplo
     <li>Honest proof boundary: deterministic mechanism/workflow proof now, full live production answer-quality proof not claimed yet.</li>
   </ul>
 
-  <h2 id="whats-new-v12-2-0">What&apos;s new in the TypeScript reset</h2>
+  <h2 id="whats-new-v12-2-0">Design principles</h2>
   <ul>
-    <li><strong>TypeScript-first replacement:</strong> OpenClawBrain now presents a package-first workspace shape instead of a Python-first operational surface.</li>
-    <li><strong>Immediate boot behavior:</strong> runtime can boot from existing files without waiting for a full historical pre-processing gate.</li>
-    <li><strong>Always-on learning loop:</strong> background learning is default-on and keeps processing historical and incoming data continuously.</li>
+    <li><strong>Package-first workspace:</strong> OpenClawBrain ships as scoped TypeScript packages with explicit contracts and versioned pack format.</li>
+    <li><strong>Immediate boot:</strong> runtime boots from existing files without waiting for a full historical pre-processing gate.</li>
+    <li><strong>Always-on learning:</strong> background learning is default-on and keeps processing historical and incoming data continuously.</li>
     <li><strong>Default label stack:</strong> human feedback, self labels, and scanner/harvester labels all feed the learner loop by default.</li>
     <li><strong>Hot/off-path split:</strong> learned route function stays on the hot path while async teacher behavior stays off the hot path.</li>
     <li><strong>Continuous graph adaptation:</strong> structural updates, decay, and Hebbian co-firing are standard background behavior.</li>
@@ -395,7 +395,7 @@ For efficiency, repeated outcomes compress context from 30 nodes to 2.7 in deplo
     <ol>
     <li><a href="#the-problem">The Problem</a></li>
     <li><a href="#the-graph">The Graph</a></li>
-    <li><a href="#whats-new-v12-2-0">What&apos;s new in the TypeScript reset</a></li>
+    <li><a href="#whats-new-v12-2-0">Design principles</a></li>
     <li><a href="#new-since-v12-2-1-main">Forward package surface</a></li>
     <li><a href="#two-timescale-architecture">Two-Timescale Architecture</a></li>
     <li><a href="#context-lifecycle">Context Lifecycle</a></li>
@@ -424,25 +424,21 @@ For efficiency, repeated outcomes compress context from 30 nodes to 2.7 in deplo
 
   <p>OpenClawBrain is a directed graph of chunk nodes with typed edges carrying bounded scalar weight. Implementations may store metadata (for example, edge kind and summaries) alongside the graph state.</p>
 
-<pre><code>from dataclasses import dataclass, field
-from typing import Any
+<pre><code>interface Node {
+  id: string;
+  content: string;
+  summary?: string;
+  metadata?: Record&lt;string, unknown&gt;;
+}
 
-@dataclass
-class Node:
-    id: str
-    content: str
-    summary: str = ""
-    metadata: dict[str, Any] = field(default_factory=dict)
-
-@dataclass
-class Edge:
-    source: str
-    target: str
-    weight: float
-    kind: str
-    summary: str = ""
-    metadata: dict[str, Any] = field(default_factory=dict)
-</code></pre>
+interface Edge {
+  source: string;
+  target: string;
+  weight: number;
+  kind: string;
+  summary?: string;
+  metadata?: Record&lt;string, unknown&gt;;
+}</code></pre>
 
   <p>A query creates seed nodes \(\mathcal S(q)\) and initial frontier. Fired nodes are the nodes visited in this traversal; only fired nodes are eligible for read/execution.</p>
 
@@ -467,29 +463,36 @@ class Edge:
 
   <p>The graph is deliberately sparse in active retrieval because routing should remain selective. Dormant edges are not deleted; they can recover if feedback returns.</p>
 
-  <pre><code>def qtsim_router(query, candidate_targets):
-    """Policy hook for selecting habitual actions."""
+  <pre><code>/** Policy hook for selecting habitual actions. */
+function qtsimRouter(query: string, candidateTargets: string[]): string[] {
+  // ...learned policy selects targets
+  return selectedTargets;
+}
 
-    ...
-    return selected_targets
+function chooseNext(
+  currentNode: string,
+  graph: Graph,
+  router: typeof qtsimRouter,
+  query: string,
+  visited: Set&lt;string&gt;,
+): string[] {
+  const edges = graph.outgoing(currentNode);
+  const candidates: Array&lt;{ target: string; weight: number }&gt; = [];
+  const suppressed = new Set&lt;string&gt;();
 
+  for (const edge of edges) {
+    if (edge.weight &lt;= -0.01) { suppressed.add(edge.target); continue; }
+    if (edge.target &amp;&amp; !visited.has(edge.target)) {
+      candidates.push({ target: edge.target, weight: edge.weight });
+    }
+  }
 
-def choose_next(current_node, graph, qtsim_router, query, visited):
-    edges = graph.outgoing(current_node)
-    candidates, suppressed = [], set()
-    for edge in edges:
-        if edge.weight <= -0.01:
-            suppressed.add(edge.target)
-            continue
-        if edge.weight >= 0.6 and edge.target not in visited:
-            candidates.append((edge.target, edge.weight))
-        if 0.2 <= edge.weight < 0.6 and edge.target not in visited:
-            candidates.append((edge.target, edge.weight))
+  const auto = candidates.filter(c =&gt; c.weight &gt;= 0.6).map(c =&gt; c.target);
+  const habitual = candidates.filter(c =&gt; c.weight &gt;= 0.2 &amp;&amp; c.weight &lt; 0.6).map(c =&gt; c.target);
+  const selected = router ? router(query, habitual) : auto;
 
-    habitual = [t for t, w in candidates if 0.2 <= w < 0.6]
-    auto = [t for t, w in candidates if w >= 0.6]
-    selected = qtsim_router(query, habitual) if qtsim_router else auto
-    return [n for n in auto + selected if n not in suppressed and n not in visited]</code></pre>
+  return [...auto, ...selected].filter(n =&gt; !suppressed.has(n) &amp;&amp; !visited.has(n));
+}</code></pre>
 
   <h2 id="how-it-learns">3. Learning Rule and Dynamics</h2>
 
@@ -1105,7 +1108,7 @@ python run_all.py</code></pre>
   </div>
 
   <h3>Positioning against related systems</h3>
-  <p><strong>MemGPT:</strong> a runtime memory operating-system stack, while OpenClawBrain is a routing layer. Think of it as a graph policy for what to retrieve and feed next, not a replacement memory system.</p>
+  <p><strong>MemGPT:</strong> a runtime memory operating-system stack, while OpenClawBrain is a routing layer. Think of it as a graph policy for what to retrieve and feed next, not a standalone memory system.</p>
   <p><strong>Reflexion:</strong> textual reflection over time, whereas OpenClawBrain stores learned routing decisions as numeric edge weights over a graph.</p>
   <p><strong>Self-RAG:</strong> generation-level self-critique and revision; OpenClawBrain is retrieval-routing-level learning that shapes traversal before generation.</p>
   <p><strong>Related family:</strong> bandit-style routing and learning-to-rank ideas motivate the same principle in other forms — choose actions with feedback; OpenClawBrain applies it inside a sparse document graph with explicit STOP and edge-level inhibition.</p>
