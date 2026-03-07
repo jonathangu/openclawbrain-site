@@ -1,6 +1,7 @@
 # Reproduce Evaluation + Figures (Canonical)
 
 This is the single source of truth for reproducing evaluation metrics and figures referenced on the OpenClawBrain site and paper.
+All workflows below are package-first artifact pipelines in the TypeScript workspace.
 
 ## 0) Bootstrap the TypeScript workspace
 
@@ -16,7 +17,7 @@ pnpm release:pack
 
 ## 1) Run the workflow-proof harness (deterministic mechanism proof)
 
-Use this harness for the current top-of-page mechanism proof slice on the homepage.
+Use this harness for the published top-of-page mechanism proof slice on the homepage.
 
 ```bash
 cd /path/to/openclawbrain
@@ -34,7 +35,7 @@ Expected artifacts in `scratch/workflow-proof/latest/`:
 - `report.md`
 - `worked_example.md`
 
-Current deterministic metrics:
+Deterministic metrics from the published workflow-proof artifacts:
 
 | Mode | Exact target success | Required-node coverage |
 | --- | ---: | ---: |
@@ -45,12 +46,12 @@ Current deterministic metrics:
 
 Interpretation:
 - Cold-start graph priors are already somewhat useful on these held-out workflow-shaped queries.
-- Async supervision trains a better learned runtime route policy than vector top-k, pointer chasing, or graph priors alone.
+- Async supervision trains a better learned route policy than vector top-k, pointer chasing, or graph priors alone.
 
 Non-claims:
 - This is mechanism proof, not full product proof.
 - This is not a live production OpenClaw runtime eval.
-- This does not yet prove downstream answer quality directly; it proves retrieval-routing behavior on deterministic workflow-shaped tasks.
+- This does not directly prove downstream answer quality; it proves retrieval-routing behavior on deterministic workflow-shaped tasks.
 
 ## 2) Recorded-session head-to-head benchmark
 
@@ -134,4 +135,4 @@ Expected outputs in `figures/eval/`:
 
 ## 6) Paper table placeholders
 
-If you do not have the outputs above, leave paper/blog tables as `TBD` and cite the exact command + output path you plan to fill (for example, `/tmp/ocb_eval.json` and `/tmp/ocb_expert_regions/simulation_curve.csv`).
+If a run does not produce the outputs above, leave paper/blog tables as `TBD` and cite the exact command + output path for the missing artifact (for example, `/tmp/ocb_eval.json` and `/tmp/ocb_expert_regions/simulation_curve.csv`).
