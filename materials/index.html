@@ -22,10 +22,12 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a></div>
     <h1>Additional Materials</h1>
-    <p>Canonical docs and references for the TypeScript-first OpenClawBrain replacement: fast boot from existing files, always-on background learning, default-on label harvesting, and continuous graph learning with learned routing on the hot path.</p>
+    <p>Canonical docs and references for the shipped TypeScript-first OpenClawBrain system: OpenClaw owns runtime, while OpenClawBrain owns immutable packs, promotion/rollback activation, deterministic compile, fast boot from existing files, and always-on learning.</p>
 
     <div class="card">
       <ul>
+        <li><a href="/proof/">Proof package (published artifacts)</a></li>
+        <li><a href="/paper/">Canonical paper + PDF</a></li>
         <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/core-thesis-ultimate-policy-gradient.md">Core thesis</a></li>
         <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/ultimate-policy-gradient-routing-math.md">Math appendix</a></li>
         <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/evaluation-plan.md">Evaluation plan</a></li>
@@ -38,6 +40,7 @@
 
     <h2 style="font-family:var(--sans); color:var(--bright); margin-top:1.4rem;">TypeScript Package Surface</h2>
     <div class="card">
+      <p style="margin-top:0;">This package surface is the shipped artifact boundary for pack assembly, activation state, deterministic compile, and learning.</p>
       <ul>
         <li><code>@openclawbrain/contracts</code></li>
         <li><code>@openclawbrain/events</code></li>

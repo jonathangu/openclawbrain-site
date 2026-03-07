@@ -21,7 +21,7 @@
     <h1>Post 4: Operator Guide for Local Embeddings OOTB</h1>
     <p class="meta">March 2026 · v12.2.6+ series</p>
 
-    <p>Local embeddings out-of-the-box remain the default hot-path routing signal. In the TypeScript-first workspace, boot starts from existing files immediately, while learning keeps chewing through historical data in the background.</p>
+    <p>Local embeddings out-of-the-box remain the default hot-path routing signal. In the shipped TypeScript-first workspace, boot starts from existing files immediately while always-on learning keeps updating candidate packs in the background.</p>
 
     <h2>Package-first Baseline Flow</h2>
     <pre>corepack enable
@@ -31,11 +31,14 @@ pnpm release:pack</pre>
 
     <h2>Operational Notes</h2>
     <ul>
-      <li>Keep the learned route function deterministic and bounded on the hot path; teacher models stay asynchronous.</li>
+      <li>Keep the learned route function deterministic and bounded on the hot path; deterministic compile serves context from the active immutable pack.</li>
       <li>Leave human labels, self-label harvesting, and scanner ingestion default-on so new signals land continuously.</li>
       <li>Run continuous graph learning (connect/split/merge/decay/co-firing) in background loops, not inline with user requests.</li>
+      <li>Treat pack activation as explicit promotion/rollback state so runtime reversions are immediate when needed.</li>
       <li>Treat mechanism proof and product proof separately: routing-mechanism wins do not automatically prove end-to-end operator outcomes.</li>
     </ul>
+
+    <p>Runtime ownership stays split: OpenClaw runs channels, sessions, prompt assembly, and fail-open control; OpenClawBrain runs packs, learning, and compile logic.</p>
 
     <p>Next: <a href="/blog/v12.2.6-series/05-industry-baselines-ablations/">Post 5 on industry baselines + ablation study</a>.</p>
     <p>Series index: <a href="/blog/v12.2.6-series/">OpenClawBrain v12.2.6+ series</a>.</p>
