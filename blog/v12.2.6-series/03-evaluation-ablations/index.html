@@ -22,20 +22,26 @@
     h2 { margin:1.5rem 0 .6rem; font-size:1.24rem; }
     p { margin:0 0 1rem; }
     .meta { color:var(--muted); font-size:.84rem; margin-bottom:1rem; }
-    .card, figure { border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 56px rgba(0,0,0,.28); }
+    .card, figure { border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 56px rgba(0,0,0,.28); min-width: 0; }
     .card { padding:1rem 1.05rem; margin:1rem 0; }
     .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; margin:1rem 0; }
     figure { padding:1rem; margin:1rem 0 1.25rem; }
     figure img { width:100%; border-radius:16px; border:1px solid rgba(122,226,191,0.14); background:#12201c; }
     figcaption { margin-top:.65rem; color:var(--muted); font-family:var(--sans); font-size:.84rem; }
     ul,ol { padding-left:1.2rem; }
-    table { width:100%; border-collapse:collapse; margin:1rem 0; font-family:var(--sans); }
+    .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:1rem 0; border-radius:14px; }
+    table { width:100%; border-collapse:collapse; margin:0; font-family:var(--sans); }
     th,td { border:1px solid rgba(122,226,191,0.14); padding:.6rem .68rem; text-align:left; vertical-align:top; }
     th { color:var(--bright); background:rgba(12,24,20,0.88); }
-    code { font-family:var(--mono); color:#aef0d4; background:rgba(174,240,212,0.08); padding:.12rem .32rem; border-radius:6px; }
+    code { font-family:var(--mono); color:#aef0d4; background:rgba(174,240,212,0.08); padding:.12rem .32rem; border-radius:6px; white-space:normal; }
+    main :is(p, li, a, code, h1, h2, h3, .meta, .nav, .eyebrow, th, td, figcaption) { overflow-wrap:anywhere; word-break:normal; }
     @media (max-width: 820px) {
       main { width:min(100vw - 24px,920px); }
       .grid { grid-template-columns:1fr; }
+      .card { padding:.88rem .92rem; border-radius:18px; }
+      figure { padding:.88rem; border-radius:18px; }
+      h1 { font-size:clamp(1.75rem,9vw,2.4rem); line-height:1.06; }
+      table { min-width:620px; font-size:.82rem; }
     }
   </style>
 </head>
@@ -64,7 +70,7 @@
     </div>
 
     <h2>Strongest published benchmark artifacts (March 2026)</h2>
-    <table>
+    <div class="table-wrap"><table>
       <thead>
         <tr><th>Artifact</th><th>Scope</th><th>Key result</th><th>Public bundle</th></tr>
       </thead>
@@ -82,14 +88,14 @@
           <td><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">proof-results/sparse_feedback_10seed</a></td>
         </tr>
       </tbody>
-    </table>
+    </table></div>
 
     <p>These are benchmark artifacts, not live product rollout evidence. They are stronger than the deterministic mechanism harness, but still below shadow-mode and online proof in the claim ladder.</p>
 
     <h2>Current workflow-proof slice</h2>
     <p>The current published slice is intentionally narrow: exact-target retrieval on 4 deterministic workflow queries. It is useful because it tests the product framing directly: can durable graph priors make OpenClawBrain useful before learning, and does background learning later improve the served <code>route_fn</code>?</p>
 
-    <table>
+    <div class="table-wrap"><table>
       <thead>
         <tr><th>Mode</th><th>Exact-target success</th><th>What this isolates</th></tr>
       </thead>
@@ -115,7 +121,7 @@
           <td>The same memory layer after background learning has improved routing.</td>
         </tr>
       </tbody>
-    </table>
+    </table></div>
 
     <p>The learning curve matters as much as the endpoint. <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs, while <code>learned</code> first reaches 4/4 at epoch 14. The proof package now also points to <code>per_query_matrix.csv</code> and <code>per_query_matrix.md</code>, the 16-row scenario matrix showing which node IDs reached prompt context under each mode. Reproduce the figures from <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>; compare the integration-level artifact bundle in <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
 
@@ -132,7 +138,7 @@
     <h2>Recorded-session benchmark detail</h2>
     <p><code>recorded_h2h_relational_drift_001</code> is the fixed-session benchmark bundle currently highlighted on the proof page.</p>
 
-    <table>
+    <div class="table-wrap"><table>
       <thead>
         <tr><th>Baseline</th><th>Accuracy</th><th>Context used</th><th>Traversal cost</th></tr>
       </thead>
@@ -142,14 +148,14 @@
         <tr><td><code>heuristic_stateful</code></td><td>0.8163</td><td>800</td><td>800</td></tr>
         <tr><td><code>vector_rag</code></td><td>0.7875</td><td>800</td><td>800</td></tr>
       </tbody>
-    </table>
+    </table></div>
 
     <p>The nearest baseline still needs 5&times; more context and 8&times; more traversal cost for lower accuracy. Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">proof-results/recorded_h2h_relational_drift_001</a>.</p>
 
     <h2>Sparse-feedback 10-seed benchmark detail</h2>
     <p><code>sparse_feedback_10seed</code> is the strongest current multi-seed family for proving full-brain behavior under sparse teacher signals.</p>
 
-    <table>
+    <div class="table-wrap"><table>
       <thead>
         <tr><th>Baseline</th><th>Accuracy (mean)</th><th>Context/query</th><th>Traversal/query</th><th>H2H vs <code>full_brain</code></th></tr>
       </thead>
@@ -159,7 +165,7 @@
         <tr><td><code>vector_rag</code></td><td>60.49%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
         <tr><td><code>heuristic_stateful</code></td><td>51.38%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
       </tbody>
-    </table>
+    </table></div>
 
     <p><code>full_brain</code> leads best RAG by +24.91 pp and beats <code>vector_rag_rerank</code> in 9/10 seeds while using ~5x less context per query. Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">proof-results/sparse_feedback_10seed</a>.</p>
 
@@ -167,7 +173,7 @@
     <p>The deterministic workflow slice plus the two benchmark bundles prove something real but bounded: durable structure helps early retrieval, learned routing improves later, and <code>full_brain</code> leads credible RAG baselines on frozen workloads. It still does <strong>not</strong> prove better outcomes on live OpenClaw traffic without shadow and online artifacts.</p>
 
     <h2>The stronger evidence path</h2>
-    <table>
+    <div class="table-wrap"><table>
       <thead>
         <tr><th>Stage</th><th>What it proves</th><th>What artifacts are required</th></tr>
       </thead>
@@ -193,7 +199,7 @@
           <td>Success, correction rate, prompt size, latency, cost.</td>
         </tr>
       </tbody>
-    </table>
+    </table></div>
 
     <h2>Reporting contract</h2>
     <ol>

@@ -8,6 +8,7 @@
   <link rel="canonical" href="https://openclawbrain.ai/materials/" />
   <style>
     :root { --bg:#0f1219; --card:#171d29; --text:#d8dfec; --muted:#98a4b8; --bright:#f4f8ff; --border:#2a364c; --accent:#7db9ff; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; }
+    * { box-sizing: border-box; }
     body { margin:0; background:linear-gradient(145deg,#121a2a,#0f1219 48%); color:var(--text); font-family:var(--serif); line-height:1.75; }
     main { max-width:860px; margin:0 auto; padding:2.6rem 1.2rem 3.4rem; }
     h1 { font-family:var(--sans); color:var(--bright); margin:.4rem 0 .8rem; }
@@ -16,6 +17,17 @@
     ul { padding-left:1.2rem; }
     li { margin:.6rem 0; }
     .card { border:1px solid var(--border); border-radius:10px; background:var(--card); padding:1rem 1.1rem; margin-top:1rem; }
+    code { overflow-wrap: anywhere; }
+    pre { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    main :is(p, li, a, code, h1, h2, .meta, .nav) { overflow-wrap: anywhere; word-break: normal; }
+    .card, .card > * { min-width: 0; }
+    @media (max-width: 640px) {
+      main { padding: 1.9rem 0.9rem 2.7rem; }
+      h1 { font-size: 1.65rem; line-height: 1.2; }
+      h2 { font-size: 1.16rem; }
+      .card { padding: 0.85rem 0.9rem; border-radius: 12px; }
+      li { margin: 0.5rem 0; }
+    }
   </style>
 </head>
 <body>

@@ -27,6 +27,7 @@
       --mono: 'JetBrains Mono', 'Menlo', monospace;
     }
     html { scroll-behavior: smooth; }
+    img { max-width: 100%; height: auto; }
     body { font-family: var(--serif); background: var(--bg); color: var(--text); font-size: 18px; line-height: 1.75; -webkit-font-smoothing: antialiased; }
     a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
     .page { max-width: 740px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
@@ -43,13 +44,13 @@
     h2 { font-family: var(--sans); font-size: 1.35rem; font-weight: 700; color: var(--text-bright); margin-top: 3rem; margin-bottom: 1rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); }
     h3 { font-family: var(--sans); font-size: 1.1rem; font-weight: 600; color: var(--text-bright); margin-top: 2rem; margin-bottom: 0.75rem; }
     p { margin-bottom: 1rem; } ul, ol { margin-bottom: 1rem; padding-left: 1.5rem; } li { margin-bottom: 0.4rem; }
-    .table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0; -webkit-overflow-scrolling: touch; border-radius: 8px; }
     table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 0.82rem; }
     th { text-align: left; padding: 0.6rem 0.8rem; background: var(--bg-card); color: var(--text-bright); font-weight: 600; border-bottom: 2px solid var(--border); }
     td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
-    code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-code); padding: 0.15em 0.4em; border-radius: 4px; color: var(--orange); }
+    code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-code); padding: 0.15em 0.4em; border-radius: 4px; color: var(--orange); white-space: normal; }
     pre { background: var(--bg-code); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; overflow-x: auto; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; color: var(--text); margin: 1.5rem 0; }
-    pre code { background: none; padding: 0; }
+    pre code { background: none; padding: 0; white-space: inherit; }
     blockquote { border-left: 3px solid var(--accent); margin: 1.5rem 0; padding: 0.75rem 1.25rem; background: var(--accent-dim); border-radius: 0 8px 8px 0; font-size: 0.95rem; }
     blockquote p { margin-bottom: 0; }
     .fig { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; text-align: center; }
@@ -95,17 +96,54 @@
       background: var(--bg-card); font-family: var(--sans); font-size: 0.9rem;
       color: var(--text-bright); text-decoration: none; transition: border-color 0.15s;
     }
+    .cta-grid a span { display: block; min-width: 0; }
     .cta-grid a.cta-strong { border-color: rgba(74, 158, 255, 0.38); background: rgba(74, 158, 255, 0.1); }
     .cta-grid a:hover { border-color: var(--accent); text-decoration: none; }
     .cta-grid .cta-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
     .pkg-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin: 0.75rem 0; }
     .pkg-item { padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-code); font-family: var(--mono); font-size: 0.76rem; color: var(--orange); }
     .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 0 0 0.75rem; }
+    .runtime-card,
+    .section-card,
+    .proof-card,
+    .proof-family,
+    .proof-step,
+    .proof-note,
+    .worked-turn-step,
+    .pkg-item,
+    .cta-grid a,
+    .evidence-grid > div,
+    .table-wrap,
+    #install { min-width: 0; }
+    .page :is(p, li, a, th, td, code, .proof-family-title, .proof-step-title, .section-title, .proof-meta, .tag, .authors) {
+      overflow-wrap: anywhere;
+      word-break: normal;
+    }
+    .cta-grid a { align-items: flex-start; }
     @media (max-width: 720px) {
       .proof-family-grid, .proof-grid, .proof-notes, .worked-turn-steps, .cta-grid, .evidence-grid { grid-template-columns: 1fr; }
       .pkg-list { grid-template-columns: repeat(2, 1fr); }
+      .page { padding-top: 2.2rem; }
+      .proof-card, .section-card, .runtime-card, #install { border-radius: 12px; }
+      .proof-family, .proof-step, .proof-note, .worked-turn-step, .cta-grid a { padding: 0.72rem 0.8rem; }
+      .cta-grid { gap: 0.6rem; }
+      #install { padding: 1.2rem 1.1rem !important; }
+      .proof-metrics table { font-size: 0.77rem; }
+      .proof-metrics th, .proof-metrics td { padding: 0.42rem 0.45rem; }
     }
-    @media (max-width: 600px) { .page { padding: 2rem 1rem 4rem; } .page-title { font-size: 1.5rem; } body { font-size: 16px; } .pkg-list { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) {
+      .page { padding: 2rem 1rem 4rem; }
+      .page-title { font-size: 1.45rem; line-height: 1.2; }
+      .page-subtitle { font-size: 0.98rem; }
+      h2 { font-size: 1.2rem; margin-top: 2.2rem; }
+      h3 { font-size: 1rem; }
+      .section-title { font-size: 1.03rem; }
+      .proof-family-title { font-size: 0.88rem; }
+      .proof-step-title { font-size: 0.9rem; }
+      .proof-meta { font-size: 0.8rem; }
+      body { font-size: 16px; line-height: 1.68; }
+      .pkg-list { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -118,7 +156,7 @@
     <p class="page-subtitle">TypeScript-first brain packages for OpenClaw: package-first workspace, OpenClaw-owned runtime boundary, and durable local memory that learns.</p>
     <p class="page-subtitle">Fast boot from existing files. Learned routing on the hot path. Async teacher learning off the hot path.</p>
     <p class="authors"><span class="name">Jonathan Gu</span> &middot; <a href="mailto:jonathangu@gmail.com" style="color: var(--text-muted); font-size: 0.85rem;">jonathangu@gmail.com</a></p>
-    <div style="text-align: left; max-width: 720px; margin: 1.1rem auto 0; padding: 1.1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card);">
+    <div class="runtime-card" style="text-align: left; max-width: 720px; margin: 1.1rem auto 0; padding: 1.1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card);">
       <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;">Runtime boundary</p>
       <p style="margin: 0 0 0.6rem; font-family: var(--sans); font-size: 1.25rem; font-weight: 700; color: var(--text-bright); line-height: 1.25;">
         OpenClaw owns runtime. OpenClawBrain owns learning contracts.

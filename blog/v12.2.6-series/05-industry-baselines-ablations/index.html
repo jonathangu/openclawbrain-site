@@ -23,13 +23,20 @@
     h2 { margin:1.5rem 0 .6rem; font-size:1.24rem; }
     p { margin:0 0 1rem; }
     .meta { color:var(--muted); font-size:.84rem; margin-bottom:1rem; }
-    .card { border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 56px rgba(0,0,0,.28); padding:1rem 1.05rem; margin:1rem 0; }
-    table { width:100%; border-collapse:collapse; margin:1rem 0; font-family:var(--sans); }
+    .card { border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 56px rgba(0,0,0,.28); padding:1rem 1.05rem; margin:1rem 0; min-width: 0; }
+    .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:1rem 0; border-radius:14px; }
+    table { width:100%; border-collapse:collapse; margin:0; font-family:var(--sans); }
     th,td { border:1px solid rgba(128,203,255,0.14); padding:.6rem .68rem; text-align:left; vertical-align:top; }
     th { color:var(--bright); background:rgba(12,20,29,0.88); }
-    code { font-family:var(--mono); color:#c6e8ff; background:rgba(198,232,255,0.08); padding:.12rem .32rem; border-radius:6px; }
+    code { font-family:var(--mono); color:#c6e8ff; background:rgba(198,232,255,0.08); padding:.12rem .32rem; border-radius:6px; white-space:normal; }
     ul { padding-left:1.2rem; }
-    @media (max-width: 760px) { main { width:min(100vw - 24px,940px); } }
+    main :is(p, li, a, code, h1, h2, .meta, .nav, .eyebrow, th, td) { overflow-wrap:anywhere; word-break:normal; }
+    @media (max-width: 760px) {
+      main { width:min(100vw - 24px,940px); }
+      .card { padding:.88rem .92rem; border-radius:18px; }
+      h1 { font-size:clamp(1.75rem,9vw,2.4rem); line-height:1.06; }
+      table { min-width:620px; font-size:.82rem; }
+    }
   </style>
 </head>
 <body>
@@ -46,7 +53,7 @@
     </div>
 
     <h2>Strongest baseline evidence first</h2>
-    <table>
+    <div class="table-wrap"><table>
       <thead>
         <tr><th>Artifact</th><th>Scope</th><th>Result vs best RAG</th><th>Bundle</th></tr>
       </thead>
@@ -64,10 +71,10 @@
           <td><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">sparse_feedback_10seed</a></td>
         </tr>
       </tbody>
-    </table>
+    </table></div>
 
     <h2>Current published baseline slice</h2>
-    <table>
+    <div class="table-wrap"><table>
       <thead>
         <tr><th>Baseline</th><th>Why it matters</th><th>Current exact-target success</th></tr>
       </thead>
@@ -93,14 +100,14 @@
           <td>4/4</td>
         </tr>
       </tbody>
-    </table>
+    </table></div>
 
     <p>The learning curve is the second half of the comparison. <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs, while <code>learned</code> first reaches 4/4 at epoch 14. That is the current concrete evidence for the product framing: useful from graph priors first, better later via background learning.</p>
 
     <h2>Recorded-session head-to-head comparison</h2>
     <p>For fixed-session replay, the current published bundle is <code>recorded_h2h_relational_drift_001</code>.</p>
 
-    <table>
+    <div class="table-wrap"><table>
       <thead>
         <tr><th>Baseline</th><th>Accuracy</th><th>Context used</th><th>Traversal cost</th></tr>
       </thead>
@@ -110,14 +117,14 @@
         <tr><td><code>heuristic_stateful</code></td><td>0.8163</td><td>800</td><td>800</td></tr>
         <tr><td><code>vector_rag</code></td><td>0.7875</td><td>800</td><td>800</td></tr>
       </tbody>
-    </table>
+    </table></div>
 
     <p>Against the best RAG baseline, the margin is +7.9 pp. The best baseline still needs 5&times; context and 8&times; traversal for lower accuracy.</p>
 
     <h2>Sparse-feedback 10-seed comparison</h2>
     <p>For multi-seed robustness, the strongest published family is <code>sparse_feedback_10seed</code> (10 seeds, 1,800 queries per seed, 8 baselines).</p>
 
-    <table>
+    <div class="table-wrap"><table>
       <thead>
         <tr><th>Baseline</th><th>Accuracy (mean)</th><th>Context/query</th><th>Traversal/query</th><th>H2H vs <code>full_brain</code></th></tr>
       </thead>
@@ -127,12 +134,12 @@
         <tr><td><code>vector_rag</code></td><td>60.49%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
         <tr><td><code>heuristic_stateful</code></td><td>51.38%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
       </tbody>
-    </table>
+    </table></div>
 
     <p><code>full_brain</code> leads best RAG by +24.91 pp and wins 9/10 seeds head-to-head over <code>vector_rag_rerank</code>.</p>
 
     <h2>Why these baselines belong</h2>
-    <table>
+    <div class="table-wrap"><table>
       <thead>
         <tr><th>Question</th><th>Why the answer matters</th></tr>
       </thead>
@@ -150,7 +157,7 @@
           <td>Because the product claim is not just "there is a graph." It is "the graph helps immediately, and background learning improves later."</td>
         </tr>
       </tbody>
-    </table>
+    </table></div>
 
     <h2>What the current comparison says honestly</h2>
     <div class="card">
@@ -163,7 +170,7 @@
     </div>
 
     <h2>What stronger comparison evidence looks like</h2>
-    <table>
+    <div class="table-wrap"><table>
       <thead>
         <tr><th>Stage</th><th>Use</th><th>Still too weak for broad product claims?</th></tr>
       </thead>
@@ -189,7 +196,7 @@
           <td>Best basis for public product claims</td>
         </tr>
       </tbody>
-    </table>
+    </table></div>
 
     <h2>Comparison discipline</h2>
     <ul>

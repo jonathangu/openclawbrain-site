@@ -22,17 +22,25 @@
     h2 { margin:1.5rem 0 .6rem; font-size:1.28rem; }
     p { margin:0 0 1rem; }
     .meta { color:var(--muted); font-size:.84rem; margin-bottom:1rem; }
-    .box, figure { border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 56px rgba(0,0,0,.28); }
+    .box, figure { border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 56px rgba(0,0,0,.28); min-width: 0; }
     .box { padding:1rem 1.05rem; margin:1rem 0; }
     figure { padding:1rem; margin:1rem 0 1.25rem; }
     figure img { width:100%; border-radius:16px; border:1px solid rgba(135,192,233,0.14); background:#0a1019; }
     figcaption { margin-top:.65rem; color:var(--muted); font-family:var(--sans); font-size:.84rem; }
     pre,code { font-family:var(--mono); }
-    code { color:var(--warm); background:rgba(255,190,118,0.1); padding:.12rem .32rem; border-radius:6px; }
+    code { color:var(--warm); background:rgba(255,190,118,0.1); padding:.12rem .32rem; border-radius:6px; white-space:normal; }
     pre { margin:0; padding:.95rem 1rem; overflow:auto; border-radius:16px; background:rgba(8,14,23,0.9); border:1px solid rgba(135,192,233,0.14); color:#cfe6fb; font-size:.86rem; line-height:1.65; }
     ol,ul { padding-left:1.2rem; }
     .note { padding:1rem 1.05rem; border-radius:18px; border:1px solid rgba(127,210,255,0.16); background:rgba(8,15,24,0.76); font-family:var(--sans); color:#cfe0eb; }
-    @media (max-width: 760px) { main { width:min(100vw - 24px,900px); } }
+    main :is(p, li, a, code, h1, h2, h3, .meta, .nav, .eyebrow, figcaption) { overflow-wrap:anywhere; word-break:normal; }
+    @media (max-width: 760px) {
+      main { width:min(100vw - 24px,900px); }
+      .box, figure, .note { border-radius:18px; }
+      .box, .note { padding:.88rem .92rem; }
+      figure { padding:.88rem; }
+      h1 { font-size:clamp(1.75rem,8.8vw,2.45rem); line-height:1.06; }
+      pre { font-size:.8rem; border-radius:12px; }
+    }
   </style>
 </head>
 <body>

@@ -7,12 +7,21 @@
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/04-operator-local-embeddings/" />
   <style>
     :root { --bg:#17131d; --text:#e2dcec; --muted:#b6abc9; --bright:#f8f4ff; --border:#4b4160; --accent:#caa7ff; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; --mono:"JetBrains Mono",monospace; }
+    * { box-sizing: border-box; }
     body { margin:0; background:linear-gradient(135deg,#201a2d,#17131d 48%); color:var(--text); font-family:var(--serif); line-height:1.82; }
     main { max-width:860px; margin:0 auto; padding:2.5rem 1.2rem 3rem; }
     h1,h2 { font-family:var(--sans); color:var(--bright); }
     .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.84rem; }
     pre { border:1px solid var(--border); border-radius:10px; background:#221c30; padding:.9rem 1rem; overflow:auto; font-family:var(--mono); }
+    code { white-space: normal; }
     a { color:var(--accent); }
+    main :is(p, li, a, code, h1, h2, .meta, .nav) { overflow-wrap:anywhere; word-break:normal; }
+    @media (max-width: 640px) {
+      main { padding:1.9rem .9rem 2.5rem; }
+      h1 { font-size:1.62rem; line-height:1.2; }
+      h2 { font-size:1.12rem; }
+      pre { border-radius:12px; font-size:.8rem; }
+    }
   </style>
 </head>
 <body>

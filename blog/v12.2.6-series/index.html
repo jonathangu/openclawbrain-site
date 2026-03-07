@@ -30,6 +30,7 @@
       background:var(--panel);
       box-shadow:0 22px 70px rgba(0,0,0,.28);
       backdrop-filter:blur(12px);
+      min-width: 0;
     }
     .hero { padding:1.45rem; margin-bottom:1.2rem; }
     .eyebrow {
@@ -79,10 +80,19 @@
       background:rgba(9,18,28,0.78);
       color:#cddfeb;
       font-family:var(--sans);
+      min-width: 0;
     }
+    code { white-space: normal; }
+    main :is(p, a, code, .meta, .kicker, h1, h2, h3, .nav, .eyebrow) { overflow-wrap:anywhere; word-break:normal; }
     @media (max-width: 760px) {
       main { width:min(100vw - 24px,980px); }
       .grid { grid-template-columns:1fr; }
+      .hero { padding:1.05rem; border-radius:20px; }
+      .card { padding:.9rem .95rem; border-radius:18px; }
+      .callout { padding:.85rem .9rem; border-radius:16px; }
+      h1 { font-size:clamp(1.75rem,9vw,2.3rem); line-height:1.05; }
+      .hero p { font-size:.98rem; }
+      .kicker { font-size:.9rem; }
     }
   </style>
 </head>

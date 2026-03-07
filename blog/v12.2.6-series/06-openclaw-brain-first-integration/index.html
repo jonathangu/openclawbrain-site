@@ -8,6 +8,7 @@
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/06-openclaw-brain-first-integration/" />
   <style>
     :root { --bg:#0e1118; --text:#e3ecf8; --muted:#99a6bc; --bright:#f4f8ff; --border:#2b3a52; --accent:#6ac4ff; --card:#131c29; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; --mono:"JetBrains Mono",monospace; }
+    * { box-sizing: border-box; }
     body { margin:0; background:radial-gradient(circle at 30% 0%,#192843,#0e1118 58%); color:var(--text); font-family:var(--serif); line-height:1.78; }
     main { max-width:900px; margin:0 auto; padding:2.4rem 1.2rem 3.2rem; }
     h1,h2 { font-family:var(--sans); color:var(--bright); }
@@ -15,9 +16,18 @@
     a { color:var(--accent); }
     pre,code { font-family:var(--mono); }
     pre { border:1px solid var(--border); border-radius:10px; background:#0f1726; padding:.85rem 1rem; overflow:auto; }
-    .callout { border:1px solid var(--border); border-radius:12px; background:var(--card); padding:1rem 1.1rem; margin:1rem 0; }
+    code { white-space: normal; }
+    .callout { border:1px solid var(--border); border-radius:12px; background:var(--card); padding:1rem 1.1rem; margin:1rem 0; min-width: 0; }
     ul { padding-left:1.1rem; }
-    .compare { border:1px solid var(--border); border-radius:12px; background:#121c2a; padding:1rem; }
+    .compare { border:1px solid var(--border); border-radius:12px; background:#121c2a; padding:1rem; min-width: 0; }
+    main :is(p, li, a, code, h1, h2, h3, .meta, .nav, ol) { overflow-wrap:anywhere; word-break:normal; }
+    @media (max-width: 640px) {
+      main { padding:1.9rem .9rem 2.5rem; }
+      h1 { font-size:1.64rem; line-height:1.2; }
+      h2 { font-size:1.14rem; }
+      pre { border-radius:12px; font-size:.79rem; }
+      .compare, .callout { padding:.88rem .92rem; }
+    }
   </style>
 </head>
 <body>
