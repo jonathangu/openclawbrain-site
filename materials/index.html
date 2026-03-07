@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OpenClawBrain Materials — Docs, Data, and References</title>
-  <meta name="description" content="OpenClawBrain materials: integration guides, benchmark data, evaluation docs, and reference artifacts for memory and learned routing in OpenClaw." />
+  <title>OpenClawBrain Materials</title>
+  <meta name="description" content="Additional OpenClawBrain materials: TypeScript package surface, thesis, evaluation plan, reproduce-eval steps, simulations, and operator quickstart." />
   <link rel="canonical" href="https://openclawbrain.ai/materials/" />
   <style>
     :root { --bg:#0f1219; --card:#171d29; --text:#d8dfec; --muted:#98a4b8; --bright:#f4f8ff; --border:#2a364c; --accent:#7db9ff; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; }
@@ -22,7 +22,7 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a></div>
     <h1>Additional Materials</h1>
-    <p>Docs and references for OpenClawBrain — memory and learned routing for OpenClaw. Start with the proof artifacts below; they are ordered by evidentiary strength and publication readiness.</p>
+    <p>Docs, references, and evaluation artifacts for OpenClawBrain. Ordered by evidentiary strength.</p>
 
     <div class="card">
       <ul>
@@ -41,7 +41,7 @@
     </div>
 
     <div class="card">
-      <p style="margin-top:0;"><strong>Proof ladder:</strong> deterministic workflow simulations are mechanism proof; recorded-session and multi-seed benchmark bundles are stronger comparative evidence; shadow and online rollout claims stay out of scope until matching artifacts are published.</p>
+      <p style="margin-top:0;">See the <a href="/proof/">proof package</a> for the full evidence ladder and claim boundaries.</p>
     </div>
 
     <h2 style="font-family:var(--sans); color:var(--bright); margin-top:1.4rem;">TypeScript Package Surface</h2>
@@ -69,7 +69,7 @@
         <li><a href="/figures/eval/alpha_router_conf_hist.svg">alpha_router_conf_hist.svg</a></li>
         <li><a href="/figures/eval/ablation_bar_chart.svg">ablation_bar_chart.svg</a></li>
       </ul>
-      <p style="margin:.5rem 0 0;">Mechanism plots are mechanism proof only. Recorded-session and sparse-feedback bundles are benchmark evidence, not live production claims. Regenerate from repo root (see <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>):</p>
+      <p style="margin:.5rem 0 0;">Regenerate from repo root (see <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>):</p>
       <pre style="overflow:auto; white-space:pre-wrap; margin:.4rem 0 0; background:#111827; border:1px solid var(--border); border-radius:8px; padding:.75rem; color:#c7d2fe; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">corepack enable
 pnpm install
 pnpm check

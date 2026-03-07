@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain Paper — Memory and Learned Routing for OpenClaw</title>
+  <title>OpenClawBrain Paper</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain paper: durable memory and learned routing for repeated workflows in OpenClaw, with published benchmark evidence and explicit claim boundaries.">
-  <meta property="og:title" content="OpenClawBrain Paper — Memory and Learned Routing for OpenClaw">
-  <meta property="og:description" content="OpenClawBrain paper: durable memory and learned routing for repeated workflows in OpenClaw, with published benchmark evidence.">
+  <meta name="description" content="Canonical paper route for OpenClawBrain: revised paper/PDF metadata plus the current top comparative evidence rung (recorded-session and sparse-feedback benchmarks) with explicit proof boundaries.">
+  <meta property="og:title" content="OpenClawBrain Paper">
+  <meta property="og:description" content="OpenClawBrain paper route with direct PDF, current benchmark evidence, and explicit boundaries between mechanism, benchmark, shadow, and online claims.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/paper/">
   <meta name="twitter:card" content="summary_large_image">
@@ -321,26 +321,19 @@
     <main>
       <section class="hero">
         <div class="hero-copy">
-          <div class="eyebrow">Paper</div>
-          <h1>The technical paper behind OpenClawBrain.</h1>
+          <div class="eyebrow">Canonical paper route</div>
+          <h1>Paper and PDF.</h1>
           <p class="lead">
-            The March 2026 paper covers the architecture (learned routing on the hot path, async learning off it), the confidence-mixing mechanism, and the unified policy learning rule. Benchmark results live in the <a href="../proof/">proof package</a>.
+            The canonical paper for OpenClawBrain: shadow routing with QTsim confidence mixing and unified policy learning. March 7, 2026 revision (v12.2.6+).
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href="../openclawbrain.pdf">Open the PDF</a>
-            <a class="btn btn-secondary" href="../proof/">Review the proof package</a>
-            <a class="btn btn-secondary" href="../blog/v12.2.6-series/">Read the current series</a>
+            <a class="btn btn-secondary" href="../proof/">Proof package</a>
             <a class="btn btn-secondary" href="../materials/">Supporting materials</a>
           </div>
           <p class="hero-note">
-            Benchmark evidence is published. Shadow-mode and live production claims are not made yet. See <a href="../proof/">/proof/</a> for the full evidence ladder.
+            Benchmark evidence is published in the <a href="../proof/">proof package</a>. Shadow and online claims are separate.
           </p>
-          <div class="tag-row">
-            <span class="tag">Version v12.2.6+</span>
-            <span class="tag">Jonathan Gu</span>
-            <span class="tag">March 7, 2026 revision</span>
-            <span class="tag">Direct PDF: <code>/openclawbrain.pdf</code></span>
-          </div>
         </div>
 
         <div class="hero-panel">
@@ -357,11 +350,13 @@
           </article>
 
           <article class="status-card">
-            <div class="kicker">How to read it</div>
-            <h2>Architecture is settled. Evidence is layered.</h2>
+            <div class="kicker">Read it with the boundary</div>
+            <h2>Architecture is settled; evidence is layered.</h2>
             <ul>
-              <li>The paper describes the system design. The <a href="../proof/">proof package</a> has benchmark results and explicit claim boundaries.</li>
-              <li>The <a href="../blog/v12.2.6-series/">blog series</a> walks through the architecture and rollout path in narrative form.</li>
+              <li>The paper covers the shipped hot/cold path split, route signals, confidence mixing, and unified policy learning.</li>
+              <li>Top comparative rung now includes <code>recorded_h2h_relational_drift_001</code> (0.975 vs 0.896, +7.9 pp) and sparse-feedback 10-seed (91.96% vs 67.05%, +24.91 pp).</li>
+              <li><a href="../proof/">/proof/</a> shows which claims are already evidenced and which claims still require shadow/online artifacts.</li>
+              <li><a href="../blog/v12.2.6-series/">/blog/v12.2.6-series/</a> explains how the architecture boundary and rollout path fit together.</li>
             </ul>
           </article>
         </div>
@@ -369,19 +364,19 @@
 
       <section class="section">
         <div class="section-head">
-          <h2>Headline benchmark results</h2>
-          <p class="section-intro">Both benchmarks run on frozen workloads — not live production traffic. Full methodology and bundles are in the <a href="../proof/">proof package</a>.</p>
+          <h2>Current top comparative evidence</h2>
+          <p class="section-intro">The paper revision tracks the strongest published benchmark artifacts while keeping benchmark claims separate from shadow and online claims.</p>
         </div>
         <div class="paper-grid">
           <article class="paper-card">
             <div class="kicker">Recorded-session head-to-head</div>
             <h3><code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896</h3>
-            <p>800 queries, 8 baselines, fixed rubric. Delta: +7.9 pp.</p>
+            <p>Artifact: <code>recorded_h2h_relational_drift_001</code>. Setup: 800 queries, 41 steps, 8 baselines. Delta: +7.9 percentage points on a fixed rubric.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Sparse-feedback 10-seed</div>
             <h3><code>full_brain</code> 91.96% vs best RAG 67.05%</h3>
-            <p>10 seeds, 8 baselines. Delta: +24.9 pp with ~5x smaller context per query.</p>
+            <p>Delta: +24.91 percentage points, with about 5x smaller context per query and a 9-1 head-to-head seed score over <code>vector_rag_rerank</code>.</p>
           </article>
         </div>
       </section>
@@ -389,28 +384,28 @@
       <section class="section">
         <div class="section-head">
           <h2>What the paper covers</h2>
-          <p class="section-intro">The four main ideas the paper develops.</p>
+          <p class="section-intro">The paper is the longer technical framing behind the site architecture and evidence contract. These are the core claims it organizes, without turning mechanism proof into online proof.</p>
         </div>
         <div class="paper-grid">
           <article class="paper-card">
             <div class="kicker">System split</div>
             <h3>Hot path local, cold path asynchronous</h3>
-            <p>Routing decisions happen locally during live turns. Learning and policy updates happen asynchronously afterward.</p>
+            <p>The central operating shape is a strict split: local bounded routing on live OpenClaw turns, then replay, labeling, and policy updates later off the hot path.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Route signals</div>
             <h3><code>graph_prior</code> plus QTsim confidence mixing</h3>
-            <p>Graph structure provides a durable prior. QTsim adds query-conditioned similarity. Entropy and margin features gate how much each signal contributes.</p>
+            <p>The runtime policy combines durable structure with query-conditioned fit, then uses uncertainty features like entropy and margin to decide how much each signal should matter per decision.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Learning rule</div>
             <h3>Unified policy learning</h3>
-            <p>Human corrections, self-learning, harvested signals, and teacher labels feed a single learning loop with a clear authority order.</p>
+            <p>Teacher distillation and policy-gradient updates are treated as one learning loop with an authority order: human corrections first, then self-learning outcomes, harvested signals, and async-teacher labels.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Maintenance path</div>
             <h3>RL-native graph maintenance</h3>
-            <p>Graph maintenance is framed as a control problem: connect, split, and merge actions with conservative guardrails.</p>
+            <p>The paper frames graph maintenance as a control problem, with Phase 2a evidence and connect, split, and merge action classes governed by conservative guardrails.</p>
           </article>
         </div>
       </section>
@@ -418,28 +413,28 @@
       <section class="section">
         <div class="section-head">
           <h2>Read next</h2>
-          <p class="section-intro">Pair the paper with these for full context.</p>
+          <p class="section-intro">The paper is easier to evaluate when it is paired with the packaged proof, the architecture narrative, and the underlying materials.</p>
         </div>
         <div class="paper-grid">
           <a class="paper-card" href="../proof/">
             <div class="kicker">Proof package</div>
             <h3>What is proven now</h3>
-            <p>Benchmark results, evidence ladder, and explicit claim boundaries.</p>
+            <p>Mechanism proof, the evidence ladder, and the claim boundary that keeps the site from overclaiming beyond published artifacts.</p>
           </a>
           <a class="paper-card" href="../blog/v12.2.6-series/">
             <div class="kicker">Architecture series</div>
             <h3>Why this boundary is fixed</h3>
-            <p>The architecture narrative in six posts — runtime boundary, artifact pipeline, and operator rollout.</p>
+            <p>The shortest path through the OpenClaw-owned runtime boundary, OpenClawBrain artifact pipeline, operator rollout, and evaluation contract.</p>
           </a>
           <a class="paper-card" href="../materials/">
             <div class="kicker">Materials</div>
             <h3>Docs, figures, and repository references</h3>
-            <p>Figures, reproduce steps, and GitHub references.</p>
+            <p>Reproduce-eval steps, figure links, GitHub references, and the supporting material list for the site.</p>
           </a>
           <a class="paper-card" href="../docs/openclaw-integration.md">
             <div class="kicker">Operator docs</div>
             <h3>OpenClaw integration</h3>
-            <p>Step-by-step setup, fail-open wiring, and background learning configuration.</p>
+            <p>Brain-first mode, fail-open wiring, bounded prompt context, and the background learning loop that serves later turns.</p>
           </a>
         </div>
       </section>
@@ -452,7 +447,7 @@
     </main>
 
     <footer>
-      OpenClawBrain &mdash; claims are published only when matching evidence artifacts exist.
+      The paper should stay synchronized with the proof package: publish benchmark, shadow, and online claims only when their artifacts are present.
     </footer>
   </div>
 </body>

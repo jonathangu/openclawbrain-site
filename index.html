@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain: Memory and Learned Routing for OpenClaw</title>
+  <title>OpenClawBrain — Memory That Learns for OpenClaw</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain adds durable memory and learned routing to OpenClaw, so repeated workflows improve over time instead of reloading the same context every turn.">
-  <meta property="og:title" content="OpenClawBrain: Memory and Learned Routing for OpenClaw">
-  <meta property="og:description" content="OpenClawBrain adds durable memory and learned routing to OpenClaw, so repeated workflows improve over time instead of reloading the same context every turn.">
+  <meta name="description" content="OpenClawBrain adds learned routing and durable memory to OpenClaw. Routes that work get reinforced; routes that fail get suppressed. Published benchmark proof included.">
+  <meta property="og:title" content="OpenClawBrain — Memory That Learns for OpenClaw">
+  <meta property="og:description" content="Standard retrieval picks chunks per query with no memory of what worked. OpenClawBrain adds a learned graph router that improves with every interaction.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary">
@@ -21,240 +21,245 @@
       --text: #d4d4d4; --text-bright: #f0f0f0; --text-muted: #777;
       --accent: #4a9eff; --accent-dim: rgba(74, 158, 255, 0.15);
       --green: #3fb950; --orange: #e3955c; --red: #f85149;
-      --border: #1e1e1e;
+      --border: #1e1e1e; --crab: #e85d3a; --crab-dim: rgba(232, 93, 58, 0.15);
       --serif: 'Crimson Pro', Georgia, serif;
       --sans: 'Inter', -apple-system, sans-serif;
       --mono: 'JetBrains Mono', 'Menlo', monospace;
     }
     html { scroll-behavior: smooth; }
-    body { font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 17px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--serif); background: var(--bg); color: var(--text); font-size: 18px; line-height: 1.75; -webkit-font-smoothing: antialiased; }
     a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
-
-    /* Layout */
-    .page { max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+    .page { max-width: 740px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
 
     /* Hero */
-    .hero { text-align: center; margin-bottom: 3.5rem; }
-    .hero-back { display: inline-block; font-size: 13px; color: var(--text-muted); margin-bottom: 2rem; }
-    .hero h1 { font-size: 2rem; font-weight: 700; color: var(--text-bright); line-height: 1.25; margin-bottom: 1rem; }
-    .hero-subtitle { font-family: var(--serif); font-size: 1.1rem; color: var(--text); line-height: 1.65; margin-bottom: 1.5rem; max-width: 620px; margin-left: auto; margin-right: auto; }
-    .hero-bullets { list-style: none; padding: 0; margin: 0 auto 1.75rem; max-width: 520px; text-align: left; }
-    .hero-bullets li { padding: 0.4rem 0; font-size: 0.92rem; color: var(--text); display: flex; gap: 0.6rem; align-items: baseline; }
-    .hero-bullets li::before { content: ''; display: inline-block; width: 6px; height: 6px; min-width: 6px; border-radius: 50%; background: var(--accent); margin-top: 0.45rem; }
-    .hero-ctas { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
-    .hero-ctas a { display: inline-block; padding: 0.6rem 1.1rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; text-decoration: none; }
-    .hero-ctas a.primary { background: var(--accent); color: #0a0f17; }
-    .hero-ctas a.secondary { border: 1px solid rgba(74, 158, 255, 0.35); color: var(--accent); }
-    .hero-meta { margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); }
-    .hero-meta .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 3px; background: var(--accent-dim); color: var(--accent); }
+    .hero { text-align: center; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+    .hero-eyebrow { font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; }
+    .hero h1 { font-family: var(--sans); font-size: 2.1rem; font-weight: 700; color: var(--text-bright); line-height: 1.25; margin-bottom: 1rem; }
+    .hero-lead { font-size: 1.1rem; color: var(--text); max-width: 600px; margin: 0 auto 1.5rem; }
+    .hero-cta { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .hero-cta a { display: inline-block; padding: 0.6rem 1.1rem; border-radius: 8px; font-family: var(--sans); font-size: 0.9rem; font-weight: 600; text-decoration: none; }
+    .hero-cta .primary { background: var(--accent); color: #0a0f17; }
+    .hero-cta .secondary { border: 1px solid rgba(74, 158, 255, 0.35); color: var(--accent); }
+    .hero-meta { font-family: var(--sans); font-size: 0.82rem; color: var(--text-muted); }
 
-    /* Sections */
-    .section { margin-bottom: 3rem; }
-    .section-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
-    .section h2 { font-size: 1.3rem; font-weight: 700; color: var(--text-bright); line-height: 1.3; margin-bottom: 0.75rem; }
-    .section p { font-size: 0.95rem; line-height: 1.65; margin-bottom: 0.75rem; }
+    /* Section cards */
+    .section-card { text-align: left; max-width: 720px; margin: 0 auto 2.5rem; padding: 1.1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card); }
+    .section-label { margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .section-title { margin: 0 0 0.6rem; font-family: var(--sans); font-size: 1.15rem; font-weight: 700; color: var(--text-bright); line-height: 1.3; }
 
-    /* Cards */
-    .card { padding: 1.1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card); margin-bottom: 1rem; }
-    .card-accent { border-color: rgba(74, 158, 255, 0.28); background: linear-gradient(180deg, rgba(74, 158, 255, 0.06), rgba(17, 17, 17, 0.96)); }
+    /* Table */
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 0.82rem; }
+    th { text-align: left; padding: 0.6rem 0.8rem; background: var(--bg-card); color: var(--text-bright); font-weight: 600; border-bottom: 2px solid var(--border); }
+    td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+    code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-code); padding: 0.15em 0.4em; border-radius: 4px; color: var(--orange); }
+    pre { background: var(--bg-code); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; overflow-x: auto; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; color: var(--text); margin: 1.5rem 0; }
 
-    /* Steps */
-    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 1rem 0; }
-    .step { padding: 0.85rem 0.9rem; border: 1px solid var(--border); border-radius: 10px; background: rgba(10, 10, 10, 0.55); }
-    .step-num { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
-    .step h3 { font-size: 0.95rem; font-weight: 600; color: var(--text-bright); margin-bottom: 0.3rem; line-height: 1.3; }
-    .step p { font-size: 0.85rem; color: var(--text); line-height: 1.5; margin: 0; }
+    /* Proof snapshot */
+    .proof-snapshot { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 0.9rem 0; }
+    .proof-snapshot-item { padding: 0.75rem 0.9rem; border: 1px solid rgba(63,185,80,0.25); border-radius: 8px; background: rgba(63,185,80,0.06); }
+    .proof-snapshot-item .label { font-family: var(--sans); font-size: 0.72rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.15rem; }
+    .proof-snapshot-item .number { font-family: var(--sans); font-size: 0.92rem; font-weight: 600; color: var(--text-bright); }
+    .proof-snapshot-item .detail { font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem; }
 
-    /* Proof summary */
-    .proof-split { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0; }
-    .proof-box { padding: 0.85rem 0.95rem; border-radius: 10px; }
-    .proof-box.proven { border: 1px solid rgba(63, 185, 80, 0.25); background: rgba(63, 185, 80, 0.06); }
-    .proof-box.not-claimed { border: 1px dashed rgba(227, 149, 92, 0.35); background: rgba(227, 149, 92, 0.06); }
-    .proof-box h3 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; line-height: 1.3; }
-    .proof-box.proven h3 { color: var(--green); }
-    .proof-box.not-claimed h3 { color: var(--orange); }
-    .proof-box p { font-size: 0.85rem; color: var(--text); line-height: 1.5; margin: 0; }
-    .proof-box code { font-family: var(--mono); font-size: 0.8em; background: var(--bg-code); padding: 0.1em 0.35em; border-radius: 3px; color: var(--orange); }
+    /* Package list */
+    .pkg-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin: 0.75rem 0; }
+    .pkg-item { padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-code); font-family: var(--mono); font-size: 0.76rem; color: var(--orange); }
 
-    /* Deep links */
-    .deep-links { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.65rem; margin-top: 1.5rem; }
-    .deep-links a {
-      display: block; padding: 0.75rem 0.9rem; border: 1px solid var(--border); border-radius: 10px;
-      background: var(--bg-card); color: var(--text-bright); text-decoration: none; transition: border-color 0.15s;
-      font-size: 0.88rem;
+    /* CTA grid */
+    .cta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 1.5rem 0; }
+    .cta-grid a {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: 10px;
+      background: var(--bg-card); font-family: var(--sans); font-size: 0.9rem;
+      color: var(--text-bright); text-decoration: none; transition: border-color 0.15s;
     }
-    .deep-links a:hover { border-color: var(--accent); text-decoration: none; }
-    .deep-links .dl-label { display: block; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.15rem; }
+    .cta-grid a:hover { border-color: var(--accent); text-decoration: none; }
+    .cta-grid .cta-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
 
-    /* Footer */
-    footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text-muted); text-align: center; }
+    /* Hero image */
+    .fig { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0; overflow: hidden; margin: 0 0 2.5rem; }
+    .fig img { width: 100%; display: block; border-radius: 8px; }
 
-    /* Quickstart */
-    pre { background: var(--bg-code); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; overflow-x: auto; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; color: var(--text); margin: 1rem 0; }
-    code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-code); padding: 0.1em 0.35em; border-radius: 3px; color: var(--orange); }
-    pre code { background: none; padding: 0; }
+    /* Badge */
+    .badge { display: inline-block; font-family: var(--sans); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 6px; }
+    .badge-draft { background: rgba(227, 149, 92, 0.2); color: var(--orange); }
+    .badge-repo { background: var(--accent-dim); color: var(--accent); }
 
-    @media (max-width: 600px) {
-      .page { padding: 2rem 1rem 4rem; }
-      .hero h1 { font-size: 1.5rem; }
-      body { font-size: 15px; }
-      .steps { grid-template-columns: 1fr; }
-      .proof-split { grid-template-columns: 1fr; }
-      .deep-links { grid-template-columns: 1fr; }
+    @media (max-width: 720px) {
+      .proof-snapshot, .cta-grid { grid-template-columns: 1fr; }
+      .pkg-list { grid-template-columns: repeat(2, 1fr); }
     }
+    @media (max-width: 600px) { .page { padding: 2rem 1rem 4rem; } .hero h1 { font-size: 1.5rem; } body { font-size: 16px; } .pkg-list { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 <article class="page">
 
-  <!-- ========== HERO ========== -->
-  <div class="hero">
-    <a href="https://www.jonathangu.com/" class="hero-back">&larr; jonathangu.com</a>
-    <h1>OpenClawBrain: Memory and Learned Routing for OpenClaw</h1>
-    <p class="hero-subtitle">
-      OpenClawBrain adds durable memory and learned routing to OpenClaw, so repeated workflows improve over time instead of reloading the same context every turn.
+  <!-- Hero: problem → value → CTA -->
+  <header class="hero">
+    <p class="hero-eyebrow">For OpenClaw operators</p>
+    <h1>Your retrieval doesn't learn from outcomes.<br>OpenClawBrain fixes that.</h1>
+    <p class="hero-lead">
+      Embedding similarity picks chunks per query with no memory of what worked before.
+      OpenClawBrain adds a learned graph router that reinforces routes that succeed and
+      suppresses routes that fail — inside your existing OpenClaw runtime.
     </p>
-    <ul class="hero-bullets">
-      <li><span><strong>Fast at runtime:</strong> bounded local retrieval on the hot path</span></li>
-      <li><span><strong>Improves over time:</strong> background learning from traces and labels</span></li>
-      <li><span><strong>Evidence-first:</strong> published benchmark artifacts with explicit claim boundaries</span></li>
-    </ul>
-    <div class="hero-ctas">
-      <a class="primary" href="/docs/openclaw-integration.md">Read the 3-minute overview</a>
-      <a class="secondary" href="/proof/">See the evidence</a>
-      <a class="secondary" href="/docs/">Open docs</a>
+    <div class="hero-cta">
+      <a class="primary" href="/docs/openclaw-integration.md">Get started</a>
+      <a class="secondary" href="/proof/">See the proof</a>
+      <a class="secondary" href="/paper/">Read the paper</a>
     </div>
     <p class="hero-meta">
-      <span class="badge"><a href="https://github.com/jonathangu/openclawbrain" style="color: inherit; text-decoration: none;">GitHub</a></span>
-      <span class="badge"><a href="/openclawbrain.pdf" style="color: inherit; text-decoration: none;">PDF</a></span>
-      <span class="badge"><a href="https://clawhub.ai/skills/openclawbrain" style="color: inherit; text-decoration: none;">ClawHub</a></span>
+      <span class="badge badge-repo"><a href="https://github.com/jonathangu/openclawbrain" style="color: inherit; text-decoration: none;">GitHub</a></span>
+      <span class="badge badge-repo"><a href="https://clawhub.ai/skills/openclawbrain" style="color: inherit; text-decoration: none;">ClawHub</a></span>
+      <span class="badge badge-repo"><a href="/openclawbrain.pdf" style="color: inherit; text-decoration: none;">PDF</a></span>
+      <span class="badge badge-draft">v12.2.6</span>
     </p>
+  </header>
+
+  <!-- Hero image -->
+  <div class="fig">
+    <img src="hero.png" onerror="this.src='hero-v2.png'" alt="A brain-shaped neural network of document nodes and weighted edges — green reflex paths, blue habitual, gray dormant">
   </div>
 
-  <!-- ========== WHO IT'S FOR ========== -->
-  <div class="section">
-    <p class="section-label">Who it's for</p>
-    <h2>Teams running OpenClaw on repeated workflows</h2>
-    <p>
-      Use OpenClawBrain when you already run OpenClaw on repeated workflows &mdash; deploys, runbooks, triage, monitoring, research, or other recurring operator tasks &mdash; and you want the system to reuse what worked before instead of starting fresh every turn.
-    </p>
-  </div>
-
-  <!-- ========== THE PROBLEM ========== -->
-  <div class="section">
-    <p class="section-label">The problem</p>
-    <h2>Plain retrieval answers the current query. It does not make the next similar query better.</h2>
-    <p>
-      OpenClawBrain adds a learned routing layer so successful paths get reinforced, bad paths get suppressed, and repeated workflows stop paying the full rediscovery cost every time.
-    </p>
-  </div>
-
-  <!-- ========== HOW IT WORKS ========== -->
-  <div class="section">
+  <!-- How it works (3 points, no jargon wall) -->
+  <div class="section-card">
     <p class="section-label">How it works</p>
-    <h2>Three steps, on and off the hot path</h2>
-    <div class="steps">
-      <div class="step">
-        <p class="step-num">Step 1</p>
-        <h3>Retrieve locally at runtime</h3>
-        <p>Bounded local retrieval runs on the hot path. No full pre-scan gate before first useful routing.</p>
-      </div>
-      <div class="step">
-        <p class="step-num">Step 2</p>
-        <h3>Capture signals from real use</h3>
-        <p>Human labels, self labels, and scanner/harvester labels feed into one learner loop by default.</p>
-      </div>
-      <div class="step">
-        <p class="step-num">Step 3</p>
-        <h3>Improve in the background</h3>
-        <p>Async teacher updates and graph learning stay off the hot path. Routes that succeed get reinforced.</p>
-      </div>
+    <p class="section-title">Fast start. Continuous learning. Clean boundary.</p>
+    <ul style="margin: 0.5rem 0 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.6;">
+      <li><strong>Boot from existing files</strong> — no full pre-scan gate before the first useful route.</li>
+      <li><strong>Learned routing on the hot path</strong> — the route function runs inline with bounded compute. Background teacher updates stay off the hot path.</li>
+      <li><strong>Default-on labels</strong> — human corrections, self labels, and scanner/harvester signals all feed one learning loop.</li>
+    </ul>
+  </div>
+
+  <!-- The problem in detail -->
+  <div class="section-card">
+    <p class="section-label">The problem</p>
+    <p class="section-title">Standard retrieval does not learn from outcomes.</p>
+    <div class="table-wrap" style="margin: 0 0 0.5rem;">
+      <table>
+        <thead>
+          <tr>
+            <th>Pain</th>
+            <th>Fix in OpenClawBrain</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cold starts blocked by full-history prep.</td>
+            <td>Boot from current files immediately; learn history in the background.</td>
+          </tr>
+          <tr>
+            <td>Label collection is inconsistent and optional.</td>
+            <td>Human, self, and harvester labels run as default inputs.</td>
+          </tr>
+          <tr>
+            <td>Learning logic and runtime are tightly coupled.</td>
+            <td>OpenClaw owns runtime; OpenClawBrain packages own contracts, provenance, and learner.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <!-- ========== PROOF SUMMARY ========== -->
-  <div class="section">
-    <p class="section-label">Evidence</p>
-    <h2>What is proven today</h2>
-    <p>
-      Published recorded-session and sparse-feedback benchmark artifacts show OpenClawBrain outperforming baseline RAG systems under controlled conditions.
-    </p>
-    <div class="proof-split">
-      <div class="proof-box proven">
-        <h3>What is proven</h3>
-        <p>
-          Recorded-session H2H: <code>full_brain</code> 0.975 vs 0.896 (+7.9 pp).
-          Sparse-feedback 10-seed: 91.96% vs 67.05% (+24.91 pp).
-          Mechanism proof: <code>learned</code> 1.00 vs <code>graph_prior_only</code> 0.50.
-        </p>
+  <!-- Proof snapshot (summary, not the full ladder) -->
+  <div class="section-card" style="border-color: rgba(74, 158, 255, 0.28);">
+    <p class="section-label">Published proof</p>
+    <p class="section-title">Two benchmark families. Reproducible. Not live production claims.</p>
+    <div class="proof-snapshot">
+      <div class="proof-snapshot-item">
+        <p class="label">Recorded-session H2H</p>
+        <p class="number">0.975 vs 0.896 (+7.9 pp)</p>
+        <p class="detail">800 queries, 41 steps, 8 baselines</p>
       </div>
-      <div class="proof-box not-claimed">
-        <h3>What is not yet claimed</h3>
-        <p>
-          Live production answer-quality wins still require shadow-mode and narrow online artifacts. This claim is not made.
-        </p>
+      <div class="proof-snapshot-item">
+        <p class="label">Sparse-feedback 10-seed</p>
+        <p class="number">91.96% vs 67.05% (+24.91 pp)</p>
+        <p class="detail">~5x smaller context/query, 9-1 over best RAG</p>
       </div>
     </div>
-    <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">
-      All benchmark results are reproducible. <a href="/proof/">Full proof package &rarr;</a> &middot; <a href="/docs/reproduce-eval.md">Reproduce instructions &rarr;</a>
+    <p style="margin: 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
+      Both are comparative benchmark evidence on frozen workloads. Shadow and online claims require their own artifacts.
+      <a href="/proof/">Full proof package &rarr;</a>
     </p>
   </div>
 
-  <!-- ========== INTEGRATION ========== -->
-  <div class="section">
-    <p class="section-label">Integration</p>
-    <h2>OpenClaw owns runtime. OpenClawBrain owns learning.</h2>
-    <p>
-      OpenClaw keeps runtime orchestration, fail-open behavior, and prompt assembly. OpenClawBrain owns contracts, event normalization, provenance, packs, compiler, and learner packages. Wire in and go.
+  <!-- What ships -->
+  <div class="section-card">
+    <p class="section-label">What ships</p>
+    <p class="section-title">Nine scoped TypeScript packages</p>
+    <div class="pkg-list">
+      <div class="pkg-item">@openclawbrain/contracts</div>
+      <div class="pkg-item">@openclawbrain/events</div>
+      <div class="pkg-item">@openclawbrain/event-export</div>
+      <div class="pkg-item">@openclawbrain/workspace-metadata</div>
+      <div class="pkg-item">@openclawbrain/provenance</div>
+      <div class="pkg-item">@openclawbrain/pack-format</div>
+      <div class="pkg-item">@openclawbrain/activation</div>
+      <div class="pkg-item">@openclawbrain/compiler</div>
+      <div class="pkg-item">@openclawbrain/learner</div>
+    </div>
+    <p style="margin: 0.75rem 0 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
+      Versioned, type-safe, published via <code>pnpm release:pack</code>. Wire into your OpenClaw runtime and go.
     </p>
-    <pre><code>corepack enable
+  </div>
+
+  <!-- Quickstart -->
+  <div id="install" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem 1.75rem; margin-bottom: 2.5rem;">
+    <p style="font-family: var(--sans); font-size: 0.95rem; font-weight: 600; color: var(--text-bright); margin-bottom: 1rem;">Quickstart</p>
+<pre style="background: var(--bg-code); border-radius: 6px; padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; overflow-x: auto; color: var(--text);"><code>corepack enable
 pnpm install
 pnpm check
 pnpm release:pack</code></pre>
-    <p style="font-size: 0.85rem; color: var(--text-muted);">
-      See <a href="/docs/openclaw-integration.md">integration guide</a> and <a href="/docs/reproduce-eval.md">reproduction instructions</a>.
+    <p style="font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.5;">
+      See <a href="/docs/openclaw-integration.md">integration guide</a> and <a href="https://github.com/jonathangu/openclawbrain">README</a>.
     </p>
   </div>
 
-  <!-- ========== DEEP LINKS ========== -->
-  <div class="deep-links">
+  <!-- Explore -->
+  <div class="cta-grid">
     <a href="/proof/">
-      <span class="dl-label">Evidence</span>
-      Proof Package
+      <span>
+        <span class="cta-label">Evidence</span><br>
+        Proof Package
+      </span>
     </a>
-    <a href="/docs/openclaw-integration.md">
-      <span class="dl-label">Guide</span>
-      OpenClaw Integration
-    </a>
-    <a href="/docs/reproduce-eval.md">
-      <span class="dl-label">Reproduce</span>
-      Eval Harness &amp; Commands
-    </a>
-    <a href="/docs/operator-guide.md">
-      <span class="dl-label">Ops</span>
-      Operator Guide
+    <a href="/paper/">
+      <span>
+        <span class="cta-label">Paper</span><br>
+        Full PDF
+      </span>
     </a>
     <a href="/blog/v12.2.6-series/">
-      <span class="dl-label">Blog</span>
-      v12.2.6 Series
+      <span>
+        <span class="cta-label">Blog</span><br>
+        v12.2.6 Series
+      </span>
     </a>
-    <a href="/openclawbrain.pdf">
-      <span class="dl-label">Paper</span>
-      Full PDF
+    <a href="/docs/openclaw-integration.md">
+      <span>
+        <span class="cta-label">Guide</span><br>
+        Integration Docs
+      </span>
     </a>
     <a href="/materials/">
-      <span class="dl-label">Materials</span>
-      Figures &amp; Data
+      <span>
+        <span class="cta-label">Materials</span><br>
+        Figures &amp; Data
+      </span>
     </a>
     <a href="https://github.com/jonathangu/openclawbrain">
-      <span class="dl-label">Source</span>
-      GitHub Repository
+      <span>
+        <span class="cta-label">Source</span><br>
+        GitHub
+      </span>
     </a>
   </div>
 
-  <footer>
-    <p>OpenClawBrain &mdash; memory and learned routing for OpenClaw.</p>
-    <p style="margin-top: 0.4rem;"><a href="https://www.jonathangu.com/" style="color: var(--text-muted);">Jonathan Gu</a></p>
+  <footer style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-align: center;">
+    OpenClawBrain &mdash; memory that learns for OpenClaw.
   </footer>
 
 </article>

@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain Proof Package — Evidence for Memory and Learned Routing</title>
+  <title>OpenClawBrain Proof Package</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Published benchmark evidence for OpenClawBrain: recorded-session and sparse-feedback head-to-head results, mechanism proof, and explicit claim boundaries.">
-  <meta property="og:title" content="OpenClawBrain Proof Package — Evidence for Memory and Learned Routing">
-  <meta property="og:description" content="Published benchmark evidence for OpenClawBrain: recorded-session and sparse-feedback head-to-head results with explicit claim boundaries.">
+  <meta name="description" content="OpenClawBrain proof package: mechanism, recorded-session, and sparse-feedback benchmark artifacts with explicit claim boundaries.">
+  <meta property="og:title" content="OpenClawBrain Proof Package">
+  <meta property="og:description" content="Mechanism proof plus recorded-session and sparse-feedback benchmark artifacts with explicit proof boundaries.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/proof/">
   <meta name="twitter:card" content="summary_large_image">
@@ -55,7 +55,6 @@
       background: rgba(255, 190, 114, 0.1);
       padding: 0.12rem 0.34rem;
       border-radius: 6px;
-      white-space: normal;
     }
     .shell {
       width: min(1160px, calc(100vw - 32px));
@@ -107,7 +106,6 @@
       background: var(--panel);
       box-shadow: var(--shadow);
       backdrop-filter: blur(14px);
-      min-width: 0;
     }
     .hero {
       display: grid;
@@ -197,7 +195,6 @@
       font-size: 0.94rem;
       font-weight: 600;
       transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-      min-width: 0;
     }
     .btn:hover {
       text-decoration: none;
@@ -269,7 +266,6 @@
       background: none;
       padding: 0;
       color: inherit;
-      white-space: inherit;
     }
     .figure-card img {
       border-radius: 18px;
@@ -374,10 +370,6 @@
       font-family: var(--sans);
       color: #cfe2f0;
     }
-    main :is(p, li, a, code, .kicker, .meta, figcaption, .tag, .btn, h1, h2, h3) {
-      overflow-wrap: anywhere;
-      word-break: normal;
-    }
     footer {
       margin-top: 1.8rem;
       padding-top: 1.1rem;
@@ -404,7 +396,6 @@
         align-items: flex-start;
       }
       .nav-links { justify-content: flex-start; }
-      .hero { gap: 0.7rem; padding-bottom: 1.35rem; }
       .hero-copy,
       .hero-panel,
       .status-card,
@@ -415,29 +406,9 @@
       .callout {
         border-radius: 20px;
       }
-      .hero-copy,
-      .status-card,
-      .figure-card,
-      .ladder-card,
-      .check-card,
-      .kit-card,
-      .callout { padding: 0.95rem; }
+      .hero-copy { padding: 1.45rem; }
       h1 { max-width: 100%; }
-      .lead { font-size: 1rem; }
-      .section { padding-top: 1rem; }
-      .section-head { margin-bottom: 0.8rem; }
-      .section-intro { font-size: 0.92rem; line-height: 1.55; }
-      .cta-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.55rem;
-      }
-      .btn {
-        width: 100%;
-        justify-content: flex-start;
-        border-radius: 14px;
-        min-height: 44px;
-      }
+      .lead { font-size: 1.08rem; }
     }
   </style>
 </head>
@@ -461,31 +432,19 @@
       <section class="hero">
         <div class="hero-copy">
           <div class="eyebrow">Evidence package</div>
-          <h1>Proof, packaged for operator review.</h1>
+          <h1>Proof package.</h1>
           <p class="lead">
-            OpenClawBrain adds durable memory and learned routing to OpenClaw so repeated workflows improve over time. This page publishes the current evidence: what is proven, what is not, and the artifacts to verify each claim. Two benchmark families are published — recorded-session head-to-head (<code>recorded_h2h_relational_drift_001</code>: 0.975 vs 0.896, +7.9 pp) and sparse-feedback multi-seed (<code>proof-results/sparse_feedback_10seed</code>: 91.96% vs 67.05%, +24.91 pp, ~5x smaller context/query).
+            Two published benchmark families anchor the evidence: recorded-session head-to-head (0.975 vs 0.896, +7.9 pp) and sparse-feedback 10-seed (91.96% vs 67.05%, +24.91 pp). Both are comparative evidence on frozen workloads, not live production claims.
           </p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="#worked-turn">Start with worked-turn evidence</a>
-            <a class="btn btn-secondary" href="#recorded-session">Jump to recorded-session proof</a>
-            <a class="btn btn-secondary" href="#sparse-feedback">Jump to sparse-feedback proof</a>
-            <a class="btn btn-secondary" href="../docs/worked-example.md">Read the worked turn</a>
-            <a class="btn btn-secondary" href="../docs/openclaw-integration.md">OpenClaw integration</a>
-            <a class="btn btn-secondary" href="../paper/">Read the paper</a>
-            <a class="btn btn-secondary" href="../docs/reproduce-eval.md">Raw reproduce-eval doc</a>
+            <a class="btn btn-primary" href="#recorded-session">Recorded-session H2H</a>
+            <a class="btn btn-secondary" href="#sparse-feedback">Sparse-feedback proof</a>
+            <a class="btn btn-secondary" href="#worked-turn">Worked-turn trace</a>
+            <a class="btn btn-secondary" href="../docs/reproduce-eval.md">Reproduce instructions</a>
           </div>
           <p class="hero-note">
-            Claim boundary: deterministic simulations, reproducible figures, traceable turn bundles, recorded-session benchmarks, and sparse-feedback benchmarks prove mechanism and comparative behavior on frozen workloads. Shadow and online comparative claims are published only with matching production artifacts.
+            Shadow and online claims are published only when matching production artifacts exist.
           </p>
-          <div class="tag-row">
-            <a class="tag" href="#worked-turn">Worked-turn trace</a>
-            <a class="tag" href="#recorded-session">Recorded-session H2H</a>
-            <a class="tag" href="#sparse-feedback">Sparse-feedback 10-seed</a>
-            <span class="tag">OpenClaw-native memory</span>
-            <span class="tag">Learned route policy artifacts</span>
-            <span class="tag">Continuous background learning</span>
-            <span class="tag">No fake benchmark certainty</span>
-          </div>
         </div>
 
         <div class="hero-panel">
