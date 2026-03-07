@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <title>OpenClawBrain Paper</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Canonical paper route for OpenClawBrain: canonical PDF, paper metadata, supporting materials, and links that keep the paper aligned with the published proof boundary.">
+  <meta name="description" content="Canonical paper route for OpenClawBrain: revised paper/PDF metadata plus the current top comparative evidence rung (recorded-session and sparse-feedback benchmarks) with explicit proof boundaries.">
   <meta property="og:title" content="OpenClawBrain Paper">
-  <meta property="og:description" content="The OpenClawBrain paper, direct PDF, supporting materials, and the published proof boundary.">
+  <meta property="og:description" content="OpenClawBrain paper route with direct PDF, current benchmark evidence, and explicit boundaries between mechanism, benchmark, shadow, and online claims.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/paper/">
   <meta name="twitter:card" content="summary_large_image">
@@ -324,7 +324,7 @@
           <div class="eyebrow">Canonical paper route</div>
           <h1>Paper, PDF, and supporting materials.</h1>
           <p class="lead">
-            This is the canonical home for the OpenClawBrain paper. It packages the March 2, 2026 PDF with version metadata, the settled TypeScript-first architecture framing, and the links that keep the paper aligned with the published proof boundary on the site.
+            This is the canonical home for the OpenClawBrain paper. It packages the March 7, 2026 PDF revision with the settled TypeScript-first architecture framing and the current top comparative benchmark rung: recorded-session head-to-head plus sparse-feedback 10-seed results.
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href="../openclawbrain.pdf">Open the PDF</a>
@@ -333,12 +333,12 @@
             <a class="btn btn-secondary" href="../materials/">Supporting materials</a>
           </div>
           <p class="hero-note">
-            Evidence boundary: deterministic workflow-proof artifacts are published and reproducible. Recorded-session, shadow-mode, and narrow online comparisons are separate evidence layers and are only claimed with their own artifacts in <a href="../proof/">/proof/</a>.
+            Evidence boundary: deterministic mechanism proof and fixed-session benchmark proof are published. Shadow-mode and narrow online claims remain separate layers and are only claimed with their own artifacts in <a href="../proof/">/proof/</a>.
           </p>
           <div class="tag-row">
             <span class="tag">Version v12.2.6+</span>
             <span class="tag">Jonathan Gu</span>
-            <span class="tag">March 2, 2026</span>
+            <span class="tag">March 7, 2026 revision</span>
             <span class="tag">Direct PDF: <code>/openclawbrain.pdf</code></span>
           </div>
         </div>
@@ -361,9 +361,29 @@
             <h2>Architecture is settled; evidence is layered.</h2>
             <ul>
               <li>The paper covers the shipped hot/cold path split, route signals, confidence mixing, and unified policy learning.</li>
-              <li><a href="../proof/">/proof/</a> shows which claims are already evidenced and which comparative claims require additional artifacts.</li>
+              <li>Top comparative rung now includes <code>recorded_h2h_relational_drift_001</code> (0.975 vs 0.896, +7.9 pp) and sparse-feedback 10-seed (91.96% vs 67.05%, +24.91 pp).</li>
+              <li><a href="../proof/">/proof/</a> shows which claims are already evidenced and which claims still require shadow/online artifacts.</li>
               <li><a href="../blog/v12.2.6-series/">/blog/v12.2.6-series/</a> explains how the architecture boundary and rollout path fit together.</li>
             </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Current top comparative evidence</h2>
+          <p class="section-intro">The paper revision tracks the strongest published benchmark artifacts while keeping benchmark claims separate from shadow and online claims.</p>
+        </div>
+        <div class="paper-grid">
+          <article class="paper-card">
+            <div class="kicker">Recorded-session head-to-head</div>
+            <h3><code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896</h3>
+            <p>Artifact: <code>recorded_h2h_relational_drift_001</code>. Setup: 800 queries, 41 steps, 8 baselines. Delta: +7.9 percentage points on a fixed rubric.</p>
+          </article>
+          <article class="paper-card">
+            <div class="kicker">Sparse-feedback 10-seed</div>
+            <h3><code>full_brain</code> 91.96% vs best RAG 67.05%</h3>
+            <p>Delta: +24.91 percentage points, with about 5x smaller context per query and a 9-1 head-to-head seed score over <code>vector_rag_rerank</code>.</p>
           </article>
         </div>
       </section>
@@ -434,7 +454,7 @@
     </main>
 
     <footer>
-      The paper should stay synchronized with the proof package: publish comparative recorded-session, shadow, and online claims only when their artifacts are present.
+      The paper should stay synchronized with the proof package: publish benchmark, shadow, and online claims only when their artifacts are present.
     </footer>
   </div>
 </body>
