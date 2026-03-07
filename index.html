@@ -88,8 +88,9 @@
     .cta-grid .cta-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
     .pkg-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin: 0.75rem 0; }
     .pkg-item { padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-code); font-family: var(--mono); font-size: 0.76rem; color: var(--orange); }
+    .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 0 0 0.75rem; }
     @media (max-width: 720px) {
-      .proof-grid, .proof-notes, .cta-grid { grid-template-columns: 1fr; }
+      .proof-grid, .proof-notes, .cta-grid, .evidence-grid { grid-template-columns: 1fr; }
       .pkg-list { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 600px) { .page { padding: 2rem 1rem 4rem; } .page-title { font-size: 1.5rem; } body { font-size: 16px; } .pkg-list { grid-template-columns: 1fr; } }
@@ -122,7 +123,7 @@
         Package Quickstart
       </a>
       <p style="margin: 0.55rem 0 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
-        Proof boundary is explicit: mechanism-level workflow proof is published; live production answer-quality proof is not claimed yet. <a href="/docs/reproduce-eval.md">Reproduce the proof docs &rarr;</a>
+        Workflow and mechanism proof is published; live production answer-quality proof is not claimed. <a href="/proof/">Proof package &rarr;</a>
       </p>
     </div>
     <div class="proof-card">
@@ -174,9 +175,12 @@
           <p>It is not a live production OpenClaw eval, and it does not directly prove downstream answer quality on user tasks yet.</p>
         </div>
       </div>
+      <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 0.85rem 0 0.65rem;">
+        <a href="/proof/" style="display: inline-block; padding: 0.5rem 0.85rem; border-radius: 8px; background: var(--accent); color: #0a0f17; font-family: var(--sans); font-size: 0.85rem; font-weight: 600; text-decoration: none;">View Proof Package</a>
+        <a href="/docs/reproduce-eval.md" style="display: inline-block; padding: 0.5rem 0.85rem; border-radius: 8px; border: 1px solid rgba(74,158,255,0.35); color: var(--accent); font-family: var(--sans); font-size: 0.85rem; font-weight: 600; text-decoration: none;">Reproduce Instructions</a>
+      </div>
       <p class="proof-meta">
-        Command: <code>corepack enable &amp;&amp; pnpm install &amp;&amp; pnpm check</code><br>
-        Artifacts: deterministic traces, label streams, eval query sets, learning curves, and summary reports. <a href="/docs/reproduce-eval.md">Full reproduce instructions &rarr;</a>
+        Command: <code>corepack enable &amp;&amp; pnpm install &amp;&amp; pnpm check</code> &mdash; artifacts include deterministic traces, label streams, eval query sets, learning curves, and summary reports.
       </p>
     </div>
     <div class="page-meta">
@@ -304,22 +308,30 @@
   <div class="section-card" style="border-color: rgba(74, 158, 255, 0.28);">
     <p class="section-label">Evidence</p>
     <p class="section-title">What is proven and what is not</p>
-    <div class="table-wrap" style="margin: 0 0 0.75rem;">
-      <table>
-        <thead>
-          <tr><th>Claim</th><th>Status</th><th>Evidence</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Learned routing beats static baselines on workflow queries</td><td style="color: var(--green);">Proven</td><td>Deterministic eval: 1.00 vs 0.00&ndash;0.50 target success</td></tr>
-          <tr><td>Context compression on repeated tasks</td><td style="color: var(--green);">Proven</td><td>30 &rarr; 2.7 nodes (91% reduction in simulation)</td></tr>
-          <tr><td>Inhibitory learning suppresses bad paths</td><td style="color: var(--green);">Proven</td><td>Bad edge reaches &minus;0.94; good edge stays 1.0</td></tr>
-          <tr><td>Cold graph traversal improves retrieval over embedding-only</td><td style="color: var(--green);">Proven</td><td>+7.7% MultiHop-RAG, +33.6% HotPotQA vs embedding baselines</td></tr>
-          <tr><td>Live production answer-quality improvement</td><td style="color: var(--orange);">Not claimed</td><td>Requires Step 3 production eval (pending)</td></tr>
-        </tbody>
-      </table>
+    <div class="evidence-grid">
+      <div style="padding: 0.65rem 0.8rem; border: 1px solid rgba(63,185,80,0.25); border-radius: 8px; background: rgba(63,185,80,0.06);">
+        <p style="margin: 0 0 0.2rem; font-family: var(--sans); font-size: 0.72rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em;">Proven</p>
+        <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-bright); line-height: 1.4;">Learned routing beats static baselines</p>
+        <p style="margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted);">1.00 vs 0.00&ndash;0.50 exact-target success</p>
+      </div>
+      <div style="padding: 0.65rem 0.8rem; border: 1px solid rgba(63,185,80,0.25); border-radius: 8px; background: rgba(63,185,80,0.06);">
+        <p style="margin: 0 0 0.2rem; font-family: var(--sans); font-size: 0.72rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em;">Proven</p>
+        <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-bright); line-height: 1.4;">91% context compression</p>
+        <p style="margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted);">30 &rarr; 2.7 nodes on repeated tasks</p>
+      </div>
+      <div style="padding: 0.65rem 0.8rem; border: 1px solid rgba(63,185,80,0.25); border-radius: 8px; background: rgba(63,185,80,0.06);">
+        <p style="margin: 0 0 0.2rem; font-family: var(--sans); font-size: 0.72rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em;">Proven</p>
+        <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-bright); line-height: 1.4;">Inhibitory learning works</p>
+        <p style="margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted);">Bad edge &minus;0.94; good edge stays 1.0</p>
+      </div>
+      <div style="padding: 0.65rem 0.8rem; border: 1px dashed rgba(227,149,92,0.35); border-radius: 8px; background: rgba(227,149,92,0.06);">
+        <p style="margin: 0 0 0.2rem; font-family: var(--sans); font-size: 0.72rem; color: var(--orange); text-transform: uppercase; letter-spacing: 0.06em;">Not claimed</p>
+        <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-bright); line-height: 1.4;">Live production answer quality</p>
+        <p style="margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted);">Requires Step 3 production eval</p>
+      </div>
     </div>
     <p style="margin: 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
-      All mechanism and workflow claims are reproducible from deterministic simulation scripts and the benchmark harness in the repo. <a href="/docs/reproduce-eval.md">Full reproduce instructions &rarr;</a>
+      All mechanism and workflow claims are reproducible. <a href="/proof/">Full proof package &rarr;</a> &middot; <a href="/docs/reproduce-eval.md">Reproduce instructions &rarr;</a>
     </p>
   </div>
 
@@ -338,6 +350,18 @@ pnpm release:pack</code></pre>
 
   <!-- CTA grid -->
   <div class="cta-grid">
+    <a href="/proof/" style="border-color: rgba(74,158,255,0.35);">
+      <span>
+        <span class="cta-label">Evidence</span><br>
+        Proof Package
+      </span>
+    </a>
+    <a href="/docs/reproduce-eval.md">
+      <span>
+        <span class="cta-label">Reproduce</span><br>
+        Eval Harness &amp; Commands
+      </span>
+    </a>
     <a href="/docs/openclaw-integration.md">
       <span>
         <span class="cta-label">Guide</span><br>
@@ -366,18 +390,6 @@ pnpm release:pack</code></pre>
       <span>
         <span class="cta-label">Source</span><br>
         GitHub Repository
-      </span>
-    </a>
-    <a href="/docs/reproduce-eval.md">
-      <span>
-        <span class="cta-label">Reproduce</span><br>
-        Proof Docs &amp; Eval Harness
-      </span>
-    </a>
-    <a href="/gu2016/">
-      <span>
-        <span class="cta-label">Foundation</span><br>
-        Gu (2016) Derivation
       </span>
     </a>
     <a href="/docs/operator-guide.md">
