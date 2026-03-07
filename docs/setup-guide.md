@@ -1,6 +1,6 @@
 # Getting Started with OpenClawBrain
 
-OpenClawBrain learns what context your AI agent should see for each query, and improves that over time from real usage. It works alongside [OpenClaw](https://github.com/jonathangu/openclaw), which handles the runtime (sessions, tools, prompts, answers).
+OpenClawBrain replaces static retrieval with a learned routing function (`route_fn`) over a knowledge graph. Instead of dumping the nearest text chunks into the prompt, it picks the right context for each query, learns from corrections and feedback, and gets sharper over time. It works alongside [OpenClaw](https://github.com/jonathangu/openclaw), which owns the runtime (sessions, tools, prompts, answers).
 
 This guide gets you from zero to a working setup.
 
@@ -20,7 +20,7 @@ pnpm check            # type-check, lint, test, and verify package integrity
 pnpm release:pack     # produce a versioned brain pack
 ```
 
-A **brain pack** is a bundle of context blocks and learned routing weights. It is the artifact OpenClaw loads at runtime to decide what context to surface for a given query.
+A **brain pack** is a versioned bundle of context blocks (nodes from the knowledge graph) and learned routing weights. It is the artifact OpenClaw loads at runtime so that `route_fn` can decide what context to surface for a given query.
 
 ## 2. Connect to OpenClaw
 

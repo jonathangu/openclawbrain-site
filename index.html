@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain - Make Your AI Agent Learn From Every Conversation</title>
+  <title>OpenClawBrain - A Learned Router That Makes Your AI Agent Sharper Over Time</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain makes OpenClaw stateful and self-improving by learning what context to serve at runtime. It watches usage, feedback, and history, then builds better brain packs over time.">
-  <meta property="og:title" content="OpenClawBrain - Make Your AI Agent Learn From Every Conversation">
-  <meta property="og:description" content="OpenClawBrain makes OpenClaw stateful and self-improving by learning what context to serve at runtime.">
+  <meta name="description" content="OpenClawBrain replaces static retrieval with a learned routing function over a knowledge graph. It watches real conversations, learns which context matters, and serves sharper answers every day.">
+  <meta property="og:title" content="OpenClawBrain - A Learned Router That Makes Your AI Agent Sharper Over Time">
+  <meta property="og:description" content="Not just retrieval — a routing function that learns from corrections, structure, and feedback to pick the right context on every turn.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary">
@@ -488,10 +488,11 @@
 
     <div class="hero-card" id="start-here">
       <p class="eyebrow">What is OpenClawBrain?</p>
-      <h1>Your AI agent gets smarter with every conversation</h1>
+      <h1>A learned router that makes your AI agent sharper over time</h1>
       <p class="lead">
-        OpenClawBrain makes <a href="https://github.com/jonathangu/openclaw">OpenClaw</a> stateful and self-improving.
-        It learns what context your agent should see for a given query &mdash; and gets better at it continuously from real use, feedback, and history.
+        <a href="https://github.com/jonathangu/openclaw">OpenClaw</a> runs your agent &mdash; sessions, tools, prompts, answers. OpenClawBrain makes it learn.
+        Instead of dumping the nearest text chunks into the prompt (that is what RAG does), OpenClawBrain trains a routing function that walks a knowledge graph, picks the right context for each query, and gets better from every correction and conversation.
+        The result: your agent serves more accurate answers using less context, and improves continuously without manual tuning.
       </p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="/docs/setup-guide.md">Get started</a>
@@ -516,52 +517,52 @@
   <section class="section" id="how-it-works">
     <h2>How it works</h2>
     <p class="section-intro">
-      Most AI agents start every conversation from scratch. OpenClawBrain gives your agent a memory that improves over time. The core idea: a <strong>knowledge graph</strong> plus a <strong>learned router</strong> that decides which memories to surface for each query &mdash; and gets sharper from every interaction.
+      Most AI agents start every conversation from scratch. OpenClawBrain gives yours a memory that improves over time &mdash; a <strong>knowledge graph</strong> that stores structured relationships between facts, and a <strong>learned router</strong> (<code>route_fn</code>) that decides which facts to pull into the prompt for each query.
     </p>
     <div class="path-grid">
       <article class="path-step primary">
         <p class="step-index">Step 1</p>
         <h3>Your agent runs on OpenClaw</h3>
-        <p>OpenClaw handles sessions, tools, prompts, and answers. It is the runtime &mdash; the thing that actually talks to users.</p>
+        <p>OpenClaw handles sessions, tools, prompts, and answers &mdash; the runtime that actually talks to users. If anything goes wrong with the brain, the agent keeps working normally.</p>
       </article>
       <article class="path-step">
         <p class="step-index">Step 2</p>
         <h3>OpenClawBrain builds a knowledge graph</h3>
-        <p>It organizes your agent's memory as a graph of context blocks &mdash; facts, rules, corrections, and relationships &mdash; not a flat list of text chunks. The graph captures structure: which pieces of knowledge relate to each other and how.</p>
+        <p>Your agent's memory is a graph, not a pile of text chunks. Each node is a context block &mdash; a fact, a rule, a correction. Edges capture how those blocks relate: "this deploy policy connects to that rollback rule," "this correction supersedes that old guidance." The structure lets the router follow relationships, not just match keywords.</p>
       </article>
       <article class="path-step">
         <p class="step-index">Step 3</p>
-        <h3>The learned router picks what matters</h3>
-        <p>At query time, a learned routing function walks the graph and selects the right context to serve. It combines durable structure (what the graph already knows) with query-specific signals (what fits this particular question). Over time, it gets better &mdash; surfacing more relevant information with less noise.</p>
+        <h3>A learned router picks what matters</h3>
+        <p>At query time, <code>route_fn</code> walks the graph and selects the right context. It blends two signals: the graph's durable structure (<code>graph_prior</code>) and a per-query relevance score (<code>QTsim</code>). A confidence gate decides how much to trust each signal &mdash; leaning on the graph when the query is ambiguous, and on the query signal when it is clear. The router improves continuously from corrections, outcomes, and background learning.</p>
       </article>
     </div>
   </section>
 
   <section class="section" id="why-not-rag">
-    <h2>Why this is better than ordinary RAG</h2>
+    <h2>Why this beats ordinary RAG</h2>
     <p class="section-intro">
-      Standard RAG (retrieval-augmented generation) stores text chunks and retrieves the nearest neighbors by semantic similarity. It works for simple lookups, but it has fundamental limits. OpenClawBrain is different in four ways that matter.
+      RAG retrieves the nearest text chunks by semantic similarity and hopes the answer is in the pile. That works for simple lookups but falls apart on structured tasks, ambiguous queries, and anything that requires following relationships between facts. OpenClawBrain replaces that with learned selection over structure.
     </p>
     <div class="path-grid">
       <article class="path-step primary">
         <p class="step-index">Difference 1</p>
         <h3>It learns from corrections</h3>
-        <p>When a user corrects the agent, the router learns from it. Next time a similar question comes up, the routing is better. Ordinary RAG has no feedback loop &mdash; it returns the same results no matter how many times you correct it.</p>
+        <p>When a user corrects the agent, the router learns from that correction &mdash; tied to the exact routing decision that produced the wrong answer. Next time a similar question comes in, it routes differently. RAG has no feedback loop: correct it a hundred times, and it returns the same chunks tomorrow.</p>
       </article>
       <article class="path-step">
         <p class="step-index">Difference 2</p>
-        <h3>It serves relationships, not just similar text</h3>
-        <p>The knowledge graph stores structured relationships between pieces of context. The router can follow edges &mdash; "this deploy rule connects to that rollback policy" &mdash; instead of just matching keywords. RAG only sees text similarity.</p>
+        <h3>It follows relationships, not just similarity</h3>
+        <p>RAG treats your knowledge as isolated text chunks and ranks them by how similar they sound to the query. The knowledge graph stores actual relationships &mdash; "this deploy policy depends on that rollback rule" &mdash; and the router follows those edges. It can reach context that is structurally relevant even when the wording does not match.</p>
       </article>
       <article class="path-step">
         <p class="step-index">Difference 3</p>
-        <h3>It gets sharper over time</h3>
-        <p>The routing function improves continuously from real usage, feedback, and corrections. After a few hundred interactions, it surfaces better context with less noise. A static RAG index stays exactly the same from day one.</p>
+        <h3>It compounds over time</h3>
+        <p>Every correction, every outcome, every conversation makes the routing function a little better. After a few hundred interactions, the agent is measurably sharper &mdash; not because someone manually tuned it, but because the router learned what works. A static RAG index never improves.</p>
       </article>
       <article class="path-step">
         <p class="step-index">Difference 4</p>
         <h3>It uses less context for better results</h3>
-        <p>Because the router is selective, it sends less but more relevant context to the model. In benchmarks, it uses roughly 5&times; less context per query than the best RAG baseline &mdash; while scoring significantly higher on accuracy.</p>
+        <p>Because the router is selective, it sends fewer but more relevant context blocks to the model. In benchmarks, it uses roughly 5&times; less context per query than the best RAG baseline &mdash; while scoring 8&ndash;25 percentage points higher on accuracy. Less context also means faster, cheaper inference.</p>
       </article>
     </div>
   </section>
@@ -569,17 +570,17 @@
   <section class="section" id="two-systems">
     <h2>Two systems, one goal</h2>
     <p class="section-intro">
-      OpenClaw and OpenClawBrain have distinct jobs. This split is intentional &mdash; it keeps the runtime fast and the learning safe.
+      OpenClaw and OpenClawBrain have distinct jobs. This separation is intentional &mdash; it keeps the live path fast and the learning safe to iterate on.
     </p>
 
     <div class="boundary-grid">
       <article class="boundary-card">
         <h3>OpenClaw owns runtime</h3>
-        <p>Sessions, tools, prompt assembly, answers, fail-open behavior. If something goes wrong with learning, your agent keeps working.</p>
+        <p>Sessions, tools, prompt assembly, answers, and fail-open behavior. If learning degrades or the brain goes offline, your agent keeps working &mdash; it just serves without brain-enhanced context until the next healthy pack is ready.</p>
       </article>
       <article class="boundary-card">
         <h3>OpenClawBrain owns learning</h3>
-        <p>Watches usage and feedback. Builds brain packs. Trains the route function that decides what context to surface. All of this happens off the hot path &mdash; it never slows down responses.</p>
+        <p>Watches usage, corrections, and feedback. Builds versioned brain packs (bundles of context blocks and learned routing weights). Trains the <code>route_fn</code> that decides what context to surface. All of this runs off the hot path &mdash; learning never slows down a single response.</p>
       </article>
     </div>
   </section>
@@ -607,11 +608,11 @@ pnpm release:pack</code></pre>
     <div class="proof-family-grid">
       <article class="proof-family">
         <h3>Recorded-session benchmark</h3>
-        <p>800 queries, 8 baselines. Learned routing scores 97.5% accuracy vs best RAG baseline at 89.6%. That means the learned router gets the right answer on about 1 in 13 queries where RAG gets it wrong.</p>
+        <p>800 frozen queries, 8 baselines, same rubric. The learned router answers 97.5% correctly; the best RAG baseline reaches 89.6%. That gap means roughly 1 in 13 queries where RAG gets it wrong, the learned router gets it right.</p>
       </article>
       <article class="proof-family">
         <h3>Sparse-feedback benchmark</h3>
-        <p>Even with limited feedback signals, learned routing hits 92% vs RAG at 67% &mdash; while using roughly 5&times; less context per query. The router is both more accurate and more efficient.</p>
+        <p>Real teams do not correct every answer. With minimal feedback signals across 10 random seeds, the learned router still hits 92% vs RAG at 67% &mdash; while using roughly 5&times; less context per query. More accurate and more efficient, even with sparse supervision.</p>
       </article>
     </div>
 
@@ -664,7 +665,7 @@ pnpm release:pack</code></pre>
   </section>
 
   <footer class="footer">
-    <p>OpenClawBrain makes OpenClaw stateful and self-improving.</p>
+    <p>OpenClawBrain makes OpenClaw stateful and self-improving by learning what context to serve at runtime.</p>
     <p>Jonathan Gu &middot; <a href="mailto:jonathangu@gmail.com">jonathangu@gmail.com</a></p>
     <p><a class="back-link" href="https://www.jonathangu.com/">Author site</a></p>
   </footer>

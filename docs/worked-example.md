@@ -1,8 +1,8 @@
 # Worked Example: One OpenClaw Turn End to End
 
-This page shows one realistic but generic OpenClaw turn wired through OpenClawBrain.
+This page walks through one realistic OpenClaw turn wired through OpenClawBrain &mdash; from the routing decision, through the bounded context sent to the model, to the correction that feeds back into learning.
 
-It is a concrete operator example, not a benchmark.
+It is a concrete operator example, not a benchmark. It shows how `route_fn` picks context from the knowledge graph, how corrections are tied to the exact routing decision that fired, and how background learning later improves the router for similar future queries.
 
 Default stack assumed here:
 
@@ -211,12 +211,12 @@ That bundle is the smallest useful proof unit for OpenClawBrain on real OpenClaw
 
 The concrete product story is:
 
-1. OpenClaw can use the brain on the next turn.
-2. Corrections can target the specific routing decision that was made for that query.
-3. The router improves later, through background learning and a later deploy window.
+1. OpenClaw can use the brain on the very next turn &mdash; the graph's structure provides useful routing even before learning has run.
+2. Corrections are tied to the specific routing decision that was made for that query, not lost in a generic feedback bucket.
+3. The router improves later, through background learning and a later deploy window. Each correction makes `route_fn` a little sharper for similar future queries.
 
 That is the intended separation:
 
-- immediate utility on the live turn
-- continuous improvement off the hot path
+- immediate utility on the live turn (graph structure + current learned weights)
+- continuous improvement off the hot path (corrections, outcomes, and automated signals compound over time)
 - claims backed by saved artifacts instead of narrative certainty

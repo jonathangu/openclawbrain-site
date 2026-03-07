@@ -52,7 +52,7 @@
     <h1>Evaluation: prove it without pretending</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>OpenClawBrain needs a cleaner evidence story than "the simulations look good." This page starts with the strongest published benchmarks, then walks through the evidence ladder — what each rung actually proves, and where the claims stop — so the proof scope is obvious on first read.</p>
+    <p>OpenClawBrain needs a cleaner evidence story than "the simulations look good." This page leads with the strongest published benchmarks, then walks through the evidence ladder &mdash; what each rung proves, where the claims stop, and why learned routing over a knowledge graph outperforms static RAG retrieval on these workloads &mdash; so the proof scope is obvious on first read.</p>
 
     <div class="grid">
       <div class="card">
@@ -93,7 +93,7 @@
     <p>These are benchmark artifacts, not live product rollout evidence. They sit in the middle of the evidence ladder: stronger than the small deterministic mechanism test, but still below shadow-traffic and online rollout proof (which would show the router helping on real user queries).</p>
 
     <h2>Current workflow-proof slice</h2>
-    <p>The current published slice is intentionally narrow: exact-target retrieval on 4 deterministic workflow queries. It is useful because it tests the core product claim directly: can the graph's built-in structural knowledge (the "graph prior") make OpenClawBrain useful before any learning has happened, and does background learning later improve the served routing function?</p>
+    <p>The workflow-proof slice is intentionally narrow: exact-target retrieval on 4 deterministic workflow queries. It tests the core product claim directly &mdash; can the knowledge graph's structural relationships make routing useful before any learning, and does background learning improve the served <code>route_fn</code> over time? Standard vector search (RAG-style) finds none of the required context. The learned router finds all of it.</p>
 
     <div class="table-wrap"><table>
       <thead>
@@ -170,7 +170,7 @@
     <p>The learned router leads the best RAG baseline by nearly 25 percentage points (92.0% vs. 67.1%) and wins 9 of 10 seeds head-to-head while using about 5x less context per query. Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">proof-results/sparse_feedback_10seed</a>.</p>
 
     <h2>Mechanism proof versus product proof</h2>
-    <p>The deterministic workflow slice plus the two benchmark bundles prove something real but bounded: the graph's built-in structure helps retrieval from day one, learned routing improves it further, and the learned router leads credible RAG baselines on frozen workloads. It still does <strong>not</strong> prove better outcomes on live OpenClaw traffic — that requires shadow-traffic and online rollout artifacts.</p>
+    <p>The workflow slice plus the two benchmark bundles prove something real but bounded: the knowledge graph's structure helps retrieval from day one, learned routing improves it further, and the learned router leads credible RAG baselines on frozen workloads. The reason it beats RAG is not magic &mdash; it is structural: the router can follow relationships between facts (not just keyword similarity), it learns from corrections (RAG has no feedback loop), and it sends less context for better results. It still does <strong>not</strong> prove better outcomes on live OpenClaw traffic &mdash; that requires shadow-traffic and online rollout artifacts.</p>
 
     <h2>The evidence ladder (what each rung proves)</h2>
     <div class="table-wrap"><table>

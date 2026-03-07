@@ -104,10 +104,10 @@
       <div class="eyebrow">Shipped series</div>
       <h1>OpenClawBrain v12.2.6+</h1>
       <p>
-        This six-post series explains how OpenClaw and OpenClawBrain divide the work, and why that split matters. OpenClaw handles the live session — tools, prompts, answers. OpenClawBrain handles the learning side — turning usage and feedback into better "brain packs" (versioned bundles of context and routing weights) that make future answers more accurate.
+        This series explains how OpenClaw and OpenClawBrain divide the work, and why that split matters. OpenClaw handles the live session &mdash; sessions, tools, prompts, answers. OpenClawBrain handles learning &mdash; watching real conversations, training a routing function (<code>route_fn</code>) over a knowledge graph, and packaging the result into versioned brain packs that make the agent sharper over time.
       </p>
       <p>
-        Each post goes deep on one piece: the learning rule, the routing function, the evidence, the operator setup, the baselines, and the runtime integration. Start wherever you like.
+        The core idea: instead of dumping the nearest text chunks into the prompt (RAG), a learned router walks a graph of structured relationships, picks the right context for each query, and improves from corrections and feedback. Each post goes deep on one piece. Start wherever you like.
       </p>
       <div class="callout">
         The headline numbers: in recorded-session benchmarks the learned router (<code>full_brain</code>) answers 97.5% of queries correctly vs. 89.6% for the best RAG baseline — roughly 1 in 13 queries where RAG fails, the learned router gets right. In sparse-feedback tests it widens to 92.0% vs. 67.1%, using about 5x less context per query and winning 9 out of 10 random seeds head-to-head. These are benchmark results, not live-traffic claims; see <a href="/proof/">/proof/</a> for the full evidence ladder and artifact links.
@@ -160,13 +160,13 @@
       <a class="card" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
         <div class="meta">Post 1</div>
         <h3>Shadow routing + the unified learning rule</h3>
-        <div class="kicker">How the live router stays fast while background learning improves it from every feedback source.</div>
+        <div class="kicker">Why the teacher stays off the live path, and how human corrections, outcomes, and automated signals fold into a single update rule with a clear priority order.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
         <div class="meta">Post 2</div>
         <h3>The learned runtime route function</h3>
-        <div class="kicker">How the router blends the graph's built-in structural knowledge with query-specific signals, leaning on whichever is more confident.</div>
+        <div class="kicker">How the router blends the graph's structural knowledge (<code>graph_prior</code>) with per-query relevance (<code>QTsim</code>), and how a confidence gate shifts weight between them.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/04-operator-local-embeddings/">

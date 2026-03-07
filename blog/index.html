@@ -55,7 +55,7 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a></div>
     <h1>OpenClawBrain Blog</h1>
-    <p>Architecture, evidence, and release notes for OpenClawBrain — the system that teaches OpenClaw to remember and learn from past conversations. Start with the proof-first posts below, or jump to the <a href="/proof/">proof package</a> for benchmark results.</p>
+    <p>Architecture, evidence, and release notes for OpenClawBrain &mdash; the learned routing layer that makes OpenClaw stateful and self-improving. Instead of static retrieval, a trained <code>route_fn</code> walks a knowledge graph, picks the right context for each query, and gets sharper from corrections and real use. Start with the proof-first posts below, or jump to the <a href="/proof/">proof package</a> for benchmark results.</p>
 
     <div class="section">
       <h2>Proof First</h2>
@@ -64,7 +64,7 @@
           <div class="title">Worked example: follow one real OpenClaw conversation turn</div>
           <div class="meta">Start here · see what actually happens before looking at scores</div>
           <div>
-            Walk through a single conversation turn end to end: how the system compiles context, captures corrections, and feeds them back into learning — with a clear line between what it uses now and what it saves for later.
+            Walk through a single conversation turn end to end: the routing decision, the bounded context sent to the model, the correction captured against the exact route that fired, and how that correction feeds into background learning. A clear line between what helps now and what improves later.
             <br />
             <a href="/docs/worked-example.md">Open bundle: docs/worked-example.md</a>.
             <br />
@@ -117,12 +117,12 @@
         <a class="post" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
           <div class="title">Post 1: Shadow Routing + Ultimate Policy Gradient</div>
           <div class="meta">March 2026</div>
-          <div>How OpenClawBrain's learned router decides which knowledge to retrieve, and how it ranks different signals (user corrections, outcomes, prior knowledge) to improve over time.</div>
+          <div>How the learned router decides which knowledge to pull into the prompt, why the teacher stays off the live path, and how human corrections, outcomes, and automated signals fold into a single update rule.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
           <div class="title">Post 2: QTsim + Confidence Mixing</div>
           <div class="meta">March 2026</div>
-          <div>How the router blends two scoring methods — one from the knowledge graph, one from query similarity — and uses confidence checks to pick the better signal on each query.</div>
+          <div>How the router blends the graph's structural knowledge (<code>graph_prior</code>) with a per-query relevance score (<code>QTsim</code>), and how a confidence gate shifts weight between them depending on query clarity.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
           <div class="title">Post 3: Evaluation and Ablations</div>
@@ -137,7 +137,7 @@
         <a class="post" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
           <div class="title">Post 5: Industry Baselines + Ablation Study</div>
           <div class="meta">March 2026</div>
-          <div>Side-by-side comparison against industry baselines, with recorded-session and sparse-feedback head-to-head results.</div>
+          <div>Side-by-side comparison against credible baselines: why each baseline matters, where the learned router wins today, and where the evidence stops short of live-traffic claims.</div>
         </a>
       </div>
     </div>

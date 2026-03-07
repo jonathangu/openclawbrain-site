@@ -1,6 +1,7 @@
 # Reproduce Evaluation + Figures (Canonical)
 
-This is the single source of truth for reproducing evaluation metrics and figures referenced on the OpenClawBrain site and paper.
+This is the single source of truth for reproducing every evaluation metric and figure referenced on the OpenClawBrain site and paper. The benchmarks compare OpenClawBrain's learned router (`route_fn` over a knowledge graph) against conventional RAG baselines on frozen workloads &mdash; same queries, same data, same scoring rules.
+
 Most workflows below run as npm scripts in the TypeScript workspace and produce reproducible output files; the sparse-feedback multiseed proof family is reproduced from the `brain-ground-zero` proof harness repo.
 
 ## 0) Initialize the TypeScript workspace

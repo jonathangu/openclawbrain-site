@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <title>OpenClawBrain Proof Package</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain proof package: how we tested the learned router, what the benchmarks show, and where the evidence stops.">
+  <meta name="description" content="OpenClawBrain proof package: benchmark results for the learned router vs RAG baselines, worked examples, and honest boundaries on what we have and have not yet proven.">
   <meta property="og:title" content="OpenClawBrain Proof Package">
-  <meta property="og:description" content="Benchmark results, worked examples, and honest boundaries on what we have and have not yet proven.">
+  <meta property="og:description" content="97.5% vs 89.6% on recorded sessions. 92% vs 67% under sparse feedback. Worked examples, reproduction steps, and clear boundaries on what is proven.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/proof/">
   <meta name="twitter:card" content="summary_large_image">
@@ -434,7 +434,7 @@
           <div class="eyebrow">Evidence package</div>
           <h1>Proof package.</h1>
           <p class="lead">
-            OpenClawBrain uses a learned router -- a function trained on real usage patterns -- to decide what context an AI assistant should see for each question. We tested it against the best conventional retrieval (RAG) baselines on two fixed benchmark suites. The learned router answers correctly 97.5% of the time vs 89.6% for the best RAG baseline (+7.9 pp), and under sparse feedback conditions it reaches 92.0% vs 67.1% (+24.9 pp) while using roughly 5x less context. These are controlled benchmark results, not live production claims.
+            RAG retrieves chunks by similarity and hopes the right answer is in the pile. OpenClawBrain replaces that with a learned router &mdash; a function trained on real usage that walks a knowledge graph, picks the right context for each question, and improves from corrections and feedback. We tested it against the best RAG baselines on two frozen benchmark suites. The learned router answers correctly 97.5% of the time vs 89.6% for the best RAG baseline (+7.9 pp), and under sparse feedback it reaches 92.0% vs 67.1% (+24.9 pp) while using roughly 5x less context. These are controlled benchmark results, not live production claims.
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href="#recorded-session">Recorded-session H2H</a>
@@ -506,7 +506,7 @@
         <div class="section-head">
           <div>
             <h2>Worked-turn example (inspect one real turn)</h2>
-            <p class="section-intro">Before looking at aggregate numbers, it helps to see one concrete turn. This section shows exactly what happens when OpenClaw (the runtime) asks OpenClawBrain (the learning layer) for context: what context was sent, what the answer looked like, and how a correction gets captured for future improvement.</p>
+            <p class="section-intro">Before trusting aggregate scores, inspect one concrete turn. This section shows exactly what happens when OpenClaw asks OpenClawBrain for context: the routing decision, the bounded context block sent to the model, and how a correction gets tied to the exact route that fired &mdash; so the router can learn from it on the next background cycle.</p>
           </div>
         </div>
         <div class="two-col">
@@ -545,7 +545,7 @@ correction: internal-only patch -> no support contact</code></pre>
         <div class="section-head">
           <div>
             <h2>Workflow proof: does the right context reach the model?</h2>
-            <p class="section-intro">This is a focused test: for 4 fixed workflow queries, does the system surface exactly the right knowledge-graph nodes into the model's context window? It also checks whether background learning (which never slows down the live response) improves routing accuracy over time.</p>
+            <p class="section-intro">A focused test: for 4 fixed workflow queries, does the router surface exactly the right knowledge-graph nodes into the model's context window? Standard vector search finds 0 of 4. The graph's built-in structure (no learning) gets 2 of 4. The learned router gets all 4 &mdash; by combining structural edges with learned weights. Background learning improves routing over epochs without ever slowing a live response.</p>
           </div>
         </div>
         <div class="two-col">
@@ -577,7 +577,7 @@ correction: internal-only patch -> no support contact</code></pre>
         <div class="section-head">
           <div>
             <h2>Recorded-session head-to-head</h2>
-            <p class="section-intro">The first apples-to-apples comparison: we froze 800 queries, locked the knowledge state, and scored every retrieval method with the same rubric. This is benchmark evidence from a recorded session -- not a claim about live production quality.</p>
+            <p class="section-intro">An apples-to-apples comparison: 800 frozen queries, locked knowledge state, one rubric for every method. The learned router answers correctly about 8 percentage points more often than the best RAG baseline &mdash; and uses a fraction of the context to do it. This is benchmark evidence, not a claim about live production quality.</p>
           </div>
         </div>
         <div class="two-col">
@@ -612,7 +612,7 @@ correction: internal-only patch -> no support contact</code></pre>
         <div class="section-head">
           <div>
             <h2>Sparse-feedback proof (10 random seeds)</h2>
-            <p class="section-intro">Real teams do not correct every answer -- they fix the ones that matter and move on. This benchmark tests whether the learned router still wins when it only gets sparse correction signals. We ran 10 independent random seeds under the same evaluation conditions. This is still controlled benchmark evidence, not live production data.</p>
+            <p class="section-intro">Real teams do not correct every answer &mdash; they fix the ones that matter and move on. This benchmark tests the harder, more realistic scenario: does the learned router still win when it only gets sparse correction signals? We ran 10 independent random seeds under the same conditions. The advantage widens &mdash; nearly 25 percentage points &mdash; because learned routing compounds even from limited feedback, while RAG has no way to improve at all.</p>
           </div>
         </div>
         <div class="two-col">
@@ -649,7 +649,7 @@ correction: internal-only patch -> no support contact</code></pre>
         <div class="section-head">
           <div>
             <h2>Evidence ladder</h2>
-            <p class="section-intro">We build confidence in steps, from "does one turn work?" to "does it work in production?" Each rung answers a different question, and we do not skip ahead. Green-highlighted cards are rungs we have already reached.</p>
+            <p class="section-intro">Confidence builds in steps, from "does one turn work?" to "does it work in production?" Each rung answers a different question, and we do not skip ahead. Green-highlighted cards are rungs we have reached.</p>
           </div>
         </div>
         <div class="ladder-grid">
@@ -799,7 +799,7 @@ correction: internal-only patch -> no support contact</code></pre>
     </main>
 
     <footer>
-      OpenClaw owns the runtime (sessions, tools, prompts, answers). OpenClawBrain owns learning (usage, feedback, history become better brain packs). Claims on this site rise only as published evidence rises.
+      OpenClaw owns the runtime &mdash; sessions, tools, prompts, answers. OpenClawBrain owns the learning &mdash; turning usage, corrections, and feedback into better brain packs that sharpen future routing. Claims on this site rise only as published evidence rises.
     </footer>
   </div>
 </body>

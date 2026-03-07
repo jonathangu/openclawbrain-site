@@ -21,14 +21,14 @@
 <body>
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a></div>
-    <h1>Additional Materials</h1>
-    <p>OpenClawBrain is a learned routing layer that sits on top of a knowledge graph, deciding which facts to retrieve and how to combine them for each query. These are the docs, references, and evaluation artifacts behind it — listed from strongest evidence to supporting details.</p>
+    <h1>Materials</h1>
+    <p>OpenClawBrain replaces static retrieval with a learned routing function over a knowledge graph &mdash; one that decides which facts to pull into the prompt, follows structural relationships between them, and improves from corrections and feedback. Below are the docs, references, and evaluation artifacts, listed from strongest evidence to supporting detail.</p>
 
     <div class="card">
       <ul>
         <li><a href="/proof/">Proof package (claim ladder + published artifacts)</a></li>
-        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">Recorded-session head-to-head bundle</a> &mdash; 800 queries, 41 steps, 8 baselines; <code>full_brain</code> scores 0.975 vs <code>vector_rag_rerank</code> at 0.896 — meaning the learned router answers correctly about 8 percentage points more often than the best RAG baseline</li>
-        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">Sparse-feedback 10-seed bundle</a> &mdash; with very little training data, <code>full_brain</code> reaches 91.96% accuracy vs best RAG at 67.05% — a 25-point gap while using roughly 5x less context per query, and winning 9 out of 10 head-to-head seed runs</li>
+        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">Recorded-session head-to-head bundle</a> &mdash; 800 frozen queries, 8 baselines; the learned router scores 97.5% vs the best RAG baseline at 89.6% (+7.9 pp)</li>
+        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">Sparse-feedback 10-seed bundle</a> &mdash; with minimal corrections, the learned router reaches 92.0% vs best RAG at 67.1% (+24.9 pp) while using roughly 5x less context per query and winning 9 of 10 seeds</li>
         <li><a href="/docs/reproduce-eval.md">Reproduce eval + figures (canonical)</a></li>
         <li><a href="/docs/worked-example.md">Worked turn artifact contract</a></li>
         <li><a href="/paper/">Canonical paper + PDF</a></li>
@@ -46,7 +46,7 @@
 
     <h2 style="font-family:var(--sans); color:var(--bright); margin-top:1.4rem;">TypeScript Package Surface</h2>
     <div class="card">
-      <p style="margin-top:0;">These TypeScript packages are the building blocks of OpenClawBrain's runtime: they define data formats, record what happens during queries, bundle knowledge into portable packs, and run the learning loop that improves routing over time.</p>
+      <p style="margin-top:0;">These TypeScript packages are the building blocks of OpenClawBrain. They define data formats, record what happens during queries, bundle knowledge into versioned brain packs, and run the learning loop that trains <code>route_fn</code> over time.</p>
       <ul>
         <li><code>@openclawbrain/contracts</code></li>
         <li><code>@openclawbrain/events</code></li>

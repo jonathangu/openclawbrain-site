@@ -1,6 +1,6 @@
 # OpenClaw Integration
 
-OpenClawBrain is a learning layer that plugs into OpenClaw. OpenClaw owns the runtime (sessions, tools, prompts, answers). OpenClawBrain owns learning: it turns usage, feedback, and history into brain packs that improve what context gets served at query time.
+OpenClawBrain is the learning layer that plugs into OpenClaw. OpenClaw owns the runtime &mdash; sessions, tools, prompts, answers. OpenClawBrain owns learning: it watches real conversations, trains a routing function (`route_fn`) over a knowledge graph, and packages the result into versioned brain packs that improve what context gets served at query time. The router learns from corrections, outcomes, and automated signals, and gets sharper continuously without manual tuning.
 
 New here? Start with the [setup guide](setup-guide.md).
 
@@ -54,8 +54,8 @@ OpenClaw runtime then deploys the released pack set in its own environment.
 ### Serving (hot path)
 
 1. OpenClaw receives a query.
-2. The learned route function (from the deployed brain pack) picks which context blocks to surface.
-3. OpenClaw assembles the prompt with that context and serves the response.
+2. The learned `route_fn` (from the deployed brain pack) walks the knowledge graph and picks which context blocks to surface. It blends the graph's structural knowledge (`graph_prior`) with per-query relevance (`QTsim`), using a confidence gate to shift weight between them.
+3. OpenClaw assembles the prompt with that bounded context and serves the response.
 
 ### Learning (off the hot path)
 
