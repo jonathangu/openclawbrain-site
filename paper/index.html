@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenClawBrain Paper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Canonical paper route for OpenClawBrain: current PDF, paper metadata, supporting materials, and the links that keep the paper aligned with the live proof boundary.">
+  <meta property="og:title" content="OpenClawBrain Paper">
+  <meta property="og:description" content="The current OpenClawBrain paper, direct PDF, supporting materials, and the live proof boundary.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://openclawbrain.ai/paper/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://openclawbrain.ai/paper/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #071019;
+      --panel: rgba(10, 21, 32, 0.86);
+      --panel-soft: rgba(8, 18, 29, 0.78);
+      --line: rgba(144, 192, 222, 0.2);
+      --line-strong: rgba(144, 192, 222, 0.34);
+      --text: #dce8f1;
+      --muted: #97afbf;
+      --bright: #f7fbff;
+      --accent: #79d3ff;
+      --accent-strong: #3eb5ff;
+      --warm: #ffbe72;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+      --sans: "Space Grotesk", sans-serif;
+      --serif: "Newsreader", serif;
+      --mono: "IBM Plex Mono", monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(62, 181, 255, 0.18), transparent 32%),
+        radial-gradient(circle at 100% 0%, rgba(255, 190, 114, 0.12), transparent 28%),
+        linear-gradient(180deg, #071019 0%, #08131d 52%, #071019 100%);
+      font-family: var(--serif);
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      font-family: var(--mono);
+      font-size: 0.88em;
+      color: var(--warm);
+      background: rgba(255, 190, 114, 0.1);
+      padding: 0.12rem 0.34rem;
+      border-radius: 6px;
+    }
+    .shell {
+      width: min(1160px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding-bottom: 4.25rem;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.25rem 0 0.9rem;
+      font-family: var(--sans);
+      font-size: 0.92rem;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: var(--bright);
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .brand-mark {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--warm));
+      box-shadow: 0 0 0 6px rgba(121, 211, 255, 0.11);
+    }
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .nav-links a { color: var(--muted); }
+    .hero,
+    .hero-copy,
+    .hero-panel,
+    .status-card,
+    .paper-card,
+    .callout {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+      gap: 1rem;
+      padding: 1.15rem 0 1.8rem;
+      background: none;
+      border: 0;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+    .hero-copy {
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-copy::after {
+      content: "";
+      position: absolute;
+      inset: auto -18% -34% auto;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(121, 211, 255, 0.18), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-panel {
+      display: grid;
+      gap: 1rem;
+      padding: 1rem;
+      background: rgba(10, 21, 32, 0.72);
+    }
+    .eyebrow,
+    .kicker,
+    .meta {
+      font-family: var(--sans);
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.42rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(121, 211, 255, 0.09);
+      border: 1px solid rgba(121, 211, 255, 0.22);
+      font-size: 0.76rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--bright);
+    }
+    h1 {
+      margin-top: 1rem;
+      font-size: clamp(2.45rem, 5vw, 4.3rem);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+      max-width: 10ch;
+    }
+    .lead {
+      margin: 1rem 0 0;
+      max-width: 35rem;
+      font-size: 1.14rem;
+      color: #c9dae5;
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1.55rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0.75rem 1.05rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-family: var(--sans);
+      font-size: 0.94rem;
+      font-weight: 600;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+    .btn:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-strong), #7ddcff);
+      color: #03111b;
+    }
+    .btn-secondary {
+      background: rgba(121, 211, 255, 0.08);
+      border-color: rgba(121, 211, 255, 0.24);
+      color: var(--bright);
+    }
+    .hero-note {
+      margin: 1rem 0 0;
+      font-family: var(--sans);
+      font-size: 0.92rem;
+      color: var(--muted);
+      max-width: 39rem;
+    }
+    .tag-row {
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .tag {
+      padding: 0.45rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid rgba(144, 192, 222, 0.16);
+      background: rgba(6, 14, 22, 0.72);
+      font-family: var(--sans);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .status-card,
+    .paper-card {
+      padding: 1.1rem 1.15rem 1.05rem;
+      background: var(--panel-soft);
+      box-shadow: none;
+    }
+    .status-card ul {
+      margin: 0.7rem 0 0;
+      padding-left: 1.15rem;
+    }
+    .section {
+      margin-top: 1.4rem;
+    }
+    .section-head {
+      margin-bottom: 0.85rem;
+    }
+    .section-intro {
+      margin: 0.45rem 0 0;
+      color: var(--muted);
+      max-width: 46rem;
+    }
+    .paper-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .kicker {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.55rem;
+    }
+    .paper-card p,
+    .callout p {
+      margin: 0.7rem 0 0;
+      color: var(--muted);
+    }
+    .callout {
+      padding: 1rem 1.05rem;
+      background: rgba(10, 21, 32, 0.72);
+    }
+    footer {
+      margin-top: 2rem;
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    @media (max-width: 920px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+      .nav-links { justify-content: flex-start; }
+    }
+    @media (max-width: 760px) {
+      .shell {
+        width: min(100vw - 24px, 1160px);
+      }
+      .topbar {
+        align-items: flex-start;
+      }
+      .hero-copy,
+      .hero-panel,
+      .status-card,
+      .paper-card,
+      .callout {
+        border-radius: 20px;
+      }
+      .hero-copy { padding: 1.45rem; }
+      h1 { max-width: 100%; }
+      .lead { font-size: 1.08rem; }
+      .paper-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>OpenClawBrain</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="../">Home</a>
+        <a href="../proof/">Proof</a>
+        <a href="../blog/">Blog</a>
+        <a href="../materials/">Materials</a>
+        <a href="../openclawbrain.pdf">PDF</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">Canonical paper route</div>
+          <h1>Paper, PDF, and supporting materials.</h1>
+          <p class="lead">
+            This is the human-facing home for the current OpenClawBrain paper. It packages the March 2, 2026 PDF with version metadata, the core research framing, and the links that keep the paper aligned with the live proof boundary on the site.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="../openclawbrain.pdf">Open the PDF</a>
+            <a class="btn btn-secondary" href="../proof/">Review the proof package</a>
+            <a class="btn btn-secondary" href="../blog/v12.2.6-series/">Read the current series</a>
+            <a class="btn btn-secondary" href="../materials/">Supporting materials</a>
+          </div>
+          <p class="hero-note">
+            Evidence boundary: the deterministic workflow-proof slice is live and reproducible now. Recorded-session, shadow-mode, and narrow online proof are still future work, so the paper should be read alongside <a href="../proof/">/proof/</a>.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Version v12.2.6+</span>
+            <span class="tag">Jonathan Gu</span>
+            <span class="tag">March 2, 2026</span>
+            <span class="tag">Direct PDF: <code>/openclawbrain.pdf</code></span>
+          </div>
+        </div>
+
+        <div class="hero-panel">
+          <article class="status-card">
+            <div class="kicker">Current artifact</div>
+            <h2>OpenClawBrain v12.2.6+</h2>
+            <ul>
+              <li><strong>Title:</strong> Shadow Routing with QTsim Confidence Mixing and Unified Policy Learning</li>
+              <li><strong>Author:</strong> Jonathan Gu</li>
+              <li><strong>Canonical route:</strong> <a href="./">/paper/</a></li>
+              <li><strong>Direct artifact:</strong> <a href="../openclawbrain.pdf">/openclawbrain.pdf</a></li>
+              <li><strong>Source:</strong> <a href="../openclawbrain.tex">openclawbrain.tex</a></li>
+            </ul>
+          </article>
+
+          <article class="status-card">
+            <div class="kicker">Read it honestly</div>
+            <h2>Mechanism proof is live. Full product proof is not.</h2>
+            <ul>
+              <li>The paper covers the hot/cold path split, route signals, confidence mixing, and unified policy learning.</li>
+              <li><a href="../proof/">/proof/</a> shows what is actually proven now and what still needs stronger evidence.</li>
+              <li><a href="../blog/v12.2.6-series/">/blog/v12.2.6-series/</a> explains how the product story and rollout path fit together.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>What the paper covers</h2>
+          <p class="section-intro">The paper is the longer technical framing behind the current site. These are the core claims it tries to organize, without turning mechanism proof into online proof.</p>
+        </div>
+        <div class="paper-grid">
+          <article class="paper-card">
+            <div class="kicker">System split</div>
+            <h3>Hot path local, cold path asynchronous</h3>
+            <p>The central operating shape is a strict split: local bounded routing on live OpenClaw turns, then replay, labeling, and policy updates later off the hot path.</p>
+          </article>
+          <article class="paper-card">
+            <div class="kicker">Route signals</div>
+            <h3><code>graph_prior</code> plus QTsim confidence mixing</h3>
+            <p>The runtime policy combines durable structure with query-conditioned fit, then uses uncertainty features like entropy and margin to decide how much each signal should matter per decision.</p>
+          </article>
+          <article class="paper-card">
+            <div class="kicker">Learning rule</div>
+            <h3>Unified policy learning</h3>
+            <p>Teacher distillation and policy-gradient updates are treated as one learning loop with an authority order: human corrections first, then self-learning outcomes, harvested signals, and async-teacher labels.</p>
+          </article>
+          <article class="paper-card">
+            <div class="kicker">Maintenance path</div>
+            <h3>RL-native graph maintenance</h3>
+            <p>The paper also frames graph maintenance as a control problem, with shipped Phase 2a hooks now and future connect, split, and merge actions behind conservative guardrails.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Read next</h2>
+          <p class="section-intro">The paper is easier to evaluate when it is paired with the packaged proof, the current narrative, and the underlying materials.</p>
+        </div>
+        <div class="paper-grid">
+          <a class="paper-card" href="../proof/">
+            <div class="kicker">Proof package</div>
+            <h3>What is proven now</h3>
+            <p>Mechanism proof, the evidence ladder, and the claim boundary that keeps the site from overclaiming beyond current artifacts.</p>
+          </a>
+          <a class="paper-card" href="../blog/v12.2.6-series/">
+            <div class="kicker">Current series</div>
+            <h3>Why the product is framed this way</h3>
+            <p>The shortest path through shadow routing, the learned runtime router, operator rollout, and the evaluation contract.</p>
+          </a>
+          <a class="paper-card" href="../materials/">
+            <div class="kicker">Materials</div>
+            <h3>Docs, figures, and repository references</h3>
+            <p>Reproduce-eval steps, figure links, GitHub references, and the supporting material list for the current site.</p>
+          </a>
+          <a class="paper-card" href="../docs/openclaw-integration.md">
+            <div class="kicker">Operator docs</div>
+            <h3>OpenClaw integration</h3>
+            <p>Brain-first mode, fail-open wiring, bounded prompt context, and the background learning loop that serves later turns.</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="callout">
+          <p>Canonical human-facing paper route: <a href="./">/paper/</a>. Direct artifact route: <a href="../openclawbrain.pdf">/openclawbrain.pdf</a>.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      The paper should stay synchronized with the proof package: mechanism proof is live, but recorded-session, shadow, and online proof still need their own artifacts.
+    </footer>
+  </div>
+</body>
+</html>

@@ -3,133 +3,166 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Post 5: Industry Baselines + Ablation Study</title>
-  <meta name="description" content="Why OpenClawBrain compares against vector top-k, top-k + reranker, and pointer-chasing, and how we report reproducible metrics." />
+  <title>Post 5: Baselines and the Comparison Contract</title>
+  <meta name="description" content="How OpenClawBrain should compare itself, what baseline modes matter, and which claims still need head-to-head evidence." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/05-industry-baselines-ablations/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
   <style>
-    :root { --bg:#10141b; --text:#e6edf6; --muted:#9aa7bd; --bright:#f7fbff; --border:#2b3a52; --accent:#7dc9ff; --card:#15202f; --sans:"Inter",system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; --mono:"JetBrains Mono",monospace; }
-    body { margin:0; background:radial-gradient(circle at 20% 0%,#1b2a3e,#10141b 55%); color:var(--text); font-family:var(--serif); line-height:1.8; }
-    main { max-width:880px; margin:0 auto; padding:2.5rem 1.2rem 3.4rem; }
+    :root { --bg:#0d131a; --panel:rgba(17,28,40,0.86); --line:rgba(125,201,255,0.18); --text:#e5edf6; --muted:#9ca9bf; --bright:#f8fbff; --accent:#80cbff; --sans:"Space Grotesk",sans-serif; --serif:"Newsreader",serif; --mono:"IBM Plex Mono",monospace; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(circle at 15% 0%, rgba(128,203,255,0.16), transparent 30%), linear-gradient(180deg,#0d131a 0%,#101821 55%,#0d131a 100%); color:var(--text); font-family:var(--serif); line-height:1.82; }
+    a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+    main { width:min(940px,calc(100vw - 32px)); margin:0 auto; padding:2rem 0 3rem; }
+    .nav,.meta,.eyebrow { font-family:var(--sans); }
+    .nav { color:var(--muted); font-size:.88rem; margin-bottom:1rem; }
+    .eyebrow { display:inline-flex; padding:.38rem .68rem; border-radius:999px; border:1px solid rgba(128,203,255,0.18); background:rgba(128,203,255,0.08); color:var(--accent); font-size:.76rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; }
     h1,h2 { font-family:var(--sans); color:var(--bright); }
-    .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.85rem; }
-    a { color:var(--accent); }
-    table { width:100%; border-collapse:collapse; margin:1rem 0; font-family:var(--sans); font-size:.92rem; }
-    th,td { border:1px solid var(--border); padding:.6rem .7rem; text-align:left; vertical-align:top; }
-    th { color:var(--bright); background:#142235; }
-    figure { margin:1.2rem 0 1.6rem; }
-    figure img { width:100%; border:1px solid var(--border); border-radius:12px; background:#101a28; }
-    figcaption { font-family:var(--sans); color:var(--muted); font-size:.82rem; margin-top:.45rem; }
-    pre { border:1px solid var(--border); border-radius:10px; background:#0e1726; padding:.9rem 1rem; overflow:auto; font-family:var(--mono); font-size:.86rem; }
-    .callout { border:1px solid var(--border); border-radius:12px; background:var(--card); padding:1rem 1.1rem; margin:1rem 0; }
+    h1 { margin:.95rem 0 .4rem; font-size:clamp(2rem,4vw,3.15rem); line-height:1.02; letter-spacing:-.04em; max-width:15ch; }
+    h2 { margin:1.5rem 0 .6rem; font-size:1.24rem; }
+    p { margin:0 0 1rem; }
+    .meta { color:var(--muted); font-size:.84rem; margin-bottom:1rem; }
+    .card { border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 56px rgba(0,0,0,.28); padding:1rem 1.05rem; margin:1rem 0; }
+    table { width:100%; border-collapse:collapse; margin:1rem 0; font-family:var(--sans); }
+    th,td { border:1px solid rgba(128,203,255,0.14); padding:.6rem .68rem; text-align:left; vertical-align:top; }
+    th { color:var(--bright); background:rgba(12,20,29,0.88); }
+    code { font-family:var(--mono); color:#c6e8ff; background:rgba(198,232,255,0.08); padding:.12rem .32rem; border-radius:6px; }
+    ul { padding-left:1.2rem; }
+    @media (max-width: 760px) { main { width:min(100vw - 24px,940px); } }
   </style>
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a> · <a href="/blog/v12.2.6-series/">series</a></div>
-    <h1>Post 5: Industry Baselines + Ablation Study</h1>
-    <p class="meta">March 2026 · v12.2.6+ series</p>
+    <div class="nav"><a href="/">openclawbrain.ai</a> | <a href="/blog/">blog</a> | <a href="/proof/">proof</a> | <a href="/paper/">paper</a> | <a href="/blog/v12.2.6-series/">series</a></div>
+    <div class="eyebrow">Post 5</div>
+    <h1>Baselines and the comparison contract</h1>
+    <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>We align our evaluation with industry standard baselines so it is easy to compare routing systems on real operator workloads. This post explains why those baselines exist, how we map them to OpenClawBrain modes, and which metrics we report.</p>
+    <p>OpenClawBrain should compare itself against retrieval behaviors operators would plausibly use instead of hiding behind vague "AI memory" framing. The current published slice on <a href="/proof/#workflow-proof">/proof/</a> is narrow but concrete: 4 deterministic workflow queries scored with exact-target success.</p>
 
-    <h2>Why These Baselines</h2>
-    <table>
-      <thead>
-        <tr><th>Baseline</th><th>What It Represents</th><th>Why It Matters</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Vector top-k</strong></td>
-          <td>Plain embedding retrieval without traversal.</td>
-          <td>Cold-start floor: strong when there is no learned routing yet.</td>
-        </tr>
-        <tr>
-          <td><strong>Top-k + reranker</strong></td>
-          <td>Deterministic re-ranking over candidate edges (<code>edge+sim</code>).</td>
-          <td>Represents classic “cheap rerank” stacks without learning.</td>
-        </tr>
-        <tr>
-          <td><strong>Pointer-chasing</strong></td>
-          <td>Iterative multi-hop traversal without learned routing policy.</td>
-          <td>Captures the common failure mode of repeated pointer-following in memory systems.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="callout">
-      <p style="margin:0;">Mapping to harness modes:</p>
-      <ul>
-        <li>Vector top-k → <code>vector_only</code></li>
-        <li>Top-k + reranker → <code>edge_sim_legacy</code> (deterministic <code>route_mode=edge+sim</code>)</li>
-        <li>Pointer-chasing → <code>edge_sim_legacy</code> with multi-hop traversal enabled (the harness default)</li>
-      </ul>
-      <p style="margin:0.6rem 0 0;">OpenClawBrain learned routing is reported as <code>learned</code>, with <code>graph_prior_only</code> and <code>qtsim_only</code> as ablation bounds.</p>
+    <div class="card">
+      <p>That scope matters. These numbers are strong enough to compare mechanism-level baselines honestly; they are not broad enough to claim real OpenClaw workload wins yet. For that, the next rung is still recorded-session eval, then shadow traffic, then a narrow online rollout.</p>
     </div>
 
-    <h2>Metrics We Report</h2>
+    <h2>Current published baseline slice</h2>
     <table>
       <thead>
-        <tr><th>Metric</th><th>Definition</th><th>Source</th></tr>
+        <tr><th>Baseline</th><th>Why it matters</th><th>Current exact-target success</th></tr>
       </thead>
       <tbody>
-        <tr><td>Reward / accuracy</td><td>Task success or correctness rate (dataset dependent).</td><td>Eval harness outputs + datasets.</td></tr>
-        <tr><td>% oracle gap closed</td><td>Fraction of distance to oracle reduced over training.</td><td>Expert-regions simulation CSV.</td></tr>
-        <tr><td>Latency</td><td>p50/p95 end-to-end query time.</td><td><code>run_eval.py</code> JSON output.</td></tr>
-        <tr><td>Tool calls</td><td>Count of external tool invocations per query.</td><td>Downstream agent instrumentation.</td></tr>
-        <tr><td>Tokens</td><td>Prompt + completion tokens per query.</td><td>Downstream agent instrumentation.</td></tr>
-        <tr><td>Cost</td><td>Token or tool-call cost in USD (or local cost model).</td><td>Downstream agent instrumentation.</td></tr>
+        <tr>
+          <td><code>vector_topk</code></td>
+          <td>Cold-start semantic retrieval floor with no workflow structure and no learned routing.</td>
+          <td>0/4</td>
+        </tr>
+        <tr>
+          <td><code>pointer_chase</code></td>
+          <td>Simple deterministic traversal over explicit links. It checks whether a plain walk over stored pointers is already enough.</td>
+          <td>1/4</td>
+        </tr>
+        <tr>
+          <td><code>graph_prior_only</code></td>
+          <td>Durable structure without learned routing. This is the "start useful fast" baseline.</td>
+          <td>2/4</td>
+        </tr>
+        <tr>
+          <td><code>learned</code></td>
+          <td>The same memory layer after background learning has improved the runtime route policy.</td>
+          <td>4/4</td>
+        </tr>
       </tbody>
     </table>
 
-    <h2>Reproducibility Contract</h2>
-    <p>We do not publish new numbers without a traceable run. If results are missing, tables remain <strong>TBD</strong> until the run artifacts exist.</p>
+    <p>The learning curve is the second half of the comparison. <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs, while <code>learned</code> first reaches 4/4 at epoch 14. That is the current concrete evidence for the product framing: useful from graph priors first, better later via background learning.</p>
+
+    <h2>10-seed ground-zero comparison (March 2026)</h2>
+    <p>The ground-zero harness scales the baseline comparison to 800 queries&nbsp;&times;&nbsp;10 seeds with mid-run relation drift. Cost and accuracy now sit side by side:</p>
 
     <table>
       <thead>
-        <tr><th>Setting (expert-regions sim)</th><th>Reward / Accuracy</th><th>% Oracle Gap Closed</th><th>Latency (p50/p95)</th><th>Tool Calls</th><th>Tokens</th><th>Cost</th></tr>
+        <tr><th>Baseline</th><th>Accuracy</th><th>Context used</th><th>Traversal cost</th><th>Win rate vs full_brain</th></tr>
       </thead>
       <tbody>
-        <tr><td>Vector top-k</td><td>0.878629 / 0.8920</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
-        <tr><td>Top-k + reranker</td><td>0.879762 / 0.8935</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
-        <tr><td>Pointer-chasing (graph prior only)</td><td>0.555147 / 0.5290</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
-        <tr><td>OpenClawBrain learned (mixed)</td><td>0.935126 / 0.9680</td><td>96.74%</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+        <tr><td><code>full_brain</code></td><td><strong>0.9723</strong></td><td>800</td><td>800</td><td>&mdash;</td></tr>
+        <tr><td><code>vector_rag_rerank</code></td><td>0.8901</td><td>4 000</td><td>6 400</td><td>1/10</td></tr>
+        <tr><td><code>vector_rag</code></td><td>0.7966</td><td>800</td><td>800</td><td>0/10</td></tr>
+        <tr><td><code>heuristic_stateful</code></td><td>0.7943</td><td>800</td><td>800</td><td>0/10</td></tr>
       </tbody>
     </table>
 
-    <p>In the expert-regions simulation, the learned mixed router outperforms the best industry baseline (top-k + reranker) by +0.0554 reward and +0.0745 accuracy, while closing 96.74% of the oracle gap. Pointer-chasing (graph prior only) trails materially, underscoring the value of learned routing even against strong vector baselines.</p>
+    <p><code>vector_rag_rerank</code> is the nearest competitor but uses 5&times; the context and 8&times; the traversal cost for lower accuracy. <code>full_brain</code> wins in 10/10 seeds against <code>vector_rag</code> and <code>heuristic_stateful</code>, and 9/10 against <code>vector_rag_rerank</code>.</p>
 
-    <figure>
-      <img src="/figures/eval/reward_vs_epoch.svg" alt="Reward versus epoch curve" loading="lazy" />
-      <figcaption>Reward curve from the expert-regions simulation CSV output.</figcaption>
-    </figure>
-    <figure>
-      <img src="/figures/eval/oracle_gap_closed.svg" alt="Oracle gap closed curve" loading="lazy" />
-      <figcaption>Percent oracle gap closed over training epochs.</figcaption>
-    </figure>
-    <figure>
-      <img src="/figures/eval/ablation_bar_chart.svg" alt="Ablation bar chart" loading="lazy" />
-      <figcaption>Ablation chart generated from CSV outputs. Replace placeholders with run-linked data.</figcaption>
-    </figure>
+    <h2>Why these baselines belong</h2>
+    <table>
+      <thead>
+        <tr><th>Question</th><th>Why the answer matters</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>If <code>vector_topk</code> were already enough, why add a memory layer?</td>
+          <td>Because a durable memory product should beat a plain semantic floor on workflow retrieval, not just rename it.</td>
+        </tr>
+        <tr>
+          <td>If <code>pointer_chase</code> were enough, why learn anything?</td>
+          <td>Because deterministic link-following is a credible alternative for explicit workflows. It needs to be ruled in or out directly.</td>
+        </tr>
+        <tr>
+          <td>If <code>graph_prior_only</code> matched <code>learned</code>, why keep the learning path?</td>
+          <td>Because the product claim is not just "there is a graph." It is "the graph helps immediately, and background learning improves later."</td>
+        </tr>
+      </tbody>
+    </table>
 
-    <h2>How To Reproduce</h2>
-    <p>Use the canonical repro steps in <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>. The short version:</p>
-    <pre>cd /path/to/openclawbrain
-python examples/eval/run_eval.py \
-  --state /path/to/state.json \
-  --queries /path/to/queries.jsonl \
-  --modes vector_only,edge_sim_legacy,graph_prior_only,qtsim_only,learned \
-  --output /tmp/ocb_eval.json \
-  --print-per-query
+    <h2>What the current comparison says honestly</h2>
+    <div class="card">
+      <ul>
+        <li>The workflow-proof slice cleanly separates cold-start semantic retrieval, deterministic traversal, durable graph priors, and the learned policy.</li>
+        <li>The 10-seed ground-zero harness extends this to 800 queries per seed with relation drift: <code>full_brain</code> reaches 0.9723 accuracy at 800 context / 800 traversal cost, while <code>vector_rag_rerank</code> reaches 0.8901 at 4&thinsp;000 context / 6&thinsp;400 traversal cost.</li>
+        <li>The site still does <strong>not</strong> publish broad operator wins from real OpenClaw traffic. This is bounded benchmark evidence, not recorded-session or production proof.</li>
+      </ul>
+    </div>
 
-python examples/eval/simulate_expert_regions.py --output-dir /tmp/ocb_expert_regions
-python examples/eval/simulate_two_cluster_routing.py --output-dir /tmp/ocb_two_cluster
+    <h2>What stronger comparison evidence looks like</h2>
+    <table>
+      <thead>
+        <tr><th>Stage</th><th>Use</th><th>Still too weak for broad product claims?</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Current deterministic workflow proof</td>
+          <td>Mechanism proof on one fixed, reproducible query slice</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Offline recorded-session eval</td>
+          <td>Head-to-head on the same workload</td>
+          <td>Stronger, but still not live</td>
+        </tr>
+        <tr>
+          <td>Shadow traffic</td>
+          <td>Real OpenClaw traffic with side-by-side scoring</td>
+          <td>Often enough for narrow claims</td>
+        </tr>
+        <tr>
+          <td>Narrow online rollout</td>
+          <td>Operational decision support</td>
+          <td>Best basis for public product claims</td>
+        </tr>
+      </tbody>
+    </table>
 
-python3 /path/to/openclawbrain-site/scripts/plot_eval.py \
-  --inputs /tmp/ocb_expert_regions /tmp/ocb_two_cluster \
-  --out figures/eval</pre>
+    <h2>Comparison discipline</h2>
+    <ul>
+      <li>Use the same query set, scoring rubric, and prompt budget rules across all modes.</li>
+      <li>Keep the command, artifact path, and commit SHA for every published number.</li>
+      <li>Leave cells as <code>TBD</code> when the artifact does not exist yet.</li>
+      <li>Do not describe the current 4-query deterministic slice as a real operator win.</li>
+    </ul>
 
-    <p>Expected outputs include <code>/tmp/ocb_eval.json</code>, <code>/tmp/ocb_expert_regions/simulation_curve.csv</code>, and regenerated SVGs in <code>figures/eval/</code>.</p>
+    <p>Packaged proof boundary: <a href="/proof/">/proof/</a>. Reproduction steps: <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>. Turn-level artifact contract: <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
 
-    <p>Series index: <a href="/blog/v12.2.6-series/">OpenClawBrain v12.2.6+ series</a>.</p>
+    <p>Next: <a href="/blog/v12.2.6-series/06-openclaw-brain-first-integration/">Post 6 on brain-first OpenClaw integration</a>.</p>
   </main>
 </body>
 </html>

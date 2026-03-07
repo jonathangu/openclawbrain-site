@@ -5,49 +5,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Post 1: Shadow Routing + Ultimate Policy Gradient</title>
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/01-shadow-routing-upg/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
   <style>
-    :root { --bg:#11151f; --text:#d5dbe7; --muted:#97a3b9; --bright:#f4f7fd; --border:#2a3242; --accent:#7ec0ff; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; }
-    body { margin:0; background:radial-gradient(circle at 0% 0%,#1a2233,#11151f 55%); color:var(--text); font-family:var(--serif); line-height:1.78; }
-    main { max-width:860px; margin:0 auto; padding:2.5rem 1.2rem 3rem; }
-    h1,h2 { font-family:var(--sans); color:var(--bright); }
-    .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.84rem; }
-    .box { border:1px solid var(--border); border-radius:10px; background:#161d2c; padding:.9rem 1rem; margin:1rem 0; }
-    figure { margin:1.2rem 0 1.5rem; }
-    figure img { width:100%; border:1px solid var(--border); border-radius:12px; background:#0f1420; }
-    figcaption { font-family:var(--sans); color:var(--muted); font-size:.82rem; margin-top:.45rem; }
-    a { color:var(--accent); }
+    :root { --bg:#0b1221; --panel:rgba(16,25,40,0.86); --line:rgba(135,192,233,0.18); --text:#dbe6f1; --muted:#9dafc2; --bright:#f7fbff; --accent:#7fd2ff; --warm:#ffbe76; --sans:"Space Grotesk",sans-serif; --serif:"Newsreader",serif; --mono:"IBM Plex Mono",monospace; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(circle at 0% 0%, rgba(127,210,255,0.18), transparent 30%), linear-gradient(180deg,#0b1221 0%,#0c1423 55%,#0b1221 100%); color:var(--text); font-family:var(--serif); line-height:1.8; }
+    a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+    main { width:min(900px,calc(100vw - 32px)); margin:0 auto; padding:2rem 0 3rem; }
+    .nav,.meta,.eyebrow { font-family:var(--sans); }
+    .nav { color:var(--muted); font-size:.88rem; margin-bottom:1rem; }
+    .eyebrow { display:inline-flex; padding:.38rem .68rem; border-radius:999px; border:1px solid rgba(127,210,255,0.18); background:rgba(127,210,255,0.08); color:var(--accent); font-size:.76rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; }
+    h1,h2,h3 { font-family:var(--sans); color:var(--bright); }
+    h1 { margin:.95rem 0 .4rem; font-size:clamp(2rem,4vw,3.3rem); line-height:1.02; letter-spacing:-.04em; max-width:14ch; }
+    h2 { margin:1.5rem 0 .6rem; font-size:1.28rem; }
+    p { margin:0 0 1rem; }
+    .meta { color:var(--muted); font-size:.84rem; margin-bottom:1rem; }
+    .box, figure { border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 56px rgba(0,0,0,.28); }
+    .box { padding:1rem 1.05rem; margin:1rem 0; }
+    figure { padding:1rem; margin:1rem 0 1.25rem; }
+    figure img { width:100%; border-radius:16px; border:1px solid rgba(135,192,233,0.14); background:#0a1019; }
+    figcaption { margin-top:.65rem; color:var(--muted); font-family:var(--sans); font-size:.84rem; }
+    pre,code { font-family:var(--mono); }
+    code { color:var(--warm); background:rgba(255,190,118,0.1); padding:.12rem .32rem; border-radius:6px; }
+    pre { margin:0; padding:.95rem 1rem; overflow:auto; border-radius:16px; background:rgba(8,14,23,0.9); border:1px solid rgba(135,192,233,0.14); color:#cfe6fb; font-size:.86rem; line-height:1.65; }
+    ol,ul { padding-left:1.2rem; }
+    .note { padding:1rem 1.05rem; border-radius:18px; border:1px solid rgba(127,210,255,0.16); background:rgba(8,15,24,0.76); font-family:var(--sans); color:#cfe0eb; }
+    @media (max-width: 760px) { main { width:min(100vw - 24px,900px); } }
   </style>
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a> · <a href="/blog/v12.2.6-series/">series</a></div>
-    <h1>Post 1: Shadow Routing + Ultimate Policy Gradient</h1>
-    <p class="meta">March 2026 · v12.2.6+ series</p>
+    <div class="nav"><a href="/">openclawbrain.ai</a> | <a href="/blog/">blog</a> | <a href="/proof/">proof</a> | <a href="/paper/">paper</a> | <a href="/blog/v12.2.6-series/">series</a></div>
+    <div class="eyebrow">Post 1</div>
+    <h1>Shadow routing + Ultimate Policy Gradient</h1>
+    <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>The current OpenClawBrain design separates runtime routing from heavy learning. Runtime is local and bounded. Learning happens asynchronously over replay data.</p>
+    <p>OpenClawBrain is easiest to understand if you separate the live query path from the learning path. The live path serves OpenClaw. The learning path produces better labels and better routing weights for later turns.</p>
 
-    <h2>Shadow Routing</h2>
-    <p>"Shadow routing" means teacher models do not sit on the query hot path. They run later, label prior decisions, and produce updates for the next deployment window.</p>
+    <h2>Shadow routing</h2>
+    <p>"Shadow routing" means the expensive teacher stays off the hot path. The brain answers live queries with the learned runtime <code>route_fn</code>. Replay, scanner/harvester passes, and the async teacher work later on historical and ongoing data.</p>
     <div class="box">
-      Hot path: embedding lookup -> local route policy -> bounded context output.<br />
-      Cold path: replay -> teacher labels -> distillation + policy-gradient updates.
+      <pre>hot path: OpenClaw -&gt; query_brain -&gt; learned route_fn -&gt; bounded [BRAIN_CONTEXT]
+shadow path: sessions -&gt; scanner/harvester labels + async teacher labels -&gt; Ultimate Policy Gradient -&gt; updated route_fn</pre>
     </div>
+
     <figure>
-      <img src="/figures/eval/shadow_routing_hotpath_loop.svg" alt="Shadow routing hot path and background loop diagram" loading="lazy" />
-      <figcaption>Hot-path routing remains local while teacher supervision stays in the asynchronous shadow loop.</figcaption>
+      <img src="/figures/eval/shadow_routing_hotpath_loop.svg" alt="Diagram showing the hot-path query loop and the asynchronous shadow-learning loop" loading="lazy" />
+      <figcaption>The live router stays local and bounded; the shadow loop exists to improve the next router, not to answer the current turn.</figcaption>
     </figure>
 
-    <h2>Ultimate Policy Gradient</h2>
-    <p>All supervision enters one update stack with an explicit authority order:</p>
+    <h2>Where the labels come from</h2>
+    <p>The update rule is fed by multiple label sources because OpenClawBrain is meant to live inside a real OpenClaw workflow.</p>
     <ol>
-      <li>Human feedback</li>
-      <li>Self-learning outcomes</li>
-      <li>Harvested weak signals</li>
-      <li>Async teacher labels</li>
+      <li><strong>Human feedback</strong>: corrections and teachings tied to the same <code>chat_id</code> as the fired route.</li>
+      <li><strong>Self-learning outcomes</strong>: positive or negative outcomes on turns the brain actually helped serve.</li>
+      <li><strong>Scanner / harvester labels</strong>: structured signals mined from historical and ongoing session data.</li>
+      <li><strong>Async teacher labels</strong>: background teacher judgments on ambiguous or difficult route decisions.</li>
     </ol>
-    <p>The hierarchy ensures high-authority corrections can override volume-driven but weaker labels.</p>
 
-    <p>Next: <a href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">Post 2 on QTsim confidence mixing</a>.</p>
+    <h2>Ultimate Policy Gradient</h2>
+    <p>Ultimate Policy Gradient is the unifying update rule. The system does not learn one routing policy from human labels and a second routing policy from teacher labels. It learns one runtime policy while preserving an authority order among label sources.</p>
+    <div class="note">
+      Human corrections should be able to override weaker but higher-volume labels. That is a product requirement, not just a training detail.
+    </div>
+
+    <h2>Why this matters for OpenClaw</h2>
+    <ul>
+      <li>You can use the brain immediately after `init` and `serve`.</li>
+      <li>Historical replay and teacher labeling do not block first use.</li>
+      <li>The thing that improves over time is the runtime <code>route_fn</code> that OpenClaw actually calls.</li>
+    </ul>
+
+    <p>Next: <a href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">Post 2 on the learned runtime route function</a>.</p>
   </main>
 </body>
 </html>

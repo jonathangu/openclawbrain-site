@@ -3,67 +3,184 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Post 3: Evaluation and Ablations</title>
+  <title>Post 3: Evaluation - Prove It Without Pretending</title>
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/03-evaluation-ablations/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
   <style>
-    :root { --bg:#0f1916; --text:#d9e9e4; --muted:#9fb8b0; --bright:#f4fffb; --border:#34544a; --accent:#7ae2bf; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; }
-    body { margin:0; background:radial-gradient(circle at 85% 0%,#1b2d27,#0f1916 52%); color:var(--text); font-family:var(--serif); line-height:1.8; }
-    main { max-width:860px; margin:0 auto; padding:2.5rem 1.2rem 3rem; }
-    h1,h2 { font-family:var(--sans); color:var(--bright); }
-    .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.84rem; }
+    :root { --bg:#0f1815; --panel:rgba(16,29,24,0.86); --line:rgba(122,226,191,0.2); --text:#d9e9e4; --muted:#a2bbb3; --bright:#f5fffb; --accent:#7ae2bf; --sans:"Space Grotesk",sans-serif; --serif:"Newsreader",serif; --mono:"IBM Plex Mono",monospace; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(circle at 100% 0%, rgba(122,226,191,0.16), transparent 28%), linear-gradient(180deg,#0f1815 0%,#111d19 55%,#0f1815 100%); color:var(--text); font-family:var(--serif); line-height:1.82; }
+    a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+    main { width:min(920px,calc(100vw - 32px)); margin:0 auto; padding:2rem 0 3rem; }
+    .nav,.meta,.eyebrow { font-family:var(--sans); }
+    .nav { color:var(--muted); font-size:.88rem; margin-bottom:1rem; }
+    .eyebrow { display:inline-flex; padding:.38rem .68rem; border-radius:999px; border:1px solid rgba(122,226,191,0.18); background:rgba(122,226,191,0.08); color:var(--accent); font-size:.76rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; }
+    h1,h2,h3 { font-family:var(--sans); color:var(--bright); }
+    h1 { margin:.95rem 0 .4rem; font-size:clamp(2rem,4.1vw,3.15rem); line-height:1.02; letter-spacing:-.04em; max-width:13ch; }
+    h2 { margin:1.5rem 0 .6rem; font-size:1.24rem; }
+    p { margin:0 0 1rem; }
+    .meta { color:var(--muted); font-size:.84rem; margin-bottom:1rem; }
+    .card, figure { border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 56px rgba(0,0,0,.28); }
+    .card { padding:1rem 1.05rem; margin:1rem 0; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; margin:1rem 0; }
+    figure { padding:1rem; margin:1rem 0 1.25rem; }
+    figure img { width:100%; border-radius:16px; border:1px solid rgba(122,226,191,0.14); background:#12201c; }
+    figcaption { margin-top:.65rem; color:var(--muted); font-family:var(--sans); font-size:.84rem; }
+    ul,ol { padding-left:1.2rem; }
     table { width:100%; border-collapse:collapse; margin:1rem 0; font-family:var(--sans); }
-    th,td { border:1px solid var(--border); padding:.55rem .65rem; text-align:left; }
-    th { color:var(--bright); }
-    figure { margin:1.2rem 0 1.5rem; }
-    figure img { width:100%; border:1px solid var(--border); border-radius:12px; background:#12201c; }
-    figcaption { font-family:var(--sans); color:var(--muted); font-size:.82rem; margin-top:.45rem; }
-    a { color:var(--accent); }
+    th,td { border:1px solid rgba(122,226,191,0.14); padding:.6rem .68rem; text-align:left; vertical-align:top; }
+    th { color:var(--bright); background:rgba(12,24,20,0.88); }
+    code { font-family:var(--mono); color:#aef0d4; background:rgba(174,240,212,0.08); padding:.12rem .32rem; border-radius:6px; }
+    @media (max-width: 820px) {
+      main { width:min(100vw - 24px,920px); }
+      .grid { grid-template-columns:1fr; }
+    }
   </style>
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a> · <a href="/blog/v12.2.6-series/">series</a></div>
-    <h1>Post 3: Evaluation and Ablations</h1>
-    <p class="meta">March 2026 · v12.2.6+ series</p>
+    <div class="nav"><a href="/">openclawbrain.ai</a> | <a href="/blog/">blog</a> | <a href="/proof/">proof</a> | <a href="/paper/">paper</a> | <a href="/blog/v12.2.6-series/">series</a></div>
+    <div class="eyebrow">Post 3</div>
+    <h1>Evaluation: prove it without pretending</h1>
+    <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>Claims for the current system should follow the canonical repro path in <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a> and avoid unreproducible benchmark numbers.</p>
+    <p>OpenClawBrain needs a cleaner evidence story than "the simulations look good." The current deterministic workflow-proof slice on <a href="/proof/#workflow-proof">/proof/</a> makes the mechanism proof concrete, but product claims still need a stronger ladder.</p>
 
-    <h2>Core Ablations</h2>
-    <ul>
-      <li><code>graph_prior</code> only vs <code>QTsim</code> only vs mixed policy</li>
-      <li>Fixed mixer vs entropy/margin confidence gate</li>
-      <li>Distillation only vs policy gradient only vs combined</li>
-      <li>No maintain vs connect-only vs connect+split+merge (as phases ship)</li>
-    </ul>
-    <figure>
-      <img src="/figures/eval/reward_vs_epoch.svg" alt="Reward versus epoch learning curve" loading="lazy" />
-      <figcaption>Learning curve from generated eval artifacts. Replace placeholder output with run-linked CSV data.</figcaption>
-    </figure>
-    <figure>
-      <img src="/figures/eval/oracle_gap_closed.svg" alt="Oracle gap closed versus epoch curve" loading="lazy" />
-      <figcaption>Fraction of oracle gap closed over training epochs.</figcaption>
-    </figure>
+    <div class="grid">
+      <div class="card">
+        <h3>Proven now</h3>
+        <p><code>full_brain</code> 0.9723 accuracy across 10 seeds, beating <code>vector_rag</code> and <code>heuristic_stateful</code> in 10/10 seeds and <code>vector_rag_rerank</code> in 9/10&mdash;at 5&times; lower context cost.</p>
+      </div>
+      <div class="card">
+        <h3>Needs head-to-head</h3>
+        <p>Recorded-session comparisons, shadow traffic, and narrow online rollout before claiming better task outcomes on real OpenClaw workflows.</p>
+      </div>
+      <div class="card">
+        <h3>Not claimed</h3>
+        <p>No blanket benchmark wins, no production latency or cost win, and no production superiority from deterministic artifacts alone.</p>
+      </div>
+    </div>
 
-    <h2>Reporting Contract</h2>
+    <h2>Current workflow-proof slice</h2>
+    <p>The current published slice is intentionally narrow: exact-target retrieval on 4 deterministic workflow queries. It is useful because it tests the product framing directly: can durable graph priors make OpenClawBrain useful before learning, and does background learning later improve the served <code>route_fn</code>?</p>
+
     <table>
       <thead>
-        <tr><th>Setting</th><th>Success (%)</th><th>Context Tokens</th><th>Latency (ms)</th></tr>
+        <tr><th>Mode</th><th>Exact-target success</th><th>What this isolates</th></tr>
       </thead>
       <tbody>
-        <tr><td>graph_prior only</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
-        <tr><td>QTsim only</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
-        <tr><td>mixed with confidence gate</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+        <tr>
+          <td><code>vector_topk</code></td>
+          <td>0/4</td>
+          <td>Semantic retrieval floor with no workflow structure or learned routing.</td>
+        </tr>
+        <tr>
+          <td><code>pointer_chase</code></td>
+          <td>1/4</td>
+          <td>Simple deterministic traversal over explicit links without a learned route policy.</td>
+        </tr>
+        <tr>
+          <td><code>graph_prior_only</code></td>
+          <td>2/4</td>
+          <td>Durable structure before learning; the "start useful fast" part of the story.</td>
+        </tr>
+        <tr>
+          <td><code>learned</code></td>
+          <td>4/4</td>
+          <td>The same memory layer after background learning has improved routing.</td>
+        </tr>
       </tbody>
     </table>
+
+    <p>The learning curve matters as much as the endpoint. <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs, while <code>learned</code> first reaches 4/4 at epoch 14. The proof package now also points to <code>per_query_matrix.csv</code> and <code>per_query_matrix.md</code>, the 16-row scenario matrix showing which node IDs reached prompt context under each mode. Reproduce the figures from <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>; compare the integration-level artifact bundle in <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
+
     <figure>
-      <img src="/figures/eval/ablation_bar_chart.svg" alt="Ablation bar chart comparing routing variants" loading="lazy" />
-      <figcaption>Ablation summary for <code>vector_only</code>, <code>graph_prior_only</code>, <code>qtsim_only</code>, and <code>learned</code>.</figcaption>
+      <img src="/figures/eval/workflow_proof_exact_target_success.svg" alt="Bar chart showing exact-target success across the deterministic workflow proof modes: vector_topk zero out of four, pointer_chase one out of four, graph_prior_only two out of four, and learned four out of four" loading="lazy" />
+      <figcaption>Current mechanism proof, now tied to the published workflow slice on <a href="/proof/#workflow-proof">/proof/</a>: the same 4 fixed queries, the same scoring rule, and a visible gap between cold-start retrieval, graph priors, and the learned policy.</figcaption>
     </figure>
 
-    <p>Fill every <code>TBD</code> with commit SHA, exact command, seed, and artifact links.</p>
+    <figure>
+      <img src="/figures/eval/workflow_proof_learning_curve.svg" alt="Line chart showing graph_prior_only exact-target success staying at fifty percent while learned routing reaches one hundred percent at epoch fourteen" loading="lazy" />
+      <figcaption>Useful fast with graph priors, better later via background learning: <code>graph_prior_only</code> stays at 2/4 for all 16 epochs, while <code>learned</code> reaches 4/4 at epoch 14. That is still deterministic harness evidence, not recorded-session or live-traffic proof.</figcaption>
+    </figure>
 
-    <p>New: <a href="/blog/v12.2.6-series/05-industry-baselines-ablations/">Post 5 on industry baselines + ablation study</a>.</p>
-    <p>Next: <a href="/blog/v12.2.6-series/04-operator-local-embeddings/">Post 4 on operator rollout with local embeddings OOTB</a>.</p>
+    <h2>10-seed ground-zero proof (March 2026)</h2>
+    <p>The ground-zero harness scales the evidence beyond the narrow 4-query slice. It runs 800 queries per seed across 10 independent seeds, with relation drift injected mid-run, and scores every baseline on accuracy, staleness, and traversal cost.</p>
+
+    <table>
+      <thead>
+        <tr><th>Baseline</th><th>Accuracy</th><th>Context used</th><th>Traversal cost</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>full_brain</code></td><td><strong>0.9723</strong></td><td>800</td><td>800</td></tr>
+        <tr><td><code>vector_rag_rerank</code></td><td>0.8901</td><td>4 000</td><td>6 400</td></tr>
+        <tr><td><code>vector_rag</code></td><td>0.7966</td><td>800</td><td>800</td></tr>
+        <tr><td><code>heuristic_stateful</code></td><td>0.7943</td><td>800</td><td>800</td></tr>
+      </tbody>
+    </table>
+
+    <p><code>full_brain</code> beats <code>vector_rag</code> and <code>heuristic_stateful</code> in 10/10 seeds, and <code>vector_rag_rerank</code> in 9/10. The nearest competitor (<code>vector_rag_rerank</code>) uses 5&times; the context and 8&times; the traversal cost to reach lower accuracy.</p>
+
+    <h2>Worked example: E048&thinsp;::&thinsp;E001</h2>
+    <p>The ground-truth relation between entities E048 and E001 changes from <code>manages</code> to <code>depends_on</code> at step&nbsp;22. This table shows how each baseline tracks the drift:</p>
+
+    <table>
+      <thead>
+        <tr><th>Step</th><th>Truth</th><th>full_brain</th><th>heuristic_stateful</th><th>vector_rag</th><th>vector_rag_rerank</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>13</td><td>manages</td><td>manages (ok)</td><td>manages (ok)</td><td>owns (WRONG)</td><td>manages (ok)</td></tr>
+        <tr><td>22</td><td>depends_on</td><td>depends_on (ok)</td><td>manages (STALE)</td><td>manages (STALE)</td><td>manages (STALE)</td></tr>
+        <tr><td>38</td><td>depends_on</td><td>depends_on (ok)</td><td>manages (STALE)</td><td>owns (WRONG)</td><td>depends_on (ok)</td></tr>
+      </tbody>
+    </table>
+
+    <p><code>full_brain</code> tracks the relation change at steps 22 and 38. <code>heuristic_stateful</code> stays stale. The vector baselines stay wrong or lag behind. This is bounded benchmark evidence&mdash;mechanism proof, not a claim of recorded-session or production superiority.</p>
+
+    <h2>Mechanism proof versus product proof</h2>
+    <p>This slice proves something real but limited: durable structure already helps on fixed workflow retrieval, and learned routing can improve later without claiming that the hot path retrains itself inline. It does <strong>not</strong> prove that operators complete real OpenClaw tasks faster, with fewer corrections, or at lower cost in production.</p>
+
+    <h2>The stronger evidence path</h2>
+    <table>
+      <thead>
+        <tr><th>Stage</th><th>What it proves</th><th>What artifacts are required</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Deterministic workflow proof</td>
+          <td>The router and learning loop behave coherently on the fixed workflow slice.</td>
+          <td>Exact commands, commit SHA, <code>summary.csv</code>, <code>learning_curve.csv</code>, <code>report.md</code>, <code>per_query_matrix.csv</code>, and <code>per_query_matrix.md</code>.</td>
+        </tr>
+        <tr>
+          <td>Offline recorded-session eval</td>
+          <td>The same OpenClaw workload can be scored head-to-head across routing modes.</td>
+          <td>Query set, scoring rubric, eval JSON, commit SHA, and sampled turn bundles in the <a href="/docs/worked-example.md">worked-example format</a>.</td>
+        </tr>
+        <tr>
+          <td>Shadow traffic</td>
+          <td>The brain helps on real OpenClaw traffic without being the only live path yet.</td>
+          <td>Mirrored traffic slice, side-by-side metrics, retained outputs, and disagreement traces.</td>
+        </tr>
+        <tr>
+          <td>Narrow online rollout</td>
+          <td>Operational value under real usage constraints.</td>
+          <td>Success, correction rate, prompt size, latency, cost.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Reporting contract</h2>
+    <ol>
+      <li>Every nontrivial claim needs a command, an artifact path, and a commit SHA.</li>
+      <li>If an artifact does not exist yet, the table cell stays <code>TBD</code>.</li>
+      <li>Do not summarize the 4-query deterministic workflow slice as a product win on OpenClaw traffic.</li>
+    </ol>
+
+    <p>Packaged view: <a href="/proof/">/proof/</a>, including the scenario-level matrix references. Rerun steps: <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>. Smallest real-turn proof unit: <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
+
+    <p>Next: <a href="/blog/v12.2.6-series/04-operator-local-embeddings/">Post 4 on local-first rollout</a>.</p>
   </main>
 </body>
 </html>
