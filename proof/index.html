@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <title>OpenClawBrain Proof Package</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain proof package: published evidence for the settled architecture, with explicit mechanism claims, evidence layers, and operator artifacts behind each statement.">
+  <meta name="description" content="OpenClawBrain proof package: mechanism, recorded-session, and sparse-feedback benchmark artifacts with explicit claim boundaries.">
   <meta property="og:title" content="OpenClawBrain Proof Package">
-  <meta property="og:description" content="Mechanism proof, worked turns, evidence ladder, and the proof boundary for OpenClawBrain.">
+  <meta property="og:description" content="Mechanism proof plus recorded-session and sparse-feedback benchmark artifacts with explicit proof boundaries.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/proof/">
   <meta name="twitter:card" content="summary_large_image">
@@ -298,7 +298,7 @@
     }
     .ladder-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 1rem;
     }
     .step {
@@ -417,19 +417,22 @@
           <div class="eyebrow">Evidence package</div>
           <h1>Proof, packaged for operator review.</h1>
           <p class="lead">
-            OpenClawBrain ships a settled TypeScript-first architecture: OpenClaw owns the live runtime boundary, while OpenClawBrain owns memory, learning, immutable pack artifacts, and deterministic context compilation. This page publishes the evidence artifacts for that architecture, including recorded-session head-to-head evidence where <code>full_brain</code> reaches 0.975 accuracy vs best baseline 0.896 across 800 queries, 41 steps, and 8 baselines.
+            OpenClawBrain ships a settled TypeScript-first architecture: OpenClaw owns the live runtime boundary, while OpenClawBrain owns memory, learning, immutable pack artifacts, and deterministic context compilation. This page publishes the current proof families: recorded-session head-to-head (<code>recorded_h2h_relational_drift_001</code>: 0.975 vs 0.896, +7.9 pp) and sparse-feedback multi-seed (<code>proof-results/sparse_feedback_10seed</code>: 91.96% vs 67.05%, +24.91 pp, ~5x smaller context/query).
           </p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="../docs/worked-example.md">Read the worked turn</a>
+            <a class="btn btn-primary" href="#recorded-session">Jump to recorded-session proof</a>
+            <a class="btn btn-secondary" href="#sparse-feedback">Jump to sparse-feedback proof</a>
+            <a class="btn btn-secondary" href="../docs/worked-example.md">Read the worked turn</a>
             <a class="btn btn-secondary" href="../docs/openclaw-integration.md">OpenClaw integration</a>
             <a class="btn btn-secondary" href="../paper/">Read the paper</a>
-            <a class="btn btn-secondary" href="../blog/v12.2.6-series/">Current blog series</a>
             <a class="btn btn-secondary" href="../docs/reproduce-eval.md">Raw reproduce-eval doc</a>
           </div>
           <p class="hero-note">
-            Claim boundary: deterministic simulations, reproducible figures, traceable turn bundles, and recorded-session head-to-head benchmarks prove the mechanism and integration contract. Shadow and online comparative claims are published only with matching artifacts, and are not implied here until that evidence exists.
+            Claim boundary: deterministic simulations, reproducible figures, traceable turn bundles, recorded-session benchmarks, and sparse-feedback benchmarks prove mechanism and comparative behavior on frozen workloads. Shadow and online comparative claims are published only with matching production artifacts.
           </p>
           <div class="tag-row">
+            <a class="tag" href="#recorded-session">Recorded-session H2H</a>
+            <a class="tag" href="#sparse-feedback">Sparse-feedback 10-seed</a>
             <span class="tag">OpenClaw-native memory</span>
             <span class="tag">Learned route policy artifacts</span>
             <span class="tag">Continuous background learning</span>
@@ -438,14 +441,24 @@
         </div>
 
         <div class="hero-panel">
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.34); background: rgba(156, 224, 188, 0.08);">
+            <div class="kicker">Latest benchmark families</div>
+            <h2>Recorded-session and sparse-feedback are now both published</h2>
+            <ul>
+              <li><strong>Recorded-session:</strong> <code>recorded_h2h_relational_drift_001</code> (800 queries, 41 steps, 8 baselines), <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp).</li>
+              <li><strong>Sparse-feedback (10 seeds):</strong> <code>proof-results/sparse_feedback_10seed</code> with <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), ~5x smaller context/query, and 9-1 head-to-head over <code>vector_rag_rerank</code>.</li>
+            </ul>
+          </article>
+
           <div class="status-grid">
             <article class="status-card" id="proven-now">
               <div class="kicker">Proven now</div>
-              <h2>Mechanism, integration shape, recorded-session head-to-head, and local reproducibility</h2>
+              <h2>Mechanism, integration shape, two benchmark families, and local reproducibility</h2>
               <ul>
                 <li>Deterministic simulations and ablations show the routing and learning loop behaves as intended.</li>
                 <li>A worked OpenClaw turn shows stable <code>turn_id</code>, bounded compiled context, and feedback captured against the route that fired.</li>
-                <li>Recorded-session head-to-head: 800 queries, 41 steps, 8 baselines. <code>full_brain</code> accuracy 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp). Public bundle: <code>proof-results/recorded_h2h_relational_drift_001</code>.</li>
+                <li>Recorded-session head-to-head: 800 queries, 41 steps, 8 baselines. <code>full_brain</code> accuracy 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp).</li>
+                <li>Sparse-feedback 10-seed family: <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), with ~5x smaller context per query.</li>
                 <li>The figure-generation and eval harness paths are explicit enough to rerun and inspect locally.</li>
               </ul>
             </article>
@@ -455,6 +468,7 @@
               <h2>Fixed-session, shadow, and online validation artifacts</h2>
               <ul>
                 <li>For fixed-session head-to-head claims, publish runs with the same state, query set, and rubric across all modes.</li>
+                <li>For sparse-feedback claims, publish seed-level tables plus context/query and traversal/query budgets per mode.</li>
                 <li>For shadow-mode claims, publish mirrored OpenClaw traffic comparisons with saved disagreement traces.</li>
                 <li>For narrow online rollout claims, publish success, corrections, prompt size, latency, and cost artifacts.</li>
               </ul>
@@ -523,7 +537,7 @@
         <div class="two-col">
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
             <div class="kicker">Benchmark result</div>
-            <h2><code>full_brain</code> 0.975 vs best baseline 0.896</h2>
+            <h2><code>recorded_h2h_relational_drift_001</code>: 0.975 vs 0.896</h2>
             <ul>
               <li>800 queries, 41 training steps, 8 baselines compared.</li>
               <li><code>full_brain</code> accuracy: <strong>0.975</strong></li>
@@ -548,11 +562,48 @@
         </div>
       </section>
 
+      <section class="section" id="sparse-feedback">
+        <div class="section-head">
+          <div>
+            <h2>Sparse-feedback proof family (10 seeds)</h2>
+            <p class="section-intro">The next major fixed-workload comparison family: sparse supervision over 10 seeds with shared evaluation conditions. This is still benchmark evidence on frozen workloads, not live production serving evidence.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">Benchmark result</div>
+            <h2><code>full_brain</code> 91.96% vs best RAG 67.05%</h2>
+            <ul>
+              <li>10-seed sparse-feedback head-to-head family.</li>
+              <li><code>full_brain</code> average accuracy: <strong>91.96%</strong></li>
+              <li>Best RAG baseline average: <strong>67.05%</strong></li>
+              <li>Delta: <strong>+24.91 percentage points</strong></li>
+              <li>Efficiency: <strong>~5x smaller context/query</strong></li>
+              <li>Pairwise: <strong>9-1 over <code>vector_rag_rerank</code></strong></li>
+            </ul>
+            <p class="meta">
+              Public bundle: <code>proof-results/sparse_feedback_10seed</code> in <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">brain-ground-zero</a> (run date 2026-03-07). Reproduce entrypoint: <code>./scripts/run_sparse_feedback_proof.sh</code>.
+            </p>
+          </article>
+
+          <article class="status-card">
+            <div class="kicker">Proof boundary</div>
+            <h2>What this does and does not prove</h2>
+            <ul>
+              <li>This proves strong comparative accuracy and efficiency under sparse-feedback benchmark conditions.</li>
+              <li>It strengthens confidence that learned routing remains robust with reduced supervision density.</li>
+              <li>It does <strong>not</strong> prove live production answer quality, live latency wins, or online rollout outcomes yet.</li>
+              <li>Shadow-mode and narrow online artifacts remain the next required rungs for those claims.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
       <section class="section" id="evidence-ladder">
         <div class="section-head">
           <div>
             <h2>Evidence ladder</h2>
-            <p class="section-intro">Each step answers a different question. Publish claims at the rung with matching artifacts, and do not collapse simulation, recorded-session, shadow, and online evidence together.</p>
+            <p class="section-intro">Each step answers a different question. Publish claims at the rung with matching artifacts, and do not collapse simulation, recorded-session, sparse-feedback, shadow, and online evidence together.</p>
           </div>
         </div>
         <div class="ladder-grid">
@@ -568,14 +619,20 @@
             <p>800 queries, 41 steps, 8 baselines. <code>full_brain</code> accuracy 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp). Public bundle: <code>proof-results/recorded_h2h_relational_drift_001</code>.</p>
             <div class="meta">This rung is reached. Evidence is benchmark/recorded-session, not live production.</div>
           </article>
+          <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
+            <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">3</div>
+            <h3>Sparse-feedback 10-seed family</h3>
+            <p><code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), ~5x smaller context/query, and 9-1 over <code>vector_rag_rerank</code>.</p>
+            <div class="meta">This rung is reached for benchmark conditions. Evidence is still fixed-workload benchmark evidence.</div>
+          </article>
           <article class="ladder-card">
-            <div class="step">3</div>
+            <div class="step">4</div>
             <h3>Shadow mode</h3>
             <p>Mirror real OpenClaw traffic without serving it yet. Keep the same output budget and save disagreement traces, prompt size, latency, and cost logs.</p>
             <div class="meta">This hardens comparative evidence before live serving.</div>
           </article>
           <article class="ladder-card">
-            <div class="step">4</div>
+            <div class="step">5</div>
             <h3>Narrow online rollout</h3>
             <p>Enable the brain for a small traffic slice, keep fail-open behavior, and only publish claims backed by the saved artifacts from that slice.</p>
             <div class="meta">This is product proof, not simulation proof.</div>
@@ -615,12 +672,13 @@
           </article>
           <article class="check-card">
             <div class="kicker">Head-to-head</div>
-            <h3>Frozen recorded-session eval</h3>
+            <h3>Frozen recorded and sparse-feedback evals</h3>
             <ul>
-              <li>Query or session-set path plus digest</li>
+              <li>Query/session-set path plus digest and seed list</li>
               <li>State snapshot identifier</li>
               <li>Rubric version and per-mode outputs</li>
               <li>Per-query judgments</li>
+              <li>Per-seed summary plus context/query budgets</li>
               <li>Sampled worked-turn bundles</li>
             </ul>
           </article>
@@ -669,7 +727,7 @@
           <a class="kit-card" href="../docs/reproduce-eval.md">
             <div class="kicker">Raw commands</div>
             <h3>Reproduce-eval doc</h3>
-            <p>The step-by-step markdown contract for package-first simulations, fixed-session eval, shadow comparisons, and figure generation.</p>
+            <p>The step-by-step markdown contract for package-first simulations, recorded-session + sparse-feedback eval families, shadow comparisons, and figure generation.</p>
           </a>
           <a class="kit-card" href="../blog/v12.2.6-series/03-evaluation-ablations/">
             <div class="kicker">Evaluation post</div>
@@ -682,7 +740,7 @@
       <section class="section">
         <div class="callout">
           <p>
-            This page packages the claim boundary for fast review. The markdown docs remain the canonical step-by-step references. The packaging goal is clarity: which artifacts establish the shipped architecture, which claims already have published evidence, and which claims require additional artifacts before publication.
+            This page packages the claim boundary for fast review. The markdown docs remain the canonical step-by-step references. The packaging goal is clarity: which artifacts establish the shipped architecture, which claims already have published benchmark evidence now (recorded-session and sparse-feedback), and which claims still require shadow/online artifacts before publication.
           </p>
         </div>
       </section>

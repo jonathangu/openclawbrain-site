@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <title>OpenClawBrain: TypeScript-First Brain Packages for OpenClaw</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain is the TypeScript-first package surface for OpenClaw memory and learning: fast boot from existing files, learned routing on the hot path, and async teacher learning off the hot path.">
+  <meta name="description" content="OpenClawBrain is the TypeScript-first package surface for OpenClaw memory and learning, with published recorded-session and sparse-feedback head-to-head proof bundles.">
   <meta property="og:title" content="OpenClawBrain: TypeScript-First Brain Packages for OpenClaw">
-  <meta property="og:description" content="OpenClawBrain: TypeScript-first brain packages for OpenClaw — package-first workspace, OpenClaw-owned runtime boundary, fast boot from existing files, and always-on background learning.">
+  <meta property="og:description" content="OpenClawBrain: TypeScript-first brain packages for OpenClaw with published recorded-session and sparse-feedback head-to-head evidence.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary">
@@ -59,7 +59,12 @@
     .note { margin: 1.5rem 0; padding: 0.95rem 1rem; border-left: 3px solid var(--orange); background: rgba(227,149,92,0.09); border-radius: 6px; color: var(--text-bright); }
     .tag { font-size: 0.76rem; font-family: var(--sans); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
     .proof-card { max-width: 720px; margin: 1rem auto 0; padding: 1rem 1.1rem; border: 1px solid rgba(74, 158, 255, 0.28); border-radius: 12px; background: linear-gradient(180deg, rgba(74, 158, 255, 0.10), rgba(17, 17, 17, 0.96)); }
-    .proof-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; margin: 0.9rem 0 0.8rem; }
+    .proof-family-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; margin: 0.9rem 0 0.8rem; }
+    .proof-family { padding: 0.75rem 0.85rem; border: 1px solid rgba(74, 158, 255, 0.3); border-radius: 10px; background: rgba(10, 10, 10, 0.55); text-align: left; }
+    .proof-family-label { margin: 0 0 0.2rem; font-family: var(--sans); font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .proof-family-title { margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.92rem; font-weight: 600; color: var(--text-bright); line-height: 1.35; }
+    .proof-family-metric { margin: 0.2rem 0 0; font-family: var(--sans); font-size: 0.82rem; color: var(--text); line-height: 1.45; }
+    .proof-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; margin: 0.9rem 0 0.8rem; }
     .proof-step { padding: 0.8rem 0.9rem; border: 1px solid var(--border); border-radius: 10px; background: rgba(10, 10, 10, 0.55); text-align: left; }
     .proof-step.active { border-color: rgba(74, 158, 255, 0.48); background: rgba(74, 158, 255, 0.10); }
     .proof-step.pending { border-style: dashed; }
@@ -90,7 +95,7 @@
     .pkg-item { padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-code); font-family: var(--mono); font-size: 0.76rem; color: var(--orange); }
     .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin: 0 0 0.75rem; }
     @media (max-width: 720px) {
-      .proof-grid, .proof-notes, .cta-grid, .evidence-grid { grid-template-columns: 1fr; }
+      .proof-family-grid, .proof-grid, .proof-notes, .cta-grid, .evidence-grid { grid-template-columns: 1fr; }
       .pkg-list { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 600px) { .page { padding: 2rem 1rem 4rem; } .page-title { font-size: 1.5rem; } body { font-size: 16px; } .pkg-list { grid-template-columns: 1fr; } }
@@ -123,14 +128,28 @@
         Package Quickstart
       </a>
       <p style="margin: 0.55rem 0 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
-        Workflow, mechanism, and recorded-session head-to-head proof is published; live production answer-quality proof is not claimed. <a href="/proof/">Proof package &rarr;</a>
+        Mechanism, workflow, recorded-session, and sparse-feedback benchmark proof is published. Live production answer-quality proof is not claimed. <a href="/proof/">Proof package &rarr;</a>
       </p>
     </div>
     <div class="proof-card">
-      <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; text-align: left;">Current proof ladder</p>
+      <p style="margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; text-align: left;">Latest proof update</p>
       <p style="margin: 0; font-family: var(--sans); font-size: 1.02rem; color: var(--text-bright); text-align: left;">
-        The strongest current evidence is a recorded-session head-to-head benchmark: <code>full_brain</code> 0.975 accuracy vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp) across 800 queries, 41 steps, and 8 baselines. Mechanism proof from deterministic workflow simulations remains the foundation.
+        Two published benchmark families now anchor the proof package: recorded-session head-to-head and sparse-feedback multi-seed head-to-head. Both are comparative benchmark evidence on frozen workloads, not live production serving claims.
       </p>
+      <div class="proof-family-grid">
+        <div class="proof-family">
+          <p class="proof-family-label">Recorded bundle</p>
+          <p class="proof-family-title"><code>recorded_h2h_relational_drift_001</code></p>
+          <p class="proof-family-metric">800 queries, 41 steps, 8 baselines.</p>
+          <p class="proof-family-metric"><code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp).</p>
+        </div>
+        <div class="proof-family">
+          <p class="proof-family-label">Sparse feedback family</p>
+          <p class="proof-family-title"><code>proof-results/sparse_feedback_10seed</code></p>
+          <p class="proof-family-metric"><code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp).</p>
+          <p class="proof-family-metric">~5x smaller context per query and 9-1 head-to-head over <code>vector_rag_rerank</code>.</p>
+        </div>
+      </div>
       <div class="proof-grid">
         <div class="proof-step">
           <p class="proof-step-label">Step 1</p>
@@ -145,47 +164,53 @@
         <div class="proof-step active">
           <p class="proof-step-label">Step 3</p>
           <p class="proof-step-title">Recorded-session H2H</p>
-          <p class="proof-step-copy">800 queries, 41 steps, 8 baselines. <code>full_brain</code> 0.975 vs best baseline 0.896 (+7.9 pp). Benchmark evidence, not live production.</p>
+          <p class="proof-step-copy">Bundle <code>recorded_h2h_relational_drift_001</code>: 800 queries, 41 steps, 8 baselines. <code>full_brain</code> 0.975 vs 0.896 (+7.9 pp).</p>
+        </div>
+        <div class="proof-step active">
+          <p class="proof-step-label">Step 4</p>
+          <p class="proof-step-title">Sparse-feedback H2H</p>
+          <p class="proof-step-copy">10-seed sparse-feedback family: 91.96% vs 67.05% (+24.91 pp), ~5x smaller context/query, 9-1 over <code>vector_rag_rerank</code>.</p>
         </div>
         <div class="proof-step pending">
-          <p class="proof-step-label">Step 4</p>
-          <p class="proof-step-title">Live production eval</p>
-          <p class="proof-step-copy">Not claimed here yet. This page does not present live production OpenClaw answer-quality proof.</p>
+          <p class="proof-step-label">Step 5</p>
+          <p class="proof-step-title">Shadow + online eval</p>
+          <p class="proof-step-copy">Not claimed yet. Live production answer-quality claims require shadow and narrow online artifacts.</p>
         </div>
       </div>
       <div class="table-wrap proof-metrics">
         <table>
           <thead>
             <tr>
-              <th>Mode</th>
-              <th>Exact target success</th>
-              <th>Required-node coverage</th>
+              <th>Proof family</th>
+              <th>Topline result</th>
+              <th>Boundary label</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td><code>vector_topk</code></td><td>0.00</td><td>0.00</td></tr>
-            <tr><td><code>pointer_chase</code></td><td>0.25</td><td>0.38</td></tr>
-            <tr><td><code>graph_prior_only</code></td><td>0.50</td><td>0.50</td></tr>
-            <tr><td><code>learned</code></td><td>1.00</td><td>1.00</td></tr>
+            <tr><td>Recorded-session H2H</td><td><code>full_brain</code> 0.975 vs best baseline 0.896 (+7.9 pp)</td><td>Published benchmark artifact</td></tr>
+            <tr><td>Sparse-feedback (10 seeds)</td><td><code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp)</td><td>Published benchmark artifact</td></tr>
+            <tr><td>Workflow proof</td><td><code>learned</code> 1.00 vs <code>graph_prior_only</code> 0.50</td><td>Mechanism/integration artifact</td></tr>
           </tbody>
         </table>
       </div>
       <div class="proof-notes">
         <div class="proof-note">
           <p class="proof-note-title">What This Proves</p>
-          <p>OpenClawBrain can learn a better route policy than vector retrieval, pointer chasing, or cold-start graph priors alone on held-out workflow-shaped queries.</p>
+          <p>OpenClawBrain beats strong RAG baselines on controlled recorded-session and sparse-feedback benchmarks, while preserving the OpenClaw-owned runtime boundary.</p>
         </div>
         <div class="proof-note">
           <p class="proof-note-title">What This Does Not Prove</p>
-          <p>It is not a live production OpenClaw eval, and it does not directly prove downstream answer quality on user tasks yet.</p>
+          <p>These are not live production answer-quality results. Shadow-mode and narrow online rollout artifacts are still required before making that claim.</p>
         </div>
       </div>
       <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 0.85rem 0 0.65rem;">
         <a href="/proof/" style="display: inline-block; padding: 0.5rem 0.85rem; border-radius: 8px; background: var(--accent); color: #0a0f17; font-family: var(--sans); font-size: 0.85rem; font-weight: 600; text-decoration: none;">View Proof Package</a>
+        <a href="/proof/#recorded-session" style="display: inline-block; padding: 0.5rem 0.85rem; border-radius: 8px; border: 1px solid rgba(74,158,255,0.35); color: var(--accent); font-family: var(--sans); font-size: 0.85rem; font-weight: 600; text-decoration: none;">Recorded-session Bundle</a>
+        <a href="/proof/#sparse-feedback" style="display: inline-block; padding: 0.5rem 0.85rem; border-radius: 8px; border: 1px solid rgba(74,158,255,0.35); color: var(--accent); font-family: var(--sans); font-size: 0.85rem; font-weight: 600; text-decoration: none;">Sparse-feedback Proof</a>
         <a href="/docs/reproduce-eval.md" style="display: inline-block; padding: 0.5rem 0.85rem; border-radius: 8px; border: 1px solid rgba(74,158,255,0.35); color: var(--accent); font-family: var(--sans); font-size: 0.85rem; font-weight: 600; text-decoration: none;">Reproduce Instructions</a>
       </div>
       <p class="proof-meta">
-        Command: <code>corepack enable &amp;&amp; pnpm install &amp;&amp; pnpm check</code> &mdash; artifacts include deterministic traces, label streams, eval query sets, learning curves, and summary reports.
+        Start local repro with <code>corepack enable &amp;&amp; pnpm install &amp;&amp; pnpm check</code>, then run the proof-family commands in <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>.
       </p>
     </div>
     <div class="page-meta">
@@ -312,27 +337,32 @@
   <!-- Proof / evidence -->
   <div class="section-card" style="border-color: rgba(74, 158, 255, 0.28);">
     <p class="section-label">Evidence</p>
-    <p class="section-title">What is proven and what is not</p>
+    <p class="section-title">Evidence ladder snapshot</p>
     <div class="evidence-grid">
       <div style="padding: 0.65rem 0.8rem; border: 1px solid rgba(63,185,80,0.25); border-radius: 8px; background: rgba(63,185,80,0.06);">
         <p style="margin: 0 0 0.2rem; font-family: var(--sans); font-size: 0.72rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em;">Proven</p>
-        <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-bright); line-height: 1.4;">Learned routing beats static baselines</p>
-        <p style="margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted);">1.00 vs 0.00&ndash;0.50 exact-target success</p>
+        <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-bright); line-height: 1.4;">Recorded-session head-to-head is published</p>
+        <p style="margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted);"><code>recorded_h2h_relational_drift_001</code>: 0.975 vs 0.896 (+7.9 pp)</p>
       </div>
       <div style="padding: 0.65rem 0.8rem; border: 1px solid rgba(63,185,80,0.25); border-radius: 8px; background: rgba(63,185,80,0.06);">
         <p style="margin: 0 0 0.2rem; font-family: var(--sans); font-size: 0.72rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em;">Proven</p>
-        <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-bright); line-height: 1.4;">91% context compression</p>
-        <p style="margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted);">30 &rarr; 2.7 nodes on repeated tasks</p>
+        <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-bright); line-height: 1.4;">Sparse-feedback multi-seed family is published</p>
+        <p style="margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted);">10 seeds: 91.96% vs 67.05% (+24.91 pp), ~5x smaller context/query</p>
       </div>
       <div style="padding: 0.65rem 0.8rem; border: 1px solid rgba(63,185,80,0.25); border-radius: 8px; background: rgba(63,185,80,0.06);">
         <p style="margin: 0 0 0.2rem; font-family: var(--sans); font-size: 0.72rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em;">Proven</p>
-        <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-bright); line-height: 1.4;">Inhibitory learning works</p>
-        <p style="margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted);">Bad edge &minus;0.94; good edge stays 1.0</p>
+        <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-bright); line-height: 1.4;">Workflow mechanism proof is reproducible</p>
+        <p style="margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted);"><code>learned</code> 1.00 vs <code>graph_prior_only</code> 0.50 exact-target success</p>
       </div>
       <div style="padding: 0.65rem 0.8rem; border: 1px solid rgba(63,185,80,0.25); border-radius: 8px; background: rgba(63,185,80,0.06);">
         <p style="margin: 0 0 0.2rem; font-family: var(--sans); font-size: 0.72rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em;">Proven</p>
-        <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-bright); line-height: 1.4;">Recorded-session head-to-head</p>
-        <p style="margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted);">0.975 vs 0.896 accuracy, 800 queries, 8 baselines</p>
+        <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-bright); line-height: 1.4;">TypeScript package boundary is shipped</p>
+        <p style="margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted);">OpenClaw owns runtime; OpenClawBrain owns memory/learning artifacts</p>
+      </div>
+      <div style="padding: 0.65rem 0.8rem; border: 1px dashed rgba(227,149,92,0.35); border-radius: 8px; background: rgba(227,149,92,0.06);">
+        <p style="margin: 0 0 0.2rem; font-family: var(--sans); font-size: 0.72rem; color: var(--orange); text-transform: uppercase; letter-spacing: 0.06em;">Needs next rung</p>
+        <p style="margin: 0; font-family: var(--sans); font-size: 0.86rem; color: var(--text-bright); line-height: 1.4;">Shadow-mode comparative artifacts</p>
+        <p style="margin: 0.15rem 0 0; font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted);">Saved disagreements, latency/cost, and same-turn rubric outputs</p>
       </div>
       <div style="padding: 0.65rem 0.8rem; border: 1px dashed rgba(227,149,92,0.35); border-radius: 8px; background: rgba(227,149,92,0.06);">
         <p style="margin: 0 0 0.2rem; font-family: var(--sans); font-size: 0.72rem; color: var(--orange); text-transform: uppercase; letter-spacing: 0.06em;">Not claimed</p>
@@ -341,7 +371,7 @@
       </div>
     </div>
     <p style="margin: 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
-      All mechanism, workflow, and recorded-session claims are reproducible. <a href="/proof/">Full proof package &rarr;</a> &middot; <a href="/docs/reproduce-eval.md">Reproduce instructions &rarr;</a>
+      Recorded-session and sparse-feedback benchmark claims are both published and reproducible. <a href="/proof/">Full proof package &rarr;</a> &middot; <a href="/docs/reproduce-eval.md">Reproduce instructions &rarr;</a>
     </p>
   </div>
 
@@ -366,10 +396,28 @@ pnpm release:pack</code></pre>
         Proof Package
       </span>
     </a>
+    <a href="/proof/#recorded-session">
+      <span>
+        <span class="cta-label">Recorded</span><br>
+        H2H Bundle Results
+      </span>
+    </a>
+    <a href="/proof/#sparse-feedback">
+      <span>
+        <span class="cta-label">Sparse Feedback</span><br>
+        10-Seed Proof Family
+      </span>
+    </a>
     <a href="/docs/reproduce-eval.md">
       <span>
         <span class="cta-label">Reproduce</span><br>
         Eval Harness &amp; Commands
+      </span>
+    </a>
+    <a href="/docs/worked-example.md">
+      <span>
+        <span class="cta-label">Worked Turn</span><br>
+        One Turn End to End
       </span>
     </a>
     <a href="/docs/openclaw-integration.md">

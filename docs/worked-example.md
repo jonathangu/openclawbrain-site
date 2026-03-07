@@ -15,12 +15,13 @@ Companion docs:
 - [docs/reproduce-eval.md](reproduce-eval.md)
 - [/proof/](../proof/)
 
-How this page relates to the workflow proof:
+How this page relates to the published proof families:
 
 - this page is the minimum artifact contract for one real OpenClaw-shaped turn
 - the deterministic workflow proof on `/proof/` is a separate mechanism bundle built from 4 fixed workflow scenarios
 - its scenario-level evidence matrix is `per_query_matrix.csv` and `per_query_matrix.md`: 16 deterministic rows showing which node IDs reached prompt context under each mode
-- that matrix proves prompt-context node inclusion in the sim; it does **not** prove downstream answer quality or real production task success
+- recorded-session and sparse-feedback benchmark bundles scale from one turn contract to fixed multi-query and multi-seed comparisons
+- none of these artifacts, by themselves, prove live production answer quality on served OpenClaw traffic
 
 ## Scenario
 

@@ -1,7 +1,7 @@
 # Reproduce Evaluation + Figures (Canonical)
 
 This is the single source of truth for reproducing evaluation metrics and figures referenced on the OpenClawBrain site and paper.
-All workflows below are package-first artifact pipelines in the TypeScript workspace.
+Most workflows below are package-first artifact pipelines in the TypeScript workspace; the sparse-feedback multiseed proof family is reproduced from the `brain-ground-zero` proof harness repo.
 
 ## 0) Bootstrap the TypeScript workspace
 
@@ -78,7 +78,54 @@ Non-claims:
 - This does not prove shadow-mode or online rollout outcomes.
 - The next rungs are shadow-mode and narrow online rollout.
 
-## 3) Run the baseline + ablation harness (real query set)
+## 3) Sparse-feedback 10-seed proof family
+
+This is the next major benchmark family after recorded-session head-to-head: sparse supervision over fixed workloads and seeds.
+
+Public bundle: `proof-results/sparse_feedback_10seed` in [brain-ground-zero](https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed) (run date `2026-03-07`).
+
+Published sparse-feedback metrics:
+
+| Mode | Accuracy | Context/query | H2H vs `full_brain` |
+| --- | ---: | ---: | ---: |
+| `full_brain` | 91.96% | 1.00 | &mdash; |
+| `vector_rag_rerank` (best RAG baseline) | 67.05% | 5.00 | 1-9-0 |
+
+- Delta: +24.91 percentage points (`full_brain` vs best RAG baseline).
+- Pairwise headline: `full_brain` vs `vector_rag_rerank` is 9-1-0 across 10 seeds.
+- Sparse feedback condition: explicit correctness signals are sparse (approximately 19% effective feedback events in the published run).
+
+Reproduce from the proof harness repo:
+
+```bash
+git clone https://github.com/jonathangu/brain-ground-zero.git
+cd brain-ground-zero
+./scripts/run_sparse_feedback_proof.sh
+```
+
+Expected sparse-feedback artifacts in `proof-results/sparse_feedback_10seed/`:
+- `summary.json`
+- `summary_table.csv` + `summary_table.md`
+- `leaderboard.csv` + `leaderboard.md`
+- `pairwise_accuracy_delta.csv` + `pairwise_accuracy_delta.md`
+- `win_rate_matrix.csv` + `win_rate_matrix.md`
+- `per_seed_breakdown.csv` + `per_seed_breakdown.md`
+- `per_seed_accuracy_matrix.csv` + `per_seed_accuracy_matrix.md`
+- `proof_digest.md`
+- `worked_example_trace.md`
+- `learning_curve.png`
+- `seeds.json`
+
+Interpretation:
+- The full brain policy stays materially ahead under sparse feedback while using much less context per query than the strongest RAG baseline.
+- This is fixed-workload benchmark evidence and should be reported as such.
+
+Non-claims:
+- This does not prove live production answer quality on served OpenClaw traffic.
+- This does not prove shadow-mode or online rollout outcomes.
+- Runtime ownership boundaries are unchanged: OpenClaw owns live runtime, OpenClawBrain owns memory/learning artifacts.
+
+## 4) Run the baseline + ablation harness (real query set)
 
 Use the evaluation package entrypoint in the main `openclawbrain` workspace.
 
@@ -101,7 +148,7 @@ Baseline mapping used in the paper/blog:
 
 If you add a dedicated pointer-chasing mode in the harness, include it in `--modes` and document it in the report.
 
-## 4) Run synthetic simulations (reward/accuracy/oracle-gap curves)
+## 5) Run synthetic simulations (reward/accuracy/oracle-gap curves)
 
 ```bash
 cd /path/to/openclawbrain
@@ -115,7 +162,7 @@ Expected outputs:
 - `/tmp/ocb_two_cluster/simulation_curve.csv` (columns: `epoch,ce_loss,cluster_accuracy,top1_accuracy`)
 - `/tmp/ocb_two_cluster/report.md`
 
-## 5) Generate site/paper figures from CSVs
+## 6) Generate site/paper figures from CSVs
 
 From this website repo:
 
@@ -133,6 +180,6 @@ Expected outputs in `figures/eval/`:
 - `alpha_router_conf_hist.svg` + `alpha_router_conf_hist.png` (if data present)
 - `ablation_bar_chart.svg` + `ablation_bar_chart.png`
 
-## 6) Paper table placeholders
+## 7) Paper table placeholders
 
 If a run does not produce the outputs above, leave paper/blog tables as `TBD` and cite the exact command + output path for the missing artifact (for example, `/tmp/ocb_eval.json` and `/tmp/ocb_expert_regions/simulation_curve.csv`).
