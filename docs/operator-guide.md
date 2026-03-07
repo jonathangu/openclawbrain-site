@@ -1,6 +1,6 @@
-# OpenClawBrain Principal Operator Guide (TypeScript-first)
+# OpenClawBrain Principal Operator Guide (Canonical Product)
 
-OpenClawBrain runs as a TypeScript package set behind an OpenClaw-owned runtime boundary.
+OpenClawBrain is the shipped TypeScript package system for memory, learning, packs, activation state, and deterministic compile behind an OpenClaw-owned runtime boundary.
 
 Operator visuals:
 - [Brains dashboard](/docs/brains-dashboard/)
@@ -31,31 +31,48 @@ OpenClaw owns:
 - fail-open behavior
 - prompt assembly and request routing
 - deployment/canary/rollback controls
+- runtime diagnostics
 
 OpenClawBrain owns:
+- memory structure and learning policy behavior
 - contracts/events/event-export/workspace metadata
-- provenance and pack format
-- activation/compiler/learner logic
+- provenance and immutable pack assembly
+- activation/promotion/rollback state for pack sets
+- deterministic compiler output from active pack state
+- learner logic and off-path teacher updates
 
-If this boundary blurs, incident response becomes ambiguous. Keep it explicit in runbooks.
+Keep this boundary explicit in all runbooks and incidents.
 
-## 3) Default-on operating model
+## 3) Pack operations: activate, promote, rollback
+
+Operator pack discipline:
+
+1. Build candidate pack set (`pnpm check`, `pnpm release:pack`).
+2. Activate candidate in canary runtime scope.
+3. Validate hot-path latency, fail-open behavior, and background loop health.
+4. Promote candidate globally.
+5. Roll back to previous active pack set if health regresses.
+
+Deterministic compile means the same active pack state must produce the same context compilation behavior.
+
+## 4) Default-on operating model
 
 Required defaults in production profiles:
 - fast boot from existing files
 - background learning enabled
 - prioritize new events over deep historical backlog
+- allow larger compiled context when it removes avoidable model/tool round-trips
 - human + self label harvesting enabled
 - scanner + harvest loops enabled
 - continuous graph learning enabled (decay, Hebbian co-firing, structural updates)
 - teacher off hot path
 
-## 4) Health signals to monitor
+## 5) Health signals to monitor
 
 Hot path:
 - turn latency budget
 - fail-open activation rate
-- route function evaluation success rate
+- route function/compile evaluation success rate
 
 Background loops:
 - ingest lag for new events
@@ -68,21 +85,6 @@ Provenance/quality:
 - event normalization success/failure counts
 - provenance chain completeness
 - correction retention trend
-
-## 5) Cutover policy
-
-Recommended cutover pattern:
-
-1. Build and check pack set (`pnpm check`, `pnpm release:pack`).
-2. Deploy to canary runtime segment.
-3. Verify hot-path latency and fail-open behavior.
-4. Verify background learning/scanner/harvest loops remain healthy.
-5. Promote globally.
-
-Rollback policy:
-- revert to previous known-good pack set in OpenClaw runtime
-- keep runtime serving while background loops recover
-- avoid changing multiple boundaries simultaneously during rollback
 
 ## 6) Incident handling
 
@@ -103,20 +105,18 @@ If scanner/harvest loop is unhealthy:
 
 ## 7) Proof boundary (non-negotiable)
 
-Mechanism proof supports deployment safety, not product claims.
+Mechanism/workflow proof supports safe promotion discipline. It is not a stand-in for live answer-quality claims.
 
-Mechanism proof examples:
+Mechanism/workflow proof examples:
 - schema/contract compatibility
 - deterministic normalization and export
 - provenance continuity
 - stable compiler/activation behavior
 
-Product proof examples:
+Live product proof examples:
 - better user-visible relevance/accuracy
 - lower repeat-error rate after corrections
 - stronger reliability under live traffic
-
-Do not market mechanism checks as product proof.
 
 ## 8) Operator responsibilities
 

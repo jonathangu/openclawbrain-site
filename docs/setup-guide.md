@@ -1,22 +1,23 @@
-> Canonical docs live on GitHub; this page is a snapshot.
+> Canonical docs live on GitHub; this page mirrors the shipped setup path.
 
 # OpenClawBrain Setup Guide (TypeScript-first)
 
-OpenClawBrain is now a TypeScript-first, package-first workspace that runs behind an OpenClaw-owned runtime boundary.
+OpenClawBrain is the shipped TypeScript-first, package-first workspace behind an OpenClaw-owned runtime boundary.
 
 This guide is the day-0 setup path for operators who want:
 - fast boot from existing files
 - always-on background learning by default
 - default-on labels, scanner, and harvest flow
-- continuous graph learning with teacher off the hot path
+- deterministic compile from active packs
+- activation, promotion, and rollback discipline for pack sets
 
 ## Prerequisites
 
 - Node.js 20+ and `corepack`
 - `pnpm` enabled via `corepack`
 - OpenClaw runtime checkout and deployment access
-- Existing agent workspace files (markdown/docs/memory) ready to ingest
-- Provider credentials configured in OpenClaw runtime secrets, not in workspace docs
+- existing agent workspace files (markdown/docs/memory) ready to ingest
+- provider credentials configured in OpenClaw runtime secrets, not in workspace docs
 
 ## Step 1: Install and verify the workspace
 
@@ -29,9 +30,9 @@ pnpm check
 pnpm release:pack
 ```
 
-`pnpm check` is the quality gate for type/lint/test/package integrity. `pnpm release:pack` produces the package set consumed by OpenClaw runtime.
+`pnpm check` is the release quality gate for type/lint/test/package integrity. `pnpm release:pack` produces the versioned package/pack set consumed by OpenClaw runtime.
 
-## Step 2: Pin the public package surface
+## Step 2: Pin the canonical package surface
 
 Use a pinned, versioned package set for runtime wiring:
 
@@ -45,11 +46,11 @@ Use a pinned, versioned package set for runtime wiring:
 - `@openclawbrain/compiler`
 - `@openclawbrain/learner`
 
-Avoid mixing ad-hoc local package revisions in production. Promote package sets as a unit.
+Promote package sets as a unit. Do not mix ad-hoc local package revisions in production.
 
 ## Step 3: Wire OpenClaw runtime to the package set
 
-OpenClaw owns runtime orchestration and fail-open behavior. OpenClawBrain packages provide the contracts, normalization, and learning components.
+OpenClaw owns runtime orchestration and fail-open behavior. OpenClawBrain packages provide memory, normalization, provenance, pack lifecycle, and compile/learning components.
 
 Use a runtime profile equivalent to:
 
@@ -86,7 +87,16 @@ Use a runtime profile equivalent to:
 }
 ```
 
-## Step 4: Validate first boot behavior
+## Step 4: Activate, promote, and rollback packs
+
+1. Activate candidate pack set in canary runtime scope.
+2. Validate latency, fail-open behavior, and loop health.
+3. Promote candidate globally when canary passes.
+4. Roll back to previous active pack set if health regresses.
+
+Compilation from the active pack remains deterministic for a fixed state.
+
+## Step 5: Validate first boot behavior
 
 Expected first-boot behavior:
 
@@ -94,8 +104,9 @@ Expected first-boot behavior:
 2. There is no full-history scan gate before first responses.
 3. New events are learned first; historical backfill continues in background.
 4. Labels/scanner/harvest loops are active by default.
+5. Compiled context size is chosen for task effectiveness, including larger context when it avoids extra model/tool round-trips.
 
-## Step 5: Validate runtime boundaries
+## Step 6: Validate runtime boundaries
 
 Operator checks:
 
@@ -104,23 +115,23 @@ Operator checks:
 - Provenance is preserved for normalized events and generated activations.
 - Teacher logic executes asynchronously and never gates turn latency.
 
-## Step 6: Day-2 operating model
+## Step 7: Day-2 operating model
 
 Default model:
 
-- Keep runtime up continuously.
-- Keep background learning enabled continuously.
-- Promote package sets intentionally (canary, then broad rollout).
-- Measure mechanism and product outcomes separately.
+- keep runtime up continuously
+- keep background learning enabled continuously
+- promote package sets intentionally (canary, then broad rollout)
+- measure mechanism/workflow and live product outcomes separately
 
-Mechanism proof examples:
+Mechanism/workflow proof examples:
 - contract integrity
 - normalization/provenance correctness
 - deterministic pack/compiler behavior
 
-Product proof examples:
+Live product proof examples:
 - response quality uplift
 - correction durability
 - retrieval precision/recall at user-visible level
 
-Do not claim product proof from mechanism checks alone.
+Mechanism/workflow checks are required release evidence, not a substitute for live answer-quality evidence.
