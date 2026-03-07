@@ -97,21 +97,45 @@
         This series explains the shipped product boundary end to end: OpenClaw owns runtime orchestration, prompt assembly, and fail-open control; OpenClawBrain owns memory packages, immutable pack assembly, activation promotion/rollback, deterministic compile, and always-on learning.
       </p>
       <div class="callout">
-        Read this series for the shortest technical map of the shipped system: package-first boot from existing files, deterministic context compile from the active pack, and continuous background learning from teacher/scanner/harvester label sources. If you want the packaged proof boundary first, start with <a href="/proof/">/proof/</a>. If you want the paper framing and direct PDF first, start with <a href="/paper/">/paper/</a>. If you want one concrete operator trace first, start with <a href="/docs/worked-example.md">docs/worked-example.md</a>.
+        Evidence-first read path: recorded-session head-to-head <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp), then sparse-feedback 10-seed <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp, ~5x lower context/query, 9-1 head-to-head). Mechanism proof remains explicit and separate from product claims; see <a href="/proof/">/proof/</a> for ladder labels and artifact links.
       </div>
     </section>
 
     <div class="grid">
       <a class="card" href="/proof/">
         <div class="meta">Evidence hub</div>
-        <h3>Proof package: what is proven now</h3>
-        <div class="kicker">Mechanism proof including the 10-seed ground-zero harness, current head-to-head and shadow-evidence status, and linked artifacts behind each claim.</div>
+        <h3>Proof package: claim ladder + artifact links</h3>
+        <div class="kicker">Mechanism proof, recorded-session benchmark proof, and explicit non-claims until shadow/online evidence is published.</div>
+      </a>
+
+      <a class="card" href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">
+        <div class="meta">Strongest artifact</div>
+        <h3>Recorded head-to-head bundle</h3>
+        <div class="kicker">800 queries, 41 steps, 8 baselines. <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp).</div>
+      </a>
+
+      <a class="card" href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">
+        <div class="meta">Strongest 10-seed run</div>
+        <h3>Sparse-feedback proof bundle</h3>
+        <div class="kicker"><code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), ~5x lower context/query, 9-1 vs <code>vector_rag_rerank</code>.</div>
+      </a>
+
+      <a class="card" href="/blog/v12.2.6-series/03-evaluation-ablations/">
+        <div class="meta">Post 3</div>
+        <h3>Evaluation: what is proven now</h3>
+        <div class="kicker">Direct tables for recorded-session and sparse-feedback benchmarks, then the mechanism-vs-product boundary.</div>
+      </a>
+
+      <a class="card" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
+        <div class="meta">Post 5</div>
+        <h3>Baselines and comparison contract</h3>
+        <div class="kicker">Why these baselines matter, where full_brain wins now, and what still needs shadow/online artifacts.</div>
       </a>
 
       <a class="card" href="/paper/">
         <div class="meta">Paper + PDF</div>
         <h3>Canonical paper route</h3>
-        <div class="kicker">The current paper, direct PDF, and supporting materials in one place.</div>
+        <div class="kicker">Paper framing and direct PDF with citations aligned to the same proof artifacts.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/06-openclaw-brain-first-integration/">
@@ -129,25 +153,13 @@
       <a class="card" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
         <div class="meta">Post 2</div>
         <h3>The learned runtime route function</h3>
-        <div class="kicker">How `graph_prior` and query-conditioned evidence combine on a live turn.</div>
-      </a>
-
-      <a class="card" href="/blog/v12.2.6-series/03-evaluation-ablations/">
-        <div class="meta">Post 3</div>
-        <h3>Evaluation: what is proven now</h3>
-        <div class="kicker">Mechanism proof vs recorded-session and shadow-traffic proof. Now includes the 10-seed ground-zero accuracy and cost comparison.</div>
+        <div class="kicker">How <code>graph_prior</code> and query-conditioned evidence combine on a live turn.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
         <div class="meta">Post 4</div>
         <h3>Local-first operator flow</h3>
         <div class="kicker">Default stack, fast startup, and what should stay off the hot path.</div>
-      </a>
-
-      <a class="card" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
-        <div class="meta">Post 5</div>
-        <h3>Baselines and the comparison contract</h3>
-        <div class="kicker">The baseline set that matters, the 10-seed cost-vs-accuracy comparison, and the artifacts required for any comparison claim.</div>
       </a>
     </div>
   </main>

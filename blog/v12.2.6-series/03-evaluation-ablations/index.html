@@ -46,22 +46,45 @@
     <h1>Evaluation: prove it without pretending</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>OpenClawBrain needs a cleaner evidence story than "the simulations look good." The current deterministic workflow-proof slice on <a href="/proof/#workflow-proof">/proof/</a> makes the mechanism proof concrete, but product claims still need a stronger ladder.</p>
+    <p>OpenClawBrain needs a cleaner evidence story than "the simulations look good." This page starts with the strongest published benchmarks, then keeps the mechanism-vs-product ladder explicit so proof scope is obvious on first read.</p>
 
     <div class="grid">
       <div class="card">
         <h3>Proven now</h3>
-        <p><code>full_brain</code> 0.9723 accuracy across 10 seeds, beating <code>vector_rag</code> and <code>heuristic_stateful</code> in 10/10 seeds and <code>vector_rag_rerank</code> in 9/10&mdash;at 5&times; lower context cost.</p>
+        <p>Recorded-session H2H: <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp). Sparse-feedback 10-seed: <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), with ~5x lower context/query and 9-1 H2H over <code>vector_rag_rerank</code>.</p>
       </div>
       <div class="card">
-        <h3>Needs head-to-head</h3>
-        <p>Recorded-session comparisons, shadow traffic, and narrow online rollout before claiming better task outcomes on real OpenClaw workflows.</p>
+        <h3>Needs production comparisons</h3>
+        <p>Shadow traffic and narrow online rollout artifacts before claiming better outcomes on live OpenClaw workloads.</p>
       </div>
       <div class="card">
         <h3>Not claimed</h3>
         <p>No blanket benchmark wins, no production latency or cost win, and no production superiority from deterministic artifacts alone.</p>
       </div>
     </div>
+
+    <h2>Strongest published benchmark artifacts (March 2026)</h2>
+    <table>
+      <thead>
+        <tr><th>Artifact</th><th>Scope</th><th>Key result</th><th>Public bundle</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Recorded session H2H<br /><code>recorded_h2h_relational_drift_001</code></td>
+          <td>800 queries, 41 steps, 8 baselines</td>
+          <td><code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp)</td>
+          <td><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">proof-results/recorded_h2h_relational_drift_001</a></td>
+        </tr>
+        <tr>
+          <td>Sparse-feedback 10-seed<br /><code>sparse_feedback_10seed</code></td>
+          <td>10 seeds, 1,800 queries/seed, 8 baselines</td>
+          <td><code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), ~5x lower context/query, 9-1 H2H over <code>vector_rag_rerank</code></td>
+          <td><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">proof-results/sparse_feedback_10seed</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>These are benchmark artifacts, not live product rollout evidence. They are stronger than the deterministic mechanism harness, but still below shadow-mode and online proof in the claim ladder.</p>
 
     <h2>Current workflow-proof slice</h2>
     <p>The current published slice is intentionally narrow: exact-target retrieval on 4 deterministic workflow queries. It is useful because it tests the product framing directly: can durable graph priors make OpenClawBrain useful before learning, and does background learning later improve the served <code>route_fn</code>?</p>
@@ -106,41 +129,42 @@
       <figcaption>Useful fast with graph priors, better later via background learning: <code>graph_prior_only</code> stays at 2/4 for all 16 epochs, while <code>learned</code> reaches 4/4 at epoch 14. That is still deterministic harness evidence, not recorded-session or live-traffic proof.</figcaption>
     </figure>
 
-    <h2>10-seed ground-zero proof (March 2026)</h2>
-    <p>The ground-zero harness scales the evidence beyond the narrow 4-query slice. It runs 800 queries per seed across 10 independent seeds, with relation drift injected mid-run, and scores every baseline on accuracy, staleness, and traversal cost.</p>
+    <h2>Recorded-session benchmark detail</h2>
+    <p><code>recorded_h2h_relational_drift_001</code> is the fixed-session benchmark bundle currently highlighted on the proof page.</p>
 
     <table>
       <thead>
         <tr><th>Baseline</th><th>Accuracy</th><th>Context used</th><th>Traversal cost</th></tr>
       </thead>
       <tbody>
-        <tr><td><code>full_brain</code></td><td><strong>0.9723</strong></td><td>800</td><td>800</td></tr>
-        <tr><td><code>vector_rag_rerank</code></td><td>0.8901</td><td>4 000</td><td>6 400</td></tr>
-        <tr><td><code>vector_rag</code></td><td>0.7966</td><td>800</td><td>800</td></tr>
-        <tr><td><code>heuristic_stateful</code></td><td>0.7943</td><td>800</td><td>800</td></tr>
+        <tr><td><code>full_brain</code></td><td><strong>0.9750</strong></td><td>800</td><td>800</td></tr>
+        <tr><td><code>vector_rag_rerank</code></td><td>0.8962</td><td>4 000</td><td>6 400</td></tr>
+        <tr><td><code>heuristic_stateful</code></td><td>0.8163</td><td>800</td><td>800</td></tr>
+        <tr><td><code>vector_rag</code></td><td>0.7875</td><td>800</td><td>800</td></tr>
       </tbody>
     </table>
 
-    <p><code>full_brain</code> beats <code>vector_rag</code> and <code>heuristic_stateful</code> in 10/10 seeds, and <code>vector_rag_rerank</code> in 9/10. The nearest competitor (<code>vector_rag_rerank</code>) uses 5&times; the context and 8&times; the traversal cost to reach lower accuracy.</p>
+    <p>The nearest baseline still needs 5&times; more context and 8&times; more traversal cost for lower accuracy. Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">proof-results/recorded_h2h_relational_drift_001</a>.</p>
 
-    <h2>Worked example: E048&thinsp;::&thinsp;E001</h2>
-    <p>The ground-truth relation between entities E048 and E001 changes from <code>manages</code> to <code>depends_on</code> at step&nbsp;22. This table shows how each baseline tracks the drift:</p>
+    <h2>Sparse-feedback 10-seed benchmark detail</h2>
+    <p><code>sparse_feedback_10seed</code> is the strongest current multi-seed family for proving full-brain behavior under sparse teacher signals.</p>
 
     <table>
       <thead>
-        <tr><th>Step</th><th>Truth</th><th>full_brain</th><th>heuristic_stateful</th><th>vector_rag</th><th>vector_rag_rerank</th></tr>
+        <tr><th>Baseline</th><th>Accuracy (mean)</th><th>Context/query</th><th>Traversal/query</th><th>H2H vs <code>full_brain</code></th></tr>
       </thead>
       <tbody>
-        <tr><td>13</td><td>manages</td><td>manages (ok)</td><td>manages (ok)</td><td>owns (WRONG)</td><td>manages (ok)</td></tr>
-        <tr><td>22</td><td>depends_on</td><td>depends_on (ok)</td><td>manages (STALE)</td><td>manages (STALE)</td><td>manages (STALE)</td></tr>
-        <tr><td>38</td><td>depends_on</td><td>depends_on (ok)</td><td>manages (STALE)</td><td>owns (WRONG)</td><td>depends_on (ok)</td></tr>
+        <tr><td><code>full_brain</code></td><td><strong>91.96%</strong></td><td>1.00</td><td>1.00</td><td>&mdash;</td></tr>
+        <tr><td><code>vector_rag_rerank</code> (best RAG)</td><td>67.05%</td><td>5.00</td><td>8.00</td><td>1/10</td></tr>
+        <tr><td><code>vector_rag</code></td><td>60.49%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
+        <tr><td><code>heuristic_stateful</code></td><td>51.38%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
       </tbody>
     </table>
 
-    <p><code>full_brain</code> tracks the relation change at steps 22 and 38. <code>heuristic_stateful</code> stays stale. The vector baselines stay wrong or lag behind. This is bounded benchmark evidence&mdash;mechanism proof, not a claim of recorded-session or production superiority.</p>
+    <p><code>full_brain</code> leads best RAG by +24.91 pp and beats <code>vector_rag_rerank</code> in 9/10 seeds while using ~5x less context per query. Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">proof-results/sparse_feedback_10seed</a>.</p>
 
     <h2>Mechanism proof versus product proof</h2>
-    <p>This slice proves something real but limited: durable structure already helps on fixed workflow retrieval, and learned routing can improve later without claiming that the hot path retrains itself inline. It does <strong>not</strong> prove that operators complete real OpenClaw tasks faster, with fewer corrections, or at lower cost in production.</p>
+    <p>The deterministic workflow slice plus the two benchmark bundles prove something real but bounded: durable structure helps early retrieval, learned routing improves later, and <code>full_brain</code> leads credible RAG baselines on frozen workloads. It still does <strong>not</strong> prove better outcomes on live OpenClaw traffic without shadow and online artifacts.</p>
 
     <h2>The stronger evidence path</h2>
     <table>
@@ -155,8 +179,8 @@
         </tr>
         <tr>
           <td>Offline recorded-session eval</td>
-          <td>The same OpenClaw workload can be scored head-to-head across routing modes.</td>
-          <td>Query set, scoring rubric, eval JSON, commit SHA, and sampled turn bundles in the <a href="/docs/worked-example.md">worked-example format</a>.</td>
+          <td>The same OpenClaw-style workloads can be scored head-to-head across routing modes.</td>
+          <td>Published now: <code>recorded_h2h_relational_drift_001</code> and <code>sparse_feedback_10seed</code> with query fixtures, scoring tables, per-query outputs, and worked traces.</td>
         </tr>
         <tr>
           <td>Shadow traffic</td>
@@ -178,7 +202,7 @@
       <li>Do not summarize the 4-query deterministic workflow slice as a product win on OpenClaw traffic.</li>
     </ol>
 
-    <p>Packaged view: <a href="/proof/">/proof/</a>, including the scenario-level matrix references. Rerun steps: <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>. Smallest real-turn proof unit: <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
+    <p>Packaged view: <a href="/proof/">/proof/</a>. Benchmark bundles: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">recorded_h2h_relational_drift_001</a> and <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">sparse_feedback_10seed</a>. Rerun steps: <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>. Smallest real-turn proof unit: <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
 
     <p>Next: <a href="/blog/v12.2.6-series/04-operator-local-embeddings/">Post 4 on local-first rollout</a>.</p>
   </main>

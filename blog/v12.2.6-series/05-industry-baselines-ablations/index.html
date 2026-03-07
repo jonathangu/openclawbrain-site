@@ -39,11 +39,32 @@
     <h1>Baselines and the comparison contract</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>OpenClawBrain should compare itself against retrieval behaviors operators would plausibly use instead of hiding behind vague "AI memory" framing. The current published slice on <a href="/proof/#workflow-proof">/proof/</a> is narrow but concrete: 4 deterministic workflow queries scored with exact-target success.</p>
+    <p>OpenClawBrain should compare itself against retrieval behaviors operators would plausibly use instead of hiding behind vague "AI memory" framing. This page starts from the strongest published benchmark artifacts, then ties them back to the mechanism slice and the product-proof boundary.</p>
 
     <div class="card">
-      <p>That scope matters. These numbers are strong enough to compare mechanism-level baselines honestly; they are not broad enough to claim real OpenClaw workload wins yet. For that, the next rung is still recorded-session eval, then shadow traffic, then a narrow online rollout.</p>
+      <p>Current benchmark headline: recorded-session H2H <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp), plus sparse-feedback 10-seed <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp, ~5x lower context/query, 9-1 H2H). These are benchmark claims, not live product rollout claims.</p>
     </div>
+
+    <h2>Strongest baseline evidence first</h2>
+    <table>
+      <thead>
+        <tr><th>Artifact</th><th>Scope</th><th>Result vs best RAG</th><th>Bundle</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>recorded_h2h_relational_drift_001</code></td>
+          <td>800 queries, 41 steps, 8 baselines</td>
+          <td><code>full_brain</code> 0.975 vs 0.896 (+7.9 pp)</td>
+          <td><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">recorded_h2h_relational_drift_001</a></td>
+        </tr>
+        <tr>
+          <td><code>sparse_feedback_10seed</code></td>
+          <td>10 seeds, 1,800 queries/seed, 8 baselines</td>
+          <td><code>full_brain</code> 91.96% vs 67.05% (+24.91 pp), ~5x lower context/query, 9-1 H2H</td>
+          <td><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">sparse_feedback_10seed</a></td>
+        </tr>
+      </tbody>
+    </table>
 
     <h2>Current published baseline slice</h2>
     <table>
@@ -76,22 +97,39 @@
 
     <p>The learning curve is the second half of the comparison. <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs, while <code>learned</code> first reaches 4/4 at epoch 14. That is the current concrete evidence for the product framing: useful from graph priors first, better later via background learning.</p>
 
-    <h2>10-seed ground-zero comparison (March 2026)</h2>
-    <p>The ground-zero harness scales the baseline comparison to 800 queries&nbsp;&times;&nbsp;10 seeds with mid-run relation drift. Cost and accuracy now sit side by side:</p>
+    <h2>Recorded-session head-to-head comparison</h2>
+    <p>For fixed-session replay, the current published bundle is <code>recorded_h2h_relational_drift_001</code>.</p>
 
     <table>
       <thead>
-        <tr><th>Baseline</th><th>Accuracy</th><th>Context used</th><th>Traversal cost</th><th>Win rate vs full_brain</th></tr>
+        <tr><th>Baseline</th><th>Accuracy</th><th>Context used</th><th>Traversal cost</th></tr>
       </thead>
       <tbody>
-        <tr><td><code>full_brain</code></td><td><strong>0.9723</strong></td><td>800</td><td>800</td><td>&mdash;</td></tr>
-        <tr><td><code>vector_rag_rerank</code></td><td>0.8901</td><td>4 000</td><td>6 400</td><td>1/10</td></tr>
-        <tr><td><code>vector_rag</code></td><td>0.7966</td><td>800</td><td>800</td><td>0/10</td></tr>
-        <tr><td><code>heuristic_stateful</code></td><td>0.7943</td><td>800</td><td>800</td><td>0/10</td></tr>
+        <tr><td><code>full_brain</code></td><td><strong>0.9750</strong></td><td>800</td><td>800</td></tr>
+        <tr><td><code>vector_rag_rerank</code></td><td>0.8962</td><td>4 000</td><td>6 400</td></tr>
+        <tr><td><code>heuristic_stateful</code></td><td>0.8163</td><td>800</td><td>800</td></tr>
+        <tr><td><code>vector_rag</code></td><td>0.7875</td><td>800</td><td>800</td></tr>
       </tbody>
     </table>
 
-    <p><code>vector_rag_rerank</code> is the nearest competitor but uses 5&times; the context and 8&times; the traversal cost for lower accuracy. <code>full_brain</code> wins in 10/10 seeds against <code>vector_rag</code> and <code>heuristic_stateful</code>, and 9/10 against <code>vector_rag_rerank</code>.</p>
+    <p>Against the best RAG baseline, the margin is +7.9 pp. The best baseline still needs 5&times; context and 8&times; traversal for lower accuracy.</p>
+
+    <h2>Sparse-feedback 10-seed comparison</h2>
+    <p>For multi-seed robustness, the strongest published family is <code>sparse_feedback_10seed</code> (10 seeds, 1,800 queries per seed, 8 baselines).</p>
+
+    <table>
+      <thead>
+        <tr><th>Baseline</th><th>Accuracy (mean)</th><th>Context/query</th><th>Traversal/query</th><th>H2H vs <code>full_brain</code></th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>full_brain</code></td><td><strong>91.96%</strong></td><td>1.00</td><td>1.00</td><td>&mdash;</td></tr>
+        <tr><td><code>vector_rag_rerank</code> (best RAG)</td><td>67.05%</td><td>5.00</td><td>8.00</td><td>1/10</td></tr>
+        <tr><td><code>vector_rag</code></td><td>60.49%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
+        <tr><td><code>heuristic_stateful</code></td><td>51.38%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
+      </tbody>
+    </table>
+
+    <p><code>full_brain</code> leads best RAG by +24.91 pp and wins 9/10 seeds head-to-head over <code>vector_rag_rerank</code>.</p>
 
     <h2>Why these baselines belong</h2>
     <table>
@@ -118,7 +156,8 @@
     <div class="card">
       <ul>
         <li>The workflow-proof slice cleanly separates cold-start semantic retrieval, deterministic traversal, durable graph priors, and the learned policy.</li>
-        <li>The 10-seed ground-zero harness extends this to 800 queries per seed with relation drift: <code>full_brain</code> reaches 0.9723 accuracy at 800 context / 800 traversal cost, while <code>vector_rag_rerank</code> reaches 0.8901 at 4&thinsp;000 context / 6&thinsp;400 traversal cost.</li>
+        <li>Recorded-session replay shows <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp) on 800 queries with fixed state and rubric.</li>
+        <li>Sparse-feedback 10-seed extends this to 18,000 total queries: <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp) at ~5x lower context/query.</li>
         <li>The site still does <strong>not</strong> publish broad operator wins from real OpenClaw traffic. This is bounded benchmark evidence, not recorded-session or production proof.</li>
       </ul>
     </div>
@@ -136,7 +175,7 @@
         </tr>
         <tr>
           <td>Offline recorded-session eval</td>
-          <td>Head-to-head on the same workload</td>
+          <td>Head-to-head on the same workload (published: <code>recorded_h2h_relational_drift_001</code>, <code>sparse_feedback_10seed</code>)</td>
           <td>Stronger, but still not live</td>
         </tr>
         <tr>
@@ -160,7 +199,7 @@
       <li>Do not describe the current 4-query deterministic slice as a real operator win.</li>
     </ul>
 
-    <p>Packaged proof boundary: <a href="/proof/">/proof/</a>. Reproduction steps: <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>. Turn-level artifact contract: <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
+    <p>Packaged proof boundary: <a href="/proof/">/proof/</a>. Benchmark bundles: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">recorded_h2h_relational_drift_001</a> and <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">sparse_feedback_10seed</a>. Reproduction steps: <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>. Turn-level artifact contract: <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
 
     <p>Next: <a href="/blog/v12.2.6-series/06-openclaw-brain-first-integration/">Post 6 on brain-first OpenClaw integration</a>.</p>
   </main>

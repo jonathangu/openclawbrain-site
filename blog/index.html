@@ -51,26 +51,41 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a></div>
     <h1>OpenClawBrain Blog</h1>
-    <p>These posts document the shipped TypeScript-first system: OpenClaw owns the live runtime, while OpenClawBrain owns immutable packs, promotion/rollback, deterministic compile, fast boot from existing files, and always-on learning.</p>
+    <p>These posts document the shipped TypeScript-first system: OpenClaw owns the live runtime, while OpenClawBrain owns immutable packs, promotion/rollback, deterministic compile, fast boot from existing files, and always-on learning. Strongest benchmark artifacts right now: recorded-session head-to-head <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp), plus sparse-feedback 10-seed <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp, ~5x lower context/query, 9-1 head-to-head).</p>
 
     <div class="section">
-      <h2>Start here</h2>
+      <h2>Proof First</h2>
       <div class="grid">
         <div class="post">
-          <div class="title">Start here: Brain-first integration + pain points</div>
-          <div class="meta">March 2026</div>
+          <div class="title">Recorded-session head-to-head: relational_drift_001</div>
+          <div class="meta">March 2026 · 800 queries · 41 steps · 8 baselines</div>
           <div>
-            <a href="/blog/v12.2.6-series/06-openclaw-brain-first-integration/">Brain-first integration post</a>
-            and
-            <a href="/#why-this-exists">Why this exists</a>.
+            <a href="/proof/#recorded-session">Proof ladder placement</a>:
+            benchmark artifact, not live production claim.
             <br />
-            <a href="/docs/reproduce-eval.md">Benchmarks: mechanism proof and product proof checks</a>.
+            <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">Open bundle: recorded_h2h_relational_drift_001</a>.
+            <br />
+            <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp).
           </div>
         </div>
+        <div class="post">
+          <div class="title">Sparse-feedback 10-seed proof run</div>
+          <div class="meta">March 2026 · 10 seeds · 8 baselines</div>
+          <div>
+            <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">Open bundle: sparse_feedback_10seed</a>.
+            <br />
+            <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), ~5x lower context/query, 9-1 over <code>vector_rag_rerank</code>.
+          </div>
+        </div>
+        <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
+          <div class="title">Mechanism vs product proof ladder</div>
+          <div class="meta">Post 3</div>
+          <div>Deterministic workflow proof, recorded-session benchmark proof, and explicit non-claims until shadow/online evidence exists.</div>
+        </a>
         <a class="post" href="/docs/openclaw-integration.md">
-          <div class="title">Start here: OpenClaw Integration Doc</div>
-          <div class="meta">Operator docs</div>
-          <div>Step-by-step setup, toggles, and guardrails.</div>
+          <div class="title">Operator integration doc</div>
+          <div class="meta">Operational setup</div>
+          <div>Step-by-step OpenClaw integration, toggles, and fail-open guardrails.</div>
         </a>
       </div>
     </div>
@@ -81,7 +96,7 @@
         <a class="post" href="/blog/v12.2.6-series/">
           <div class="title">Series Index: OpenClawBrain v12.2.6+</div>
           <div class="meta">March 2026</div>
-          <div>Start here for the full sequence and links.</div>
+          <div>Evidence-first map of the shipped architecture, proof ladder, and operator flow.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
           <div class="title">Post 1: Shadow Routing + Ultimate Policy Gradient</div>
@@ -96,7 +111,7 @@
         <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
           <div class="title">Post 3: Evaluation and Ablations</div>
           <div class="meta">March 2026</div>
-          <div>How claims are measured and what ablations are required.</div>
+          <div>Strongest published benchmarks first, then mechanism-vs-product claim boundaries.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
           <div class="title">Post 4: Operator Guide for Local Embeddings OOTB</div>
@@ -106,7 +121,7 @@
         <a class="post" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
           <div class="title">Post 5: Industry Baselines + Ablation Study</div>
           <div class="meta">March 2026</div>
-          <div>Why vector top-k, top-k+reranker, and pointer-chasing are the comparison set.</div>
+          <div>Comparison contract with recorded-session and sparse-feedback head-to-head results.</div>
         </a>
       </div>
     </div>
