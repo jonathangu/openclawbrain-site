@@ -16,7 +16,7 @@ This is the canonical policy for secrets in OpenClaw/OpenClawBrain workspaces.
 - Keep token files in `~/.openclaw/credentials/*.token` and set `chmod 600`.
 - Never write secret values into brain/workspace notes, prompts, or state.
 
-Safe migration (no value printing):
+Safe setup (no value printing):
 
 ```bash
 mkdir -p ~/.openclaw/credentials/env ~/.openclaw/credentials
@@ -123,23 +123,10 @@ Each registry entry should track:
 
 ## Operations
 
-Harvest capability pointers (no value output):
+Run pointer harvest and leak-audit jobs using the current OpenClawBrain TypeScript tooling for your workspace.
 
-```bash
-python3 -m openclawbrain.ops.harvest_secret_pointers --workspace ~/.openclaw/workspace
-```
-
-Credential-file pointer harvest is enabled by default. If `~/.openclaw/credentials` exists, matching files are added as pointer-only rows (path + mode), without reading file contents. Override or disable with:
-
-```bash
-python3 -m openclawbrain.ops.harvest_secret_pointers \
-  --workspace ~/.openclaw/workspace \
-  --credentials-dir ~/.openclaw/credentials \
-  --no-include-credentials
-```
-
-Audit potential leaks (path + line only):
-
-```bash
-python3 -m openclawbrain.ops.audit_secret_leaks --workspace ~/.openclaw/workspace --strict
-```
+Required behavior:
+- harvest outputs pointer-only rows (env key names, token file paths, file modes)
+- secret values are never loaded into memory notes, prompt payloads, or state
+- credential-file pointer harvest includes `~/.openclaw/credentials` by default unless explicitly disabled
+- strict leak audit reports only path + line metadata for suspected leaks

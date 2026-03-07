@@ -6,7 +6,7 @@ Practical operator playbooks for the package-first runtime model.
 
 Canonical runbook: [docs/operator-guide.md](operator-guide.md)
 
-## Recipe 1: Day-0 bootstrap from existing files
+## Recipe 1: Day-0 startup from existing files
 
 Goal: start serving quickly without waiting for full historical replay.
 

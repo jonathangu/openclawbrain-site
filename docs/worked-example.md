@@ -57,7 +57,6 @@ const summary = "deploy note for billing banner patch; " +
 const candidates = activate(state, { summary, turnId });
 const compiled    = compile(candidates, {
   format: "prompt",
-  excludeBootstrap: true,
   maxPromptContextChars: 20_000,
 });
 ```

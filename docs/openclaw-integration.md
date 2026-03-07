@@ -1,4 +1,4 @@
-# OpenClaw Integration (TypeScript replacement)
+# OpenClaw Integration (TypeScript Runtime Boundary)
 
 OpenClawBrain is integrated as a TypeScript package set behind an OpenClaw-owned runtime boundary.
 
@@ -80,10 +80,9 @@ Teacher logic remains off the hot path and updates behavior asynchronously.
 
 ## Fast boot model
 
-Fast boot from existing files is the default operating mode:
+Fast startup from existing files is the default operating mode:
 
-- no full fresh-state scan gate before serving
-- runtime can start from available workspace files and prior exports
+- runtime starts from available workspace files and prior exports
 - background learning backfills historical data while new data is prioritized first
 
 This keeps startup practical even with large historical archives.
@@ -104,10 +103,3 @@ Keep proofs honest:
 - product proof: user-visible quality, error reduction, correction retention, and reliability under live traffic
 
 Mechanism proof is required but not sufficient for product claims.
-
-## What to avoid
-
-- Python daemon/socket lifecycle as integration shape
-- adapter-CLI-on-hot-path architecture as default model
-- migration framing that treats the TypeScript package model as temporary
-- full-history replay gating before first useful response

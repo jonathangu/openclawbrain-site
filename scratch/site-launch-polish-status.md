@@ -12,6 +12,6 @@ Branch: `codex/20260306/site-launch-polish`
 
 ## Verification
 
-- Served the repo locally with `python3 -m http.server 8123 --bind 127.0.0.1`.
+- Served the repo locally on `127.0.0.1:8123`.
 - Confirmed HTTP 200 for `/`, `/paper/`, `/proof/`, `/blog/`, `/materials/`, `/blog/v12.2.6-series/03-evaluation-ablations/`, and `/openclawbrain.pdf`.
 - Ran a local cross-link check across the updated entry surfaces; it passed.

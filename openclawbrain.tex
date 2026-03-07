@@ -226,7 +226,7 @@ pnpm run eval:sim-two-cluster -- --output-dir /tmp/ocb_two_cluster
 Expected outputs include \texttt{/tmp/ocb\_eval.json}, \texttt{/tmp/ocb\_expert\_regions/simulation\_curve.csv}, and regenerated SVGs in \texttt{figures/eval/} using the plotting entrypoint documented in \texttt{docs/reproduce-eval.md}.
 
 \section{5. Operational Notes}
-OpenClawBrain supports local embeddings out-of-the-box for operator-first deployment. This enables deterministic bootstrap and private/offline-friendly operation while keeping optional teacher workflows in asynchronous jobs.
+OpenClawBrain supports local embeddings out-of-the-box for operator-first deployment. This enables deterministic startup and private/offline-friendly operation while keeping optional teacher workflows in asynchronous jobs.
 
 \section{6. Conclusion}
 The v12.2.6+ system is defined by a fixed runtime boundary and four commitments: OpenClaw-owned runtime control, local hot-path retrieval, QTsim+graph-prior confidence mixing, distillation plus policy-gradient learning, and RL-native structure maintenance. The current top comparative rung is benchmark evidence (\texttt{recorded\_h2h\_relational\_drift\_001} and sparse-feedback 10-seed), while shadow/online claims remain explicitly out of scope until their artifacts are published.

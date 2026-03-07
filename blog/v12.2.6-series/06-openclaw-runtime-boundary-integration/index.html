@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Post 6: Brain-first OpenClaw Integration</title>
+  <title>Post 6: OpenClaw Runtime Boundary Integration</title>
   <meta name="description" content="What changes when OpenClaw runs with OpenClawBrain: settled runtime ownership, immutable packs, deterministic compile, and always-on learning with guardrails." />
-  <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/06-openclaw-brain-first-integration/" />
+  <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/" />
   <style>
     :root { --bg:#0e1118; --text:#e3ecf8; --muted:#99a6bc; --bright:#f4f8ff; --border:#2b3a52; --accent:#6ac4ff; --card:#131c29; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; --mono:"JetBrains Mono",monospace; }
     * { box-sizing: border-box; }
@@ -33,32 +33,21 @@
 <body>
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a> · <a href="/blog/v12.2.6-series/">series</a></div>
-    <h1>Post 6: Brain-first OpenClaw Integration</h1>
+    <h1>Post 6: OpenClaw Runtime Boundary Integration</h1>
     <p class="meta">March 2026 · v12.2.6+ series</p>
 
-    <p>Brain-first integration is the shipped runtime boundary: OpenClaw owns orchestration, prompt assembly, runtime diagnostics, and fail-open behavior; OpenClawBrain owns normalized contracts/events, immutable packs, activation promotion/rollback, deterministic compile, and learning packages.</p>
+    <p>This integration is the shipped runtime boundary: OpenClaw owns orchestration, prompt assembly, runtime diagnostics, and fail-open behavior; OpenClawBrain owns normalized contracts/events, immutable packs, activation promotion/rollback, deterministic compile, and learning packages.</p>
 
-    <h2>What exactly changes when enabled?</h2>
+    <h2>Current runtime flow</h2>
     <div class="compare">
-      <h3>Before brain-first (OOTB OpenClaw)</h3>
-      <pre>User message
-  ↓
-OpenClaw loads AGENTS/role + local files
-  ↓
-Model answers directly from loaded context
-  ↓
-Response sent
-  ↓
-Manual teach/correction workflow (if you built one)</pre>
-
-      <h3>After brain-first</h3>
+      <h3>OpenClaw with OpenClawBrain packages</h3>
       <pre>User message
   ↓
 OpenClaw runtime boundary normalizes events + workspace context
   ↓
 Learned route function scores candidates from existing files + active pack state
   ↓
-Deterministic compile assembles bounded <code>[BRAIN_CONTEXT v1]...[/BRAIN_CONTEXT]</code> into prompt
+Deterministic compile assembles a bounded compiled context block for prompt assembly
   ↓
 Model answers with stronger task-relevant prior
   ↓
@@ -67,7 +56,7 @@ Background learner harvests labels and writes candidate pack updates asynchronou
 
     <h2>Why this changes outcomes</h2>
     <ul>
-      <li><strong>Fast boot:</strong> context starts from existing files, without a full fresh-state scan gate.</li>
+      <li><strong>Fast startup:</strong> context starts from existing files and prior exports.</li>
       <li><strong>Fewer turns:</strong> learned routing sends task-relevant priors into prompt assembly before generation.</li>
       <li><strong>Teacher stays off hot path:</strong> heavy learning work runs asynchronously while the learned route function serves requests inline.</li>
       <li><strong>Controlled reversions:</strong> immutable packs with promotion/rollback let operators switch state without runtime-shape rewrites.</li>
@@ -84,7 +73,7 @@ Background learner harvests labels and writes candidate pack updates asynchronou
       <p style="margin:0 0 .6rem;"><strong>Safe defaults:</strong></p>
       <ul style="margin:0 0 .4rem 1rem;">
         <li>Keep retrieval context bounded and measurable so comparisons stay fair.</li>
-        <li>Use data-only <code>[BRAIN_CONTEXT v1]</code> blocks, not raw tool traces.</li>
+        <li>Use bounded data-only compiled context blocks, not raw tool traces.</li>
         <li>Run fail-open by default: if retrieval fails, continue normal OpenClaw flow.</li>
       </ul>
       <p style="margin:0 0 .6rem;"><strong>Deep path:</strong></p>
@@ -124,8 +113,8 @@ pnpm release:pack</pre>
       <li><strong>Product proof:</strong> end-to-end operator outcomes require full evaluations (turns, quality, latency, spend) and rollout evidence.</li>
     </ul>
 
-    <h2>Rollback and OpenClaw OOTB compatibility</h2>
-    <p>Brain-first wiring is <strong>opt-in</strong>; OpenClaw defaults remain untouched. Rollback is immediate: switch to the previous active pack (or disable runtime-boundary wiring) and restart the gateway. Turning it off does not require data-shape rewrites.</p>
+    <h2>Rollback and OpenClaw compatibility</h2>
+    <p>Rollback is immediate: switch to the previous active pack (or disable runtime-boundary wiring) and restart the gateway. OpenClaw serving behavior remains available without data-shape rewrites.</p>
 
     <p>Enablement details and operational defaults are documented in the canonical integration guide: <a href="/docs/openclaw-integration.md">docs/openclaw-integration.md</a>.</p>
 

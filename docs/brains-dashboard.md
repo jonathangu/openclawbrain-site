@@ -18,7 +18,7 @@ Snapshot date: **2026-03-03**.
 
 ## Refreshing the snapshot
 1. Edit the data table in `scripts/gen_brains_dashboard.py` with the latest snapshot.
-2. Re-run `python3 scripts/gen_brains_dashboard.py` to regenerate the PNGs.
+2. Re-run `scripts/gen_brains_dashboard.py` to regenerate the PNGs.
 
 ## Charts
 ![Brains dashboard nodes + edges](../assets/brains-dashboard/brains_dashboard_nodes_edges.png)

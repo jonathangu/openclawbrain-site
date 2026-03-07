@@ -101,7 +101,7 @@ Compilation from the active pack remains deterministic for a fixed state.
 Expected first-boot behavior:
 
 1. OpenClaw starts serving immediately from existing files and metadata.
-2. There is no full-history scan gate before first responses.
+2. Serving starts immediately from existing files and metadata.
 3. New events are learned first; historical backfill continues in background.
 4. Labels/scanner/harvest loops are active by default.
 5. Compiled context size is chosen for task effectiveness, including larger context when it avoids extra model/tool round-trips.
