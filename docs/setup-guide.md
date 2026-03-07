@@ -1,460 +1,126 @@
 > Canonical docs live on GitHub; this page is a snapshot.
 
-# OpenClawBrain Operator Setup Guide
+# OpenClawBrain Setup Guide (TypeScript-first)
+
+OpenClawBrain is now a TypeScript-first, package-first workspace that runs behind an OpenClaw-owned runtime boundary.
+
+This guide is the day-0 setup path for operators who want:
+- fast boot from existing files
+- always-on background learning by default
+- default-on labels, scanner, and harvest flow
+- continuous graph learning with teacher off the hot path
 
 ## Prerequisites
-- Python 3.10+
-- `pip install openclawbrain`
-- `OPENAI_API_KEY` in environment (required for the recommended OpenAI setup; optional only for hash offline/testing mode)
-- A workspace directory with markdown files (your agent's knowledge base)
 
-## Step 1: Build your first brain
+- Node.js 20+ and `corepack`
+- `pnpm` enabled via `corepack`
+- OpenClaw runtime checkout and deployment access
+- Existing agent workspace files (markdown/docs/memory) ready to ingest
+- Provider credentials configured in OpenClaw runtime secrets, not in workspace docs
 
-```bash
-openclawbrain init --workspace ./my-workspace --state ./brain/state.json
-openclawbrain doctor --state ./brain/state.json
-openclawbrain info --state ./brain/state.json
-```
+## Step 1: Install and verify the workspace
 
-By default, `init` tries OpenAI embeddings and LLM (`--embedder auto --llm auto`). If `OPENAI_API_KEY` is set, you get production-quality embeddings automatically. If not, it falls back to hash embeddings with no API calls. Use `--embedder hash --llm none` to force offline mode.
-
-## Initial learning: replay your sessions
-
-After init, replay your existing sessions to seed graph edges and extract learning signals. By default, `replay` runs the full learning pipeline (LLM mining + edge replay + harvest):
+Run from the OpenClawBrain TypeScript workspace root:
 
 ```bash
-openclawbrain replay --state ./brain/state.json --sessions ./sessions/
+corepack enable
+pnpm install
+pnpm check
+pnpm release:pack
 ```
 
-This extracts durable correction/teaching nodes and runs maintenance in one command (`--full-learning`, alias: `--full-pipeline`).
+`pnpm check` is the quality gate for type/lint/test/package integrity. `pnpm release:pack` produces the package set consumed by OpenClaw runtime.
 
-For cheap edge-only replay (no LLM, no harvest):
+## Step 2: Pin the public package surface
 
-```bash
-openclawbrain replay --state ./brain/state.json --sessions ./sessions/ --edges-only
+Use a pinned, versioned package set for runtime wiring:
+
+- `@openclawbrain/contracts`
+- `@openclawbrain/events`
+- `@openclawbrain/event-export`
+- `@openclawbrain/workspace-metadata`
+- `@openclawbrain/provenance`
+- `@openclawbrain/pack-format`
+- `@openclawbrain/activation`
+- `@openclawbrain/compiler`
+- `@openclawbrain/learner`
+
+Avoid mixing ad-hoc local package revisions in production. Promote package sets as a unit.
+
+## Step 3: Wire OpenClaw runtime to the package set
+
+OpenClaw owns runtime orchestration and fail-open behavior. OpenClawBrain packages provide the contracts, normalization, and learning components.
+
+Use a runtime profile equivalent to:
+
+```json
+{
+  "brain": {
+    "enabled": true,
+    "packSet": "<versioned-pack-set>",
+    "fastBootFromExistingFiles": true,
+    "backgroundLearning": {
+      "enabled": true,
+      "prioritizeNewEvents": true
+    },
+    "labels": {
+      "human": true,
+      "self": true
+    },
+    "scanner": {
+      "enabled": true
+    },
+    "harvest": {
+      "enabled": true
+    },
+    "continuousGraphLearning": {
+      "enabled": true,
+      "decay": true,
+      "hebbianCofiring": true,
+      "structuralUpdates": true
+    },
+    "teacher": {
+      "onHotPath": false
+    }
+  }
+}
 ```
 
-For fine-grained control over the LLM mining pass:
+## Step 4: Validate first boot behavior
 
-```bash
-openclawbrain replay \
-  --state ./brain/state.json \
-  --sessions ./sessions/ \
-  --fast-learning \
-  --workers 4 \
-  --window-radius 8 \
-  --max-windows 6 \
-  --hard-max-turns 120 \
-  --checkpoint ./brain/replay_checkpoint.json \
-  --json
-```
-`--extract-learning-events` is an alias for `--fast-learning`.
+Expected first-boot behavior:
 
-`fast-learning` stores extracted events in an append-only log:
-- `./brain/learning_events.jsonl`
+1. OpenClaw starts serving immediately from existing files and metadata.
+2. There is no full-history scan gate before first responses.
+3. New events are learned first; historical backfill continues in background.
+4. Labels/scanner/harvest loops are active by default.
 
-You can run this repeatedly; dedupe is by `(type, sha256(content), session_pointer)`, so repeated runs are idempotent.
+## Step 5: Validate runtime boundaries
 
-For ongoing operation after startup, use `--ignore-checkpoint` only when you intentionally want to replay older chunks that were already ingested.
+Operator checks:
 
-Replay progress defaults:
-- Fast-learning prints progress as it processes extraction windows.
-- Replay emits a heartbeat every 30 seconds by default.
-- Use `--quiet` to suppress banners/progress for automation.
+- OpenClaw hot path remains available when learner/scanner work is delayed.
+- Runtime fail-open behavior is verified (brain degradation does not block replies).
+- Provenance is preserved for normalized events and generated activations.
+- Teacher logic executes asynchronously and never gates turn latency.
 
-Single-writer lock:
-- Writer commands lock `state.json` via `state.json.lock` to prevent clobbered writes.
-- If a lock is active, prefer rebuilding into a new state and cut over (`examples/ops/rebuild_then_cutover.sh`).
-- Expert override exists (`--force` or `OPENCLAWBRAIN_STATE_LOCK_FORCE=1`) and should only be used when no conflicting writer is active.
+## Step 6: Day-2 operating model
 
-Checkpoint visibility:
+Default model:
 
-```bash
-openclawbrain replay --state ./brain/state.json --show-checkpoint --resume
-openclawbrain replay --state ./brain/state.json --show-checkpoint --resume --json
-```
+- Keep runtime up continuously.
+- Keep background learning enabled continuously.
+- Promote package sets intentionally (canary, then broad rollout).
+- Measure mechanism and product outcomes separately.
 
-Resume semantics:
-- `--resume` enables checkpoint offsets.
-- `--ignore-checkpoint` disables resume even when a checkpoint exists.
-- If a checkpoint only has legacy top-level `sessions` offsets, replay still resumes from them and prints a warning.
+Mechanism proof examples:
+- contract integrity
+- normalization/provenance correctness
+- deterministic pack/compiler behavior
 
-## Step 2: Wire up the fast loop (per-query)
+Product proof examples:
+- response quality uplift
+- correction durability
+- retrieval precision/recall at user-visible level
 
-Minimum per-query pattern: **query → log → learn**.  
-Reference implementation: `examples/ops/query_and_learn.py`
-
-```python
-from examples.ops.callbacks import make_embed_fn, make_llm_fn
-
-embed_fn = make_embed_fn("openai")  # or "hash" for offline/testing mode
-llm_fn = make_llm_fn("gpt-5-mini")  # optional, for LLM-assisted merge
-```
-
-Use this when building your query handler:
-
-- Run embeddings with `embed_fn(text)`
-- Traverse the graph and return `fired_ids`
-- Log query traces and learn outcomes:
-  - `+1.0` for good output
-  - `-1.0` for bad output
-- Persist feedback with `openclawbrain learn`
-
-For an AGENTS.md drop-in hook, use:
-
-`examples/openclaw_adapter/agents_hook.md`
-
-## Step 3: Wire up the slow loop (maintenance)
-
-Run maintenance manually:
-
-```bash
-openclawbrain maintain --state ./brain/state.json --tasks health,decay,prune,merge
-openclawbrain maintain --state ./brain/state.json --dry-run --json
-
-# Slow-learning harvest (now supported):
-openclawbrain harvest \
-  --state ./brain/state.json \
-  --events ./brain/learning_events.jsonl \
-  --tasks split,merge,prune,connect,scale \
-  --json
-```
-
-The harvest path is intentionally sidecar: it consumes OpenClaw replay artifacts and updates graph structure from them, without changing OpenClaw core memory files.
-
-For production automation, run `harvest` after `replay --fast-learning` with a bounded schedule (daily/hourly depending on session volume).
-
-## Decay during replay
-
-The default full-learning mode automatically enables decay during the replay pass. Unrelated edges weaken while actively traversed paths are reinforced. The harvest step also includes the `decay` task (`decay,scale,split,merge,prune,connect`).
-
-To enable decay during an edges-only replay, pass `--decay-during-replay`:
-
-```bash
-openclawbrain replay --state ./brain/state.json --sessions ./sessions/ --edges-only --decay-during-replay --decay-interval 10
-```
-
-`--decay-interval N` (default 10) controls how many learning steps occur between each decay pass.
-
-## Performance knobs
-
-- `--workers`: LLM workers for fast-learning window extraction (higher = faster, bounded by rate limits)
-- `--window-radius`: context breadth around likely feedback turns
-- `--max-windows`: max feedback windows sampled per file/session
-- `--hard-max-turns`: hard cap total turns considered to keep extraction bounded
-
-Recommended defaults:
-- `--workers 4`
-- `--window-radius 8`
-- `--max-windows 6`
-- `--hard-max-turns 120`
-```
-
-Schedule maintenance:
-
-### Cron one-liner
-
-```cron
-0 2 * * * /usr/bin/python3 -m openclawbrain.cli maintain --state /opt/openclawbrain/brain/state.json --tasks health,decay,prune,merge
-```
-
-### systemd timer snippet
-
-`/etc/systemd/system/openclawbrain-maintenance.service`
-
-```ini
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/python3 -m openclawbrain.cli maintain --state /opt/openclawbrain/brain/state.json --tasks health,decay,prune,merge
-```
-
-`/etc/systemd/system/openclawbrain-maintenance.timer`
-
-```ini
-[Timer]
-OnCalendar=daily
-Persistent=true
-
-[Install]
-WantedBy=timers.target
-```
-
-### Existing batch pipeline
-
-You can also invoke from your existing batch workflow/job:
-
-```bash
-python3 /opt/openclawbrain/examples/ops/run_maintenance.py --state /opt/openclawbrain/brain/state.json --tasks health,decay,prune,merge
-```
-
-## Step 4: Inject corrections and teachings
-
-```bash
-openclawbrain inject --state ./brain/state.json --id "correction::wrong-deploy" \
-  --content "Never deploy on Fridays without notifying ops" --type CORRECTION
-
-openclawbrain inject --state ./brain/state.json --id "teaching::deploy-window" \
-  --content "Deploy window is Tuesday-Thursday 10am-2pm" --type TEACHING
-```
-
-- `CORRECTION`: creates inhibitory edges.
-- `TEACHING`: creates supportive edges.
-
-## Step 5: Rebuild (when workspace changes significantly)
-
-```bash
-python3 examples/openclaw_adapter/rebuild_all_brains.py --agent main
-```
-
-## Step 6: Monitor health
-
-```bash
-openclawbrain health --state ./brain/state.json
-openclawbrain info --state ./brain/state.json
-```
-
-### Key metrics
-
-- `dormant_pct`: target 70-95% (most edges should be dormant)
-- `reflex_pct`: target 0-10% (only proven routes)
-- `orphan_nodes`: should be 0
-
-## Step 7: Set up file sync (incremental re-embedding)
-
-```bash
-openclawbrain sync --state ~/.openclawbrain/main/state.json --workspace ./my-workspace --embedder openai
-```
-
-## Step 8: Set constitutional anchors
-
-```bash
-openclawbrain anchor --state ~/.openclawbrain/main/state.json --node-id "SOUL.md::0" --authority constitutional
-openclawbrain anchor --state ~/.openclawbrain/main/state.json --list
-```
-
-## Step 9: Compact old daily notes
-
-```bash
-openclawbrain compact --state ~/.openclawbrain/main/state.json --memory-dir ./memory --dry-run
-```
-
-## Brain directory layout
-
-```
-~/.openclawbrain/main/
-├── state.json                 # Graph + index + metadata
-├── journal.jsonl              # Append-only telemetry
-├── fired_log.jsonl            # Per-chat fired nodes
-└── injected_corrections.jsonl # Dedup ledger
-```
-
-## Callback pattern (the core principle)
-
-OpenClawBrain never imports `openai` or any provider package directly. You construct callbacks and pass them in.
-
-- `embed_fn`: `(text) -> vector`
-- `llm_fn`: `(system, user) -> str`
-
-Reference: `examples/ops/callbacks.py`
-
-## Socket Server (recommended for production)
-
-Run the production service as a Unix socket wrapper around the NDJSON daemon:
-
-```bash
-openclawbrain serve --state ~/.openclawbrain/main/state.json
-```
-
-Advanced/alternate module form (same service behavior):
-
-```bash
-python3 -m openclawbrain.socket_server --state ~/.openclawbrain/main/state.json
-```
-
-The socket server creates and manages:
-
-- `~/.openclawbrain/<agent>/daemon.sock` (for example: `~/.openclawbrain/main/daemon.sock`)  
-  (created automatically by `openclawbrain serve`)
-
-Test it with:
-
-```bash
-python3 -m openclawbrain.socket_client --socket ~/.openclawbrain/main/daemon.sock --method health --params "{}"
-```
-
-### launchd (macOS)
-
-Create `~/Library/LaunchAgents/com.openclawbrain.daemon.plist`:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>Label</key>
-  <string>com.openclawbrain.daemon</string>
-  <key>ProgramArguments</key>
-  <array>
-    <string>/usr/bin/env</string>
-    <string>openclawbrain</string>
-    <string>serve</string>
-    <string>--state</string>
-    <string>/Users/YOU/.openclawbrain/main/state.json</string>
-  </array>
-  <key>RunAtLoad</key>
-  <true/>
-  <key>KeepAlive</key>
-  <true/>
-  <key>StandardOutPath</key>
-  <string>/Users/YOU/.openclawbrain/main/daemon.stdout.log</string>
-  <key>StandardErrorPath</key>
-  <string>/Users/YOU/.openclawbrain/main/daemon.stderr.log</string>
-</dict>
-</plist>
-```
-
-Load it:
-
-```bash
-launchctl load -w ~/Library/LaunchAgents/com.openclawbrain.daemon.plist
-launchctl list | rg openclawbrain
-```
-
-### systemd (Linux)
-
-Create `/etc/systemd/system/openclawbrain-daemon.service`:
-
-```ini
-[Unit]
-Description=OpenClawBrain daemon worker
-After=network-online.target
-
-[Service]
-Type=simple
-User=YOUR_USER
-WorkingDirectory=/home/YOUR_USER
-ExecStart=/usr/bin/env openclawbrain serve --state /home/YOUR_USER/.openclawbrain/main/state.json
-Restart=always
-RestartSec=1
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Enable and start:
-
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now openclawbrain-daemon.service
-```
-
-### Client Library
-
-Use the stdlib-only socket client directly from Python:
-
-```python
-from openclawbrain.socket_client import OCBClient
-
-with OCBClient("~/.openclawbrain/main/daemon.sock") as client:
-    health = client.health()
-    result = client.query("how do we deploy", chat_id="telegram:123", top_k=4)
-```
-
-## Daemon setup (legacy / debug)
-
-Keep the process warm and reuse loaded state when testing transport internals directly:
-
-Run the daemon directly for smoke tests:
-
-```bash
-openclawbrain daemon --state ~/.openclawbrain/main/state.json
-```
-
-### launchd (macOS)
-
-Create `~/Library/LaunchAgents/com.openclawbrain.daemon.plist`:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>Label</key>
-  <string>com.openclawbrain.daemon</string>
-  <key>ProgramArguments</key>
-  <array>
-    <string>/usr/bin/env</string>
-    <string>python3</string>
-    <string>-m</string>
-    <string>openclawbrain.daemon</string>
-    <string>--state</string>
-    <string>/Users/YOU/.openclawbrain/main/state.json</string>
-  </array>
-  <key>RunAtLoad</key>
-  <true/>
-  <key>KeepAlive</key>
-  <true/>
-  <key>StandardOutPath</key>
-  <string>/Users/YOU/.openclawbrain/main/daemon.stdout.log</string>
-  <key>StandardErrorPath</key>
-  <string>/Users/YOU/.openclawbrain/main/daemon.stderr.log</string>
-</dict>
-</plist>
-```
-
-Load it:
-
-```bash
-launchctl load -w ~/Library/LaunchAgents/com.openclawbrain.daemon.plist
-launchctl list | rg openclawbrain
-```
-
-### systemd (Linux)
-
-Create `/etc/systemd/system/openclawbrain-daemon.service`:
-
-```ini
-[Unit]
-Description=OpenClawBrain daemon worker
-After=network-online.target
-
-[Service]
-Type=simple
-User=YOUR_USER
-WorkingDirectory=/home/YOUR_USER
-ExecStart=/usr/bin/env python3 -m openclawbrain.daemon --state /home/YOUR_USER/.openclawbrain/main/state.json
-Restart=always
-RestartSec=1
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Enable and start:
-
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now openclawbrain-daemon.service
-```
-
-## Testing the daemon
-
-Use an `echo` pipe with NDJSON to validate request/response wiring:
-
-```bash
-echo '{"id":"health-1","method":"health","params":{}}' | openclawbrain daemon --state ~/.openclawbrain/main/state.json
-```
-
-You should receive a JSON reply on stdout with the same `id` and health fields.
-
-Or use the socket client one-liner:
-
-```bash
-python3 -m openclawbrain.socket_client --socket ~/.openclawbrain/main/daemon.sock --method health --params "{}"
-```
-
-Daemon references (supported methods):
-
-- `query`, `learn`, `maintain`, `health`, `info`, `save`, `reload`, `shutdown`, `inject`, `correction`.
-- `inject` supports TEACHING/CORRECTION/DIRECTIVE node types.
-- `correction` performs atomic penalize + inject in a single request.
+Do not claim product proof from mechanism checks alone.

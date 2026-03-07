@@ -1,187 +1,120 @@
 > Canonical docs live on GitHub; this page is a snapshot.
 
-# OpenClawBrain Ops Recipes
+# OpenClawBrain Ops Recipes (TypeScript-first)
 
-Practical operator runbooks for cutovers and large replays.
+Practical operator playbooks for the package-first runtime model.
 
-Canonical day-0/day-2 runbook: **[docs/operator-guide.md](operator-guide.md)**
+Canonical runbook: [docs/operator-guide.md](operator-guide.md)
 
-**OpenClaw path note:** OpenClaw agent session logs typically live at `~/.openclaw/agents/<agent>/sessions` (e.g., `~/.openclaw/agents/main/sessions`). You can pass that directory directly via `--sessions <dir>`.
+## Recipe 1: Day-0 bootstrap from existing files
 
-## Cutover fast
-
-Use this when you need improved retrieval quickly and can defer full replay/harvest.
-
-1. Run fast-learning only:
+Goal: start serving quickly without waiting for full historical replay.
 
 ```bash
-openclawbrain replay \
-  --state ~/.openclawbrain/main/state.json \
-  --sessions ~/.openclaw/agents/main/sessions \
-  --fast-learning \
-  --stop-after-fast-learning \
-  --resume \
-  --checkpoint ~/.openclawbrain/main/replay_checkpoint.json
-```
-`--extract-learning-events` is an alias for `--fast-learning`.
-
-Example progress output during fast-learning:
-
-```text
-[fast_learning] 250/1800 (13.9%) elapsed=41.7s rate=6.00/s eta=258.3s
+corepack enable
+pnpm install
+pnpm check
+pnpm release:pack
 ```
 
-Default replay heartbeat is every 30 seconds; use `--quiet` to suppress banners/progress in scripted runs.
+Runtime profile requirements:
+- `fastBootFromExistingFiles = true`
+- `backgroundLearning.enabled = true`
+- `backgroundLearning.prioritizeNewEvents = true`
+- `labels.human = true`
+- `labels.self = true`
+- `scanner.enabled = true`
+- `harvest.enabled = true`
+- `continuousGraphLearning.enabled = true`
 
-Checkpoint status after fast-learning:
+Expected result:
+- runtime serves immediately from existing files/exports
+- new events are learned first
+- historical learning continues in background
+
+## Recipe 2: Safe pack-set cutover
+
+Goal: ship a new OpenClawBrain package set without disrupting serving.
+
+1. Build and verify pack set:
 
 ```bash
-openclawbrain replay \
-  --state ~/.openclawbrain/main/state.json \
-  --show-checkpoint \
-  --resume
+corepack enable
+pnpm install
+pnpm check
+pnpm release:pack
 ```
 
-2. Start the daemon so serving traffic uses the latest state:
+2. Deploy to canary runtime slice.
+3. Validate:
+- hot-path latency unchanged
+- fail-open still works
+- background loops healthy
+4. Promote globally.
 
-```bash
-openclawbrain serve --state ~/.openclawbrain/main/state.json
-```
+If canary fails, roll back to the previous pack set immediately.
 
-3. Run full replay/harvest later (off-peak):
+## Recipe 3: Backlog catch-up without hot-path risk
 
-⚠️ Single-writer rule: `replay` writes `state.json`. If your daemon is running and also writing/learning, do **not** replay against the LIVE state. Either stop the daemon during full-learning, or use the no-drama rebuild flow below.
+Goal: reduce historical backlog while keeping serving stable.
 
-`openclawbrain` now enforces this with a lock file next to state (`state.json.lock`). If another writer holds the lock, writer commands fail fast with guidance. Expert override is available with `--force` or `OPENCLAWBRAIN_STATE_LOCK_FORCE=1` (only use when you are certain no conflicting writer is active).
+1. Keep hot path on learned route function.
+2. Keep teacher off hot path.
+3. Reserve async worker budget for new events first.
+4. Use remaining capacity for historical backfill, scanner, and harvest.
+5. Watch backlog depth and new-event lag separately.
 
-```bash
-openclawbrain replay \
-  --state ~/.openclawbrain/main/state.json \
-  --sessions ~/.openclaw/agents/main/sessions \
-  --full-learning \
-  --resume \
-  --checkpoint ~/.openclawbrain/main/replay_checkpoint.json
-```
-`--full-pipeline` is an alias for `--full-learning`.
+Do not gate serving on backlog completion.
 
-`examples/ops/cutover_then_background_full_learning.sh` automates this sequence.
+## Recipe 4: Label pipeline hardening
 
-## No-drama rebuild + cutover (single-writer safe)
+Goal: keep human + self labels as default behavior and avoid silent drift.
 
-Use this when you need a full rebuild/replay without stopping the currently serving daemon during the rebuild itself.
+1. Keep both human and self labels enabled.
+2. Keep scanner/harvest enabled.
+3. Monitor per-source label throughput:
+- human labels accepted
+- self labels accepted/rejected
+- harvest application rate
+4. Alert on prolonged zero-throughput windows.
 
-Why:
-- Rebuild/replay writes `state.json`.
-- If rebuild and daemon both write the same LIVE state, writes can clobber/split state.
+A zero-throughput label pipeline usually means quality regresses before hot-path errors appear.
 
-What this flow does:
-1. Builds and replays into a brand-new directory: `~/.openclawbrain/<agent>.rebuild.<timestamp>`.
-2. Verifies `state.json` in that new directory.
-3. Stops the agent daemon briefly only at cutover time.
-4. Atomically swaps directories (`LIVE -> .bak`, `NEW -> LIVE`) and restarts.
+## Recipe 5: Continuous graph learning tuning
 
-Run:
+Goal: keep live graph adaptation active without overfitting.
 
-```bash
-examples/ops/rebuild_then_cutover.sh <agent> <workspace_dir> <sessions_path...>
-```
+Required defaults:
+- decay enabled
+- Hebbian co-firing enabled
+- structural updates enabled
 
-Example:
+Tuning order:
+1. Stabilize hot-path latency and fail-open behavior.
+2. Stabilize new-event learning lag.
+3. Tune decay/co-firing/structure rates incrementally.
+4. Re-check correction retention and repeat-error trend.
 
-```bash
-examples/ops/rebuild_then_cutover.sh main ~/.openclaw/workspace \
-  ~/.openclaw/agents/main/sessions \
-  ~/.openclaw/agents/main/sessions/session-2026-03-01.jsonl
-```
+## Recipe 6: Runtime rollback on quality regression
 
-Notes:
-- `replay --sessions` accepts one or more paths, and each path may be a sessions directory or an individual `.jsonl` file.
-- The helper script uses fast-learning (`--fast-learning --stop-after-fast-learning`; alias: `--extract-learning-events`) for fast, safe cutover.
-- For full-learning, either run it into NEW before cutover, or rebuild again into a new directory and cut over again. Avoid replaying directly against LIVE while the daemon is running.
-- Tradeoff: events learned while rebuild is running are not in the NEW snapshot unless you pause learning traffic or run a small delta replay before/after cutover.
-- On systems without `launchctl`, the script skips stop/start and tells you what to do manually.
+Goal: recover quickly when product quality drops after promotion.
 
-## Parallel replay
+1. Revert OpenClaw runtime to previous known-good pack set.
+2. Keep serving active with fail-open.
+3. Preserve event exports and provenance for analysis.
+4. Compare mechanism metrics vs product outcomes:
+- mechanism may remain healthy while product quality regresses
+5. Roll forward only after a verified fix.
 
-For large histories, run replay in parallel workers and checkpoint frequently:
+## Recipe 7: New agent bring-up
 
-```bash
-openclawbrain replay \
-  --state ~/.openclawbrain/main/state.json \
-  --sessions ~/.openclaw/agents/main/sessions \
-  --full-learning \
-  --replay-workers 4 \
-  --workers 4 \
-  --checkpoint ~/.openclawbrain/main/replay_checkpoint.json \
-  --checkpoint-every-seconds 60 \
-  --checkpoint-every 50 \
-  --persist-state-every-seconds 300 \
-  --resume
-```
+Use [docs/new-agent-sop.md](new-agent-sop.md) for full steps.
 
-Notes:
-- `--replay-workers` controls edge-replay parallelism.
-- `--workers` controls fast-learning LLM extraction workers.
-- `--replay-workers > 1` uses a deterministic shard/merge approximation rather than strict sequential replay semantics.
-- `merge_batches` in replay output indicates how many merge windows were applied.
-- Use both `--checkpoint-every-seconds` and `--checkpoint-every` for long runs so restarts resume from recent progress.
-- Replay startup now prints a banner (unless `--json`) with checkpoint path, `resume`, `ignore_checkpoint`, and planned phases.
-
-Inspect checkpoint progress without opening JSON:
-
-```bash
-openclawbrain replay \
-  --state ~/.openclawbrain/main/state.json \
-  --show-checkpoint \
-  --resume
-```
-
-Machine-readable checkpoint status:
-
-```bash
-openclawbrain replay \
-  --state ~/.openclawbrain/main/state.json \
-  --show-checkpoint \
-  --resume \
-  --json
-```
-
-Resume semantics:
-- Resume takes effect only when `--resume` is set and `--ignore-checkpoint` is not set.
-- If phase-scoped offsets are missing, replay falls back to legacy top-level `sessions` offsets and emits a warning.
-
-Use `examples/ops/replay_last_days.sh` when you want a bounded replay window.
-
-## Prompt caching
-
-For stable prompt caching, build the appendix from fired nodes and append it late:
-
-```bash
-python3 examples/openclaw_adapter/query_brain.py \
-  ~/.openclawbrain/main/state.json \
-  "user query summary" \
-  --format prompt
-```
-
-Guidelines:
-- Append the `[BRAIN_CONTEXT v1]...[/BRAIN_CONTEXT]` block near the end of the final prompt.
-- Keep stable node ordering (do not reshuffle lines between retries).
-- Avoid echoing/paraphrasing this block earlier in the prompt; duplicated context reduces cache stability.
-
-## Media memory
-
-OpenClaw session logs often store uploads as `[media attached: ...]` stubs. Those stubs are low-signal by themselves, so replay should ingest allowlisted `toolResult` text (OCR/transcripts/captions) when present.
-
-```bash
-openclawbrain replay \
-  --state ~/.openclawbrain/main/state.json \
-  --sessions ~/.openclaw/agents/main/sessions \
-  --include-tool-results \
-  --tool-result-allowlist image,openai-whisper,openai-whisper-api,openai-whisper-local,summarize \
-  --tool-result-max-chars 80000
-```
-
-Flags:
-- `--include-tool-results` enables attachment of tool outputs to media-stub user turns.
-- `--tool-result-allowlist` limits ingestion to trusted tool names.
-- `--tool-result-max-chars` bounds appended text size per interaction.
+Minimum policy checklist for a new agent:
+- dedicated workspace
+- dedicated brain profile in OpenClaw runtime
+- package set pinned
+- fast boot enabled
+- background learning enabled
+- labels/scanner/harvest enabled
+- teacher off hot path
