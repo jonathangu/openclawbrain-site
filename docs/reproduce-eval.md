@@ -52,7 +52,32 @@ Non-claims:
 - This is not a live production OpenClaw runtime eval.
 - This does not yet prove downstream answer quality directly; it proves retrieval-routing behavior on deterministic workflow-shaped tasks.
 
-## 2) Run the baseline + ablation harness (real query set)
+## 2) Recorded-session head-to-head benchmark
+
+The first fair comparison layer: a frozen recorded-session query set, fixed state, and one rubric applied to all modes.
+
+Public bundle: `proof-results/recorded_h2h_relational_drift_001` in [brain-ground-zero](https://github.com/jonathangu/brain-ground-zero) at commit `1c54302`.
+
+Current recorded-session metrics:
+
+| Mode | Accuracy |
+| --- | ---: |
+| `full_brain` | 0.975 |
+| `vector_rag_rerank` (best baseline) | 0.89625 |
+
+- 800 queries, 41 training steps, 8 baselines compared.
+- Delta: +7.9 percentage points (`full_brain` vs `vector_rag_rerank`).
+
+Interpretation:
+- The full brain policy beats all 8 baselines on a frozen recorded-session query set with a fixed rubric.
+- This is benchmark/recorded-session evidence, not a live production answer-quality claim.
+
+Non-claims:
+- This does not prove live production answer quality on served OpenClaw traffic.
+- This does not prove shadow-mode or online rollout outcomes.
+- The next rungs are shadow-mode and narrow online rollout.
+
+## 3) Run the baseline + ablation harness (real query set)
 
 Use the evaluation package entrypoint in the main `openclawbrain` workspace.
 
@@ -75,7 +100,7 @@ Baseline mapping used in the paper/blog:
 
 If you add a dedicated pointer-chasing mode in the harness, include it in `--modes` and document it in the report.
 
-## 3) Run synthetic simulations (reward/accuracy/oracle-gap curves)
+## 4) Run synthetic simulations (reward/accuracy/oracle-gap curves)
 
 ```bash
 cd /path/to/openclawbrain
@@ -89,7 +114,7 @@ Expected outputs:
 - `/tmp/ocb_two_cluster/simulation_curve.csv` (columns: `epoch,ce_loss,cluster_accuracy,top1_accuracy`)
 - `/tmp/ocb_two_cluster/report.md`
 
-## 4) Generate site/paper figures from CSVs
+## 5) Generate site/paper figures from CSVs
 
 From this website repo:
 
@@ -107,6 +132,6 @@ Expected outputs in `figures/eval/`:
 - `alpha_router_conf_hist.svg` + `alpha_router_conf_hist.png` (if data present)
 - `ablation_bar_chart.svg` + `ablation_bar_chart.png`
 
-## 5) Paper table placeholders
+## 6) Paper table placeholders
 
 If you do not have the outputs above, leave paper/blog tables as `TBD` and cite the exact command + output path you plan to fill (for example, `/tmp/ocb_eval.json` and `/tmp/ocb_expert_regions/simulation_curve.csv`).

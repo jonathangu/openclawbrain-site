@@ -417,7 +417,7 @@
           <div class="eyebrow">Evidence package</div>
           <h1>Proof, packaged for operator review.</h1>
           <p class="lead">
-            OpenClawBrain already has mechanism proof for the product it claims to ship: OpenClaw-native memory, a locally served and bounded hot path, and a learned runtime <code>route_fn</code> improved off the hot path by Ultimate Policy Gradient. What exists today is useful. It is not full product proof yet.
+            OpenClawBrain has mechanism proof and a recorded-session head-to-head benchmark for the product it claims to ship: OpenClaw-native memory, a locally served and bounded hot path, and a learned runtime <code>route_fn</code> improved off the hot path by Ultimate Policy Gradient. Recorded-session evidence: <code>full_brain</code> 0.975 accuracy vs best baseline 0.896 across 800 queries, 41 steps, and 8 baselines. What exists today is useful. Shadow and online production proof are not claimed yet.
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href="../docs/worked-example.md">Read the worked turn</a>
@@ -427,7 +427,7 @@
             <a class="btn btn-secondary" href="../docs/reproduce-eval.md">Raw reproduce-eval doc</a>
           </div>
           <p class="hero-note">
-            Claim boundary: deterministic simulations, reproducible figures, and traceable turn bundles prove the mechanism and integration shape. They do not yet prove head-to-head wins on real OpenClaw traffic.
+            Claim boundary: deterministic simulations, reproducible figures, traceable turn bundles, and a recorded-session head-to-head benchmark prove the mechanism, integration shape, and comparative accuracy on a frozen query set. They do not yet prove shadow or online wins on live OpenClaw traffic.
           </p>
           <div class="tag-row">
             <span class="tag">OpenClaw-native memory</span>
@@ -441,19 +441,19 @@
           <div class="status-grid">
             <article class="status-card" id="proven-now">
               <div class="kicker">Proven now</div>
-              <h2>Mechanism, integration shape, and local reproducibility</h2>
+              <h2>Mechanism, integration shape, recorded-session head-to-head, and local reproducibility</h2>
               <ul>
                 <li>Deterministic simulations and ablations show the routing and learning loop behaves as intended.</li>
                 <li>A worked OpenClaw turn shows stable <code>turn_id</code>, bounded compiled context, and feedback captured against the route that fired.</li>
+                <li>Recorded-session head-to-head: 800 queries, 41 steps, 8 baselines. <code>full_brain</code> accuracy 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp). Public bundle: <code>proof-results/recorded_h2h_relational_drift_001</code>.</li>
                 <li>The figure-generation and eval harness paths are explicit enough to rerun and inspect locally.</li>
               </ul>
             </article>
 
             <article class="status-card">
               <div class="kicker">Still needed</div>
-              <h2>Recorded-session, shadow, and online evidence</h2>
+              <h2>Shadow and online evidence</h2>
               <ul>
-                <li>Fixed-session head-to-head runs with the same state, query set, and rubric across all modes.</li>
                 <li>Shadow-mode comparisons on mirrored OpenClaw traffic with saved disagreement traces.</li>
                 <li>Narrow online rollout data covering success, corrections, prompt size, latency, and cost.</li>
               </ul>
@@ -512,6 +512,41 @@
         </div>
       </section>
 
+      <section class="section" id="recorded-session">
+        <div class="section-head">
+          <div>
+            <h2>Recorded-session head-to-head</h2>
+            <p class="section-intro">The first fair comparison layer: a frozen query set, fixed state, and one rubric applied to all modes. This is benchmark evidence from a recorded session, not a live production answer-quality claim.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">Benchmark result</div>
+            <h2><code>full_brain</code> 0.975 vs best baseline 0.896</h2>
+            <ul>
+              <li>800 queries, 41 training steps, 8 baselines compared.</li>
+              <li><code>full_brain</code> accuracy: <strong>0.975</strong></li>
+              <li><code>vector_rag_rerank</code> (best baseline): <strong>0.89625</strong></li>
+              <li>Delta: <strong>+7.9 percentage points</strong></li>
+            </ul>
+            <p class="meta">
+              Public bundle: <code>proof-results/recorded_h2h_relational_drift_001</code> in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> at commit <code>1c54302</code>.
+            </p>
+          </article>
+
+          <article class="status-card">
+            <div class="kicker">Proof boundary</div>
+            <h2>What this does and does not prove</h2>
+            <ul>
+              <li>This is a recorded-session benchmark: frozen queries, fixed state, deterministic rubric.</li>
+              <li>It proves comparative accuracy on a controlled head-to-head with 8 baselines.</li>
+              <li>It does <strong>not</strong> prove live production answer quality, shadow-mode wins, or online rollout outcomes.</li>
+              <li>The next rungs on the evidence ladder are shadow-mode and narrow online rollout.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
       <section class="section" id="evidence-ladder">
         <div class="section-head">
           <div>
@@ -526,11 +561,11 @@
             <p>Run deterministic simulations and ablations to show the learned router and confidence gate improve under controlled conditions.</p>
             <div class="meta">This proves the mechanism. It does not prove product superiority.</div>
           </article>
-          <article class="ladder-card">
-            <div class="step">2</div>
+          <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
+            <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">2</div>
             <h3>Recorded-session head-to-head</h3>
-            <p>Use a fixed OpenClaw query or session set, the same state, and one rubric to compare <code>vector_only</code>, legacy rerankers, partial components, and the learned runtime policy.</p>
-            <div class="meta">This is the first fair comparison layer.</div>
+            <p>800 queries, 41 steps, 8 baselines. <code>full_brain</code> accuracy 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp). Public bundle: <code>proof-results/recorded_h2h_relational_drift_001</code>.</p>
+            <div class="meta">This rung is reached. Evidence is benchmark/recorded-session, not live production.</div>
           </article>
           <article class="ladder-card">
             <div class="step">3</div>
