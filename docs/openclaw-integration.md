@@ -107,7 +107,7 @@ Mechanism proof is required but not sufficient for product claims.
 
 ## What to avoid
 
-- Python daemon/socket lifecycle as forward integration shape
+- Python daemon/socket lifecycle as integration shape
 - adapter-CLI-on-hot-path architecture as default model
 - migration framing that treats the TypeScript package model as temporary
 - full-history replay gating before first useful response

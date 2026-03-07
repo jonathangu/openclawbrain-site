@@ -28,52 +28,55 @@ An OpenClaw operator is preparing a deploy note and asks:
 
 > "For this billing banner patch, what deploy constraints should I mention?"
 
-OpenClaw should not pass the raw user message into the brain unchanged. It should pass a stable summary plus a stable `chat_id`.
+OpenClaw should not pass the raw user message into the brain unchanged. It should pass a stable summary plus a stable `turn_id`.
 
 Example turn payload:
 
 ```text
-chat_id: oc-main-2026-03-06-deploy-0142
+turn_id: oc-main-2026-03-06-deploy-0142
 summary: deploy note for billing banner patch; need freeze window, rollback owner requirement, and when support contact is required
 ```
 
 Important detail:
 
-- `chat_id` must stay stable across the brain query, later correction capture, and any `learn_by_chat_id` outcome for this turn
+- `turn_id` must stay stable across the compile call, later correction capture, and any learner outcome for this turn
 - the summary should be compact and operator-meaningful, not a full prompt dump
 
-## 1. OpenClaw calls `query_brain`
+## 1. OpenClaw activates a compiled context block
 
-```bash
-STATE=~/.openclawbrain/main/state.json
-CHAT_ID=oc-main-2026-03-06-deploy-0142
-SUMMARY="deploy note for billing banner patch; need freeze window, rollback owner requirement, and when support contact is required"
+```ts
+import { activate } from "@openclawbrain/activation";
+import { compile }  from "@openclawbrain/compiler";
 
-python3 -m openclawbrain.openclaw_adapter.query_brain \
-  "$STATE" \
-  "$SUMMARY" \
-  --chat-id "$CHAT_ID" \
-  --format prompt \
-  --exclude-bootstrap \
-  --max-prompt-context-chars 20000
+const turnId  = "oc-main-2026-03-06-deploy-0142";
+const summary = "deploy note for billing banner patch; " +
+                "need freeze window, rollback owner requirement, " +
+                "and when support contact is required";
+
+const candidates = activate(state, { summary, turnId });
+const compiled    = compile(candidates, {
+  format: "prompt",
+  excludeBootstrap: true,
+  maxPromptContextChars: 20_000,
+});
 ```
 
 What to save for proof:
 
-- exact command line
-- `chat_id`
+- exact activation + compile call parameters
+- `turn_id`
 - state path or state snapshot identifier
 
-## 2. The brain returns bounded `[BRAIN_CONTEXT]`
+## 2. The compiler returns a bounded context block
 
 Example prompt block returned to OpenClaw:
 
 ```text
-[BRAIN_CONTEXT]
+[COMPILED_CONTEXT v1]
 - Deploy policy snapshot: customer-visible changes freeze after 16:00 PT unless the on-call lead approves an exception.
 - Release note rule: always name a rollback owner. Add a support contact only for customer-visible patches.
 - Prior correction from this workspace: do not describe finance-impacting changes as auto-approved; they still need manual review.
-[/BRAIN_CONTEXT]
+[/COMPILED_CONTEXT]
 ```
 
 What matters here:
@@ -99,49 +102,44 @@ Operator point:
 - the current turn benefits from the returned context immediately
 - the answer is still produced by the normal OpenClaw model path
 
-## 4. Same-turn correction capture and `learn_by_chat_id`
+## 4. Same-turn correction capture and learner outcome
 
 Suppose the user immediately corrects the agent:
 
 > "This patch is internal-only. Keep the rollback owner, but do not require a support contact."
 
-Capture the correction against the same `chat_id`:
+Capture the correction against the same `turn_id`:
 
-```bash
-MESSAGE_ID=assistant-2026-03-06-0142
-CORRECTION="For internal-only patches, keep the rollback owner but do not require a support contact."
+```ts
+import { emitCorrectionEvent } from "@openclawbrain/events";
+import { recordOutcome }       from "@openclawbrain/learner";
 
-python3 -m openclawbrain.openclaw_adapter.capture_feedback \
-  --state "$STATE" \
-  --chat-id "$CHAT_ID" \
-  --kind CORRECTION \
-  --content "$CORRECTION" \
-  --lookback 1 \
-  --message-id "$MESSAGE_ID" \
-  --json
-```
+emitCorrectionEvent(state, {
+  turnId,
+  kind: "CORRECTION",
+  content: "For internal-only patches, keep the rollback owner " +
+           "but do not require a support contact.",
+  lookback: 1,
+  messageId: "assistant-2026-03-06-0142",
+});
 
-Then mark the turn outcome:
-
-```bash
-python3 -m openclawbrain.openclaw_adapter.learn_by_chat_id \
-  --state "$STATE" \
-  --chat-id "$CHAT_ID" \
-  --outcome -1.0 \
-  --lookback 1 \
-  --json
+recordOutcome(state, {
+  turnId,
+  outcome: -1.0,
+  lookback: 1,
+});
 ```
 
 What to save for proof:
 
 - correction text
-- `message_id`
-- JSON output from `capture_feedback`
-- JSON output from `learn_by_chat_id`
+- `messageId`
+- correction event output
+- learner outcome output
 
 What happens immediately:
 
-- the correction and outcome are attached to the same fired-route history for `chat_id`
+- the correction and outcome are attached to the same fired-route history for `turn_id`
 - OpenClaw can answer the correction in the conversation right away
 
 What does **not** happen immediately:
@@ -187,8 +185,8 @@ Only after the updated state is deployed or cut over do later turns see the new 
 
 | Layer | Changes on this turn | Changes only after background learning and redeploy |
 | --- | --- | --- |
-| `chat_id` linkage | `query_brain`, correction capture, and outcome all refer to the same turn history | later analysis can replay the same turn history reliably |
-| prompt context | OpenClaw gets the bounded `[BRAIN_CONTEXT]` block immediately | similar future turns may get a different block only after updated state is served |
+| `turn_id` linkage | compile, correction capture, and outcome all refer to the same turn history | later analysis can replay the same turn history reliably |
+| prompt context | OpenClaw gets the bounded compiled context block immediately | similar future turns may get a different block only after updated state is served |
 | OpenClaw answer | the current answer can use the returned context right away | past answers do not retroactively change |
 | correction record | the correction is stored immediately against the fired route | the correction influences future routing only after replay/harvest/update work is deployed |
 | learned `route_fn` | current live weights stay as they were for this served state | later served weights can prefer better edges for similar deploy questions |
@@ -198,12 +196,12 @@ Only after the updated state is deployed or cut over do later turns see the new 
 
 If you want this turn to count as evidence instead of anecdote, keep at least:
 
-- inbound summary and stable `chat_id`
-- exact `query_brain` command
-- returned bounded `[BRAIN_CONTEXT]`
+- inbound summary and stable `turn_id`
+- exact activation + compile parameters
+- returned bounded compiled context block
 - OpenClaw answer text or response trace id
-- same-turn correction text plus `capture_feedback` JSON
-- `learn_by_chat_id` JSON
+- same-turn correction text plus correction event output
+- learner outcome output
 - later replay, harvest, and maintain commands plus output paths
 - commit SHA and state identifier used for the turn and the later cutover
 

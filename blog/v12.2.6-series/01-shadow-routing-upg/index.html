@@ -47,7 +47,7 @@
     <h2>Shadow routing</h2>
     <p>"Shadow routing" means the expensive teacher stays off the hot path. The brain answers live queries with the learned runtime <code>route_fn</code>. Replay, scanner/harvester passes, and the async teacher work later on historical and ongoing data.</p>
     <div class="box">
-      <pre>hot path: OpenClaw -&gt; query_brain -&gt; learned route_fn -&gt; bounded [BRAIN_CONTEXT]
+      <pre>hot path: OpenClaw -&gt; activate + compile -&gt; learned route_fn -&gt; bounded compiled context
 shadow path: sessions -&gt; scanner/harvester labels + async teacher labels -&gt; Ultimate Policy Gradient -&gt; updated route_fn</pre>
     </div>
 
@@ -59,7 +59,7 @@ shadow path: sessions -&gt; scanner/harvester labels + async teacher labels -&gt
     <h2>Where the labels come from</h2>
     <p>The update rule is fed by multiple label sources because OpenClawBrain is meant to live inside a real OpenClaw workflow.</p>
     <ol>
-      <li><strong>Human feedback</strong>: corrections and teachings tied to the same <code>chat_id</code> as the fired route.</li>
+      <li><strong>Human feedback</strong>: corrections and teachings tied to the same <code>turn_id</code> as the fired route.</li>
       <li><strong>Self-learning outcomes</strong>: positive or negative outcomes on turns the brain actually helped serve.</li>
       <li><strong>Scanner / harvester labels</strong>: structured signals mined from historical and ongoing session data.</li>
       <li><strong>Async teacher labels</strong>: background teacher judgments on ambiguous or difficult route decisions.</li>

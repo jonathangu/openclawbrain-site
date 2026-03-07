@@ -444,7 +444,7 @@
               <h2>Mechanism, integration shape, and local reproducibility</h2>
               <ul>
                 <li>Deterministic simulations and ablations show the routing and learning loop behaves as intended.</li>
-                <li>A worked OpenClaw turn shows stable <code>chat_id</code>, bounded <code>[BRAIN_CONTEXT]</code>, and feedback captured against the route that fired.</li>
+                <li>A worked OpenClaw turn shows stable <code>turn_id</code>, bounded compiled context, and feedback captured against the route that fired.</li>
                 <li>The figure-generation and eval harness paths are explicit enough to rerun and inspect locally.</li>
               </ul>
             </article>
@@ -559,11 +559,11 @@
             <div class="kicker">Worked turn</div>
             <h3>One traceable operator turn</h3>
             <ul>
-              <li>Stable <code>chat_id</code> and inbound summary</li>
-              <li>Exact <code>query_brain</code> command</li>
-              <li>Returned bounded <code>[BRAIN_CONTEXT]</code></li>
+              <li>Stable <code>turn_id</code> and inbound summary</li>
+              <li>Exact activation + compile parameters</li>
+              <li>Returned bounded compiled context block</li>
               <li>Response trace or answer text</li>
-              <li>Feedback and <code>learn_by_chat_id</code> JSON</li>
+              <li>Correction event and learner outcome output</li>
             </ul>
           </article>
           <article class="check-card">
@@ -613,7 +613,7 @@
           <a class="kit-card" href="../docs/worked-example.md">
             <div class="kicker">Concrete trace</div>
             <h3>Worked example</h3>
-            <p>One OpenClaw turn with stable <code>chat_id</code>, bounded context, same-turn correction capture, and later replay boundaries.</p>
+            <p>One OpenClaw turn with stable <code>turn_id</code>, bounded compiled context, same-turn correction capture, and later replay boundaries.</p>
           </a>
           <a class="kit-card" href="../docs/openclaw-integration.md">
             <div class="kicker">Rollout guide</div>
