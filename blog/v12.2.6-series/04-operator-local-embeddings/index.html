@@ -30,7 +30,7 @@
     <h1>Post 4: Operator Guide for Local Embeddings OOTB</h1>
     <p class="meta">March 2026 · v12.2.6+ series</p>
 
-    <p>Local embeddings out-of-the-box remain the default hot-path routing signal. In the shipped TypeScript-first workspace, boot starts from existing files immediately while always-on learning keeps updating candidate packs in the background.</p>
+    <p>Local embeddings out-of-the-box remain the default routing signal on the live request path (the path the user waits on). In the shipped TypeScript-first workspace, boot starts from existing files immediately. Meanwhile, always-on learning keeps building improved brain packs — versioned bundles of context and routing weights — in the background.</p>
 
     <h2>Package-first Baseline Flow</h2>
     <pre>corepack enable
@@ -40,10 +40,10 @@ pnpm release:pack</pre>
 
     <h2>Operational Notes</h2>
     <ul>
-      <li>Keep the learned route function deterministic and bounded on the hot path; deterministic compile serves context from the active immutable pack.</li>
+      <li>Keep the learned routing function deterministic and bounded on the live request path. The compiler always produces the same output from the same pack, so rollback is safe and predictable.</li>
       <li>Leave human labels, self-label harvesting, and scanner ingestion default-on so new signals land continuously.</li>
       <li>Run continuous graph learning (connect/split/merge/decay/co-firing) in background loops, not inline with user requests.</li>
-      <li>Treat pack activation as explicit promotion/rollback state so runtime reversions are immediate when needed.</li>
+      <li>Brain packs are immutable once built. You can switch which pack is active or roll back to a previous one instantly — no data-shape rewrites needed.</li>
       <li>Treat mechanism proof and product proof separately: routing-mechanism wins do not automatically prove end-to-end operator outcomes.</li>
     </ul>
 

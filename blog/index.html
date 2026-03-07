@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain Blog</title>
-  <meta name="description" content="OpenClawBrain blog: worked-turn evidence, proof ladder artifacts, and release notes." />
+  <meta name="description" content="OpenClawBrain blog: real-world evidence, benchmark results, and release notes." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/" />
   <style>
     :root {
@@ -55,52 +55,53 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a></div>
     <h1>OpenClawBrain Blog</h1>
-    <p>Architecture, evidence, and release notes for OpenClawBrain — the learned-routing memory layer for OpenClaw. Start with the proof-first posts below, or jump to the <a href="/proof/">proof package</a> for benchmark results.</p>
+    <p>Architecture, evidence, and release notes for OpenClawBrain — the system that teaches OpenClaw to remember and learn from past conversations. Start with the proof-first posts below, or jump to the <a href="/proof/">proof package</a> for benchmark results.</p>
 
     <div class="section">
       <h2>Proof First</h2>
       <div class="grid">
         <div class="post featured">
-          <div class="title">Worked-turn artifact: inspect one real OpenClaw turn</div>
-          <div class="meta">Start here · turn-level evidence before score tables</div>
+          <div class="title">Worked example: follow one real OpenClaw conversation turn</div>
+          <div class="meta">Start here · see what actually happens before looking at scores</div>
           <div>
-            Stable <code>turn_id</code> across compile, correction capture, and learner outcome; bounded <code>[COMPILED_CONTEXT]</code>; explicit now-vs-later replay boundary.
+            Walk through a single conversation turn end to end: how the system compiles context, captures corrections, and feeds them back into learning — with a clear line between what it uses now and what it saves for later.
             <br />
             <a href="/docs/worked-example.md">Open bundle: docs/worked-example.md</a>.
             <br />
-            Proof ladder placement: <a href="/proof/#worked-turn">/proof/#worked-turn</a> (trace artifact, not live production claim).
+            Evidence level: <a href="/proof/#worked-turn">/proof/#worked-turn</a> (traced example, not a live production claim).
           </div>
         </div>
         <div class="post">
-          <div class="title">Recorded-session head-to-head: relational_drift_001</div>
+          <div class="title">Head-to-head benchmark: relational_drift_001</div>
           <div class="meta">March 2026 · 800 queries · 41 steps · 8 baselines</div>
           <div>
-            <a href="/proof/#recorded-session">Proof ladder placement</a>:
-            benchmark artifact, not live production claim.
+            A recorded-session benchmark comparing OpenClawBrain against 8 baseline systems on 800 queries. <a href="/proof/#recorded-session">Evidence level</a>: benchmark result, not a live production claim.
             <br />
             <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">Open bundle: recorded_h2h_relational_drift_001</a>.
             <br />
-            <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp).
+            OpenClawBrain scored 0.975 vs the best RAG baseline at 0.896 (+7.9 percentage points).
           </div>
         </div>
         <div class="post">
-          <div class="title">Sparse-feedback 10-seed proof run</div>
+          <div class="title">Sparse-feedback benchmark: 10-seed proof run</div>
           <div class="meta">March 2026 · 10 seeds · 8 baselines</div>
           <div>
+            Tests how well the system learns when feedback is scarce — the harder, more realistic scenario. Compared against 8 baselines across 10 random seeds.
+            <br />
             <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">Open bundle: sparse_feedback_10seed</a>.
             <br />
-            <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), ~5x lower context/query, 9-1 over <code>vector_rag_rerank</code>.
+            OpenClawBrain hit 91.96% vs the best RAG baseline at 67.05% (+24.91 percentage points), using roughly 5x less context per query, winning 9 out of 10 seeds.
           </div>
         </div>
         <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
           <div class="title">Mechanism vs product proof ladder</div>
           <div class="meta">Post 3</div>
-          <div>Deterministic workflow proof, recorded-session benchmark proof, and explicit non-claims until shadow/online evidence exists.</div>
+          <div>How we separate "this mechanism works" from "this product works" — what we have proven so far, and what we explicitly do not yet claim.</div>
         </a>
         <a class="post" href="/docs/openclaw-integration.md">
-          <div class="title">Operator integration doc</div>
+          <div class="title">Operator integration guide</div>
           <div class="meta">Operational setup</div>
-          <div>Step-by-step OpenClaw integration, toggles, and fail-open guardrails.</div>
+          <div>Step-by-step instructions for connecting OpenClawBrain to OpenClaw, including configuration options and safety fallbacks.</div>
         </a>
       </div>
     </div>
@@ -111,32 +112,32 @@
         <a class="post" href="/blog/v12.2.6-series/">
           <div class="title">Series Index: OpenClawBrain v12.2.6+</div>
           <div class="meta">March 2026</div>
-          <div>Evidence-first map of the shipped architecture, proof ladder, and operator flow.</div>
+          <div>Overview of the shipped architecture, what we have proven, and how operators get started.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
           <div class="title">Post 1: Shadow Routing + Ultimate Policy Gradient</div>
           <div class="meta">March 2026</div>
-          <div>High-level architecture and reward-source hierarchy.</div>
+          <div>How OpenClawBrain's learned router decides which knowledge to retrieve, and how it ranks different signals (user corrections, outcomes, prior knowledge) to improve over time.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
           <div class="title">Post 2: QTsim + Confidence Mixing</div>
           <div class="meta">March 2026</div>
-          <div>Mechanism details: graph_prior vs QTsim with entropy/margin gating.</div>
+          <div>How the router blends two scoring methods — one from the knowledge graph, one from query similarity — and uses confidence checks to pick the better signal on each query.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
           <div class="title">Post 3: Evaluation and Ablations</div>
           <div class="meta">March 2026</div>
-          <div>Strongest published benchmarks first, then mechanism-vs-product claim boundaries.</div>
+          <div>Benchmark results and ablation tests that show which components matter. Also draws the line between what is proven so far and what is not yet claimed.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
-          <div class="title">Post 4: Operator Guide for Local Embeddings OOTB</div>
+          <div class="title">Post 4: Operator Guide — Local Embeddings Out of the Box</div>
           <div class="meta">March 2026</div>
-          <div>Package-first operator flow with learned routing hot path and async teacher loop.</div>
+          <div>How to set up OpenClawBrain with local embeddings, including the fast routing path for real-time queries and the background learning loop that improves over time.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
           <div class="title">Post 5: Industry Baselines + Ablation Study</div>
           <div class="meta">March 2026</div>
-          <div>Comparison contract with recorded-session and sparse-feedback head-to-head results.</div>
+          <div>Side-by-side comparison against industry baselines, with recorded-session and sparse-feedback head-to-head results.</div>
         </a>
       </div>
     </div>
@@ -152,12 +153,12 @@
         <a class="post" href="/blog/v12.2.1/">
           <div class="title">We shipped the correct REINFORCE update</div>
           <div class="meta">v12.2.1 · February 2026</div>
-          <div>Policy-gradient correction and self-learning behavior changes.</div>
+          <div>Fixed a bug in how the learning algorithm updates itself, and what changed in self-learning behavior as a result.</div>
         </a>
         <a class="post" href="/blog/v12.2.0/">
           <div class="title">CrabPath -> OpenClawBrain</div>
           <div class="meta">v12.2.0 · February 2026</div>
-          <div>Pre-reset retrieval-routing framing from the early release era.</div>
+          <div>The original rename from CrabPath to OpenClawBrain, with early framing of the retrieval and routing approach.</div>
         </a>
       </div>
     </div>

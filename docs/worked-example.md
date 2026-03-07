@@ -18,8 +18,8 @@ Companion docs:
 How this page relates to the published proof families:
 
 - this page is the minimum artifact contract for one real OpenClaw-shaped turn
-- the deterministic workflow proof on `/proof/` is a separate mechanism bundle built from 4 fixed workflow scenarios
-- its scenario-level evidence matrix is `per_query_matrix.csv` and `per_query_matrix.md`: 16 deterministic rows showing which node IDs reached prompt context under each mode
+- the deterministic workflow proof on `/proof/` is a separate mechanism bundle (evidence that the internals work correctly) built from 4 fixed workflow scenarios
+- its scenario-level evidence matrix is `per_query_matrix.csv` and `per_query_matrix.md`: 16 rows showing, for each query and retrieval mode, exactly which knowledge-graph nodes made it into the prompt context
 - recorded-session and sparse-feedback benchmark bundles scale from one turn contract to fixed multi-query and multi-seed comparisons
 - none of these artifacts, by themselves, prove live production answer quality on served OpenClaw traffic
 
@@ -139,7 +139,7 @@ What to save for proof:
 
 What happens immediately:
 
-- the correction and outcome are attached to the same fired-route history for `turn_id`
+- the correction and outcome are attached to the routing decision that was made for this `turn_id`
 - OpenClaw can answer the correction in the conversation right away
 
 What does **not** happen immediately:
@@ -188,7 +188,7 @@ Only after the updated state is deployed or cut over do later turns see the new 
 | `turn_id` linkage | compile, correction capture, and outcome all refer to the same turn history | later analysis can replay the same turn history reliably |
 | prompt context | OpenClaw gets the bounded compiled context block immediately | similar future turns may get a different block only after updated state is served |
 | OpenClaw answer | the current answer can use the returned context right away | past answers do not retroactively change |
-| correction record | the correction is stored immediately against the fired route | the correction influences future routing only after replay/harvest/update work is deployed |
+| correction record | the correction is stored immediately against the routing decision made for this turn | the correction influences future routing only after replay/harvest/update work is deployed |
 | learned `route_fn` | current live weights stay as they were for this served state | later served weights can prefer better edges for similar deploy questions |
 | graph structure | no need to block the live turn on structural work | split, merge, prune, connect, and decay effects appear after maintenance and cutover |
 
@@ -212,7 +212,7 @@ That bundle is the smallest useful proof unit for OpenClawBrain on real OpenClaw
 The concrete product story is:
 
 1. OpenClaw can use the brain on the next turn.
-2. Corrections can target the route that actually fired.
+2. Corrections can target the specific routing decision that was made for that query.
 3. The router improves later, through background learning and a later deploy window.
 
 That is the intended separation:

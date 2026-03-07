@@ -49,7 +49,7 @@
     <p>OpenClawBrain should compare itself against retrieval behaviors operators would plausibly use instead of hiding behind vague "AI memory" framing. This page starts from the strongest published benchmark artifacts, then ties them back to the mechanism slice and the product-proof boundary.</p>
 
     <div class="card">
-      <p>Current benchmark headline: recorded-session H2H <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp), plus sparse-feedback 10-seed <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp, ~5x lower context/query, 9-1 H2H). These are benchmark claims, not live product rollout claims.</p>
+      <p>Current benchmark headline: the learned router (<code>full_brain</code>) answers 97.5% of recorded-session queries correctly vs. 89.6% for the best RAG baseline — roughly 1 in 13 queries where RAG fails, the learned router gets right. In the sparse-feedback test (10 seeds), it widens to 92.0% vs. 67.1%, using about 5x less context per query and winning 9 of 10 seeds head-to-head. These are benchmark results, not live product rollout claims.</p>
     </div>
 
     <h2>Strongest baseline evidence first</h2>
@@ -102,7 +102,7 @@
       </tbody>
     </table></div>
 
-    <p>The learning curve is the second half of the comparison. <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs, while <code>learned</code> first reaches 4/4 at epoch 14. That is the current concrete evidence for the product framing: useful from graph priors first, better later via background learning.</p>
+    <p>The learning curve is the second half of the comparison. The graph-prior-only mode (using only the graph's built-in structural knowledge, no learning) stays flat at 2/4 across all 16 epochs, while the learned mode first reaches 4/4 at epoch 14. That is the current concrete evidence for the core product claim: useful from structural knowledge on day one, then better over time via background learning.</p>
 
     <h2>Recorded-session head-to-head comparison</h2>
     <p>For fixed-session replay, the current published bundle is <code>recorded_h2h_relational_drift_001</code>.</p>
@@ -119,7 +119,7 @@
       </tbody>
     </table></div>
 
-    <p>Against the best RAG baseline, the margin is +7.9 pp. The best baseline still needs 5&times; context and 8&times; traversal for lower accuracy.</p>
+    <p>The learned router scores 97.5% vs. the best RAG baseline's 89.6%. And the best RAG baseline needs 5x more context and 8x more traversal cost to reach that lower number.</p>
 
     <h2>Sparse-feedback 10-seed comparison</h2>
     <p>For multi-seed robustness, the strongest published family is <code>sparse_feedback_10seed</code> (10 seeds, 1,800 queries per seed, 8 baselines).</p>
@@ -136,7 +136,7 @@
       </tbody>
     </table></div>
 
-    <p><code>full_brain</code> leads best RAG by +24.91 pp and wins 9/10 seeds head-to-head over <code>vector_rag_rerank</code>.</p>
+    <p>The learned router leads the best RAG baseline by nearly 25 percentage points (92.0% vs. 67.1%) and wins 9 of 10 seeds head-to-head.</p>
 
     <h2>Why these baselines belong</h2>
     <div class="table-wrap"><table>
@@ -163,13 +163,13 @@
     <div class="card">
       <ul>
         <li>The workflow-proof slice cleanly separates cold-start semantic retrieval, deterministic traversal, durable graph priors, and the learned policy.</li>
-        <li>Recorded-session replay shows <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp) on 800 queries with fixed state and rubric.</li>
-        <li>Sparse-feedback 10-seed extends this to 18,000 total queries: <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp) at ~5x lower context/query.</li>
-        <li>The site still does <strong>not</strong> publish broad operator wins from real OpenClaw traffic. This is bounded benchmark evidence, not recorded-session or production proof.</li>
+        <li>Recorded-session replay shows the learned router at 97.5% accuracy vs. 89.6% for the best RAG baseline on 800 queries with fixed state and rubric.</li>
+        <li>Sparse-feedback (10 seeds) extends this to 18,000 total queries: 92.0% vs. 67.1% accuracy at about 5x less context per query.</li>
+        <li>The site still does <strong>not</strong> publish broad operator wins from real OpenClaw traffic. This is bounded benchmark evidence, not live-traffic proof.</li>
       </ul>
     </div>
 
-    <h2>What stronger comparison evidence looks like</h2>
+    <h2>The evidence ladder: what stronger comparison evidence looks like</h2>
     <div class="table-wrap"><table>
       <thead>
         <tr><th>Stage</th><th>Use</th><th>Still too weak for broad product claims?</th></tr>

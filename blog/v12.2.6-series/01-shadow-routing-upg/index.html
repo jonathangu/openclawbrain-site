@@ -50,18 +50,18 @@
     <h1>Shadow routing + Ultimate Policy Gradient</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>OpenClawBrain is easiest to understand if you separate the live query path from the learning path. The live path serves OpenClaw. The learning path produces better labels and better routing weights for later turns.</p>
+    <p>OpenClawBrain is easiest to understand if you separate two paths. The <strong>live path</strong> answers queries right now — it runs inside OpenClaw and must be fast. The <strong>learning path</strong> runs in the background, digesting feedback and producing better routing weights for future turns.</p>
 
     <h2>Shadow routing</h2>
-    <p>"Shadow routing" means the expensive teacher stays off the hot path. The brain answers live queries with the learned runtime <code>route_fn</code>. Replay, scanner/harvester passes, and the async teacher work later on historical and ongoing data.</p>
+    <p>"Shadow routing" means the expensive teacher model never sits in the live request path (the path the user is waiting on). The brain answers live queries with its learned routing function. Replay, scanner/harvester passes, and the background teacher all work later — on historical and ongoing data — to produce better routing weights.</p>
     <div class="box">
-      <pre>hot path: OpenClaw -&gt; activate + compile -&gt; learned route_fn -&gt; bounded compiled context
-shadow path: sessions -&gt; scanner/harvester labels + async teacher labels -&gt; Ultimate Policy Gradient -&gt; updated route_fn</pre>
+      <pre>live request path:  OpenClaw -&gt; activate brain pack + compile -&gt; learned route function -&gt; bounded context for prompt
+background path:    sessions -&gt; scanner/harvester labels + background teacher labels -&gt; Ultimate Policy Gradient -&gt; updated route function</pre>
     </div>
 
     <figure>
-      <img src="/figures/eval/shadow_routing_hotpath_loop.svg" alt="Diagram showing the hot-path query loop and the asynchronous shadow-learning loop" loading="lazy" />
-      <figcaption>The live router stays local and bounded; the shadow loop exists to improve the next router, not to answer the current turn.</figcaption>
+      <img src="/figures/eval/shadow_routing_hotpath_loop.svg" alt="Diagram showing the live request path query loop and the asynchronous shadow-learning loop" loading="lazy" />
+      <figcaption>The live router stays local and bounded. The shadow loop exists to improve the next version of the router — it never touches the current turn's answer.</figcaption>
     </figure>
 
     <h2>Where the labels come from</h2>
@@ -73,17 +73,17 @@ shadow path: sessions -&gt; scanner/harvester labels + async teacher labels -&gt
       <li><strong>Async teacher labels</strong>: background teacher judgments on ambiguous or difficult route decisions.</li>
     </ol>
 
-    <h2>Ultimate Policy Gradient</h2>
-    <p>Ultimate Policy Gradient is the unifying update rule. The system does not learn one routing policy from human labels and a second routing policy from teacher labels. It learns one runtime policy while preserving an authority order among label sources.</p>
+    <h2>Ultimate Policy Gradient (UPG)</h2>
+    <p>The Ultimate Policy Gradient is a single learning rule that combines all feedback sources — human corrections, automated signals, and teacher judgments — into one routing policy. The system does not learn separate policies from each source. Instead, it folds them together while preserving a priority order: human corrections outweigh higher-volume but weaker signals.</p>
     <div class="note">
-      Human corrections should be able to override weaker but higher-volume labels. That is a product requirement, not just a training detail.
+      Human corrections should be able to override automated labels. That is a product requirement, not just a training detail — if a person tells the system it routed wrong, that signal wins.
     </div>
 
     <h2>Why this matters for OpenClaw</h2>
     <ul>
-      <li>You can use the brain immediately after `init` and `serve`.</li>
-      <li>Historical replay and teacher labeling do not block first use.</li>
-      <li>The thing that improves over time is the runtime <code>route_fn</code> that OpenClaw actually calls.</li>
+      <li>You can use the brain immediately after <code>init</code> and <code>serve</code> — no waiting for background learning to finish.</li>
+      <li>Historical replay and teacher labeling happen asynchronously and never block first use.</li>
+      <li>The thing that improves over time is the learned routing function that OpenClaw actually calls on every turn.</li>
     </ul>
 
     <p>Next: <a href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">Post 2 on the learned runtime route function</a>.</p>

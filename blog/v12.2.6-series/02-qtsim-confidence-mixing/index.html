@@ -49,21 +49,21 @@
     <h1>The learned runtime route function</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>The phrase that matters is not just "shadow routing." The product value is the learned runtime <code>route_fn</code> that OpenClaw calls during a live query.</p>
+    <p>The phrase that matters is not just "shadow routing." The product value is the learned routing function that OpenClaw calls during a live query — the thing that decides which knowledge to pull into the prompt.</p>
 
     <h2>What the route function does</h2>
-    <p>At query time, the brain needs to decide which edges to follow from the currently seeded memory nodes. The runtime policy combines durable graph structure with query-conditioned evidence.</p>
+    <p>At query time, the brain needs to decide which edges to follow from the currently seeded memory nodes. It blends two sources of information: what the graph already knows structurally, and what the current query suggests.</p>
     <div class="box">
-      <p style="margin:0;">In the current framing:</p>
+      <p style="margin:0;">The two sources:</p>
       <ul>
-        <li><code>graph_prior</code> carries durable structural preference from earlier learning.</li>
-        <li><code>QTsim</code> is the query-conditioned component that asks which next hop fits this turn.</li>
-        <li>The learned gate decides how much to trust each one for this decision.</li>
+        <li><code>graph_prior</code> — the graph's built-in structural knowledge, accumulated from earlier learning. This is what makes the brain useful even before it has seen the current query.</li>
+        <li><code>QTsim</code> — a query-specific score that asks "which next hop fits <em>this particular turn</em>?"</li>
+        <li>A learned gate decides how much to trust each source for each routing decision.</li>
       </ul>
     </div>
 
     <h2>Confidence mixing</h2>
-    <p>The route function should not trust the query-conditioned signal equally on every decision. The gate uses uncertainty features like entropy and margin to shift weight between the durable prior and the query-conditioned score.</p>
+    <p>The router should not trust the query-specific signal equally on every decision. Sometimes the query gives a strong, clear signal; other times it is ambiguous. The gate uses uncertainty features (entropy and margin) to shift weight: when the query signal is confident, lean on it; when it is uncertain, fall back to the graph's structural knowledge.</p>
     <div class="eq">
       lambda = sigmoid(a0 + a1 * margin - a2 * entropy)
       <br />
@@ -81,17 +81,17 @@
     </figure>
 
     <h2>How the runtime route function is trained</h2>
-    <p>The live router is learned from labels produced off the hot path:</p>
+    <p>The live router is learned from labels produced outside the live request path — none of this work blocks the user:</p>
     <ul>
       <li>scanner / harvester labels from historical and ongoing sessions</li>
       <li>async teacher labels on difficult or ambiguous route choices</li>
       <li>human corrections and outcome feedback from live OpenClaw use</li>
     </ul>
 
-    <p>Ultimate Policy Gradient is what lets those labels update one runtime policy instead of turning into disconnected heuristics.</p>
+    <p>The Ultimate Policy Gradient (a single learning rule that combines all these feedback sources, with human corrections taking priority) is what lets those labels update one runtime policy instead of turning into disconnected heuristics.</p>
 
-    <h2>Why the teacher still stays off the hot path</h2>
-    <p>The teacher is there to produce labels, not to answer the current turn. If the teacher sits in the live request path, the system is no longer selling a learned runtime router. It is just selling another inference dependency.</p>
+    <h2>Why the teacher stays out of the live request path</h2>
+    <p>The teacher model exists to produce training labels, not to answer the current turn. If it sat in the live request path (the path the user waits on), the system would just be adding another inference dependency. The whole point is that a <em>learned</em> router handles live queries cheaply, and the teacher only runs in the background to make the next version of that router better.</p>
 
     <p>Next: <a href="/blog/v12.2.6-series/03-evaluation-ablations/">Post 3 on the evidence boundary and proof path</a>.</p>
   </main>

@@ -52,20 +52,20 @@
     <h1>Evaluation: prove it without pretending</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>OpenClawBrain needs a cleaner evidence story than "the simulations look good." This page starts with the strongest published benchmarks, then keeps the mechanism-vs-product ladder explicit so proof scope is obvious on first read.</p>
+    <p>OpenClawBrain needs a cleaner evidence story than "the simulations look good." This page starts with the strongest published benchmarks, then walks through the evidence ladder — what each rung actually proves, and where the claims stop — so the proof scope is obvious on first read.</p>
 
     <div class="grid">
       <div class="card">
         <h3>Proven now</h3>
-        <p>Recorded-session H2H: <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp). Sparse-feedback 10-seed: <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), with ~5x lower context/query and 9-1 H2H over <code>vector_rag_rerank</code>.</p>
+        <p>Recorded sessions: the learned router answers 97.5% of queries correctly vs. 89.6% for the best RAG baseline — roughly 1 in 13 queries where RAG fails, the learned router gets right. Sparse-feedback (10 seeds): 92.0% vs. 67.1% accuracy, about 5x less context per query, and the learned router wins 9 of 10 seeds head-to-head.</p>
       </div>
       <div class="card">
         <h3>Needs production comparisons</h3>
-        <p>Shadow traffic and narrow online rollout artifacts before claiming better outcomes on live OpenClaw workloads.</p>
+        <p>Shadow traffic (mirroring real queries) and narrow online rollout artifacts are needed before claiming better outcomes on live OpenClaw workloads.</p>
       </div>
       <div class="card">
         <h3>Not claimed</h3>
-        <p>No blanket benchmark wins, no production latency or cost win, and no production superiority from deterministic artifacts alone.</p>
+        <p>No blanket benchmark wins, no production latency or cost win, and no claim that deterministic build artifacts alone prove production superiority.</p>
       </div>
     </div>
 
@@ -90,10 +90,10 @@
       </tbody>
     </table></div>
 
-    <p>These are benchmark artifacts, not live product rollout evidence. They are stronger than the deterministic mechanism harness, but still below shadow-mode and online proof in the claim ladder.</p>
+    <p>These are benchmark artifacts, not live product rollout evidence. They sit in the middle of the evidence ladder: stronger than the small deterministic mechanism test, but still below shadow-traffic and online rollout proof (which would show the router helping on real user queries).</p>
 
     <h2>Current workflow-proof slice</h2>
-    <p>The current published slice is intentionally narrow: exact-target retrieval on 4 deterministic workflow queries. It is useful because it tests the product framing directly: can durable graph priors make OpenClawBrain useful before learning, and does background learning later improve the served <code>route_fn</code>?</p>
+    <p>The current published slice is intentionally narrow: exact-target retrieval on 4 deterministic workflow queries. It is useful because it tests the core product claim directly: can the graph's built-in structural knowledge (the "graph prior") make OpenClawBrain useful before any learning has happened, and does background learning later improve the served routing function?</p>
 
     <div class="table-wrap"><table>
       <thead>
@@ -150,7 +150,7 @@
       </tbody>
     </table></div>
 
-    <p>The nearest baseline still needs 5&times; more context and 8&times; more traversal cost for lower accuracy. Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">proof-results/recorded_h2h_relational_drift_001</a>.</p>
+    <p>The best RAG baseline (<code>vector_rag_rerank</code>) needs 5x more context and 8x more traversal cost yet still scores lower. Put differently: the learned router answers 97.5% correctly while using a fraction of the resources. Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">proof-results/recorded_h2h_relational_drift_001</a>.</p>
 
     <h2>Sparse-feedback 10-seed benchmark detail</h2>
     <p><code>sparse_feedback_10seed</code> is the strongest current multi-seed family for proving full-brain behavior under sparse teacher signals.</p>
@@ -167,36 +167,36 @@
       </tbody>
     </table></div>
 
-    <p><code>full_brain</code> leads best RAG by +24.91 pp and beats <code>vector_rag_rerank</code> in 9/10 seeds while using ~5x less context per query. Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">proof-results/sparse_feedback_10seed</a>.</p>
+    <p>The learned router leads the best RAG baseline by nearly 25 percentage points (92.0% vs. 67.1%) and wins 9 of 10 seeds head-to-head while using about 5x less context per query. Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">proof-results/sparse_feedback_10seed</a>.</p>
 
     <h2>Mechanism proof versus product proof</h2>
-    <p>The deterministic workflow slice plus the two benchmark bundles prove something real but bounded: durable structure helps early retrieval, learned routing improves later, and <code>full_brain</code> leads credible RAG baselines on frozen workloads. It still does <strong>not</strong> prove better outcomes on live OpenClaw traffic without shadow and online artifacts.</p>
+    <p>The deterministic workflow slice plus the two benchmark bundles prove something real but bounded: the graph's built-in structure helps retrieval from day one, learned routing improves it further, and the learned router leads credible RAG baselines on frozen workloads. It still does <strong>not</strong> prove better outcomes on live OpenClaw traffic — that requires shadow-traffic and online rollout artifacts.</p>
 
-    <h2>The stronger evidence path</h2>
+    <h2>The evidence ladder (what each rung proves)</h2>
     <div class="table-wrap"><table>
       <thead>
         <tr><th>Stage</th><th>What it proves</th><th>What artifacts are required</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td>Deterministic workflow proof</td>
-          <td>The router and learning loop behave coherently on the fixed workflow slice.</td>
+          <td>Rung 1: Deterministic workflow proof</td>
+          <td>The routing and learning mechanics work correctly on a small, fully reproducible query set. This is the "does the machine even work?" test.</td>
           <td>Exact commands, commit SHA, <code>summary.csv</code>, <code>learning_curve.csv</code>, <code>report.md</code>, <code>per_query_matrix.csv</code>, and <code>per_query_matrix.md</code>.</td>
         </tr>
         <tr>
-          <td>Offline recorded-session eval</td>
-          <td>The same OpenClaw-style workloads can be scored head-to-head across routing modes.</td>
-          <td>Published now: <code>recorded_h2h_relational_drift_001</code> and <code>sparse_feedback_10seed</code> with query fixtures, scoring tables, per-query outputs, and worked traces.</td>
+          <td>Rung 2: Offline recorded-session eval</td>
+          <td>The learned router beats real baselines on larger, frozen workloads. This is the "does it win a fair comparison?" test. Published now.</td>
+          <td><code>recorded_h2h_relational_drift_001</code> and <code>sparse_feedback_10seed</code> with query fixtures, scoring tables, per-query outputs, and worked traces.</td>
         </tr>
         <tr>
-          <td>Shadow traffic</td>
-          <td>The brain helps on real OpenClaw traffic without being the only live path yet.</td>
+          <td>Rung 3: Shadow traffic</td>
+          <td>The brain helps on real OpenClaw traffic (mirrored in the background, not yet serving users). This is the "does it work on real queries?" test. Not yet published.</td>
           <td>Mirrored traffic slice, side-by-side metrics, retained outputs, and disagreement traces.</td>
         </tr>
         <tr>
-          <td>Narrow online rollout</td>
-          <td>Operational value under real usage constraints.</td>
-          <td>Success, correction rate, prompt size, latency, cost.</td>
+          <td>Rung 4: Narrow online rollout</td>
+          <td>The brain serves real users and measurably improves outcomes. This is the "does it help in production?" test. Not yet published.</td>
+          <td>Success rate, correction rate, prompt size, latency, cost.</td>
         </tr>
       </tbody>
     </table></div>

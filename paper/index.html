@@ -324,7 +324,7 @@
           <div class="eyebrow">Canonical paper route</div>
           <h1>Paper and PDF.</h1>
           <p class="lead">
-            The canonical paper for OpenClawBrain: shadow routing with QTsim confidence mixing and unified policy learning. March 7, 2026 revision (v12.2.6+).
+            The canonical paper for OpenClawBrain — a learned router over a knowledge graph that decides which facts to retrieve and how to combine them, getting smarter with every query. The technical framing covers shadow routing, QTsim confidence mixing, and unified policy learning. March 7, 2026 revision (v12.2.6+).
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href="../openclawbrain.pdf">Open the PDF</a>
@@ -351,10 +351,10 @@
 
           <article class="status-card">
             <div class="kicker">Read it with the boundary</div>
-            <h2>Architecture is settled; evidence is layered.</h2>
+            <h2>The design is shipped; evidence is building in stages.</h2>
             <ul>
-              <li>The paper covers the shipped hot/cold path split, route signals, confidence mixing, and unified policy learning.</li>
-              <li>Top comparative rung now includes <code>recorded_h2h_relational_drift_001</code> (0.975 vs 0.896, +7.9 pp) and sparse-feedback 10-seed (91.96% vs 67.05%, +24.91 pp).</li>
+              <li>The paper covers how fast serving stays local while learning happens in the background, how routing signals are combined, and how the system improves over time.</li>
+              <li>The strongest benchmarks so far: the learned router scores 0.975 vs RAG at 0.896 in head-to-head tests (+7.9 pp), and reaches 91.96% vs 67.05% (+24.91 pp) with minimal training data.</li>
               <li><a href="../proof/">/proof/</a> shows which claims are already evidenced and which claims still require shadow/online artifacts.</li>
               <li><a href="../blog/v12.2.6-series/">/blog/v12.2.6-series/</a> explains how the architecture boundary and rollout path fit together.</li>
             </ul>
@@ -365,18 +365,18 @@
       <section class="section">
         <div class="section-head">
           <h2>Current top comparative evidence</h2>
-          <p class="section-intro">The paper revision tracks the strongest published benchmark artifacts while keeping benchmark claims separate from shadow and online claims.</p>
+          <p class="section-intro">Standard RAG retrieves text chunks by similarity and hopes the right answer is somewhere in the pile. OpenClawBrain replaces that with a learned router over a knowledge graph — it picks the right facts structurally, uses less context, and gets better with every query. The benchmarks below show the gap. The paper revision tracks these published artifacts while keeping benchmark claims separate from shadow and online claims.</p>
         </div>
         <div class="paper-grid">
           <article class="paper-card">
             <div class="kicker">Recorded-session head-to-head</div>
             <h3><code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896</h3>
-            <p>Artifact: <code>recorded_h2h_relational_drift_001</code>. Setup: 800 queries, 41 steps, 8 baselines. Delta: +7.9 percentage points on a fixed rubric.</p>
+            <p>Artifact: <code>recorded_h2h_relational_drift_001</code>. Across 800 queries against 8 baselines, the learned router answered correctly about 8 percentage points more often than the best RAG system — a meaningful gap on a fixed rubric.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Sparse-feedback 10-seed</div>
             <h3><code>full_brain</code> 91.96% vs best RAG 67.05%</h3>
-            <p>Delta: +24.91 percentage points, with about 5x smaller context per query and a 9-1 head-to-head seed score over <code>vector_rag_rerank</code>.</p>
+            <p>With very little training data, the router still outperforms the best RAG baseline by nearly 25 percentage points — while sending roughly 5x less text to the model per query. It won 9 out of 10 independent seed runs.</p>
           </article>
         </div>
       </section>
@@ -384,28 +384,28 @@
       <section class="section">
         <div class="section-head">
           <h2>What the paper covers</h2>
-          <p class="section-intro">The paper is the longer technical framing behind the site architecture and evidence contract. These are the core claims it organizes, without turning mechanism proof into online proof.</p>
+          <p class="section-intro">The paper is the full technical write-up behind the system. These are its four main claims — each backed by mechanism evidence, not yet by live-traffic proof.</p>
         </div>
         <div class="paper-grid">
           <article class="paper-card">
             <div class="kicker">System split</div>
-            <h3>Hot path local, cold path asynchronous</h3>
-            <p>The central operating shape is a strict split: local bounded routing on live OpenClaw turns, then replay, labeling, and policy updates later off the hot path.</p>
+            <h3>Fast serving stays local; learning happens in the background</h3>
+            <p>When a user asks a question, OpenClaw serves it immediately using a local, bounded router. Afterward — off the clock — the system replays the turn, labels outcomes, and updates its routing policy so future answers improve.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Route signals</div>
-            <h3><code>graph_prior</code> plus QTsim confidence mixing</h3>
-            <p>The runtime policy combines durable structure with query-conditioned fit, then uses uncertainty features like entropy and margin to decide how much each signal should matter per decision.</p>
+            <h3>Combining graph structure with query-specific relevance</h3>
+            <p>The router blends two signals: the stable structure of the knowledge graph (<code>graph_prior</code>) and a per-query similarity score (QTsim). It uses confidence measures to decide how much to trust each signal for every individual decision.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Learning rule</div>
-            <h3>Unified policy learning</h3>
-            <p>Teacher distillation and policy-gradient updates are treated as one learning loop with an authority order: human corrections first, then self-learning outcomes, harvested signals, and async-teacher labels.</p>
+            <h3>One learning loop with a clear priority order</h3>
+            <p>All learning — whether from human corrections, self-evaluation, harvested signals, or a teacher model — feeds into a single update loop. Human corrections always take priority, followed by the system's own outcomes, then everything else.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Maintenance path</div>
-            <h3>RL-native graph maintenance</h3>
-            <p>The paper frames graph maintenance as a control problem, with Phase 2a evidence and connect, split, and merge action classes governed by conservative guardrails.</p>
+            <h3>The knowledge graph maintains itself</h3>
+            <p>Instead of manual curation, the system treats graph upkeep — connecting, splitting, and merging nodes — as a learning problem. Conservative guardrails keep changes safe, and evidence gates each action class.</p>
           </article>
         </div>
       </section>
@@ -424,7 +424,7 @@
           <a class="paper-card" href="../blog/v12.2.6-series/">
             <div class="kicker">Architecture series</div>
             <h3>Why this boundary is fixed</h3>
-            <p>The shortest path through the OpenClaw-owned runtime boundary, OpenClawBrain artifact pipeline, operator rollout, and evaluation contract.</p>
+            <p>The shortest explanation of how the pieces fit: OpenClaw owns the runtime, OpenClawBrain owns the learning, and operators plug the two together.</p>
           </a>
           <a class="paper-card" href="../materials/">
             <div class="kicker">Materials</div>
@@ -434,7 +434,7 @@
           <a class="paper-card" href="../docs/openclaw-integration.md">
             <div class="kicker">Operator docs</div>
             <h3>OpenClaw integration</h3>
-            <p>Runtime-boundary wiring, fail-open behavior, bounded prompt context, and the background learning loop that serves later turns.</p>
+            <p>How to wire OpenClawBrain into OpenClaw: fail-safe defaults, bounded prompt context, and the background learning loop that makes later turns better.</p>
           </a>
         </div>
       </section>

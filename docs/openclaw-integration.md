@@ -24,9 +24,9 @@ Other docs:
 - Workspace metadata extraction and provenance
 - Brain pack format, activation helpers, compiler, and learner
 
-## Package surface
+## Packages
 
-The integration is built from these packages:
+The integration is split into focused npm packages, each handling one piece of the learning pipeline:
 
 - `@openclawbrain/contracts`
 - `@openclawbrain/events`
@@ -61,10 +61,10 @@ OpenClaw runtime then deploys the released pack set in its own environment.
 
 These run asynchronously and never slow down responses:
 
-- Events are normalized and harvested continuously
-- Scanner processes workspace and event streams
-- Human and self labels are collected by default
-- Graph learning (decay, co-firing, structural updates) runs continuously
+- Events (corrections, feedback, usage signals) are cleaned up and collected on an ongoing basis
+- Scanner watches for new workspace files and event streams
+- Human and automated feedback labels are collected by default
+- The knowledge graph updates continuously: unused edges fade (decay), edges that fire together strengthen (co-firing), and the graph structure is pruned and reorganized as needed
 
 Teacher logic stays off the hot path.
 
@@ -77,14 +77,14 @@ The runtime starts serving immediately from existing workspace files and prior e
 The integration is designed to be fail-open:
 
 - If learning/scanner/harvest workers are delayed, OpenClaw still serves responses normally
-- If brain quality degrades, OpenClaw falls back to core runtime behavior
+- If the brain becomes unavailable or quality degrades, OpenClaw falls back to core runtime behavior
 - Recovery happens via background loops and pack rollback
 
 ## Proof boundary
 
 Two categories of proof, kept separate:
 
-- **Mechanism proof** (required): contracts compile, events normalize correctly, provenance is intact, route function evaluates deterministically
-- **Product proof** (separate): user-visible quality, error reduction, correction retention under live traffic
+- **Mechanism proof** (required): evidence that the internals work correctly. Contracts compile, events normalize as expected, data provenance is intact, and the route function produces the same output given the same input. This is a prerequisite for any claim.
+- **Product proof** (separate): evidence that real users see better results. Does answer quality improve? Do errors go down? Are corrections retained under live traffic? This requires live or recorded-session evaluation beyond mechanism checks.
 
-Mechanism proof is required but not sufficient for product claims.
+Mechanism proof is required but not sufficient for product claims. The system working correctly does not by itself prove it works *well* for users.

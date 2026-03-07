@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain v12.2.6+ Series</title>
-  <meta name="description" content="OpenClawBrain v12.2.6+ series: the settled OpenClaw runtime split, immutable packs, deterministic compile, learned route_fn, Ultimate Policy Gradient, and published proof artifacts." />
+  <meta name="description" content="OpenClawBrain v12.2.6+ series: how OpenClaw and OpenClawBrain split responsibilities, how the learned router works, and the published evidence behind it." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -104,42 +104,45 @@
       <div class="eyebrow">Shipped series</div>
       <h1>OpenClawBrain v12.2.6+</h1>
       <p>
-        This series explains the shipped product boundary end to end: OpenClaw owns runtime orchestration, prompt assembly, and fail-open control; OpenClawBrain owns memory packages, immutable pack assembly, activation promotion/rollback, deterministic compile, and always-on learning.
+        This six-post series explains how OpenClaw and OpenClawBrain divide the work, and why that split matters. OpenClaw handles the live session — tools, prompts, answers. OpenClawBrain handles the learning side — turning usage and feedback into better "brain packs" (versioned bundles of context and routing weights) that make future answers more accurate.
+      </p>
+      <p>
+        Each post goes deep on one piece: the learning rule, the routing function, the evidence, the operator setup, the baselines, and the runtime integration. Start wherever you like.
       </p>
       <div class="callout">
-        Evidence-first read path: recorded-session head-to-head <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp), then sparse-feedback 10-seed <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp, ~5x lower context/query, 9-1 head-to-head). Mechanism proof remains explicit and separate from product claims; see <a href="/proof/">/proof/</a> for ladder labels and artifact links.
+        The headline numbers: in recorded-session benchmarks the learned router (<code>full_brain</code>) answers 97.5% of queries correctly vs. 89.6% for the best RAG baseline — roughly 1 in 13 queries where RAG fails, the learned router gets right. In sparse-feedback tests it widens to 92.0% vs. 67.1%, using about 5x less context per query and winning 9 out of 10 random seeds head-to-head. These are benchmark results, not live-traffic claims; see <a href="/proof/">/proof/</a> for the full evidence ladder and artifact links.
       </div>
     </section>
 
     <div class="grid">
       <a class="card" href="/proof/">
         <div class="meta">Evidence hub</div>
-        <h3>Proof package: claim ladder + artifact links</h3>
-        <div class="kicker">Mechanism proof, recorded-session benchmark proof, and explicit non-claims until shadow/online evidence is published.</div>
+        <h3>Proof package: what is proven and what is not</h3>
+        <div class="kicker">Each rung of the evidence ladder — mechanism tests, recorded-session benchmarks, and what still needs live-traffic proof — with links to every artifact.</div>
       </a>
 
       <a class="card" href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">
         <div class="meta">Strongest artifact</div>
         <h3>Recorded head-to-head bundle</h3>
-        <div class="kicker">800 queries, 41 steps, 8 baselines. <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp).</div>
+        <div class="kicker">800 queries, 41 steps, 8 baselines. The learned router scores 97.5% accuracy vs. 89.6% for the best RAG approach.</div>
       </a>
 
       <a class="card" href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">
         <div class="meta">Strongest 10-seed run</div>
         <h3>Sparse-feedback proof bundle</h3>
-        <div class="kicker"><code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), ~5x lower context/query, 9-1 vs <code>vector_rag_rerank</code>.</div>
+        <div class="kicker">The learned router scores 92.0% vs. 67.1% for the best RAG baseline, uses roughly 5x less context per query, and wins 9 of 10 random seeds.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/03-evaluation-ablations/">
         <div class="meta">Post 3</div>
         <h3>Evaluation: what is proven now</h3>
-        <div class="kicker">Direct tables for recorded-session and sparse-feedback benchmarks, then the mechanism-vs-product boundary.</div>
+        <div class="kicker">The benchmark numbers, what they actually prove, and where the evidence stops short of live-traffic claims.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
         <div class="meta">Post 5</div>
         <h3>Baselines and comparison contract</h3>
-        <div class="kicker">Why these baselines matter, where full_brain wins now, and what still needs shadow/online artifacts.</div>
+        <div class="kicker">Why these baselines matter, where the learned router wins today, and what still needs live-traffic evidence.</div>
       </a>
 
       <a class="card" href="/paper/">
@@ -151,25 +154,25 @@
       <a class="card" href="/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/">
         <div class="meta">Start here</div>
         <h3>OpenClaw runtime boundary integration</h3>
-        <div class="kicker">Current runtime flow, package boundary ownership, and rollback behavior.</div>
+        <div class="kicker">How the runtime flow works, which system owns what, and how to roll back instantly if needed.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
         <div class="meta">Post 1</div>
-        <h3>Shadow routing + Ultimate Policy Gradient</h3>
-        <div class="kicker">The split between local runtime routing and asynchronous learning.</div>
+        <h3>Shadow routing + the unified learning rule</h3>
+        <div class="kicker">How the live router stays fast while background learning improves it from every feedback source.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
         <div class="meta">Post 2</div>
         <h3>The learned runtime route function</h3>
-        <div class="kicker">How <code>graph_prior</code> and query-conditioned evidence combine on a live turn.</div>
+        <div class="kicker">How the router blends the graph's built-in structural knowledge with query-specific signals, leaning on whichever is more confident.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
         <div class="meta">Post 4</div>
         <h3>Local-first operator flow</h3>
-        <div class="kicker">Default stack, fast startup, and what should stay off the hot path.</div>
+        <div class="kicker">Default stack, fast startup, and what should stay out of the live request path.</div>
       </a>
     </div>
   </main>

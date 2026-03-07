@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Post 6: OpenClaw Runtime Boundary Integration</title>
-  <meta name="description" content="What changes when OpenClaw runs with OpenClawBrain: settled runtime ownership, immutable packs, deterministic compile, and always-on learning with guardrails." />
+  <meta name="description" content="What changes when OpenClaw runs with OpenClawBrain: who owns what at runtime, how brain packs work, how rollback stays safe, and how learning runs in the background." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/" />
   <style>
     :root { --bg:#0e1118; --text:#e3ecf8; --muted:#99a6bc; --bright:#f4f8ff; --border:#2b3a52; --accent:#6ac4ff; --card:#131c29; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; --mono:"JetBrains Mono",monospace; }
@@ -36,7 +36,7 @@
     <h1>Post 6: OpenClaw Runtime Boundary Integration</h1>
     <p class="meta">March 2026 · v12.2.6+ series</p>
 
-    <p>This integration is the shipped runtime boundary: OpenClaw owns orchestration, prompt assembly, runtime diagnostics, and fail-open behavior; OpenClawBrain owns normalized contracts/events, immutable packs, activation promotion/rollback, deterministic compile, and learning packages.</p>
+    <p>This post describes the shipped boundary between the two systems. <strong>OpenClaw</strong> owns the live session: orchestration, prompt assembly, runtime diagnostics, and fail-open behavior. <strong>OpenClawBrain</strong> owns the learning side: normalized contracts/events, brain packs (versioned, immutable bundles of context and routing weights), activation (switching which pack is live, or rolling back to a previous one), deterministic compilation (the compiler always produces the same output from the same pack), and background learning.</p>
 
     <h2>Current runtime flow</h2>
     <div class="compare">
@@ -58,14 +58,14 @@ Background learner harvests labels and writes candidate pack updates asynchronou
     <ul>
       <li><strong>Fast startup:</strong> context starts from existing files and prior exports.</li>
       <li><strong>Fewer turns:</strong> learned routing sends task-relevant priors into prompt assembly before generation.</li>
-      <li><strong>Teacher stays off hot path:</strong> heavy learning work runs asynchronously while the learned route function serves requests inline.</li>
-      <li><strong>Controlled reversions:</strong> immutable packs with promotion/rollback let operators switch state without runtime-shape rewrites.</li>
+      <li><strong>Teacher stays off the live request path:</strong> heavy learning work runs asynchronously while the learned routing function serves requests inline. The user never waits on the teacher model.</li>
+      <li><strong>Instant rollback:</strong> brain packs are immutable once built. You can switch which pack is active or roll back to a previous one without any data-shape rewrites.</li>
     </ul>
 
     <h2>Runtime ownership boundary</h2>
     <div class="callout">
       <p style="margin:0 0 .6rem;"><strong>OpenClaw runtime owns:</strong> channels, sessions, orchestration, prompt assembly, runtime diagnostics, and fail-open control.</p>
-      <p style="margin:0;"><strong>OpenClawBrain owns:</strong> memory structure, event/export normalization, workspace metadata + provenance, immutable pack assembly, activation promotion/rollback, deterministic compile, and background learning via <code>@openclawbrain/contracts</code>, <code>@openclawbrain/events</code>, <code>@openclawbrain/event-export</code>, <code>@openclawbrain/workspace-metadata</code>, <code>@openclawbrain/provenance</code>, <code>@openclawbrain/pack-format</code>, <code>@openclawbrain/activation</code>, <code>@openclawbrain/compiler</code>, and <code>@openclawbrain/learner</code>.</p>
+      <p style="margin:0;"><strong>OpenClawBrain owns:</strong> memory structure, event/export normalization, workspace metadata + provenance, brain pack assembly (packs are immutable once built), activation (promoting a new pack or rolling back to a previous one), deterministic compilation (same pack always produces the same output), and background learning. The relevant packages: <code>@openclawbrain/contracts</code>, <code>@openclawbrain/events</code>, <code>@openclawbrain/event-export</code>, <code>@openclawbrain/workspace-metadata</code>, <code>@openclawbrain/provenance</code>, <code>@openclawbrain/pack-format</code>, <code>@openclawbrain/activation</code>, <code>@openclawbrain/compiler</code>, and <code>@openclawbrain/learner</code>.</p>
     </div>
 
     <h2>Flow, budgets, and safety defaults</h2>
@@ -89,7 +89,7 @@ Background learner harvests labels and writes candidate pack updates asynchronou
       <li>Block sensitive paths before event/export normalization runs.</li>
       <li>Apply secret redaction before retrieval payloads are assembled.</li>
       <li>Keep prompt input data-only and cap retrieval context aggressively.</li>
-      <li>Audit provenance traces for every context payload used on the hot path.</li>
+      <li>Audit provenance traces for every context payload used on the live request path.</li>
     </ol>
 
     <h2>How to enable (package-first)</h2>
@@ -102,7 +102,7 @@ pnpm release:pack</pre>
     <h2>How this interacts with learning and harvester</h2>
     <ul>
       <li>Corrections, human labels, and self-harvested labels are part of the default loop, not optional add-ons.</li>
-      <li>Learner output is written as candidate packs; activation handles promotion and rollback without changing runtime boundaries.</li>
+      <li>Learner output is written as candidate packs; activation handles switching to the new pack (or rolling back) without changing runtime boundaries.</li>
       <li>Continuous graph learning runs in the background: structural edits, decay, and co-firing updates happen while serving traffic.</li>
       <li>Routing quality improves faster because retrieval, labels, and graph updates are tied to real session flow.</li>
     </ul>
@@ -114,7 +114,7 @@ pnpm release:pack</pre>
     </ul>
 
     <h2>Rollback and OpenClaw compatibility</h2>
-    <p>Rollback is immediate: switch to the previous active pack (or disable runtime-boundary wiring) and restart the gateway. OpenClaw serving behavior remains available without data-shape rewrites.</p>
+    <p>Rollback is immediate: switch to the previous active brain pack (or disable runtime-boundary wiring entirely) and restart the gateway. Because packs are immutable and the compiler is deterministic, OpenClaw serving behavior remains available without any data-shape rewrites.</p>
 
     <p>Enablement details and operational defaults are documented in the canonical integration guide: <a href="/docs/openclaw-integration.md">docs/openclaw-integration.md</a>.</p>
 

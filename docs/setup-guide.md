@@ -9,7 +9,7 @@ This guide gets you from zero to a working setup.
 - Node.js 20+ with `corepack`
 - An OpenClaw runtime deployment (OpenClawBrain is a learning layer, not a standalone runtime)
 - Workspace files (markdown, docs, memory files) for your agent to learn from
-- Provider credentials configured in OpenClaw runtime secrets
+- API keys for your LLM provider(s), stored in OpenClaw's secrets config
 
 ## 1. Build the workspace
 
@@ -30,16 +30,16 @@ OpenClaw owns runtime orchestration. You tell it where to find the brain pack by
 {
   "brain": {
     "enabled": true,
-    "packSet": "<versioned-pack-set>",
-    "fastBootFromExistingFiles": true,
+    "packSet": "<versioned-pack-set>",       // which brain pack version to load
+    "fastBootFromExistingFiles": true,        // start serving immediately from existing files
     "backgroundLearning": {
       "enabled": true,
-      "prioritizeNewEvents": true
+      "prioritizeNewEvents": true             // learn from new usage before backfilling history
     },
-    "labels": { "human": true, "self": true },
-    "scanner": { "enabled": true },
-    "harvest": { "enabled": true },
-    "teacher": { "onHotPath": false }
+    "labels": { "human": true, "self": true },// collect human and automated feedback signals
+    "scanner": { "enabled": true },           // watch for new workspace and event data
+    "harvest": { "enabled": true },           // extract learning signals from events
+    "teacher": { "onHotPath": false }         // keep learning off the response path
   }
 }
 ```
@@ -55,13 +55,13 @@ After connecting, verify these behaviors:
 
 1. **Agent responds immediately.** OpenClaw boots from existing files without waiting for learning to complete.
 2. **Background learning is running.** New events are learned first; historical backfill continues in the background.
-3. **Fail-open works.** If brain or learning processes are delayed, OpenClaw still serves responses normally. Brain degradation does not block replies.
+3. **Fail-open works.** If the brain becomes unavailable or learning processes are delayed, OpenClaw still serves responses normally. The agent keeps working without brain-enhanced context.
 
 ## 4. Rollback and fail-open
 
 OpenClaw owns fail-open behavior. If something goes wrong:
 
-- **Brain degradation:** OpenClaw automatically falls back to core runtime behavior. Responses continue without brain-enhanced context.
+- **Brain becomes unavailable:** OpenClaw automatically falls back to core runtime behavior. Responses continue without brain-enhanced context.
 - **Bad brain pack:** Roll back to the previous active pack set. Compilation from a given pack is deterministic, so rollback is safe.
 - **Learning delays:** Scanner, harvest, and learner workers run asynchronously. Delays do not affect the hot path.
 
