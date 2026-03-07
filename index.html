@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain — Memory That Learns for OpenClaw</title>
+  <title>OpenClawBrain: TypeScript-First Brain Packages for OpenClaw</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain adds learned routing and durable memory to OpenClaw. Routes that work get reinforced; routes that fail get suppressed. Published benchmark proof included.">
-  <meta property="og:title" content="OpenClawBrain — Memory That Learns for OpenClaw">
-  <meta property="og:description" content="Standard retrieval picks chunks per query with no memory of what worked. OpenClawBrain adds a learned graph router that improves with every interaction.">
+  <meta name="description" content="OpenClawBrain is the TypeScript-first package surface for OpenClaw memory and learning, with published recorded-session and sparse-feedback head-to-head proof bundles.">
+  <meta property="og:title" content="OpenClawBrain: TypeScript-First Brain Packages for OpenClaw">
+  <meta property="og:description" content="OpenClawBrain: TypeScript-first brain packages for OpenClaw with published recorded-session and sparse-feedback head-to-head evidence.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary">
@@ -17,251 +17,713 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #0a0a0a; --bg-card: #111111; --bg-code: #161616;
-      --text: #d4d4d4; --text-bright: #f0f0f0; --text-muted: #777;
-      --accent: #4a9eff; --accent-dim: rgba(74, 158, 255, 0.15);
-      --green: #3fb950; --orange: #e3955c; --red: #f85149;
-      --border: #1e1e1e; --crab: #e85d3a; --crab-dim: rgba(232, 93, 58, 0.15);
-      --serif: 'Crimson Pro', Georgia, serif;
-      --sans: 'Inter', -apple-system, sans-serif;
-      --mono: 'JetBrains Mono', 'Menlo', monospace;
+      --bg: #07090f;
+      --bg-panel: #0f141f;
+      --bg-panel-soft: #111824;
+      --bg-code: #161d2c;
+      --text: #ced7e5;
+      --text-bright: #f2f6fb;
+      --text-muted: #8b97ad;
+      --accent: #79d3ff;
+      --accent-strong: #4ea8db;
+      --accent-soft: rgba(121, 211, 255, 0.12);
+      --green: #9ce0bc;
+      --orange: #ffbe72;
+      --border: rgba(125, 157, 198, 0.25);
+      --border-strong: rgba(121, 211, 255, 0.36);
+      --serif: "Crimson Pro", Georgia, serif;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: "JetBrains Mono", Menlo, monospace;
+      --radius: 14px;
     }
+
     html { scroll-behavior: smooth; }
-    body { font-family: var(--serif); background: var(--bg); color: var(--text); font-size: 18px; line-height: 1.75; -webkit-font-smoothing: antialiased; }
-    a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
-    .page { max-width: 740px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
 
-    /* Hero */
-    .hero { text-align: center; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
-    .hero-eyebrow { font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; }
-    .hero h1 { font-family: var(--sans); font-size: 2.1rem; font-weight: 700; color: var(--text-bright); line-height: 1.25; margin-bottom: 1rem; }
-    .hero-lead { font-size: 1.1rem; color: var(--text); max-width: 600px; margin: 0 auto 1.5rem; }
-    .hero-cta { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
-    .hero-cta a { display: inline-block; padding: 0.6rem 1.1rem; border-radius: 8px; font-family: var(--sans); font-size: 0.9rem; font-weight: 600; text-decoration: none; }
-    .hero-cta .primary { background: var(--accent); color: #0a0f17; }
-    .hero-cta .secondary { border: 1px solid rgba(74, 158, 255, 0.35); color: var(--accent); }
-    .hero-meta { font-family: var(--sans); font-size: 0.82rem; color: var(--text-muted); }
-
-    /* Section cards */
-    .section-card { text-align: left; max-width: 720px; margin: 0 auto 2.5rem; padding: 1.1rem 1.25rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card); }
-    .section-label { margin: 0 0 0.35rem; font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
-    .section-title { margin: 0 0 0.6rem; font-family: var(--sans); font-size: 1.15rem; font-weight: 700; color: var(--text-bright); line-height: 1.3; }
-
-    /* Table */
-    .table-wrap { overflow-x: auto; margin: 1.5rem 0; }
-    table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 0.82rem; }
-    th { text-align: left; padding: 0.6rem 0.8rem; background: var(--bg-card); color: var(--text-bright); font-weight: 600; border-bottom: 2px solid var(--border); }
-    td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
-    code { font-family: var(--mono); font-size: 0.85em; background: var(--bg-code); padding: 0.15em 0.4em; border-radius: 4px; color: var(--orange); }
-    pre { background: var(--bg-code); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; overflow-x: auto; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; color: var(--text); margin: 1.5rem 0; }
-
-    /* Proof snapshot */
-    .proof-snapshot { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 0.9rem 0; }
-    .proof-snapshot-item { padding: 0.75rem 0.9rem; border: 1px solid rgba(63,185,80,0.25); border-radius: 8px; background: rgba(63,185,80,0.06); }
-    .proof-snapshot-item .label { font-family: var(--sans); font-size: 0.72rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.15rem; }
-    .proof-snapshot-item .number { font-family: var(--sans); font-size: 0.92rem; font-weight: 600; color: var(--text-bright); }
-    .proof-snapshot-item .detail { font-family: var(--sans); font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem; }
-
-    /* Package list */
-    .pkg-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin: 0.75rem 0; }
-    .pkg-item { padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-code); font-family: var(--mono); font-size: 0.76rem; color: var(--orange); }
-
-    /* CTA grid */
-    .cta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 1.5rem 0; }
-    .cta-grid a {
-      display: flex; align-items: center; gap: 0.6rem;
-      padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: 10px;
-      background: var(--bg-card); font-family: var(--sans); font-size: 0.9rem;
-      color: var(--text-bright); text-decoration: none; transition: border-color 0.15s;
+    body {
+      font-family: var(--serif);
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.75;
+      background:
+        radial-gradient(circle at 20% -10%, rgba(121, 211, 255, 0.2), transparent 45%),
+        radial-gradient(circle at 82% 0%, rgba(255, 190, 114, 0.12), transparent 38%),
+        var(--bg);
+      -webkit-font-smoothing: antialiased;
     }
-    .cta-grid a:hover { border-color: var(--accent); text-decoration: none; }
-    .cta-grid .cta-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
 
-    /* Hero image */
-    .fig { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 0; overflow: hidden; margin: 0 0 2.5rem; }
-    .fig img { width: 100%; display: block; border-radius: 8px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-    /* Badge */
-    .badge { display: inline-block; font-family: var(--sans); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 6px; }
-    .badge-draft { background: rgba(227, 149, 92, 0.2); color: var(--orange); }
-    .badge-repo { background: var(--accent-dim); color: var(--accent); }
-
-    @media (max-width: 720px) {
-      .proof-snapshot, .cta-grid { grid-template-columns: 1fr; }
-      .pkg-list { grid-template-columns: repeat(2, 1fr); }
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 2.5rem 1.4rem 5rem;
     }
-    @media (max-width: 600px) { .page { padding: 2rem 1rem 4rem; } .hero h1 { font-size: 1.5rem; } body { font-size: 16px; } .pkg-list { grid-template-columns: 1fr; } }
+
+    .site-header {
+      margin-bottom: 2.2rem;
+    }
+
+    .utility-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .brand {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .utility-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .utility-links a {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.34rem 0.65rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      color: var(--text);
+      background: rgba(10, 16, 26, 0.8);
+      text-decoration: none;
+      transition: border-color 140ms ease, background 140ms ease;
+    }
+
+    .utility-links a:hover {
+      border-color: var(--border-strong);
+      background: rgba(121, 211, 255, 0.1);
+    }
+
+    .hero-card {
+      padding: 1.35rem 1.4rem;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: linear-gradient(165deg, rgba(121, 211, 255, 0.15), rgba(10, 15, 24, 0.88) 55%);
+      margin-bottom: 1rem;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.45rem;
+      font-family: var(--sans);
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    h1 {
+      margin: 0 0 0.65rem;
+      font-family: var(--sans);
+      font-size: clamp(1.5rem, 3.3vw, 2.1rem);
+      line-height: 1.25;
+      color: var(--text-bright);
+    }
+
+    .lead {
+      margin: 0 0 0.9rem;
+      font-family: var(--sans);
+      font-size: 0.97rem;
+      line-height: 1.65;
+      color: var(--text);
+      max-width: 70ch;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.52rem 0.95rem;
+      border-radius: 9px;
+      font-family: var(--sans);
+      font-size: 0.86rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    }
+
+    .btn:hover { text-decoration: none; transform: translateY(-1px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #95e4ff);
+      color: #061018;
+    }
+
+    .btn-secondary {
+      border-color: var(--border-strong);
+      background: rgba(121, 211, 255, 0.09);
+      color: var(--accent);
+    }
+
+    .hero-meta {
+      font-family: var(--sans);
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .page-nav {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding: 0.2rem 0;
+      scrollbar-width: thin;
+    }
+
+    .page-nav a {
+      flex: 0 0 auto;
+      display: inline-block;
+      padding: 0.42rem 0.76rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: rgba(10, 15, 24, 0.85);
+      text-decoration: none;
+    }
+
+    .page-nav a:hover {
+      color: var(--text-bright);
+      border-color: var(--border-strong);
+    }
+
+    .fig {
+      margin: 0 0 1.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg-panel);
+    }
+
+    .fig img { width: 100%; display: block; }
+
+    .section {
+      margin-bottom: 1.55rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.25rem;
+      background: rgba(10, 14, 22, 0.84);
+    }
+
+    .section h2 {
+      margin: 0 0 0.45rem;
+      font-family: var(--sans);
+      font-size: 1.24rem;
+      color: var(--text-bright);
+      line-height: 1.3;
+    }
+
+    .section-intro {
+      margin: 0 0 0.9rem;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.62;
+      max-width: 80ch;
+    }
+
+    .path-grid,
+    .proof-family-grid,
+    .status-grid,
+    .route-grid,
+    .package-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.72rem;
+    }
+
+    .path-step,
+    .proof-family,
+    .status-card,
+    .route-card,
+    .package-item {
+      padding: 0.82rem 0.88rem;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--bg-panel);
+    }
+
+    .path-step {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .step-index {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    .path-step h3,
+    .route-card h3,
+    .status-card h3,
+    .proof-family h3,
+    .package-item h3 {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: 0.97rem;
+      line-height: 1.35;
+      color: var(--text-bright);
+    }
+
+    .path-step p,
+    .route-card p,
+    .status-card p,
+    .proof-family p,
+    .package-item p {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: 0.84rem;
+      line-height: 1.55;
+      color: var(--text);
+    }
+
+    .path-step a,
+    .route-card a {
+      margin-top: 0.15rem;
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 0.83rem;
+      font-weight: 600;
+    }
+
+    .path-step.primary {
+      border-color: var(--border-strong);
+      background: linear-gradient(165deg, rgba(121, 211, 255, 0.13), rgba(12, 18, 28, 0.92) 60%);
+    }
+
+    .proof-family-grid {
+      margin-bottom: 0.8rem;
+    }
+
+    .status-card.proven {
+      border-color: rgba(156, 224, 188, 0.35);
+      background: rgba(156, 224, 188, 0.08);
+    }
+
+    .status-card.pending {
+      border-style: dashed;
+      border-color: rgba(255, 190, 114, 0.45);
+      background: rgba(255, 190, 114, 0.08);
+    }
+
+    .status-label {
+      margin: 0 0 0.26rem;
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .table-wrap { overflow-x: auto; margin-top: 0.72rem; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--sans);
+      font-size: 0.8rem;
+      min-width: 580px;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.5rem 0.58rem;
+      color: var(--text-bright);
+      border-bottom: 2px solid var(--border);
+      background: var(--bg-panel-soft);
+    }
+
+    td {
+      padding: 0.5rem 0.58rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: top;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.84em;
+      background: var(--bg-code);
+      border: 1px solid rgba(121, 211, 255, 0.15);
+      color: var(--orange);
+      border-radius: 5px;
+      padding: 0.13em 0.36em;
+    }
+
+    ul {
+      margin: 0.15rem 0 0;
+      padding-left: 1.15rem;
+      font-family: var(--sans);
+      font-size: 0.87rem;
+      line-height: 1.58;
+    }
+
+    li { margin-bottom: 0.35rem; }
+
+    .boundary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.72rem;
+      margin-top: 0.65rem;
+    }
+
+    .boundary-card {
+      padding: 0.78rem 0.82rem;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--bg-panel);
+    }
+
+    .boundary-card h3 {
+      margin: 0 0 0.36rem;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      color: var(--text-bright);
+    }
+
+    .boundary-card p {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: 0.83rem;
+      line-height: 1.5;
+      color: var(--text);
+    }
+
+    .package-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-bottom: 0.78rem;
+    }
+
+    .package-item {
+      padding: 0.58rem 0.64rem;
+      background: var(--bg-code);
+      border-color: rgba(125, 157, 198, 0.29);
+    }
+
+    .package-item h3 {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      line-height: 1.45;
+      color: var(--orange);
+      font-weight: 500;
+    }
+
+    pre {
+      margin: 0;
+      padding: 0.95rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg-code);
+      overflow-x: auto;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+
+    .quickstart-foot {
+      margin-top: 0.7rem;
+      font-family: var(--sans);
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .route-card h3 code {
+      font-size: 0.76em;
+    }
+
+    .footer {
+      margin-top: 2.3rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      text-align: center;
+      font-family: var(--sans);
+    }
+
+    .footer p {
+      margin: 0.15rem 0;
+      font-size: 0.77rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .footer .back-link {
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 880px) {
+      .path-grid,
+      .proof-family-grid,
+      .status-grid,
+      .route-grid,
+      .boundary-grid { grid-template-columns: 1fr; }
+
+      .package-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      body { font-size: 16px; }
+      .page { padding: 1.7rem 0.92rem 3.5rem; }
+      .utility-row { flex-direction: column; align-items: flex-start; }
+      .hero-card,
+      .section { padding: 1rem 0.95rem; }
+      .hero-actions .btn { width: 100%; text-align: center; }
+      .package-grid { grid-template-columns: 1fr; }
+      table { min-width: 520px; }
+    }
   </style>
 </head>
 <body>
 <article class="page">
-
-  <!-- Hero: problem → value → CTA -->
-  <header class="hero">
-    <p class="hero-eyebrow">For OpenClaw operators</p>
-    <h1>Your retrieval doesn't learn from outcomes.<br>OpenClawBrain fixes that.</h1>
-    <p class="hero-lead">
-      Embedding similarity picks chunks per query with no memory of what worked before.
-      OpenClawBrain adds a learned graph router that reinforces routes that succeed and
-      suppresses routes that fail — inside your existing OpenClaw runtime.
-    </p>
-    <div class="hero-cta">
-      <a class="primary" href="/docs/openclaw-integration.md">Get started</a>
-      <a class="secondary" href="/proof/">See the proof</a>
-      <a class="secondary" href="/paper/">Read the paper</a>
+  <header class="site-header">
+    <div class="utility-row">
+      <a class="brand" href="/">openclawbrain.ai</a>
+      <nav class="utility-links" aria-label="Primary routes">
+        <a href="/proof/">Proof</a>
+        <a href="/paper/">Paper</a>
+        <a href="/docs/openclaw-integration.md">Docs</a>
+        <a href="/openclawbrain.pdf">PDF</a>
+        <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
+      </nav>
     </div>
-    <p class="hero-meta">
-      <span class="badge badge-repo"><a href="https://github.com/jonathangu/openclawbrain" style="color: inherit; text-decoration: none;">GitHub</a></span>
-      <span class="badge badge-repo"><a href="https://clawhub.ai/skills/openclawbrain" style="color: inherit; text-decoration: none;">ClawHub</a></span>
-      <span class="badge badge-repo"><a href="/openclawbrain.pdf" style="color: inherit; text-decoration: none;">PDF</a></span>
-      <span class="badge badge-draft">v12.2.6</span>
-    </p>
+
+    <div class="hero-card" id="start-here">
+      <p class="eyebrow">Guided review path</p>
+      <h1>OpenClawBrain: TypeScript-first brain stack for OpenClaw</h1>
+      <p class="lead">
+        OpenClaw owns runtime orchestration, fail-open behavior, and prompt assembly. OpenClawBrain owns contracts, event and export normalization, provenance, pack artifacts, activation helpers, compiler output, and learner updates.
+        The first read should move from turn-level traceability to benchmark evidence, then to operator integration.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#guided-path">Start the 3-step path</a>
+        <a class="btn btn-secondary" href="/proof/">Open the proof package</a>
+      </div>
+      <p class="hero-meta">
+        Claim boundary: mechanism, workflow, recorded-session, and sparse-feedback benchmark proof are published. Live production answer-quality proof is not claimed.
+      </p>
+    </div>
+
+    <nav class="page-nav" aria-label="On this page">
+      <a href="#guided-path">Start path</a>
+      <a href="#proof-snapshot">Proof snapshot</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#quickstart">Quickstart</a>
+      <a href="#route-map">Route map</a>
+    </nav>
   </header>
 
-  <!-- Hero image -->
-  <div class="fig">
-    <img src="hero.png" onerror="this.src='hero-v2.png'" alt="A brain-shaped neural network of document nodes and weighted edges — green reflex paths, blue habitual, gray dormant">
-  </div>
+  <figure class="fig" aria-label="OpenClawBrain architecture hero image">
+    <img src="hero.png" onerror="this.src='hero-v2.png'" alt="Brain-shaped network of document nodes and weighted edges showing active and dormant routes">
+  </figure>
 
-  <!-- How it works (3 points, no jargon wall) -->
-  <div class="section-card">
-    <p class="section-label">How it works</p>
-    <p class="section-title">Fast start. Continuous learning. Clean boundary.</p>
-    <ul style="margin: 0.5rem 0 0; padding-left: 1.2rem; font-family: var(--sans); font-size: 0.92rem; line-height: 1.6;">
-      <li><strong>Boot from existing files</strong> — no full pre-scan gate before the first useful route.</li>
-      <li><strong>Learned routing on the hot path</strong> — the route function runs inline with bounded compute. Background teacher updates stay off the hot path.</li>
-      <li><strong>Default-on labels</strong> — human corrections, self labels, and scanner/harvester signals all feed one learning loop.</li>
-    </ul>
-  </div>
+  <section class="section" id="guided-path">
+    <h2>Start here in order</h2>
+    <p class="section-intro">
+      The homepage now routes first-time readers through one narrow funnel instead of a broad menu. Use these steps in order, then branch into docs only after the proof boundary is clear.
+    </p>
+    <div class="path-grid">
+      <article class="path-step primary">
+        <p class="step-index">Step 1</p>
+        <h3>Inspect one worked turn</h3>
+        <p>Verify stable <code>turn_id</code>, bounded compiled context, same-turn correction capture, and replay boundary before reading aggregate benchmark numbers.</p>
+        <a href="/proof/#worked-turn">Open worked-turn evidence</a>
+      </article>
+      <article class="path-step">
+        <p class="step-index">Step 2</p>
+        <h3>Read benchmark proof families</h3>
+        <p>Check recorded-session and sparse-feedback head-to-head artifacts. Keep benchmark proof separate from shadow and online claims.</p>
+        <a href="/proof/#recorded-session">Open recorded-session benchmark</a>
+      </article>
+      <article class="path-step">
+        <p class="step-index">Step 3</p>
+        <h3>Wire packages into runtime</h3>
+        <p>After boundary review, integrate the package surface into your OpenClaw runtime and run the reproducibility commands.</p>
+        <a href="/docs/openclaw-integration.md">Open integration docs</a>
+      </article>
+    </div>
+  </section>
 
-  <!-- The problem in detail -->
-  <div class="section-card">
-    <p class="section-label">The problem</p>
-    <p class="section-title">Standard retrieval does not learn from outcomes.</p>
-    <div class="table-wrap" style="margin: 0 0 0.5rem;">
+  <section class="section" id="proof-snapshot">
+    <h2>Proof snapshot</h2>
+    <p class="section-intro">
+      Two benchmark families are now published and reproducible. They prove comparative behavior on frozen workloads, not live production answer quality.
+    </p>
+
+    <div class="proof-family-grid">
+      <article class="proof-family">
+        <h3><code>recorded_h2h_relational_drift_001</code></h3>
+        <p>800 queries, 41 steps, 8 baselines. <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp).</p>
+      </article>
+      <article class="proof-family">
+        <h3><code>proof-results/sparse_feedback_10seed</code></h3>
+        <p><code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), about 5x smaller context per query, and 9-1 head-to-head over <code>vector_rag_rerank</code>.</p>
+      </article>
+    </div>
+
+    <div class="status-grid">
+      <article class="status-card proven">
+        <p class="status-label">Published</p>
+        <h3>Mechanism and workflow proof</h3>
+        <p>Deterministic simulation plus inspectable turn-level artifacts are published and reproducible.</p>
+      </article>
+      <article class="status-card proven">
+        <p class="status-label">Published</p>
+        <h3>Recorded and sparse-feedback H2H</h3>
+        <p>Comparative benchmark bundles are available with explicit top-line metrics and reproducibility routes.</p>
+      </article>
+      <article class="status-card pending">
+        <p class="status-label">Not claimed</p>
+        <h3>Shadow and online product proof</h3>
+        <p>Live production answer-quality claims remain gated until matching shadow and online artifacts are published.</p>
+      </article>
+      <article class="status-card">
+        <p class="status-label">Next route</p>
+        <h3>Proof package and reproduce docs</h3>
+        <p><a href="/proof/">Proof package</a> and <a href="/docs/reproduce-eval.md">reproduce-eval.md</a> remain the canonical operator paths.</p>
+      </article>
+    </div>
+
+    <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Pain</th>
-            <th>Fix in OpenClawBrain</th>
+            <th>Proof family</th>
+            <th>Topline result</th>
+            <th>Boundary label</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Cold starts blocked by full-history prep.</td>
-            <td>Boot from current files immediately; learn history in the background.</td>
+            <td>Recorded-session H2H</td>
+            <td><code>full_brain</code> 0.975 vs best baseline 0.896 (+7.9 pp)</td>
+            <td>Published benchmark artifact</td>
           </tr>
           <tr>
-            <td>Label collection is inconsistent and optional.</td>
-            <td>Human, self, and harvester labels run as default inputs.</td>
+            <td>Sparse-feedback (10 seeds)</td>
+            <td><code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp)</td>
+            <td>Published benchmark artifact</td>
           </tr>
           <tr>
-            <td>Learning logic and runtime are tightly coupled.</td>
-            <td>OpenClaw owns runtime; OpenClawBrain packages own contracts, provenance, and learner.</td>
+            <td>Workflow proof</td>
+            <td><code>learned</code> 1.00 vs <code>graph_prior_only</code> 0.50</td>
+            <td>Mechanism and integration artifact</td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
+  </section>
 
-  <!-- Proof snapshot (summary, not the full ladder) -->
-  <div class="section-card" style="border-color: rgba(74, 158, 255, 0.28);">
-    <p class="section-label">Published proof</p>
-    <p class="section-title">Two benchmark families. Reproducible. Not live production claims.</p>
-    <div class="proof-snapshot">
-      <div class="proof-snapshot-item">
-        <p class="label">Recorded-session H2H</p>
-        <p class="number">0.975 vs 0.896 (+7.9 pp)</p>
-        <p class="detail">800 queries, 41 steps, 8 baselines</p>
-      </div>
-      <div class="proof-snapshot-item">
-        <p class="label">Sparse-feedback 10-seed</p>
-        <p class="number">91.96% vs 67.05% (+24.91 pp)</p>
-        <p class="detail">~5x smaller context/query, 9-1 over best RAG</p>
-      </div>
-    </div>
-    <p style="margin: 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
-      Both are comparative benchmark evidence on frozen workloads. Shadow and online claims require their own artifacts.
-      <a href="/proof/">Full proof package &rarr;</a>
+  <section class="section" id="architecture">
+    <h2>Architecture and package boundary</h2>
+    <p class="section-intro">
+      OpenClawBrain is a package surface, not a runtime replacement. Runtime orchestration stays in OpenClaw while learning contracts and artifacts stay in OpenClawBrain.
     </p>
-  </div>
 
-  <!-- What ships -->
-  <div class="section-card">
-    <p class="section-label">What ships</p>
-    <p class="section-title">Nine scoped TypeScript packages</p>
-    <div class="pkg-list">
-      <div class="pkg-item">@openclawbrain/contracts</div>
-      <div class="pkg-item">@openclawbrain/events</div>
-      <div class="pkg-item">@openclawbrain/event-export</div>
-      <div class="pkg-item">@openclawbrain/workspace-metadata</div>
-      <div class="pkg-item">@openclawbrain/provenance</div>
-      <div class="pkg-item">@openclawbrain/pack-format</div>
-      <div class="pkg-item">@openclawbrain/activation</div>
-      <div class="pkg-item">@openclawbrain/compiler</div>
-      <div class="pkg-item">@openclawbrain/learner</div>
+    <div class="boundary-grid">
+      <article class="boundary-card">
+        <h3>OpenClaw runtime owns</h3>
+        <p>Session and channel orchestration, fail-open behavior, prompt assembly, diagnostics, and worker lifecycle.</p>
+      </article>
+      <article class="boundary-card">
+        <h3>OpenClawBrain packages own</h3>
+        <p>Contracts, typed events, export normalization, provenance, pack format, activation helpers, compiler output, and learner policy updates.</p>
+      </article>
     </div>
-    <p style="margin: 0.75rem 0 0; font-family: var(--sans); font-size: 0.88rem; color: var(--text-muted);">
-      Versioned, type-safe, published via <code>pnpm release:pack</code>. Wire into your OpenClaw runtime and go.
-    </p>
-  </div>
 
-  <!-- Quickstart -->
-  <div id="install" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem 1.75rem; margin-bottom: 2.5rem;">
-    <p style="font-family: var(--sans); font-size: 0.95rem; font-weight: 600; color: var(--text-bright); margin-bottom: 1rem;">Quickstart</p>
-<pre style="background: var(--bg-code); border-radius: 6px; padding: 1rem 1.25rem; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; overflow-x: auto; color: var(--text);"><code>corepack enable
+    <div class="package-grid" style="margin-top: 0.75rem;">
+      <article class="package-item"><h3>@openclawbrain/contracts</h3></article>
+      <article class="package-item"><h3>@openclawbrain/events</h3></article>
+      <article class="package-item"><h3>@openclawbrain/event-export</h3></article>
+      <article class="package-item"><h3>@openclawbrain/workspace-metadata</h3></article>
+      <article class="package-item"><h3>@openclawbrain/provenance</h3></article>
+      <article class="package-item"><h3>@openclawbrain/pack-format</h3></article>
+      <article class="package-item"><h3>@openclawbrain/activation</h3></article>
+      <article class="package-item"><h3>@openclawbrain/compiler</h3></article>
+      <article class="package-item"><h3>@openclawbrain/learner</h3></article>
+    </div>
+
+    <ul>
+      <li>Boot immediately from existing files; no full-history pre-scan gate before first useful routing.</li>
+      <li>Human labels, self labels, and scanner or harvester labels are default-on inputs to learning.</li>
+      <li>Learned route functions stay on hot path; async teacher and graph updates stay off hot path.</li>
+    </ul>
+  </section>
+
+  <section class="section" id="quickstart">
+    <h2>Quickstart</h2>
+    <p class="section-intro">
+      Use this after reviewing the proof boundary. Start local checks, then follow integration and reproduce routes.
+    </p>
+    <pre><code>corepack enable
 pnpm install
 pnpm check
 pnpm release:pack</code></pre>
-    <p style="font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.5;">
-      See <a href="/docs/openclaw-integration.md">integration guide</a> and <a href="https://github.com/jonathangu/openclawbrain">README</a>.
+    <p class="quickstart-foot">
+      Integration route: <a href="/docs/openclaw-integration.md">/docs/openclaw-integration.md</a>.
+      Reproduce route: <a href="/docs/reproduce-eval.md">/docs/reproduce-eval.md</a>.
+      Canonical paper route: <a href="/paper/">/paper/</a>.
     </p>
-  </div>
+  </section>
 
-  <!-- Explore -->
-  <div class="cta-grid">
-    <a href="/proof/">
-      <span>
-        <span class="cta-label">Evidence</span><br>
-        Proof Package
-      </span>
-    </a>
-    <a href="/paper/">
-      <span>
-        <span class="cta-label">Paper</span><br>
-        Full PDF
-      </span>
-    </a>
-    <a href="/blog/v12.2.6-series/">
-      <span>
-        <span class="cta-label">Blog</span><br>
-        v12.2.6 Series
-      </span>
-    </a>
-    <a href="/docs/openclaw-integration.md">
-      <span>
-        <span class="cta-label">Guide</span><br>
-        Integration Docs
-      </span>
-    </a>
-    <a href="/materials/">
-      <span>
-        <span class="cta-label">Materials</span><br>
-        Figures &amp; Data
-      </span>
-    </a>
-    <a href="https://github.com/jonathangu/openclawbrain">
-      <span>
-        <span class="cta-label">Source</span><br>
-        GitHub
-      </span>
-    </a>
-  </div>
+  <section class="section" id="route-map">
+    <h2>Route map</h2>
+    <p class="section-intro">
+      Keep these routes clear and separate: proof for claims, paper for long-form framing, docs for implementation and reproducibility.
+    </p>
+    <div class="route-grid">
+      <article class="route-card">
+        <h3><code>/proof/</code></h3>
+        <p>Primary evidence package with worked turn, benchmark ladders, and claim boundary state.</p>
+        <a href="/proof/">Go to proof package</a>
+      </article>
+      <article class="route-card">
+        <h3><code>/paper/</code></h3>
+        <p>Canonical paper route with direct PDF linkage and current comparative benchmark rung context.</p>
+        <a href="/paper/">Go to paper route</a>
+      </article>
+      <article class="route-card">
+        <h3><code>/docs/openclaw-integration.md</code></h3>
+        <p>Operator integration path for runtime wiring, fail-open rules, and background learning loop setup.</p>
+        <a href="/docs/openclaw-integration.md">Go to integration doc</a>
+      </article>
+      <article class="route-card">
+        <h3><code>/docs/reproduce-eval.md</code></h3>
+        <p>Reproducibility route for deterministic eval harness commands, benchmark artifact generation, and figure outputs.</p>
+        <a href="/docs/reproduce-eval.md">Go to reproduce doc</a>
+      </article>
+    </div>
+  </section>
 
-  <footer style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted); text-align: center;">
-    OpenClawBrain &mdash; memory that learns for OpenClaw.
+  <footer class="footer">
+    <p>OpenClawBrain: TypeScript-first brain packages for OpenClaw.</p>
+    <p>Jonathan Gu &middot; <a href="mailto:jonathangu@gmail.com">jonathangu@gmail.com</a></p>
+    <p><a class="back-link" href="https://www.jonathangu.com/">Author site</a></p>
   </footer>
-
 </article>
 </body>
 </html>
