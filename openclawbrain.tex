@@ -17,14 +17,14 @@
 \noindent\textbf{Version: v12.2.6+}
 
 \section{Abstract}
-OpenClawBrain is a retrieval-routing system for long-lived agents built around a strict hot/cold path split. The hot path is local and bounded for latency-critical routing; the cold path runs asynchronous learning and structure updates.
+OpenClawBrain is a TypeScript-first package workspace for retrieval routing in long-lived agents, deployed behind an OpenClaw-owned runtime boundary. The system is built around a strict hot/cold path split: the hot path is local and bounded for latency-critical routing, while the cold path runs asynchronous learning and structure updates.
 We define a \emph{turn} as a single LLM API call. End-to-end cost is $C=\sum_{i=1}^{T} \mathrm{tokens}_i \cdot \mathrm{price}_i$, and the system targets lower $T$ (fewer calls per user-visible request) and lower per-call token counts on the hot path.
 The current system uses two route signals: a structural prior ($\mathrm{graph\_prior}$) and a query-time compatibility signal (QTsim). A confidence mixer combines those signals using uncertainty features, including entropy and margin, to decide how much weight each source gets per decision.
 Learning is performed through teacher distillation plus policy-gradient updates under a reward-source hierarchy. Human corrections have highest authority, then self-learning outcomes, then harvested signals, then high-volume teacher labels.
 This release also starts RL-native maintenance of graph structure: Phase 2a is shipped and follow-on phases cover connect/split/merge actions under policy control.
 
 \section{1. System Overview}
-OpenClawBrain is designed around a strict split:
+OpenClawBrain is designed around a strict split, with package contracts and learning components in OpenClawBrain and runtime orchestration in OpenClaw:
 \begin{itemize}
   \item \textbf{Hot path:} local embedding retrieval and bounded traversal only.
   \item \textbf{Cold path:} asynchronous learning and structure updates.
@@ -93,7 +93,7 @@ This hierarchy constrains updates so high-authority signals can override lower-l
 OpenClawBrain treats structure maintenance as a control problem over graph actions.
 
 \subsection*{3.1 Phase 2a (Shipped)}
-Phase 2a ships RL-native maintenance hooks that integrate policy outcomes with structure scoring and safe-apply gates. In practice, this means structure candidates are generated, scored with policy-derived signals, and applied only when guardrails pass.
+Phase 2a ships RL-native maintenance controls that integrate policy outcomes with structure scoring and safe-apply gates. In practice, this means structure candidates are generated, scored with policy-derived signals, and applied only when guardrails pass.
 
 \subsection*{3.2 Roadmap: connect/split/merge}
 Planned phases extend action space with explicit graph edits:
@@ -105,7 +105,7 @@ Planned phases extend action space with explicit graph edits:
 Each action class is expected to use conservative thresholds, rollback support, and offline shadow evaluation before broad enablement.
 
 \section{4. Evaluation: Industry Baselines + Ablations}
-Evaluation is organized around industry-standard baselines and fully reproducible artifacts.
+Evaluation is organized around industry-standard baselines and fully reproducible artifacts. These results are mechanism proof for routing behavior under controlled harnesses; they are not, by themselves, full end-to-end product proof for a deployed OpenClaw runtime.
 
 \subsection*{4.1 Baselines (Why These Comparisons)}
 We compare against three industry baselines plus the learned router:
@@ -163,25 +163,21 @@ OpenClawBrain learned (mixed) & 0.935126 / 0.9680 & 96.74\% & TBD & TBD & TBD & 
 \caption{Expert-regions simulation baselines from reproducible runs. Each \texttt{TBD} must cite commit SHA, command, and artifact path (e.g., \texttt{/tmp/ocb\_eval.json}).}
 \end{table}
 
-\subsection*{4.5 Reproduction Commands (Expected Output Paths)}
+\subsection*{4.5 Reproduction Workflow (TypeScript-First Package Surface)}
 Commands (from \texttt{openclawbrain} repo) and expected outputs:
 \begin{verbatim}
 cd /path/to/openclawbrain
-python examples/eval/run_eval.py \
-  --state /path/to/state.json \
-  --queries /path/to/queries.jsonl \
-  --modes vector_only,edge_sim_legacy,graph_prior_only,qtsim_only,learned \
-  --output /tmp/ocb_eval.json \
-  --print-per-query
+corepack enable
+pnpm install
+pnpm check
+pnpm release:pack
 
-python examples/eval/simulate_expert_regions.py --output-dir /tmp/ocb_expert_regions
-python examples/eval/simulate_two_cluster_routing.py --output-dir /tmp/ocb_two_cluster
-
-python3 /path/to/openclawbrain-site/scripts/plot_eval.py \
-  --inputs /tmp/ocb_expert_regions /tmp/ocb_two_cluster \
-  --out figures/eval
+pnpm run eval:workflow-proof -- --output-dir scratch/workflow-proof/latest
+pnpm run eval:baseline -- --queries /path/to/queries.jsonl --output /tmp/ocb_eval.json
+pnpm run eval:sim-expert-regions -- --output-dir /tmp/ocb_expert_regions
+pnpm run eval:sim-two-cluster -- --output-dir /tmp/ocb_two_cluster
 \end{verbatim}
-Expected outputs include \texttt{/tmp/ocb\_eval.json}, \texttt{/tmp/ocb\_expert\_regions/simulation\_curve.csv}, and regenerated SVGs in \texttt{figures/eval/}.
+Expected outputs include \texttt{/tmp/ocb\_eval.json}, \texttt{/tmp/ocb\_expert\_regions/simulation\_curve.csv}, and regenerated SVGs in \texttt{figures/eval/} using the plotting entrypoint documented in \texttt{docs/reproduce-eval.md}.
 
 \section{5. Operational Notes}
 OpenClawBrain now supports local embeddings out-of-the-box for operator-first deployment. This enables deterministic bootstrap and private/offline-friendly operation while keeping optional teacher workflows in asynchronous jobs.

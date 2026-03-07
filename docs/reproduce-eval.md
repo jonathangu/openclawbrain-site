@@ -2,18 +2,30 @@
 
 This is the single source of truth for reproducing evaluation metrics and figures referenced on the OpenClawBrain site and paper.
 
-## 1) Run the workflow-proof harness (deterministic, OpenClaw-shaped)
+## 0) Bootstrap the TypeScript workspace
 
-Use this harness for the current top-of-page proof slice on the homepage.
+All reproduction commands use the TypeScript-first package surface.
 
 ```bash
 cd /path/to/openclawbrain
-python3 -m examples.eval.simulate_openclaw_workflows \
+corepack enable
+pnpm install
+pnpm check
+pnpm release:pack
+```
+
+## 1) Run the workflow-proof harness (deterministic mechanism proof)
+
+Use this harness for the current top-of-page mechanism proof slice on the homepage.
+
+```bash
+cd /path/to/openclawbrain
+pnpm run eval:workflow-proof -- \
   --output-dir scratch/workflow-proof/latest
 ```
 
 Expected artifacts in `scratch/workflow-proof/latest/`:
-- `workflow_state.json`
+- `workflow_snapshot.json`
 - `train_traces.jsonl`
 - `train_labels.jsonl`
 - `eval_queries.jsonl`
@@ -36,17 +48,17 @@ Interpretation:
 - Async supervision trains a better learned runtime route policy than vector top-k, pointer chasing, or graph priors alone.
 
 Non-claims:
-- This is not a live production OpenClaw eval.
-- This does not yet prove downstream answer quality directly; it proves retrieval-routing quality on deterministic workflow-shaped tasks.
+- This is mechanism proof, not full product proof.
+- This is not a live production OpenClaw runtime eval.
+- This does not yet prove downstream answer quality directly; it proves retrieval-routing behavior on deterministic workflow-shaped tasks.
 
 ## 2) Run the baseline + ablation harness (real query set)
 
-Use the evaluation harness in the main `openclawbrain` code repo.
+Use the evaluation package entrypoint in the main `openclawbrain` workspace.
 
 ```bash
 cd /path/to/openclawbrain
-python examples/eval/run_eval.py \
-  --state /path/to/state.json \
+pnpm run eval:baseline -- \
   --queries /path/to/queries.jsonl \
   --modes vector_only,edge_sim_legacy,graph_prior_only,qtsim_only,learned \
   --output /tmp/ocb_eval.json \
@@ -67,8 +79,8 @@ If you add a dedicated pointer-chasing mode in the harness, include it in `--mod
 
 ```bash
 cd /path/to/openclawbrain
-python examples/eval/simulate_expert_regions.py --output-dir /tmp/ocb_expert_regions
-python examples/eval/simulate_two_cluster_routing.py --output-dir /tmp/ocb_two_cluster
+pnpm run eval:sim-expert-regions -- --output-dir /tmp/ocb_expert_regions
+pnpm run eval:sim-two-cluster -- --output-dir /tmp/ocb_two_cluster
 ```
 
 Expected outputs:
@@ -82,7 +94,8 @@ Expected outputs:
 From this website repo:
 
 ```bash
-python3 scripts/plot_eval.py \
+cd /path/to/openclawbrain-site
+pnpm run eval:plot -- \
   --inputs /tmp/ocb_expert_regions /tmp/ocb_two_cluster \
   --out figures/eval
 ```
