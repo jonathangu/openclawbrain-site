@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>OpenClawBrain Proof Package</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Jonathan Gu">
   <meta name="description" content="OpenClawBrain proof package: benchmark results for the learned router vs RAG baselines, worked examples, and honest boundaries on what we have and have not yet proven.">
   <meta property="og:title" content="OpenClawBrain Proof Package">
   <meta property="og:description" content="97.5% vs 89.6% on recorded sessions. 92% vs 67% under sparse feedback. Worked examples, reproduction steps, and clear boundaries on what is proven.">
@@ -433,6 +434,7 @@
         <div class="hero-copy">
           <div class="eyebrow">Evidence package</div>
           <h1>Proof package.</h1>
+          <p style="font-family:var(--sans); font-size:0.92rem; color:var(--muted); margin:0.5rem 0 0;">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
           <p class="lead">
             RAG retrieves chunks by similarity and hopes the right answer is in the pile. OpenClawBrain replaces that with a learned router &mdash; trained on real usage, it walks a knowledge graph, picks the right context, and improves from corrections. On two frozen benchmark suites, the learned router scores 97.5% vs. 89.6% for the best RAG baseline, and 92.0% vs. 67.1% under sparse feedback &mdash; using roughly 5&times; less context. These are controlled benchmark results, not live production claims.
           </p>
