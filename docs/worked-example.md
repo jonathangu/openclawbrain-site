@@ -1,223 +1,67 @@
 # Worked Example: One OpenClaw Turn End to End
 
-This page shows one realistic but generic OpenClaw turn wired through OpenClawBrain.
+This page shows an illustrative but generic OpenClaw turn wired through the current OpenClawBrain package surface.
 
-It is a concrete operator example, not a benchmark.
+If you want the smallest runnable consumer proof instead of the architectural walkthrough below, use `examples/npm-consumer/README.md`.
 
-Default stack assumed here:
+## Boundary
 
-- local embedder: `BAAI/bge-large-en-v1.5`
-- local async teacher: `Ollama qwen3.5:35b`
+- OpenClaw keeps the hot path, prompt assembly, response delivery, and fail-open serving.
+- OpenClawBrain supplies normalized events, packs, activation helpers, deterministic compilation, and asynchronous learner refresh.
 
-Companion docs:
+## Example turn shape
 
-- [docs/openclaw-integration.md](openclaw-integration.md)
-- [docs/reproduce-eval.md](reproduce-eval.md)
-- [/proof/](../proof/)
+### 1) OpenClaw receives a user turn
 
-How this page relates to the published proof families:
+OpenClaw receives a user message and keeps control of the hot path.
 
-- this page is the minimum artifact contract for one real OpenClaw-shaped turn
-- the deterministic workflow proof on `/proof/` is a separate mechanism bundle built from 4 fixed workflow scenarios
-- its scenario-level evidence matrix is `per_query_matrix.csv` and `per_query_matrix.md`: 16 deterministic rows showing which node IDs reached prompt context under each mode
-- recorded-session and sparse-feedback benchmark bundles scale from one turn contract to fixed multi-query and multi-seed comparisons
-- none of these artifacts, by themselves, prove live production answer quality on served OpenClaw traffic
+### 2) Compile from the promoted pack
 
-## Scenario
+OpenClaw resolves the active pack and compiles bounded context from it.
 
-An OpenClaw operator is preparing a deploy note and asks:
+If the promoted manifest requires learned routing, the compile must use that pack's learned `route_fn` and expose `routerIdentity` in diagnostics.
 
-> "For this billing banner patch, what deploy constraints should I mention?"
+Relevant package surface:
 
-OpenClaw should not pass the raw user message into the brain unchanged. It should pass a stable summary plus a stable `turn_id`.
+- `@openclawbrain/activation`
+- `@openclawbrain/compiler`
+- optional `@openclawbrain/openclaw`
 
-Example turn payload:
+### 3) Prompt assembly stays in OpenClaw
 
-```text
-turn_id: oc-main-2026-03-06-deploy-0142
-summary: deploy note for billing banner patch; need freeze window, rollback owner requirement, and when support contact is required
-```
+OpenClaw assembles the final prompt from the compiled context and serves the model call.
 
-Important detail:
+### 4) Delivery stays fail-open
 
-- `turn_id` must stay stable across the compile call, later correction capture, and any learner outcome for this turn
-- the summary should be compact and operator-meaningful, not a full prompt dump
+OpenClaw sends the response and can keep serving even if learner refresh is stale or unavailable.
 
-## 1. OpenClaw activates a compiled context block
+### 5) Normalized events are exported off the hot path
 
-```ts
-import { activate } from "@openclawbrain/activation";
-import { compile }  from "@openclawbrain/compiler";
+The turn is written into normalized interaction and feedback events for later learning.
 
-const turnId  = "oc-main-2026-03-06-deploy-0142";
-const summary = "deploy note for billing banner patch; " +
-                "need freeze window, rollback owner requirement, " +
-                "and when support contact is required";
+Relevant package surface:
 
-const candidates = activate(state, { summary, turnId });
-const compiled    = compile(candidates, {
-  format: "prompt",
-  excludeBootstrap: true,
-  maxPromptContextChars: 20_000,
-});
-```
+- `@openclawbrain/events`
+- `@openclawbrain/event-export`
+- `@openclawbrain/openclaw`
 
-What to save for proof:
+### 6) Learner and activation update asynchronously
 
-- exact activation + compile call parameters
-- `turn_id`
-- state path or state snapshot identifier
+OpenClawBrain materializes candidate packs, refreshes learned routing artifacts, and stages/promotes them behind the hot path. That is asynchronous candidate-pack refresh, not proof of live mutation of the currently active pack.
 
-## 2. The compiler returns a bounded context block
+Relevant package surface:
 
-Example prompt block returned to OpenClaw:
+- `@openclawbrain/learner`
+- `@openclawbrain/activation`
+- `@openclawbrain/pack-format`
 
-```text
-[COMPILED_CONTEXT v1]
-- Deploy policy snapshot: customer-visible changes freeze after 16:00 PT unless the on-call lead approves an exception.
-- Release note rule: always name a rollback owner. Add a support contact only for customer-visible patches.
-- Prior correction from this workspace: do not describe finance-impacting changes as auto-approved; they still need manual review.
-[/COMPILED_CONTEXT]
-```
+## Related docs
 
-What matters here:
+- [openclaw-integration.md](openclaw-integration.md)
+- [reproduce-eval.md](reproduce-eval.md)
+- [operator-observability.md](https://github.com/jonathangu/openclawbrain/blob/main/docs/operator-observability.md)
 
-- the returned block is bounded
-- OpenClaw appends the block to its prompt
-- raw retrieval internals are not injected into the prompt
+## Claim boundary
 
-This is the hot path. No async teacher call belongs here.
-
-## 3. The model answer still happens in OpenClaw
-
-The brain does not author the final reply. OpenClaw's model does.
-
-Example OpenClaw answer:
-
-```text
-For this patch, mention the current freeze window, name a rollback owner, and include a support contact if the patch is customer-visible. If finance-impacting review is still involved, do not call it auto-approved.
-```
-
-Operator point:
-
-- the current turn benefits from the returned context immediately
-- the answer is still produced by the normal OpenClaw model path
-
-## 4. Same-turn correction capture and learner outcome
-
-Suppose the user immediately corrects the agent:
-
-> "This patch is internal-only. Keep the rollback owner, but do not require a support contact."
-
-Capture the correction against the same `turn_id`:
-
-```ts
-import { emitCorrectionEvent } from "@openclawbrain/events";
-import { recordOutcome }       from "@openclawbrain/learner";
-
-emitCorrectionEvent(state, {
-  turnId,
-  kind: "CORRECTION",
-  content: "For internal-only patches, keep the rollback owner " +
-           "but do not require a support contact.",
-  lookback: 1,
-  messageId: "assistant-2026-03-06-0142",
-});
-
-recordOutcome(state, {
-  turnId,
-  outcome: -1.0,
-  lookback: 1,
-});
-```
-
-What to save for proof:
-
-- correction text
-- `messageId`
-- correction event output
-- learner outcome output
-
-What happens immediately:
-
-- the correction and outcome are attached to the same fired-route history for `turn_id`
-- OpenClaw can answer the correction in the conversation right away
-
-What does **not** happen immediately:
-
-- the current deployed `route_fn` is not magically replaced inline
-- previous turns are not re-answered
-
-## 5. Later replay, harvester, and maintain cycle
-
-After the live conversation, run the background path on historical and newly captured sessions.
-
-```bash
-SESSIONS=~/.openclaw/agents/main/sessions
-
-openclawbrain replay \
-  --state "$STATE" \
-  --sessions "$SESSIONS" \
-  --fast-learning \
-  --resume \
-  --checkpoint ~/.openclawbrain/main/replay_checkpoint.json
-
-openclawbrain harvest \
-  --state "$STATE" \
-  --events ~/.openclawbrain/main/learning_events.jsonl \
-  --tasks split,merge,prune,connect,scale \
-  --json
-
-openclawbrain maintain \
-  --state "$STATE" \
-  --tasks health,decay,prune,merge \
-  --json
-```
-
-This is where the correction joins the larger learning stream:
-
-- replay mines the recorded session history
-- harvester/scanner passes turn session events into learning signals
-- maintenance applies structural cleanup and health tasks
-
-Only after the updated state is deployed or cut over do later turns see the new routing behavior.
-
-## 6. What changed now vs later
-
-| Layer | Changes on this turn | Changes only after background learning and redeploy |
-| --- | --- | --- |
-| `turn_id` linkage | compile, correction capture, and outcome all refer to the same turn history | later analysis can replay the same turn history reliably |
-| prompt context | OpenClaw gets the bounded compiled context block immediately | similar future turns may get a different block only after updated state is served |
-| OpenClaw answer | the current answer can use the returned context right away | past answers do not retroactively change |
-| correction record | the correction is stored immediately against the fired route | the correction influences future routing only after replay/harvest/update work is deployed |
-| learned `route_fn` | current live weights stay as they were for this served state | later served weights can prefer better edges for similar deploy questions |
-| graph structure | no need to block the live turn on structural work | split, merge, prune, connect, and decay effects appear after maintenance and cutover |
-
-## 7. Minimum artifact bundle for one worked turn
-
-If you want this turn to count as evidence instead of anecdote, keep at least:
-
-- inbound summary and stable `turn_id`
-- exact activation + compile parameters
-- returned bounded compiled context block
-- OpenClaw answer text or response trace id
-- same-turn correction text plus correction event output
-- learner outcome output
-- later replay, harvest, and maintain commands plus output paths
-- commit SHA and state identifier used for the turn and the later cutover
-
-That bundle is the smallest useful proof unit for OpenClawBrain on real OpenClaw work.
-
-## 8. The operational lesson
-
-The concrete product story is:
-
-1. OpenClaw can use the brain on the next turn.
-2. Corrections can target the route that actually fired.
-3. The router improves later, through background learning and a later deploy window.
-
-That is the intended separation:
-
-- immediate utility on the live turn
-- continuous improvement off the hot path
-- claims backed by saved artifacts instead of narrative certainty
+This worked example proves the intended package boundary and learning-first operator story.
+It does not by itself prove comparative benchmark performance, full benchmark coverage in this repo, full live runtime plasticity on the active pack, or Brain Ground Zero route-function / `QTsim` proof parity.

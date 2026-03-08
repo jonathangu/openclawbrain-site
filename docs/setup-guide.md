@@ -1,137 +1,60 @@
-> Canonical docs live on GitHub; this page mirrors the shipped setup path.
+> Canonical source: the public `openclawbrain` repo. This site page mirrors the current setup truth and links outward where the full repo docs are not mirrored here.
 
-# OpenClawBrain Setup Guide (TypeScript-first)
+# Setup Guide
 
-OpenClawBrain is the shipped TypeScript-first, package-first workspace behind an OpenClaw-owned runtime boundary.
+For the current `0.1.2` wave, there is one blessed external install lane: repo tip plus local `.release/*.tgz` tarballs.
+The tagged + published npm lane stays future-only until `pnpm release:status` shows a tagged release candidate and the post-publish checks in `docs/release.md` pass in the public repo.
 
-This guide is the day-0 setup path for operators who want:
-- fast boot from existing files
-- always-on background learning by default
-- default-on labels, scanner, and harvest flow
-- deterministic compile from active packs
-- activation, promotion, and rollback discipline for pack sets
-
-## Prerequisites
-
-- Node.js 20+ and `corepack`
-- `pnpm` enabled via `corepack`
-- OpenClaw runtime checkout and deployment access
-- existing agent workspace files (markdown/docs/memory) ready to ingest
-- provider credentials configured in OpenClaw runtime secrets, not in workspace docs
-
-## Step 1: Install and verify the workspace
-
-Run from the OpenClawBrain TypeScript workspace root:
+## Current repo-tip truth
 
 ```bash
 corepack enable
-pnpm install
+pnpm install --frozen-lockfile
+pnpm release:status
+pnpm release:check
+```
+
+That sequence keeps the current technical-alpha story honest:
+
+- `pnpm release:status` shows the current ship surface and which launch-tier claim sets are actually honest now.
+- `pnpm release:check` rebuilds the repo proof lane, refreshes `.release/*.tgz`, runs `pnpm fresh-env:smoke`, and writes `.release/release-proof-manifest.json`.
+- `pnpm fresh-env:smoke` is the clean outside-consumer attach proof for the current repo-tip + tarball lane.
+- `pnpm release:consumer:smoke` remains the narrower tarball-install-only check.
+
+Do **not** tell external users to run bare `pnpm add @openclawbrain/*` yet.
+That registry lane stays future-only until a later wave has a matching release tag on `HEAD`, the publish lane finishes, and post-publish checks pass.
+
+## Start here on this site
+
+1. [docs/openclaw-integration.md](openclaw-integration.md)
+2. [docs/reproduce-eval.md](reproduce-eval.md)
+3. [docs/worked-example.md](worked-example.md)
+4. [proof package](/proof/)
+
+## Canonical repo docs
+
+Use the public repo for the docs that are not mirrored on this site:
+
+1. [openclaw-attach-quickstart.md](https://github.com/jonathangu/openclawbrain/blob/main/docs/openclaw-attach-quickstart.md)
+2. [design-partner-operating-model.md](https://github.com/jonathangu/openclawbrain/blob/main/docs/design-partner-operating-model.md)
+3. [operator-observability.md](https://github.com/jonathangu/openclawbrain/blob/main/docs/operator-observability.md)
+4. [contracts-v1.md](https://github.com/jonathangu/openclawbrain/blob/main/docs/contracts-v1.md)
+5. [release.md](https://github.com/jonathangu/openclawbrain/blob/main/docs/release.md)
+
+## Repo-local quick smoke
+
+```bash
+corepack enable
+pnpm install --frozen-lockfile
 pnpm check
-pnpm release:pack
+pnpm release:status
+pnpm fresh-env:smoke
 ```
 
-`pnpm check` is the release quality gate for type/lint/test/package integrity. `pnpm release:pack` produces the versioned package/pack set consumed by OpenClaw runtime.
+That local smoke is narrower than `pnpm release:check`: it is useful when you want the current proof lanes plus the clean-room attach proof without rerunning the full release packaging checklist.
 
-## Step 2: Pin the canonical package surface
+## Claim boundary
 
-Use a pinned, versioned package set for runtime wiring:
-
-- `@openclawbrain/contracts`
-- `@openclawbrain/events`
-- `@openclawbrain/event-export`
-- `@openclawbrain/workspace-metadata`
-- `@openclawbrain/provenance`
-- `@openclawbrain/pack-format`
-- `@openclawbrain/activation`
-- `@openclawbrain/compiler`
-- `@openclawbrain/learner`
-
-Promote package sets as a unit. Do not mix ad-hoc local package revisions in production.
-
-## Step 3: Wire OpenClaw runtime to the package set
-
-OpenClaw owns runtime orchestration and fail-open behavior. OpenClawBrain packages provide memory, normalization, provenance, pack lifecycle, and compile/learning components.
-
-Use a runtime profile equivalent to:
-
-```json
-{
-  "brain": {
-    "enabled": true,
-    "packSet": "<versioned-pack-set>",
-    "fastBootFromExistingFiles": true,
-    "backgroundLearning": {
-      "enabled": true,
-      "prioritizeNewEvents": true
-    },
-    "labels": {
-      "human": true,
-      "self": true
-    },
-    "scanner": {
-      "enabled": true
-    },
-    "harvest": {
-      "enabled": true
-    },
-    "continuousGraphLearning": {
-      "enabled": true,
-      "decay": true,
-      "hebbianCofiring": true,
-      "structuralUpdates": true
-    },
-    "teacher": {
-      "onHotPath": false
-    }
-  }
-}
-```
-
-## Step 4: Activate, promote, and rollback packs
-
-1. Activate candidate pack set in canary runtime scope.
-2. Validate latency, fail-open behavior, and loop health.
-3. Promote candidate globally when canary passes.
-4. Roll back to previous active pack set if health regresses.
-
-Compilation from the active pack remains deterministic for a fixed state.
-
-## Step 5: Validate first boot behavior
-
-Expected first-boot behavior:
-
-1. OpenClaw starts serving immediately from existing files and metadata.
-2. There is no full-history scan gate before first responses.
-3. New events are learned first; historical backfill continues in background.
-4. Labels/scanner/harvest loops are active by default.
-5. Compiled context size is chosen for task effectiveness, including larger context when it avoids extra model/tool round-trips.
-
-## Step 6: Validate runtime boundaries
-
-Operator checks:
-
-- OpenClaw hot path remains available when learner/scanner work is delayed.
-- Runtime fail-open behavior is verified (brain degradation does not block replies).
-- Provenance is preserved for normalized events and generated activations.
-- Teacher logic executes asynchronously and never gates turn latency.
-
-## Step 7: Day-2 operating model
-
-Default model:
-
-- keep runtime up continuously
-- keep background learning enabled continuously
-- promote package sets intentionally (canary, then broad rollout)
-- measure mechanism/workflow and live product outcomes separately
-
-Mechanism/workflow proof examples:
-- contract integrity
-- normalization/provenance correctness
-- deterministic pack/compiler behavior
-
-Live product proof examples:
-- response quality uplift
-- correction durability
-- retrieval precision/recall at user-visible level
-
-Mechanism/workflow checks are required release evidence, not a substitute for live answer-quality evidence.
+- Current truthful surface: repo tip, local tarballs, promoted-pack compile, and the checked-in proof lanes.
+- Supporting benchmark bundles for broader comparative and `QTsim` claims live separately in Brain Ground Zero.
+- Shadow-mode, live-traffic, and post-publish npm-install claims stay future-only until matching artifacts exist.

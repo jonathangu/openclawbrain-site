@@ -1,806 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>OpenClawBrain Proof Package</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain proof package: mechanism, recorded-session, and sparse-feedback benchmark artifacts with explicit claim boundaries.">
-  <meta property="og:title" content="OpenClawBrain Proof Package">
-  <meta property="og:description" content="Mechanism proof plus recorded-session and sparse-feedback benchmark artifacts with explicit proof boundaries.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://openclawbrain.ai/proof/">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://openclawbrain.ai/proof/">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpenClawBrain Proof Package: Current OCB Proof, BGZ Proof, and Future Claims</title>
+  <meta name="description" content="Proof package for OpenClawBrain with a clear split between current repo-tip proof, external Brain Ground Zero benchmark proof, and future shadow/live claims." />
+  <link rel="canonical" href="https://openclawbrain.ai/proof/" />
   <style>
     :root {
-      --bg: #071019;
-      --panel: rgba(10, 21, 32, 0.86);
-      --panel-soft: rgba(8, 18, 29, 0.78);
-      --line: rgba(144, 192, 222, 0.2);
-      --line-strong: rgba(144, 192, 222, 0.34);
-      --text: #dce8f1;
-      --muted: #97afbf;
-      --bright: #f7fbff;
-      --accent: #79d3ff;
-      --accent-strong: #3eb5ff;
-      --warm: #ffbe72;
-      --green: #9ce0bc;
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
-      --sans: "Space Grotesk", sans-serif;
-      --serif: "Newsreader", serif;
-      --mono: "IBM Plex Mono", monospace;
+      --bg:#0a1018;
+      --bg2:#0d1623;
+      --panel:#121c2b;
+      --panel-soft:#101925;
+      --text:#d8e2f0;
+      --muted:#96a7bf;
+      --bright:#f4f8ff;
+      --line:rgba(130,164,214,.24);
+      --accent:#7ec3ff;
+      --accent-soft:rgba(126,195,255,.12);
+      --warn:#ffcf86;
+      --sans:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --serif:"Crimson Pro",Georgia,serif;
+      --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+      --radius:18px;
     }
-    * { box-sizing: border-box; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
     body {
-      margin: 0;
-      color: var(--text);
+      margin:0;
+      color:var(--text);
+      font-family:var(--serif);
+      line-height:1.75;
       background:
-        radial-gradient(circle at 0% 0%, rgba(62, 181, 255, 0.18), transparent 32%),
-        radial-gradient(circle at 100% 0%, rgba(255, 190, 114, 0.12), transparent 28%),
-        linear-gradient(180deg, #071019 0%, #08131d 52%, #071019 100%);
-      font-family: var(--serif);
-      line-height: 1.72;
-      -webkit-font-smoothing: antialiased;
+        radial-gradient(circle at 20% -10%, rgba(126,195,255,.18), transparent 34%),
+        radial-gradient(circle at 82% 0%, rgba(255,207,134,.10), transparent 28%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
     }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    img { max-width: 100%; display: block; }
-    code {
-      font-family: var(--mono);
-      font-size: 0.88em;
-      color: var(--warm);
-      background: rgba(255, 190, 114, 0.1);
-      padding: 0.12rem 0.34rem;
-      border-radius: 6px;
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    main { width:min(980px, calc(100vw - 32px)); margin:0 auto; padding:2.2rem 0 4rem; }
+    .nav, .meta, .pill, .btn, th { font-family:var(--sans); }
+    .nav { display:flex; flex-wrap:wrap; gap:.55rem; color:var(--muted); font-size:.88rem; margin-bottom:1rem; }
+    .pill {
+      display:inline-flex; align-items:center; gap:.35rem; width:max-content;
+      padding:.34rem .7rem; border-radius:999px; border:1px solid var(--line);
+      background:var(--accent-soft); color:var(--accent); font-size:.76rem; font-weight:700;
+      letter-spacing:.08em; text-transform:uppercase;
     }
-    .shell {
-      width: min(1160px, calc(100vw - 32px));
-      margin: 0 auto;
-      padding-bottom: 4.25rem;
+    .hero, .card, .note, .table-wrap {
+      border:1px solid var(--line); border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)), var(--panel);
+      box-shadow:0 18px 56px rgba(0,0,0,.22);
     }
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 1.25rem 0 0.9rem;
-      font-family: var(--sans);
-      font-size: 0.92rem;
-    }
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.7rem;
-      color: var(--bright);
-      font-weight: 700;
-      letter-spacing: 0.01em;
-    }
-    .brand-mark {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--warm));
-      box-shadow: 0 0 0 6px rgba(121, 211, 255, 0.11);
-    }
-    .nav-links {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-    .nav-links a { color: var(--muted); }
-    .hero,
-    .hero-copy,
-    .hero-panel,
-    .status-card,
-    .figure-card,
-    .ladder-card,
-    .check-card,
-    .kit-card,
-    .callout {
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-    }
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
-      gap: 1rem;
-      padding: 1.15rem 0 1.8rem;
-      background: none;
-      border: 0;
-      box-shadow: none;
-      backdrop-filter: none;
-    }
-    .hero-copy {
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-copy::after {
-      content: "";
-      position: absolute;
-      inset: auto -18% -34% auto;
-      width: 320px;
-      height: 320px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(121, 211, 255, 0.18), transparent 70%);
-      pointer-events: none;
-    }
-    .hero-panel {
-      display: grid;
-      gap: 1rem;
-      padding: 1rem;
-      background: rgba(10, 21, 32, 0.72);
-    }
-    .eyebrow,
-    .kicker,
-    .meta {
-      font-family: var(--sans);
-    }
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      padding: 0.42rem 0.75rem;
-      border-radius: 999px;
-      background: rgba(121, 211, 255, 0.09);
-      border: 1px solid rgba(121, 211, 255, 0.22);
-      font-size: 0.76rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-    h1,
-    h2,
-    h3 {
-      margin: 0;
-      font-family: var(--sans);
-      color: var(--bright);
-    }
-    h1 {
-      margin-top: 1rem;
-      font-size: clamp(2.45rem, 5vw, 4.3rem);
-      line-height: 0.98;
-      letter-spacing: -0.045em;
-      max-width: 10.5ch;
-    }
-    .lead {
-      margin: 1rem 0 0;
-      max-width: 34rem;
-      font-size: 1.14rem;
-      color: #c9dae5;
-    }
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      margin-top: 1.55rem;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 46px;
-      padding: 0.75rem 1.05rem;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      font-family: var(--sans);
-      font-size: 0.94rem;
-      font-weight: 600;
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-    }
-    .btn:hover {
-      text-decoration: none;
-      transform: translateY(-1px);
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent-strong), #7ddcff);
-      color: #03111b;
-    }
-    .btn-secondary {
-      background: rgba(121, 211, 255, 0.08);
-      border-color: rgba(121, 211, 255, 0.24);
-      color: var(--bright);
-    }
-    .hero-note {
-      margin: 1rem 0 0;
-      font-family: var(--sans);
-      font-size: 0.92rem;
-      color: var(--muted);
-      max-width: 38rem;
-    }
-    .tag-row {
-      display: flex;
-      gap: 0.55rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-    .tag {
-      padding: 0.45rem 0.65rem;
-      border-radius: 999px;
-      border: 1px solid rgba(144, 192, 222, 0.16);
-      background: rgba(6, 14, 22, 0.72);
-      font-family: var(--sans);
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1rem;
-    }
-    .status-card,
-    .figure-card,
-    .ladder-card,
-    .check-card,
-    .kit-card {
-      padding: 1.1rem 1.15rem 1.05rem;
-      background: var(--panel-soft);
-      box-shadow: none;
-    }
-    .status-card ul,
-    .check-card ul {
-      margin: 0.7rem 0 0;
-      padding-left: 1.15rem;
-    }
-    .trace-snippet {
-      margin: 0.85rem 0 0;
-      padding: 0.85rem 0.95rem;
-      border-radius: 14px;
-      border: 1px solid rgba(144, 192, 222, 0.22);
-      background: rgba(6, 14, 22, 0.92);
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      line-height: 1.56;
-      color: #d6e8f4;
-      overflow-x: auto;
-    }
-    .trace-snippet code {
-      background: none;
-      padding: 0;
-      color: inherit;
-    }
-    .figure-card img {
-      border-radius: 18px;
-      border: 1px solid rgba(144, 192, 222, 0.14);
-      background: rgba(6, 14, 22, 0.92);
-    }
-    .figure-card figcaption {
-      margin-top: 0.7rem;
-      color: var(--muted);
-      font-family: var(--sans);
-      font-size: 0.84rem;
-    }
-    .kicker {
-      margin-bottom: 0.5rem;
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-    .section {
-      padding-top: 1.35rem;
-    }
-    .section-head {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .section-head h2 {
-      font-size: clamp(1.5rem, 2.6vw, 2.15rem);
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-    }
-    .section-intro {
-      max-width: 40rem;
-      margin: 0;
-      color: var(--muted);
-      font-family: var(--sans);
-      font-size: 0.98rem;
-    }
-    .two-col {
-      display: grid;
-      grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-      gap: 1rem;
-      align-items: start;
-    }
-    .ladder-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
-    }
-    .step {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2rem;
-      height: 2rem;
-      border-radius: 999px;
-      background: rgba(121, 211, 255, 0.1);
-      border: 1px solid rgba(121, 211, 255, 0.24);
-      color: var(--accent);
-      font-family: var(--sans);
-      font-size: 0.9rem;
-      font-weight: 700;
-      margin-bottom: 0.8rem;
-    }
-    .ladder-card p,
-    .check-card p,
-    .kit-card p,
-    .status-card p,
-    .callout p {
-      margin: 0.45rem 0 0;
-      color: var(--muted);
-    }
-    .meta {
-      color: var(--muted);
-      font-size: 0.82rem;
-      margin-top: 0.75rem;
-    }
-    .check-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1rem;
-    }
-    .kit-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
-    }
-    .kit-card {
-      display: block;
-      color: inherit;
-    }
-    .kit-card:hover {
-      border-color: var(--line-strong);
-      text-decoration: none;
-    }
-    .callout {
-      padding: 1rem 1.1rem;
-      background: linear-gradient(135deg, rgba(121, 211, 255, 0.09), rgba(255, 190, 114, 0.06));
-      font-family: var(--sans);
-      color: #cfe2f0;
-    }
-    footer {
-      margin-top: 1.8rem;
-      padding-top: 1.1rem;
-      border-top: 1px solid rgba(144, 192, 222, 0.12);
-      font-family: var(--sans);
-      font-size: 0.88rem;
-      color: var(--muted);
-    }
-    li { margin-bottom: 0.42rem; }
-    @media (max-width: 980px) {
-      .hero,
-      .status-grid,
-      .two-col,
-      .ladder-grid,
-      .check-grid,
-      .kit-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    @media (max-width: 640px) {
-      .shell { width: min(100vw - 24px, 1160px); }
-      .topbar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .nav-links { justify-content: flex-start; }
-      .hero-copy,
-      .hero-panel,
-      .status-card,
-      .figure-card,
-      .ladder-card,
-      .check-card,
-      .kit-card,
-      .callout {
-        border-radius: 20px;
-      }
-      .hero-copy { padding: 1.45rem; }
-      h1 { max-width: 100%; }
-      .lead { font-size: 1.08rem; }
+    .hero { padding:1.15rem 1.2rem; margin-bottom:1rem; }
+    .card { padding:1rem 1.05rem; }
+    .note { padding:1rem 1.05rem; background:linear-gradient(180deg, rgba(255,207,134,.10), rgba(255,255,255,.01)), var(--panel-soft); }
+    .meta { color:var(--muted); font-size:.86rem; margin:.4rem 0 0; }
+    h1,h2,h3 { color:var(--bright); font-family:var(--sans); line-height:1.25; margin:0 0 .65rem; }
+    h1 { font-size:clamp(1.8rem, 4vw, 2.6rem); }
+    h2 { font-size:1.18rem; margin-top:2rem; }
+    h3 { font-size:1rem; }
+    p, ul, ol { margin:0 0 1rem; }
+    ul, ol { padding-left:1.2rem; }
+    li { margin:.35rem 0; }
+    code, pre { font-family:var(--mono); }
+    code { background:rgba(126,195,255,.09); color:#bfe3ff; padding:.1rem .32rem; border-radius:6px; white-space:normal; }
+    pre { overflow:auto; padding:.85rem .95rem; border-radius:14px; border:1px solid var(--line); background:#0b1320; color:#d7e8ff; }
+    .grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:1rem; }
+    .grid-3 { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:1rem; }
+    .kicker { font-family:var(--sans); font-size:.8rem; color:var(--muted); margin:-.1rem 0 .55rem; }
+    .btn-row { display:flex; flex-wrap:wrap; gap:.6rem; margin-top:.9rem; }
+    .btn { display:inline-block; padding:.52rem .88rem; border-radius:10px; border:1px solid var(--line); background:var(--accent-soft); color:var(--bright); font-size:.85rem; font-weight:700; }
+    .btn:hover { text-decoration:none; border-color:rgba(126,195,255,.45); }
+    table { width:100%; border-collapse:collapse; font-size:.95rem; }
+    th, td { text-align:left; padding:.7rem .75rem; vertical-align:top; border-top:1px solid var(--line); }
+    th { color:var(--bright); font-size:.82rem; letter-spacing:.04em; text-transform:uppercase; }
+    td { color:var(--text); }
+    .table-wrap { overflow:auto; margin-top:.8rem; }
+    footer { margin-top:2rem; color:var(--muted); font-family:var(--sans); font-size:.84rem; }
+    @media (max-width: 820px) {
+      main { width:min(100vw - 24px, 980px); padding:1.5rem 0 3rem; }
+      .grid, .grid-3 { grid-template-columns:1fr; }
+      .hero, .card, .note { padding:.92rem .95rem; border-radius:16px; }
+      th, td { min-width: 180px; }
     }
   </style>
 </head>
 <body>
-  <div class="shell">
-    <header class="topbar">
-      <a class="brand" href="../">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>OpenClawBrain</span>
-      </a>
-      <nav class="nav-links" aria-label="Primary">
-        <a href="../">Home</a>
-        <a href="./">Proof</a>
-        <a href="../blog/">Blog</a>
-        <a href="../docs/worked-example.md">Worked Example</a>
-        <a href="../paper/">Paper</a>
-      </nav>
-    </header>
+  <main>
+    <div class="nav"><a href="/">home</a><a href="/proof/">proof</a><a href="/docs/reproduce-eval.md">reproduce</a><a href="/docs/worked-example.md">worked example</a><a href="/blog/">blog</a></div>
+    <section class="hero">
+      <div class="pill">Proof package</div>
+      <h1>Start with the public repo proof that exists now.</h1>
+      <p>OpenClawBrain proves the promoted-pack/runtime integration boundary and a set of reproducible repo-local proof lanes. Brain Ground Zero proves the broader comparative benchmark families and the route-function / <code>QTsim</code> story. Shadow and live rollout claims remain future-only until matching artifacts are published.</p>
+      <div class="btn-row"><a class="btn" href="/docs/reproduce-eval.md">Reproduce current lanes</a><a class="btn" href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">Read claim boundary</a><a class="btn" href="https://github.com/jonathangu/openclawbrain/blob/main/proof/customer-value/README.md">Open customer-value bundle</a></div>
+    </section>
 
-    <main>
-      <section class="hero">
-        <div class="hero-copy">
-          <div class="eyebrow">Evidence package</div>
-          <h1>Proof package.</h1>
-          <p class="lead">
-            Two published benchmark families anchor the evidence: recorded-session head-to-head (0.975 vs 0.896, +7.9 pp) and sparse-feedback 10-seed (91.96% vs 67.05%, +24.91 pp). Both are comparative evidence on frozen workloads, not live production claims.
-          </p>
-          <div class="cta-row">
-            <a class="btn btn-primary" href="#recorded-session">Recorded-session H2H</a>
-            <a class="btn btn-secondary" href="#sparse-feedback">Sparse-feedback proof</a>
-            <a class="btn btn-secondary" href="#worked-turn">Worked-turn trace</a>
-            <a class="btn btn-secondary" href="../docs/reproduce-eval.md">Reproduce instructions</a>
-          </div>
-          <p class="hero-note">
-            Shadow and online claims are published only when matching production artifacts exist.
-          </p>
-        </div>
+    <div class="grid-3">
+      <article class="card"><div class="kicker">Current OCB proof</div><h3>Repo-local proof lanes</h3><p><code>pnpm customer-value-proof:smoke</code>, <code>pnpm recorded-session-replay:report</code>, <code>pnpm eval:ocb-native:smoke</code>, <code>pnpm observability:report</code>, and <code>pnpm release:status</code> are the current in-repo truth anchors.</p></article>
+      <article class="card"><div class="kicker">External BGZ proof</div><h3>Comparative benchmark families</h3><p>The broader recorded-session and sparse-feedback bundles live in Brain Ground Zero. Use them as linked benchmark evidence, not as proof that the OCB repo locally reproduces the whole story.</p></article>
+      <article class="card"><div class="kicker">Future-only</div><h3>Shadow and live traffic</h3><p>Mirrored production traffic, disagreement traces, online rollout metrics, and broad answer-quality wins still need their own published artifacts.</p></article>
+    </div>
 
-        <div class="hero-panel">
-          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.34); background: rgba(156, 224, 188, 0.08);">
-            <div class="kicker">Latest benchmark families</div>
-            <h2>Recorded-session and sparse-feedback are now both published</h2>
-            <ul>
-              <li><strong>Recorded-session:</strong> <code>recorded_h2h_relational_drift_001</code> (800 queries, 41 steps, 8 baselines), <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp).</li>
-              <li><strong>Sparse-feedback (10 seeds):</strong> <code>proof-results/sparse_feedback_10seed</code> with <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), ~5x smaller context/query, and 9-1 head-to-head over <code>vector_rag_rerank</code>.</li>
-            </ul>
-          </article>
+    <h2>Current OpenClawBrain proof ladder</h2>
+    <div class="grid">
+      <article class="card"><h3>Worked-turn boundary</h3><p><a href="/docs/worked-example.md">docs/worked-example.md</a> shows the minimal turn shape: compile from the promoted pack, prompt assembly in OpenClaw, off-path event export, and later learner refresh.</p></article>
+      <article class="card"><h3>Customer-value bundle</h3><p>The checked-in customer-value bundle is the strongest external-friendly OCB artifact for the current technical-alpha wave because it shows later served turns improving only after refresh and promotion.</p><p><a href="https://github.com/jonathangu/openclawbrain/blob/main/proof/customer-value/README.md">proof/customer-value/README.md</a></p></article>
+      <article class="card"><h3>Recorded replay + OCB-native eval</h3><p>Recorded-session replay and the OCB-native comparative eval are the current repo-local way to show deterministic later-turn improvement and compile-path proxy tradeoffs without pretending broad benchmark closure.</p></article>
+      <article class="card"><h3>Observability + release truth</h3><p>Use <code>pnpm observability:report</code> and <code>pnpm release:status</code> to keep active/candidate/previous state, learned-route evidence, and launch-tier language machine-checkable.</p></article>
+    </div>
 
-          <div class="status-grid">
-            <article class="status-card" id="proven-now">
-              <div class="kicker">Proven now</div>
-              <h2>Mechanism, integration shape, two benchmark families, and local reproducibility</h2>
-              <ul>
-                <li>Deterministic simulations and ablations show the routing and learning loop behaves as intended.</li>
-                <li>A worked OpenClaw turn shows stable <code>turn_id</code>, bounded compiled context, and feedback captured against the route that fired.</li>
-                <li>Recorded-session head-to-head: 800 queries, 41 steps, 8 baselines. <code>full_brain</code> accuracy 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp).</li>
-                <li>Sparse-feedback 10-seed family: <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), with ~5x smaller context per query.</li>
-                <li>The figure-generation and eval harness paths are explicit enough to rerun and inspect locally.</li>
-              </ul>
-            </article>
+    <h2>Supporting benchmark bundles in Brain Ground Zero</h2>
+    <div class="grid">
+      <article class="card"><div class="kicker">BGZ benchmark bundle</div><h3><code>recorded_h2h_relational_drift_001</code></h3><p>Recorded-session head-to-head bundle. Useful as external benchmark context; not the same thing as the current OCB repo-local proof surface.</p><p><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">Open bundle</a></p></article>
+      <article class="card"><div class="kicker">BGZ benchmark bundle</div><h3><code>sparse_feedback_10seed</code></h3><p>Sparse-feedback 10-seed bundle. Useful for broader comparative context and the <code>QTsim</code> narrative; not a locally reproduced OCB proof lane.</p><p><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">Open bundle</a></p></article>
+    </div>
 
-            <article class="status-card">
-              <div class="kicker">Additional evidence layers</div>
-              <h2>Fixed-session, shadow, and online validation artifacts</h2>
-              <ul>
-                <li>For fixed-session head-to-head claims, publish runs with the same state, query set, and rubric across all modes.</li>
-                <li>For sparse-feedback claims, publish seed-level tables plus context/query and traversal/query budgets per mode.</li>
-                <li>For shadow-mode claims, publish mirrored OpenClaw traffic comparisons with saved disagreement traces.</li>
-                <li>For narrow online rollout claims, publish success, corrections, prompt size, latency, and cost artifacts.</li>
-              </ul>
-            </article>
-          </div>
+    <h2>Use the same words everywhere</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Label</th><th>Use it for</th><th>Do not turn it into</th></tr></thead>
+        <tbody>
+          <tr><td>Current repo-tip truth</td><td>public repo packages, promoted-pack compile, tarball install lane, checked-in proof lanes</td><td>registry publication, live traffic wins, or active-pack runtime mutation</td></tr>
+          <tr><td>Target end shape</td><td>where docs and paper-alignment point next: stronger launch tiers, publish lane, supplement→shadow→replace rollout</td><td>a statement that those artifacts already exist now</td></tr>
+          <tr><td>BGZ proof</td><td>broader recorded-session, sparse-feedback, and route-function / <code>QTsim</code> benchmark families</td><td>a claim that the OCB repo reproduces the entire BGZ story locally</td></tr>
+          <tr><td>Future shadow/live</td><td>mirrored traffic, disagreement traces, online rollout, real operator outcomes</td><td>something the site can publish before those artifacts are real</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-          <figure class="figure-card">
-            <div class="kicker">Workflow-proof artifact</div>
-            <img src="../figures/eval/workflow_proof_exact_target_success.svg" alt="Bar chart showing exact-target success across the deterministic workflow proof modes: vector_topk zero out of four, pointer_chase one out of four, graph_prior_only two out of four, and learned four out of four">
-            <figcaption>
-              Exact-target success on the same 4 deterministic workflow queries: <code>vector_topk</code> 0/4, <code>pointer_chase</code> 1/4, <code>graph_prior_only</code> 2/4, <code>learned</code> 4/4. Totals come from <code>baseline_eval/summary.csv</code>; the scenario-by-mode prompt-context evidence now lives in <code>report.md</code>, <code>per_query_matrix.csv</code>, and <code>per_query_matrix.md</code>. Reproduce from <a href="../docs/reproduce-eval.md">docs/reproduce-eval.md</a>; compare the turn-level contract in the <a href="../docs/worked-example.md">worked example</a>.
-            </figcaption>
-          </figure>
-
-          <article class="status-card" id="claim-boundary">
-            <div class="kicker">Claim labels</div>
-            <h2>Use the same words everywhere</h2>
-            <ul>
-              <li><strong>Proven now</strong>: the artifact already exists and can be rerun or inspected.</li>
-              <li><strong>Requires comparative artifacts</strong>: the claim depends on fixed recorded sessions, shadow traffic, or online slices.</li>
-              <li><strong>Not claimed</strong>: there is no matching artifact yet, so the site should not imply certainty.</li>
-            </ul>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="worked-turn">
-        <div class="section-head">
-          <div>
-            <h2>Worked-turn artifact (inspectable proof unit)</h2>
-            <p class="section-intro">Before aggregate benchmark numbers, inspect one OpenClaw-shaped turn with stable IDs and saved outputs. This makes the evidence contract concrete at turn level: what was known now, what changed later, and what is not implied.</p>
-          </div>
-        </div>
-        <div class="two-col">
-          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
-            <div class="kicker">Trace from published worked example</div>
-            <h2>Stable <code>turn_id</code>, bounded context, same-turn correction</h2>
-            <pre class="trace-snippet"><code>turn_id: oc-main-2026-03-06-deploy-0142
-summary: deploy note for billing banner patch...
-[COMPILED_CONTEXT v1]
-- freeze window + rollback owner requirement
-- prior correction: no auto-approval language
-[/COMPILED_CONTEXT]
-correction: internal-only patch -> no support contact</code></pre>
-            <p class="meta">
-              Source artifact: <a href="../docs/worked-example.md">docs/worked-example.md</a>. The same <code>turn_id</code> ties compile output, correction event capture, and learner outcome.
-            </p>
-          </article>
-
-          <article class="status-card">
-            <div class="kicker">Proof ladder placement</div>
-            <h2>Turn-level traceability comes before score tables</h2>
-            <ul>
-              <li><strong>Proves now:</strong> one exact turn can be inspected end to end with saved evidence fields.</li>
-              <li><strong>Connects to ladder:</strong> benchmark rows only matter when they can be grounded in this same traceability contract.</li>
-              <li><strong>Does not prove:</strong> live production answer quality, shadow-mode outcomes, or online rollout success.</li>
-              <li><strong>Replay boundary:</strong> route updates from correction capture appear on later served turns only after replay/harvest/maintain and cutover.</li>
-            </ul>
-            <p class="meta">
-              Next steps in this page: <a href="#recorded-session">recorded-session head-to-head</a> and <a href="#sparse-feedback">sparse-feedback 10-seed</a> benchmark artifacts.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="workflow-proof">
-        <div class="section-head">
-          <div>
-            <h2>Published workflow-proof slice</h2>
-            <p class="section-intro">This deterministic harness is intentionally narrow: it checks whether the exact required history or runbook nodes reach prompt context for 4 fixed workflow queries, then measures whether background teacher supervision improves the served local route policy without putting teacher calls on the hot path.</p>
-          </div>
-        </div>
-        <div class="two-col">
-          <figure class="figure-card">
-            <div class="kicker">Learning curve</div>
-            <img src="../figures/eval/workflow_proof_learning_curve.svg" alt="Line chart showing graph_prior_only exact-target success staying at fifty percent while learned routing reaches one hundred percent at epoch fourteen">
-            <figcaption>
-              <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs. <code>learned</code> stays at 2/4 through epoch 13, reaches 4/4 at epoch 14, and stays there through epoch 16. Source: <code>learning_curve.csv</code>. Inspect the scenario rows in <code>per_query_matrix.csv</code> and <code>per_query_matrix.md</code> from <a href="../docs/reproduce-eval.md">docs/reproduce-eval.md</a>; keep the product boundary aligned with the <a href="../docs/worked-example.md">worked example</a>.
-            </figcaption>
-          </figure>
-
-          <article class="status-card">
-            <div class="kicker">What this artifact establishes</div>
-            <h2>Useful from graph priors, better after background learning</h2>
-            <ul>
-              <li>Cold-start graph priors already recover both required nodes on 2 of the 4 fixed workflow queries.</li>
-              <li><code>per_query_matrix.csv</code> and <code>per_query_matrix.md</code> flatten the slice into 16 deterministic scenario-by-mode rows with required node IDs, prompt-context node IDs, exact-target success, required coverage, and pointer turns.</li>
-              <li>The learned route policy improves later, off the hot path, and reaches exact-target success 4/4 by epoch 14 with required coverage 1.00.</li>
-              <li><code>pointer_chase</code> averages 1.25 turns and still only reaches 1/4 exact-target success in this harness.</li>
-            </ul>
-            <p class="meta">
-              The matrix proves which memory nodes reached prompt context inside the deterministic sim. It does not prove downstream answer quality, recorded-session task success, scanner/harvester label quality on live histories, or production latency and cost on served OpenClaw traffic.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="recorded-session">
-        <div class="section-head">
-          <div>
-            <h2>Recorded-session head-to-head</h2>
-            <p class="section-intro">The first fair comparison layer: a frozen query set, fixed state, and one rubric applied to all modes. This is benchmark evidence from a recorded session, not a live production answer-quality claim.</p>
-          </div>
-        </div>
-        <div class="two-col">
-          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
-            <div class="kicker">Benchmark result</div>
-            <h2><code>recorded_h2h_relational_drift_001</code>: 0.975 vs 0.896</h2>
-            <ul>
-              <li>800 queries, 41 training steps, 8 baselines compared.</li>
-              <li><code>full_brain</code> accuracy: <strong>0.975</strong></li>
-              <li><code>vector_rag_rerank</code> (best baseline): <strong>0.89625</strong></li>
-              <li>Delta: <strong>+7.9 percentage points</strong></li>
-            </ul>
-            <p class="meta">
-              Public bundle: <code>proof-results/recorded_h2h_relational_drift_001</code> in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> at commit <code>1c54302</code>.
-            </p>
-          </article>
-
-          <article class="status-card">
-            <div class="kicker">Proof boundary</div>
-            <h2>What this does and does not prove</h2>
-            <ul>
-              <li>This is a recorded-session benchmark: frozen queries, fixed state, deterministic rubric.</li>
-              <li>It proves comparative accuracy on a controlled head-to-head with 8 baselines.</li>
-              <li>It does <strong>not</strong> prove live production answer quality, shadow-mode wins, or online rollout outcomes.</li>
-              <li>The next rungs on the evidence ladder are shadow-mode and narrow online rollout.</li>
-            </ul>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="sparse-feedback">
-        <div class="section-head">
-          <div>
-            <h2>Sparse-feedback proof family (10 seeds)</h2>
-            <p class="section-intro">The next major fixed-workload comparison family: sparse supervision over 10 seeds with shared evaluation conditions. This is still benchmark evidence on frozen workloads, not live production serving evidence.</p>
-          </div>
-        </div>
-        <div class="two-col">
-          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
-            <div class="kicker">Benchmark result</div>
-            <h2><code>full_brain</code> 91.96% vs best RAG 67.05%</h2>
-            <ul>
-              <li>10-seed sparse-feedback head-to-head family.</li>
-              <li><code>full_brain</code> average accuracy: <strong>91.96%</strong></li>
-              <li>Best RAG baseline average: <strong>67.05%</strong></li>
-              <li>Delta: <strong>+24.91 percentage points</strong></li>
-              <li>Efficiency: <strong>~5x smaller context/query</strong></li>
-              <li>Pairwise: <strong>9-1 over <code>vector_rag_rerank</code></strong></li>
-            </ul>
-            <p class="meta">
-              Public bundle: <code>proof-results/sparse_feedback_10seed</code> in <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">brain-ground-zero</a> (run date 2026-03-07). Reproduce entrypoint: <code>./scripts/run_sparse_feedback_proof.sh</code>.
-            </p>
-          </article>
-
-          <article class="status-card">
-            <div class="kicker">Proof boundary</div>
-            <h2>What this does and does not prove</h2>
-            <ul>
-              <li>This proves strong comparative accuracy and efficiency under sparse-feedback benchmark conditions.</li>
-              <li>It strengthens confidence that learned routing remains robust with reduced supervision density.</li>
-              <li>It does <strong>not</strong> prove live production answer quality, live latency wins, or online rollout outcomes yet.</li>
-              <li>Shadow-mode and narrow online artifacts remain the next required rungs for those claims.</li>
-            </ul>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="evidence-ladder">
-        <div class="section-head">
-          <div>
-            <h2>Evidence ladder</h2>
-            <p class="section-intro">Each step answers a different question. Start at turn-level traceability, then move upward to fixed-workload benchmark comparisons. Do not collapse simulation, recorded-session, sparse-feedback, shadow, and online evidence together.</p>
-          </div>
-        </div>
-        <div class="ladder-grid">
-          <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
-            <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">0</div>
-            <h3>Worked-turn trace</h3>
-            <p>One stable-turn artifact with inbound summary, <code>turn_id</code>, bounded compiled context, answer trace, correction capture, and learner outcome linkage.</p>
-            <div class="meta">This rung is reached. Inspect <a href="#worked-turn">worked-turn evidence</a> or open <a href="../docs/worked-example.md">docs/worked-example.md</a>.</div>
-          </article>
-          <article class="ladder-card">
-            <div class="step">1</div>
-            <h3>Mechanism proof</h3>
-            <p>Run deterministic simulations and ablations to show the learned router and confidence gate improve under controlled conditions.</p>
-            <div class="meta">This proves mechanism behavior and integration conformance. It does not, by itself, prove comparative product superiority.</div>
-          </article>
-          <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
-            <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">2</div>
-            <h3>Recorded-session head-to-head</h3>
-            <p>800 queries, 41 steps, 8 baselines. <code>full_brain</code> accuracy 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp). Public bundle: <code>proof-results/recorded_h2h_relational_drift_001</code>.</p>
-            <div class="meta">This rung is reached. Evidence is benchmark/recorded-session, not live production.</div>
-          </article>
-          <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
-            <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">3</div>
-            <h3>Sparse-feedback 10-seed family</h3>
-            <p><code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), ~5x smaller context/query, and 9-1 over <code>vector_rag_rerank</code>.</p>
-            <div class="meta">This rung is reached for benchmark conditions. Evidence is still fixed-workload benchmark evidence.</div>
-          </article>
-          <article class="ladder-card">
-            <div class="step">4</div>
-            <h3>Shadow mode</h3>
-            <p>Mirror real OpenClaw traffic without serving it yet. Keep the same output budget and save disagreement traces, prompt size, latency, and cost logs.</p>
-            <div class="meta">This hardens comparative evidence before live serving.</div>
-          </article>
-          <article class="ladder-card">
-            <div class="step">5</div>
-            <h3>Narrow online rollout</h3>
-            <p>Enable the brain for a small traffic slice, keep fail-open behavior, and only publish claims backed by the saved artifacts from that slice.</p>
-            <div class="meta">This is product proof, not simulation proof.</div>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="artifact-checklist">
-        <div class="section-head">
-          <div>
-            <h2>Artifact checklist</h2>
-            <p class="section-intro">If a claim is cited on the site, the matching artifact bundle should exist. This is the minimum useful retention policy.</p>
-          </div>
-        </div>
-        <div class="check-grid">
-          <article class="check-card">
-            <div class="kicker">Worked turn</div>
-            <h3>One traceable operator turn</h3>
-            <ul>
-              <li>Stable <code>turn_id</code> and inbound summary</li>
-              <li>Exact activation + compile parameters</li>
-              <li>Returned bounded compiled context block</li>
-              <li>Response trace or answer text</li>
-              <li>Correction event and learner outcome output</li>
-            </ul>
-          </article>
-          <article class="check-card">
-            <div class="kicker">Simulation run</div>
-            <h3>Mechanism artifact bundle</h3>
-            <ul>
-              <li>Exact command and config</li>
-              <li>Commit SHA and seed</li>
-              <li>Output directory</li>
-              <li>Generated JSON, SVG, and PNG artifacts</li>
-              <li>Figure paths cited by the site</li>
-            </ul>
-          </article>
-          <article class="check-card">
-            <div class="kicker">Head-to-head</div>
-            <h3>Frozen recorded and sparse-feedback evals</h3>
-            <ul>
-              <li>Query/session-set path plus digest and seed list</li>
-              <li>State snapshot identifier</li>
-              <li>Rubric version and per-mode outputs</li>
-              <li>Per-query judgments</li>
-              <li>Per-seed summary plus context/query budgets</li>
-              <li>Sampled worked-turn bundles</li>
-            </ul>
-          </article>
-          <article class="check-card">
-            <div class="kicker">Shadow or online</div>
-            <h3>Same-turn comparison data</h3>
-            <ul>
-              <li>Traffic slice and dates</li>
-              <li>Brain-off and brain-on outputs</li>
-              <li>Prompt, latency, and cost logs</li>
-              <li>Saved disagreement traces</li>
-              <li>Rollout window and fallback policy</li>
-            </ul>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="proof-kit">
-        <div class="section-head">
-          <div>
-            <h2>Proof kit</h2>
-            <p class="section-intro">The HTML page is the packaged overview. These source docs and references stay intact underneath it.</p>
-          </div>
-        </div>
-        <div class="kit-grid">
-          <a class="kit-card" href="../docs/worked-example.md">
-            <div class="kicker">Concrete trace</div>
-            <h3>Worked example</h3>
-            <p>One OpenClaw turn with stable <code>turn_id</code>, bounded compiled context, same-turn correction capture, and later replay boundaries.</p>
-          </a>
-          <a class="kit-card" href="../docs/openclaw-integration.md">
-            <div class="kicker">Rollout guide</div>
-            <h3>OpenClaw integration</h3>
-            <p>Brain-first mode, fail-open wiring, bounded prompt context, and the background learning loop that serves later turns.</p>
-          </a>
-          <a class="kit-card" href="../paper/">
-            <div class="kicker">Paper</div>
-            <h3>Paper + PDF</h3>
-            <p>The canonical paper page, direct PDF, and supporting materials for the settled architecture and evidence contract.</p>
-          </a>
-          <a class="kit-card" href="../blog/v12.2.6-series/">
-            <div class="kicker">Blog series</div>
-            <h3>Product narrative</h3>
-            <p>The architecture narrative, end to end: OpenClaw-owned runtime, OpenClawBrain artifact pipeline, proof boundaries, and operator rollout.</p>
-          </a>
-          <a class="kit-card" href="../docs/reproduce-eval.md">
-            <div class="kicker">Raw commands</div>
-            <h3>Reproduce-eval doc</h3>
-            <p>The step-by-step markdown contract for package-first simulations, recorded-session + sparse-feedback eval families, shadow comparisons, and figure generation.</p>
-          </a>
-          <a class="kit-card" href="../blog/v12.2.6-series/03-evaluation-ablations/">
-            <div class="kicker">Evaluation post</div>
-            <h3>What simulations do and do not prove</h3>
-            <p>The series entry that states the proof boundary directly, without pretending simulation wins are already product wins.</p>
-          </a>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="callout">
-          <p>
-            This page packages the claim boundary for fast review. The markdown docs remain the canonical step-by-step references. The packaging goal is clarity: which artifacts establish the shipped architecture, which claims already have published benchmark evidence now (recorded-session and sparse-feedback), and which claims still require shadow/online artifacts before publication.
-          </p>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      OpenClawBrain proof should stay aligned with the finished product boundary: OpenClaw owns runtime, OpenClawBrain owns memory and learning artifacts, and claims rise only as published evidence rises.
-    </footer>
-  </div>
+    <h2>Launch-tier truth</h2>
+    <p>Launch language should follow the machine-readable output from <code>pnpm release:status</code> and the release-proof manifest. For the current wave, that means technical-alpha wording is the safe default unless the repo itself shows stronger eligibility.</p>
+    <footer>Audited against the public `openclawbrain` repo and linked `brain-ground-zero` proof repo as of March 7, 2026.</footer>
+  </main>
 </body>
 </html>

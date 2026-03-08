@@ -1,113 +1,131 @@
-# OpenClaw Integration (TypeScript replacement)
+# OpenClaw Integration
 
-OpenClawBrain is integrated as a TypeScript package set behind an OpenClaw-owned runtime boundary.
-
-Primary docs:
-- setup path: [docs/setup-guide.md](setup-guide.md)
-- operator runbook: [docs/operator-guide.md](operator-guide.md)
-- operational playbooks: [docs/ops-recipes.md](ops-recipes.md)
-- new agent onboarding SOP: [docs/new-agent-sop.md](new-agent-sop.md)
+OpenClawBrain integrates with OpenClaw through a narrow promoted-pack boundary.
 
 ## Integration contract
 
-OpenClaw and OpenClawBrain have separate responsibilities.
+OpenClaw keeps the hot path: session flow, prompt assembly, response delivery, and fail-open serving.
 
-### OpenClaw owns
+OpenClawBrain supplies the learning side of the boundary:
 
-- runtime orchestration and lifecycle
-- fail-open behavior on brain degradation
-- request/response hot path and prompt assembly
-- deployment, routing, and rollback controls
+- normalized event contracts
+- deterministic event export and provenance
+- immutable pack materialization
+- activation staging/promotion
+- promoted-pack compilation with learned-route diagnostics
 
-### OpenClawBrain owns
+Today that learning boundary refreshes candidate packs behind the hot path. The current code does not prove in-place mutation of the active pack during serving.
 
-- contracts and event schemas
-- event normalization/export boundaries
-- workspace metadata extraction
-- provenance capture
-- pack format + activation helpers
-- compiler and learner behavior
+`describeAttachStatus()` in `@openclawbrain/openclaw` exposes this as `landingBoundaries` so the attach surface can state the real handoff instead of implying hidden runtime overlap.
 
-This split is intentional: OpenClaw remains the serving runtime; OpenClawBrain provides the memory/learning substrate.
+## Top invariant
 
-## Public package surface
+The promoted pack is the only supported artifact OpenClaw should compile from.
 
-Runtime integrations should be built from this package set:
+If that pack's manifest says learned routing is required, compilation must use the pack's learned `route_fn`, expose `routerIdentity`, and report `usedLearnedRouteFn=true`.
 
-- `@openclawbrain/contracts`
-- `@openclawbrain/events`
-- `@openclawbrain/event-export`
+## Exact landing path
+
+The concrete landing sequence into OpenClaw is:
+
+1. OpenClaw calls `compileRuntimeContext()` or `runRuntimeTurn()` from `@openclawbrain/openclaw`.
+2. That bridge resolves activation's `active` pointer and calls `@openclawbrain/compiler.compileRuntimeFromActivation()`.
+3. Compiler serves only from the active promoted pack and emits learned-route / fallback diagnostics.
+4. `runRuntimeTurn()` separately emits normalized interaction / feedback artifacts for learner handoff.
+5. Learner materializes fresher candidate packs off the hot path.
+6. Activation stages and promotes only activation-ready candidates.
+7. Later OpenClaw compiles see the fresher pack only after promotion flips the pointers.
+
+Boundary-by-boundary, that means:
+
+- `compile boundary`: promoted active pack only; candidate packs are never served before promotion
+- `event export boundary`: turn export is a side-channel handoff for later learning, not an in-place mutation of the active pack
+- `active pack boundary`: `active` is compile-visible; `candidate` and `previous` are inspectable for promotion / rollback only
+- `promotion boundary`: freshness advances by staging then promoting a newer candidate, not by mutating the currently served pack
+- `fail-open semantics`: missing active packs fail open; learned-required route-artifact drift hard-fails; event-export write failures do not erase successful compile output
+- `runtime ownership`: OpenClaw remains responsible for session/runtime orchestration, prompt assembly, response delivery, and the final guarded serve-path decision
+
+## Migration from heavy raw workspace injection
+
+If your current OpenClaw integration still pushes a large raw workspace dump into every turn, do not jump straight to full replacement.
+
+Use this sequence instead:
+
+1. supplement the current raw injection with promoted-pack compile
+2. shadow-compare the compiled result and freshness diagnostics
+3. replace one bounded memory-like slice at a time
+4. end with a tiny direct kernel plus compiled brain memory
+
+That rollout keeps the promoted-pack boundary truthful: the active pack is still the only compile-visible artifact, candidate freshness stays off the hot path until promotion, and learned-required route evidence remains explicit.
+
+The detailed migration checklist lives in [raw-workspace-migration.md](https://github.com/jonathangu/openclawbrain/blob/main/docs/raw-workspace-migration.md).
+
+## Minimal package surface
+
+For the current wave, do not assume bare registry install.
+Use the repo tip plus `.release/` tarballs unless `pnpm release:status` shows a matching release tag on `HEAD` and the later publish lane has completed.
+
+When that later lane is live, start with the narrow package set:
+
+```bash
+pnpm add @openclawbrain/contracts @openclawbrain/events @openclawbrain/event-export @openclawbrain/learner @openclawbrain/activation @openclawbrain/compiler
+```
+
+Add these when needed:
+
+- `@openclawbrain/pack-format`
 - `@openclawbrain/workspace-metadata`
 - `@openclawbrain/provenance`
-- `@openclawbrain/pack-format`
-- `@openclawbrain/activation`
-- `@openclawbrain/compiler`
-- `@openclawbrain/learner`
+- `@openclawbrain/openclaw` for the typed OpenClaw bridge package itself
+
+The supported public integration boundary is the versioned `@openclawbrain/*` package set plus versioned fixtures under `contracts/`.
 
 ## Bring-up sequence
 
-From the TypeScript workspace root:
+From the repo root:
 
 ```bash
 corepack enable
-pnpm install
+pnpm install --frozen-lockfile
 pnpm check
+pnpm release:status
 pnpm release:pack
 ```
 
-OpenClaw runtime then deploys the released pack set in its own environment.
+## Proofs available in this repo today
 
-## Runtime behavior (default)
+Use the built-in smoke lanes:
 
-### Hot path (serving)
+```bash
+pnpm lifecycle:smoke
+pnpm observability:smoke
+```
 
-1. OpenClaw receives a user turn.
-2. OpenClaw calls the learned route function from the deployed pack set.
-3. OpenClaw assembles prompt context from selected activations.
-4. OpenClaw serves response.
+These prove:
 
-### Off path (asynchronous)
+- pack materialization from normalized inputs
+- activation staging and promotion
+- compilation against promoted packs
+- learned `route_fn` evidence and explicit fallback notes
+- operator-facing health and freshness diagnostics
 
-- new events are normalized and harvested continuously
-- scanner flow runs continuously against workspace/event streams
-- human and self labels are harvested by default
-- continuous graph learning runs by default:
-  - decay
-  - Hebbian co-firing
-  - structural graph updates
+They run against the public package surface in this repo and temporary activation state. The central local proof is still learned `route_fn` usage at the promoted-pack boundary.
 
-Teacher logic remains off the hot path and updates behavior asynchronously.
-
-## Fast boot model
-
-Fast boot from existing files is the default operating mode:
-
-- no full fresh-state scan gate before serving
-- runtime can start from available workspace files and prior exports
-- background learning backfills historical data while new data is prioritized first
-
-This keeps startup practical even with large historical archives.
+Broader comparative benchmark families and the route-function / `QTsim` proof story live in the sibling public repo `brain-ground-zero`. See `CLAIMS.md` for the exact split.
 
 ## Failure semantics
 
-Integration must remain fail-open:
+Integration stays fail-open, but only within the actual served-boundary rules:
 
-- if a learning/scanner/harvest worker is delayed, OpenClaw still serves
-- if brain quality degrades, OpenClaw falls back to core runtime behavior
-- recovery happens via background loops and pack roll-forward/rollback
+- OpenClaw continues serving if learning or artifact refresh is delayed
+- missing active packs and non-learned-required compile misses can fall back explicitly
+- learned-required route-artifact drift is a hard serve-path failure, not a silent fallback case
+- event-export bundle write failures do not erase successful compile output
+- learning, harvesting, structural graph updates, and pack refresh stay off the hot path and land through candidate-pack promotion
 
-## Proof boundary (required)
+## Related docs
 
-Keep proofs honest:
-
-- mechanism proof: contracts compile, events normalize correctly, provenance is intact, route function evaluates deterministically
-- product proof: user-visible quality, error reduction, correction retention, and reliability under live traffic
-
-Mechanism proof is required but not sufficient for product claims.
-
-## What to avoid
-
-- Python daemon/socket lifecycle as integration shape
-- adapter-CLI-on-hot-path architecture as default model
-- migration framing that treats the TypeScript package model as temporary
-- full-history replay gating before first useful response
+- [openclaw-attach-quickstart.md](https://github.com/jonathangu/openclawbrain/blob/main/docs/openclaw-attach-quickstart.md)
+- [operator-observability.md](https://github.com/jonathangu/openclawbrain/blob/main/docs/operator-observability.md)
+- [reproduce-eval.md](reproduce-eval.md)
+- [learning-first-convergence.md](https://github.com/jonathangu/openclawbrain/blob/main/docs/learning-first-convergence.md)

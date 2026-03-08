@@ -3,214 +3,98 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Post 3: Evaluation - Prove It Without Pretending</title>
+  <title>Post 3: Mechanism, Benchmark, Shadow, and Live Claims</title>
+  <meta name="description" content="Proof-ladder note for OpenClawBrain, clarifying current OCB proof, external BGZ benchmark proof, and future shadow/live claims." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/03-evaluation-ablations/" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
   <style>
-    :root { --bg:#0f1815; --panel:rgba(16,29,24,0.86); --line:rgba(122,226,191,0.2); --text:#d9e9e4; --muted:#a2bbb3; --bright:#f5fffb; --accent:#7ae2bf; --sans:"Space Grotesk",sans-serif; --serif:"Newsreader",serif; --mono:"IBM Plex Mono",monospace; }
+    :root {
+      --bg:#0a1018;
+      --bg2:#0d1623;
+      --panel:#121c2b;
+      --panel-soft:#101925;
+      --text:#d8e2f0;
+      --muted:#96a7bf;
+      --bright:#f4f8ff;
+      --line:rgba(130,164,214,.24);
+      --accent:#7ec3ff;
+      --accent-soft:rgba(126,195,255,.12);
+      --warn:#ffcf86;
+      --sans:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --serif:"Crimson Pro",Georgia,serif;
+      --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+      --radius:18px;
+    }
     * { box-sizing:border-box; }
-    body { margin:0; background:radial-gradient(circle at 100% 0%, rgba(122,226,191,0.16), transparent 28%), linear-gradient(180deg,#0f1815 0%,#111d19 55%,#0f1815 100%); color:var(--text); font-family:var(--serif); line-height:1.82; }
-    a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
-    main { width:min(920px,calc(100vw - 32px)); margin:0 auto; padding:2rem 0 3rem; }
-    .nav,.meta,.eyebrow { font-family:var(--sans); }
-    .nav { color:var(--muted); font-size:.88rem; margin-bottom:1rem; }
-    .eyebrow { display:inline-flex; padding:.38rem .68rem; border-radius:999px; border:1px solid rgba(122,226,191,0.18); background:rgba(122,226,191,0.08); color:var(--accent); font-size:.76rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; }
-    h1,h2,h3 { font-family:var(--sans); color:var(--bright); }
-    h1 { margin:.95rem 0 .4rem; font-size:clamp(2rem,4.1vw,3.15rem); line-height:1.02; letter-spacing:-.04em; max-width:13ch; }
-    h2 { margin:1.5rem 0 .6rem; font-size:1.24rem; }
-    p { margin:0 0 1rem; }
-    .meta { color:var(--muted); font-size:.84rem; margin-bottom:1rem; }
-    .card, figure { border:1px solid var(--line); border-radius:22px; background:var(--panel); box-shadow:0 18px 56px rgba(0,0,0,.28); min-width: 0; }
-    .card { padding:1rem 1.05rem; margin:1rem 0; }
-    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; margin:1rem 0; }
-    figure { padding:1rem; margin:1rem 0 1.25rem; }
-    figure img { width:100%; border-radius:16px; border:1px solid rgba(122,226,191,0.14); background:#12201c; }
-    figcaption { margin-top:.65rem; color:var(--muted); font-family:var(--sans); font-size:.84rem; }
-    ul,ol { padding-left:1.2rem; }
-    .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:1rem 0; border-radius:14px; }
-    table { width:100%; border-collapse:collapse; margin:0; font-family:var(--sans); }
-    th,td { border:1px solid rgba(122,226,191,0.14); padding:.6rem .68rem; text-align:left; vertical-align:top; }
-    th { color:var(--bright); background:rgba(12,24,20,0.88); }
-    code { font-family:var(--mono); color:#aef0d4; background:rgba(174,240,212,0.08); padding:.12rem .32rem; border-radius:6px; white-space:normal; }
-    main :is(p, li, a, code, h1, h2, h3, .meta, .nav, .eyebrow, th, td, figcaption) { overflow-wrap:anywhere; word-break:normal; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0;
+      color:var(--text);
+      font-family:var(--serif);
+      line-height:1.75;
+      background:
+        radial-gradient(circle at 20% -10%, rgba(126,195,255,.18), transparent 34%),
+        radial-gradient(circle at 82% 0%, rgba(255,207,134,.10), transparent 28%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
+    }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    main { width:min(980px, calc(100vw - 32px)); margin:0 auto; padding:2.2rem 0 4rem; }
+    .nav, .meta, .pill, .btn, th { font-family:var(--sans); }
+    .nav { display:flex; flex-wrap:wrap; gap:.55rem; color:var(--muted); font-size:.88rem; margin-bottom:1rem; }
+    .pill {
+      display:inline-flex; align-items:center; gap:.35rem; width:max-content;
+      padding:.34rem .7rem; border-radius:999px; border:1px solid var(--line);
+      background:var(--accent-soft); color:var(--accent); font-size:.76rem; font-weight:700;
+      letter-spacing:.08em; text-transform:uppercase;
+    }
+    .hero, .card, .note, .table-wrap {
+      border:1px solid var(--line); border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)), var(--panel);
+      box-shadow:0 18px 56px rgba(0,0,0,.22);
+    }
+    .hero { padding:1.15rem 1.2rem; margin-bottom:1rem; }
+    .card { padding:1rem 1.05rem; }
+    .note { padding:1rem 1.05rem; background:linear-gradient(180deg, rgba(255,207,134,.10), rgba(255,255,255,.01)), var(--panel-soft); }
+    .meta { color:var(--muted); font-size:.86rem; margin:.4rem 0 0; }
+    h1,h2,h3 { color:var(--bright); font-family:var(--sans); line-height:1.25; margin:0 0 .65rem; }
+    h1 { font-size:clamp(1.8rem, 4vw, 2.6rem); }
+    h2 { font-size:1.18rem; margin-top:2rem; }
+    h3 { font-size:1rem; }
+    p, ul, ol { margin:0 0 1rem; }
+    ul, ol { padding-left:1.2rem; }
+    li { margin:.35rem 0; }
+    code, pre { font-family:var(--mono); }
+    code { background:rgba(126,195,255,.09); color:#bfe3ff; padding:.1rem .32rem; border-radius:6px; white-space:normal; }
+    pre { overflow:auto; padding:.85rem .95rem; border-radius:14px; border:1px solid var(--line); background:#0b1320; color:#d7e8ff; }
+    .grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:1rem; }
+    .grid-3 { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:1rem; }
+    .kicker { font-family:var(--sans); font-size:.8rem; color:var(--muted); margin:-.1rem 0 .55rem; }
+    .btn-row { display:flex; flex-wrap:wrap; gap:.6rem; margin-top:.9rem; }
+    .btn { display:inline-block; padding:.52rem .88rem; border-radius:10px; border:1px solid var(--line); background:var(--accent-soft); color:var(--bright); font-size:.85rem; font-weight:700; }
+    .btn:hover { text-decoration:none; border-color:rgba(126,195,255,.45); }
+    table { width:100%; border-collapse:collapse; font-size:.95rem; }
+    th, td { text-align:left; padding:.7rem .75rem; vertical-align:top; border-top:1px solid var(--line); }
+    th { color:var(--bright); font-size:.82rem; letter-spacing:.04em; text-transform:uppercase; }
+    td { color:var(--text); }
+    .table-wrap { overflow:auto; margin-top:.8rem; }
+    footer { margin-top:2rem; color:var(--muted); font-family:var(--sans); font-size:.84rem; }
     @media (max-width: 820px) {
-      main { width:min(100vw - 24px,920px); }
-      .grid { grid-template-columns:1fr; }
-      .card { padding:.88rem .92rem; border-radius:18px; }
-      figure { padding:.88rem; border-radius:18px; }
-      h1 { font-size:clamp(1.75rem,9vw,2.4rem); line-height:1.06; }
-      table { min-width:620px; font-size:.82rem; }
+      main { width:min(100vw - 24px, 980px); padding:1.5rem 0 3rem; }
+      .grid, .grid-3 { grid-template-columns:1fr; }
+      .hero, .card, .note { padding:.92rem .95rem; border-radius:16px; }
+      th, td { min-width: 180px; }
     }
   </style>
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> | <a href="/blog/">blog</a> | <a href="/proof/">proof</a> | <a href="/paper/">paper</a> | <a href="/blog/v12.2.6-series/">series</a></div>
-    <div class="eyebrow">Post 3</div>
-    <h1>Evaluation: prove it without pretending</h1>
-    <p class="meta">March 2026 | v12.2.6+ series</p>
-
-    <p>OpenClawBrain needs a cleaner evidence story than "the simulations look good." This page starts with the strongest published benchmarks, then keeps the mechanism-vs-product ladder explicit so proof scope is obvious on first read.</p>
-
-    <div class="grid">
-      <div class="card">
-        <h3>Proven now</h3>
-        <p>Recorded-session H2H: <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp). Sparse-feedback 10-seed: <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), with ~5x lower context/query and 9-1 H2H over <code>vector_rag_rerank</code>.</p>
-      </div>
-      <div class="card">
-        <h3>Needs production comparisons</h3>
-        <p>Shadow traffic and narrow online rollout artifacts before claiming better outcomes on live OpenClaw workloads.</p>
-      </div>
-      <div class="card">
-        <h3>Not claimed</h3>
-        <p>No blanket benchmark wins, no production latency or cost win, and no production superiority from deterministic artifacts alone.</p>
-      </div>
-    </div>
-
-    <h2>Strongest published benchmark artifacts (March 2026)</h2>
-    <div class="table-wrap"><table>
-      <thead>
-        <tr><th>Artifact</th><th>Scope</th><th>Key result</th><th>Public bundle</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Recorded session H2H<br /><code>recorded_h2h_relational_drift_001</code></td>
-          <td>800 queries, 41 steps, 8 baselines</td>
-          <td><code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp)</td>
-          <td><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">proof-results/recorded_h2h_relational_drift_001</a></td>
-        </tr>
-        <tr>
-          <td>Sparse-feedback 10-seed<br /><code>sparse_feedback_10seed</code></td>
-          <td>10 seeds, 1,800 queries/seed, 8 baselines</td>
-          <td><code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), ~5x lower context/query, 9-1 H2H over <code>vector_rag_rerank</code></td>
-          <td><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">proof-results/sparse_feedback_10seed</a></td>
-        </tr>
-      </tbody>
-    </table></div>
-
-    <p>These are benchmark artifacts, not live product rollout evidence. They are stronger than the deterministic mechanism harness, but still below shadow-mode and online proof in the claim ladder.</p>
-
-    <h2>Current workflow-proof slice</h2>
-    <p>The current published slice is intentionally narrow: exact-target retrieval on 4 deterministic workflow queries. It is useful because it tests the product framing directly: can durable graph priors make OpenClawBrain useful before learning, and does background learning later improve the served <code>route_fn</code>?</p>
-
-    <div class="table-wrap"><table>
-      <thead>
-        <tr><th>Mode</th><th>Exact-target success</th><th>What this isolates</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>vector_topk</code></td>
-          <td>0/4</td>
-          <td>Semantic retrieval floor with no workflow structure or learned routing.</td>
-        </tr>
-        <tr>
-          <td><code>pointer_chase</code></td>
-          <td>1/4</td>
-          <td>Simple deterministic traversal over explicit links without a learned route policy.</td>
-        </tr>
-        <tr>
-          <td><code>graph_prior_only</code></td>
-          <td>2/4</td>
-          <td>Durable structure before learning; the "start useful fast" part of the story.</td>
-        </tr>
-        <tr>
-          <td><code>learned</code></td>
-          <td>4/4</td>
-          <td>The same memory layer after background learning has improved routing.</td>
-        </tr>
-      </tbody>
-    </table></div>
-
-    <p>The learning curve matters as much as the endpoint. <code>graph_prior_only</code> stays flat at 2/4 across all 16 epochs, while <code>learned</code> first reaches 4/4 at epoch 14. The proof package now also points to <code>per_query_matrix.csv</code> and <code>per_query_matrix.md</code>, the 16-row scenario matrix showing which node IDs reached prompt context under each mode. Reproduce the figures from <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>; compare the integration-level artifact bundle in <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
-
-    <figure>
-      <img src="/figures/eval/workflow_proof_exact_target_success.svg" alt="Bar chart showing exact-target success across the deterministic workflow proof modes: vector_topk zero out of four, pointer_chase one out of four, graph_prior_only two out of four, and learned four out of four" loading="lazy" />
-      <figcaption>Current mechanism proof, now tied to the published workflow slice on <a href="/proof/#workflow-proof">/proof/</a>: the same 4 fixed queries, the same scoring rule, and a visible gap between cold-start retrieval, graph priors, and the learned policy.</figcaption>
-    </figure>
-
-    <figure>
-      <img src="/figures/eval/workflow_proof_learning_curve.svg" alt="Line chart showing graph_prior_only exact-target success staying at fifty percent while learned routing reaches one hundred percent at epoch fourteen" loading="lazy" />
-      <figcaption>Useful fast with graph priors, better later via background learning: <code>graph_prior_only</code> stays at 2/4 for all 16 epochs, while <code>learned</code> reaches 4/4 at epoch 14. That is still deterministic harness evidence, not recorded-session or live-traffic proof.</figcaption>
-    </figure>
-
-    <h2>Recorded-session benchmark detail</h2>
-    <p><code>recorded_h2h_relational_drift_001</code> is the fixed-session benchmark bundle currently highlighted on the proof page.</p>
-
-    <div class="table-wrap"><table>
-      <thead>
-        <tr><th>Baseline</th><th>Accuracy</th><th>Context used</th><th>Traversal cost</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>full_brain</code></td><td><strong>0.9750</strong></td><td>800</td><td>800</td></tr>
-        <tr><td><code>vector_rag_rerank</code></td><td>0.8962</td><td>4 000</td><td>6 400</td></tr>
-        <tr><td><code>heuristic_stateful</code></td><td>0.8163</td><td>800</td><td>800</td></tr>
-        <tr><td><code>vector_rag</code></td><td>0.7875</td><td>800</td><td>800</td></tr>
-      </tbody>
-    </table></div>
-
-    <p>The nearest baseline still needs 5&times; more context and 8&times; more traversal cost for lower accuracy. Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">proof-results/recorded_h2h_relational_drift_001</a>.</p>
-
-    <h2>Sparse-feedback 10-seed benchmark detail</h2>
-    <p><code>sparse_feedback_10seed</code> is the strongest current multi-seed family for proving full-brain behavior under sparse teacher signals.</p>
-
-    <div class="table-wrap"><table>
-      <thead>
-        <tr><th>Baseline</th><th>Accuracy (mean)</th><th>Context/query</th><th>Traversal/query</th><th>H2H vs <code>full_brain</code></th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>full_brain</code></td><td><strong>91.96%</strong></td><td>1.00</td><td>1.00</td><td>&mdash;</td></tr>
-        <tr><td><code>vector_rag_rerank</code> (best RAG)</td><td>67.05%</td><td>5.00</td><td>8.00</td><td>1/10</td></tr>
-        <tr><td><code>vector_rag</code></td><td>60.49%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
-        <tr><td><code>heuristic_stateful</code></td><td>51.38%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
-      </tbody>
-    </table></div>
-
-    <p><code>full_brain</code> leads best RAG by +24.91 pp and beats <code>vector_rag_rerank</code> in 9/10 seeds while using ~5x less context per query. Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">proof-results/sparse_feedback_10seed</a>.</p>
-
-    <h2>Mechanism proof versus product proof</h2>
-    <p>The deterministic workflow slice plus the two benchmark bundles prove something real but bounded: durable structure helps early retrieval, learned routing improves later, and <code>full_brain</code> leads credible RAG baselines on frozen workloads. It still does <strong>not</strong> prove better outcomes on live OpenClaw traffic without shadow and online artifacts.</p>
-
-    <h2>The stronger evidence path</h2>
-    <div class="table-wrap"><table>
-      <thead>
-        <tr><th>Stage</th><th>What it proves</th><th>What artifacts are required</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Deterministic workflow proof</td>
-          <td>The router and learning loop behave coherently on the fixed workflow slice.</td>
-          <td>Exact commands, commit SHA, <code>summary.csv</code>, <code>learning_curve.csv</code>, <code>report.md</code>, <code>per_query_matrix.csv</code>, and <code>per_query_matrix.md</code>.</td>
-        </tr>
-        <tr>
-          <td>Offline recorded-session eval</td>
-          <td>The same OpenClaw-style workloads can be scored head-to-head across routing modes.</td>
-          <td>Published now: <code>recorded_h2h_relational_drift_001</code> and <code>sparse_feedback_10seed</code> with query fixtures, scoring tables, per-query outputs, and worked traces.</td>
-        </tr>
-        <tr>
-          <td>Shadow traffic</td>
-          <td>The brain helps on real OpenClaw traffic without being the only live path yet.</td>
-          <td>Mirrored traffic slice, side-by-side metrics, retained outputs, and disagreement traces.</td>
-        </tr>
-        <tr>
-          <td>Narrow online rollout</td>
-          <td>Operational value under real usage constraints.</td>
-          <td>Success, correction rate, prompt size, latency, cost.</td>
-        </tr>
-      </tbody>
-    </table></div>
-
-    <h2>Reporting contract</h2>
-    <ol>
-      <li>Every nontrivial claim needs a command, an artifact path, and a commit SHA.</li>
-      <li>If an artifact does not exist yet, the table cell stays <code>TBD</code>.</li>
-      <li>Do not summarize the 4-query deterministic workflow slice as a product win on OpenClaw traffic.</li>
-    </ol>
-
-    <p>Packaged view: <a href="/proof/">/proof/</a>. Benchmark bundles: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">recorded_h2h_relational_drift_001</a> and <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">sparse_feedback_10seed</a>. Rerun steps: <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>. Smallest real-turn proof unit: <a href="/docs/worked-example.md">docs/worked-example.md</a>.</p>
-
-    <p>Next: <a href="/blog/v12.2.6-series/04-operator-local-embeddings/">Post 4 on local-first rollout</a>.</p>
+    <div class="nav"><a href="/">home</a><a href="/blog/">blog</a><a href="/blog/v12.2.6-series/">series</a><a href="/proof/">proof</a></div>
+    <section class="hero"><div class="pill">Proof vocabulary</div><h1>Post 3: mechanism, benchmark, shadow, and live claims</h1><p>This is the series route that most directly explains the evidence ladder. It now distinguishes current OCB proof, external BGZ benchmark context, and future shadow/live product proof.</p></section>
+    <h2>Current OCB proof now</h2><ul><li>promoted-pack compile boundary</li><li>customer-value bundle and recorded replay</li><li>OCB-native comparative eval proxies</li><li>observability and release-truth lanes</li></ul>
+    <h2>External BGZ benchmark context</h2><ul><li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">recorded-session head-to-head</a></li><li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">sparse-feedback 10-seed</a></li><li>useful comparative context, but not the same as repo-local OCB proof</li></ul>
+    <h2>Future shadow/live proof</h2><p>Mirrored traffic, disagreement traces, rollout metrics, latency/cost/quality on served traffic, and public answer-quality claims need their own artifacts. Until then, the correct label is “not yet claimed.”</p>
+    <p>For the packaged version of this ladder, use <a href="/proof/">/proof/</a>.</p>
+    <footer>Audited against the public `openclawbrain` repo and linked `brain-ground-zero` proof repo as of March 7, 2026.</footer>
   </main>
 </body>
 </html>
