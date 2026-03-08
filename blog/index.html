@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain Blog</title>
   <meta name="author" content="Jonathan Gu" />
-  <meta name="description" content="OpenClawBrain blog: real-world evidence, benchmark results, and release notes." />
+  <meta name="description" content="OpenClawBrain blog: real-world evidence, benchmark results, and explicit current-truth vs target-end-shape boundaries." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/" />
   <style>
     :root {
@@ -57,11 +57,23 @@
     <div class="nav"><a href="/">openclawbrain.ai</a></div>
     <h1>OpenClawBrain Blog</h1>
     <p class="meta">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
-    <p>Architecture, evidence, and release notes for OpenClawBrain &mdash; the learned routing layer that makes OpenClaw self-improving. Start with the proof-first posts below, or jump to the <a href="/proof/">proof package</a> for benchmark results.</p>
+    <p>Architecture, evidence, and release notes for OpenClawBrain &mdash; the TypeScript-first brain package surface for OpenClaw. This site describes both the current truthful surface and the target end shape explicitly. Start with the proof-first posts below, or jump to the <a href="/proof/">proof package</a> for the full claim boundary.</p>
 
     <div class="section">
       <h2>Proof First</h2>
       <div class="grid">
+        <div class="post featured">
+          <div class="title">Current truth and target end shape: what this repo proves today</div>
+          <div class="meta">March 2026 · CLAIMS.md truth anchor · read this first</div>
+          <div>
+            Two layers described explicitly. <strong>Current truth</strong>: promoted-pack lifecycle (learner → candidate pack → activation → compiler), PG-only <code>route_fn</code> evidence via checksum + PG metadata, operator observability, and local tarball distribution. <strong>Target end shape</strong>: npm-published operator API; scanner/labels/harvest on by default after attach; continuous live graph update (decay, Hebbian co-firing, pruning, reorganizing) on the active pack during serving; hard API enforcement of the OpenClaw/OpenClawBrain split; stronger proof ladder.
+            <br /><br />
+            Key fact: graph-dynamics fields (decay, Hebbian, prune/merge counts) are <em>build-time pack artifact metadata</em> today — not live runtime mutation of the active pack. Live continuous graph update is the target, not the current reality.
+            <br /><br />
+            Comparative benchmark proof (recorded-session +7.9&nbsp;pp, sparse-feedback +24.91&nbsp;pp) lives in the separate <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> repo.
+            Authoritative boundary: <a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">CLAIMS.md</a>.
+          </div>
+        </div>
         <div class="post featured">
           <div class="title">Worked example: follow one real OpenClaw conversation turn</div>
           <div class="meta">Start here · see what actually happens before looking at scores</div>
@@ -100,7 +112,7 @@
           <div class="meta">Post 3</div>
           <div>How we separate "this mechanism works" from "this product works" &mdash; what is proven, and what is not yet claimed.</div>
         </a>
-        <a class="post" href="/docs/openclaw-integration/">
+        <a class="post" href="/docs/openclaw-integration.md">
           <div class="title">Operator integration guide</div>
           <div class="meta">Operational setup</div>
           <div>Step-by-step instructions for connecting OpenClawBrain to OpenClaw, including configuration options and safety fallbacks.</div>

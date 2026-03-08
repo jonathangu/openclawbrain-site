@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain - A Learned Router That Makes Your AI Agent Sharper Over Time</title>
+  <title>OpenClawBrain: TypeScript-First Brain Packages for OpenClaw</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="author" content="Jonathan Gu">
-  <meta name="description" content="OpenClawBrain replaces static retrieval with a learned routing function over a knowledge graph. It watches real conversations, learns which context matters, and serves sharper answers every day.">
-  <meta property="og:title" content="OpenClawBrain - A Learned Router That Makes Your AI Agent Sharper Over Time">
-  <meta property="og:description" content="Not just retrieval — a routing function that learns from corrections, structure, and feedback to pick the right context on every turn.">
+  <meta name="description" content="OpenClawBrain: TypeScript-first brain packages for OpenClaw. Promoted-pack lifecycle, PG-only learned route_fn, operator observability. Current truth and target end shape described explicitly.">
+  <meta property="og:title" content="OpenClawBrain: TypeScript-First Brain Packages for OpenClaw">
+  <meta property="og:description" content="Promoted-pack lifecycle, PG-only learned route_fn, operator observability. Explicit current truth and target end shape.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary">
@@ -454,7 +453,64 @@
       opacity: 0.85;
     }
 
+
+    /* today vs target two-column grid */
+    .truth-target-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.72rem;
+      margin-bottom: 0.8rem;
+    }
+    .truth-card {
+      padding: 0.9rem 0.95rem;
+      border: 1px solid rgba(156, 224, 188, 0.36);
+      border-radius: 11px;
+      background: rgba(156, 224, 188, 0.06);
+    }
+    .target-card {
+      padding: 0.9rem 0.95rem;
+      border: 1px dashed rgba(255, 190, 114, 0.38);
+      border-radius: 11px;
+      background: rgba(255, 190, 114, 0.06);
+    }
+    .truth-card h3, .target-card h3 {
+      margin: 0 0 0.45rem;
+      font-family: var(--sans);
+      font-size: 0.94rem;
+      color: var(--text-bright);
+    }
+    .card-label {
+      display: block;
+      margin: 0 0 0.3rem;
+      font-family: var(--sans);
+      font-size: 0.71rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+    .truth-card .card-label { color: var(--green); }
+    .target-card .card-label { color: var(--orange); }
+    .truth-card ul, .target-card ul {
+      margin: 0;
+      padding-left: 1.1rem;
+      font-family: var(--sans);
+      font-size: 0.83rem;
+      line-height: 1.55;
+      color: var(--text);
+    }
+    .truth-card li, .target-card li { margin-bottom: 0.3rem; }
+    .callout-note {
+      margin-top: 0.72rem;
+      padding: 0.72rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(10, 14, 22, 0.84);
+      font-family: var(--sans);
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
     @media (max-width: 880px) {
+      .truth-target-grid,
       .path-grid,
       .proof-family-grid,
       .status-grid,
@@ -479,33 +535,34 @@
     <div class="utility-row">
       <a class="brand" href="/">openclawbrain.ai</a>
       <nav class="utility-links" aria-label="Primary routes">
-        <a href="/docs/setup-guide/">Get started</a>
+        <a href="/docs/setup-guide.md">Setup guide</a>
         <a href="/proof/">Proof</a>
         <a href="/paper/">Paper</a>
-        <a href="/docs/openclaw-integration/">Docs</a>
+        <a href="/docs/openclaw-integration.md">Docs</a>
         <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
       </nav>
     </div>
 
     <div class="hero-card" id="start-here">
-      <p class="eyebrow">What is OpenClawBrain?</p>
-      <h1>A learned router that makes your AI agent sharper over time</h1>
-      <p class="hero-meta" style="margin-bottom:0.5rem;">Created by <a href="https://www.jonathangu.com/" style="color:var(--accent);">Jonathan Gu</a></p>
+      <p class="eyebrow">Promoted-pack lifecycle · PG-only route_fn · operator observability</p>
+      <h1>OpenClawBrain: TypeScript-first brain packages for OpenClaw</h1>
       <p class="lead">
-        <a href="https://github.com/jonathangu/openclaw">OpenClaw</a> runs your agent &mdash; sessions, tools, prompts, answers. OpenClawBrain makes it learn.
-        Ordinary retrieval (RAG) dumps the nearest text chunks into the prompt and hopes the answer is in the pile. OpenClawBrain trains a routing function that walks a knowledge graph, picks the right context for each query, and gets better from every correction.
-        The result: more accurate answers, less context, and continuous improvement without manual tuning.
+        OpenClaw owns runtime orchestration, fail-open behavior, and prompt assembly.
+        OpenClawBrain owns contracts, event normalization, provenance, immutable pack artifacts, activation helpers, compiler output, and learner updates.
+        The promoted pack is the only supported learning and serve boundary in this repo.
+        This site describes both where the repo stands today and the target end shape it is building toward — explicitly and separately.
       </p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="/docs/setup-guide/">Get started</a>
-        <a class="btn btn-secondary" href="#how-it-works">How it works</a>
+        <a class="btn btn-primary" href="#today-vs-target">Current truth &amp; target shape</a>
+        <a class="btn btn-secondary" href="/proof/">Proof package</a>
+        <a class="btn btn-secondary" href="#guided-path">Integration path</a>
       </div>
     </div>
 
     <nav class="page-nav" aria-label="On this page">
+      <a href="#today-vs-target">Today vs target</a>
       <a href="#how-it-works">How it works</a>
-      <a href="#why-not-rag">Why not RAG?</a>
-      <a href="#two-systems">Two systems</a>
+      <a href="#two-systems">Architecture</a>
       <a href="#quickstart">Quick start</a>
       <a href="#evidence">Evidence</a>
       <a href="#links">Docs and links</a>
@@ -530,18 +587,86 @@
       <article class="path-step">
         <p class="step-index">Step 2</p>
         <h3>OpenClawBrain builds a knowledge graph</h3>
-        <p>Your agent's memory is a graph, not a pile of text chunks. Each node is a fact, a rule, or a correction. Edges capture how they relate &mdash; "this deploy policy depends on that rollback rule," "this correction supersedes that old guidance." Structure lets the router follow relationships, not just match keywords.</p>
+        <p>Your agent's memory is a graph, not a pile of text chunks. Each node is a fact, a rule, or a correction. Edges capture how they relate. The learner materializes candidate packs off the hot path — immutable bundles of graph, vector, provenance, and router artifacts. Pack-level graph-dynamics fields (decay, co-firing, prune/merge counts) describe build-time evolution metadata, not live runtime mutation.</p>
       </article>
       <article class="path-step">
         <p class="step-index">Step 3</p>
         <h3>A learned router picks what matters</h3>
-        <p>At query time, <code>route_fn</code> walks the graph and selects the right context. It blends two signals: what the graph already knows about how facts relate (<code>graph_prior</code>) and how well each fact fits this specific question (<code>QTsim</code>). A confidence gate shifts weight between them &mdash; leaning on structure when the query is ambiguous, on the query signal when it is clear. The router improves continuously from corrections and outcomes.</p>
+        <p>At query time, the promoted pack's <code>route_fn</code> walks the graph and selects the right context. It blends graph structural priors (<code>graph_prior</code>) with per-query relevance (<code>QTsim</code>). Route updates are PG-only — trained from explicit labels off the hot path. A fresher candidate pack is materialized asynchronously and becomes serve-visible only after promotion by <code>activation</code>.</p>
+      </article>
+    </div>
+  </section>
+
+
+  <section class="section" id="today-vs-target">
+    <h2>Current truth and target end shape</h2>
+    <p class="section-intro">
+      Two layers described explicitly. <strong>Green</strong> is what the repo proves today via TypeScript smoke lanes.
+      <strong>Orange dashed</strong> is the ideal end shape — stated here so progress is trackable honestly.
+      Claims only rise as published proof artifacts rise.
+    </p>
+    <div class="truth-target-grid">
+      <article class="truth-card">
+        <span class="card-label">Current truth &mdash; proved in this repo today</span>
+        <h3>What OpenClawBrain delivers now</h3>
+        <ul>
+          <li><strong>Promoted-pack compilation:</strong> <code>activation</code> selects the active pack; <code>compiler</code> serves only from it; <code>usedLearnedRouteFn</code>, <code>routerIdentity</code>, checksum, and PG metadata prove which artifact ran.</li>
+          <li><strong>PG-only <code>route_fn</code>:</strong> human, self, scanner, and teacher labels become explicit PG-ready training examples; no heuristic overlay in the serve path.</li>
+          <li><strong>Off-hot-path candidate refresh:</strong> learner materializes fresher packs asynchronously; promotion makes them compile-visible.</li>
+          <li><strong>Bootstrap attach from zero events:</strong> self-boots truthfully before first live export; seed state is operator-visible.</li>
+          <li><strong>Operator observability:</strong> activation health, collected-label counts, PG objective metadata, route artifact diffs, rollback lineage, and explicit fallback usage.</li>
+          <li><strong>Distribution today:</strong> local tarballs via <code>pnpm release:check</code> + <code>pnpm fresh-env:smoke</code>. Not npm-published yet.</li>
+          <li><strong>Graph-dynamics:</strong> decay/co-firing/prune/merge counts are pack artifact metadata &mdash; not live runtime mutation of the active pack.</li>
+        </ul>
+      </article>
+      <article class="target-card">
+        <span class="card-label">Target end shape &mdash; where the architecture is heading</span>
+        <h3>What OpenClawBrain is building toward</h3>
+        <ul>
+          <li><strong>Supported operator API:</strong> npm-published <code>@openclawbrain/*</code> wave gated by <code>pnpm release:status</code> showing a matching <code>v0.1.2</code> tag.</li>
+          <li><strong>Scanner/labels/harvest on by default after attach:</strong> all supervision inputs active from first promoted pack, not opt-in config.</li>
+          <li><strong>Continuous graph update as live operations:</strong> decay, Hebbian co-firing, pruning, and reorganizing running on the active pack during serving &mdash; not just build-time metadata.</li>
+          <li><strong>Full RL-native structural maintenance:</strong> connect, split, merge, and prune actions with conservative guardrails in the live serving runtime.</li>
+          <li><strong>Hard API enforcement of PG-only constraint:</strong> package-level enforcement at every integration point, not just a documented convention.</li>
+          <li><strong>Full OpenClaw / OpenClawBrain split at the API surface:</strong> operator-facing package API that expresses the runtime/learning boundary, not only docs.</li>
+          <li><strong>Stronger proof ladder:</strong> shadow-mode and narrow online rungs reached with published artifacts; Brain Ground Zero benchmark family expanded.</li>
+        </ul>
+      </article>
+    </div>
+    <p class="callout-note">
+      See <a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">CLAIMS.md</a> for the authoritative repo-local boundary, including what Brain Ground Zero proves separately.
+    </p>
+  </section>
+
+  <section class="section" id="guided-path">
+    <h2>Start here in order</h2>
+    <p class="section-intro">
+      Three steps for a first-time reader: inspect the repo-local proof, review benchmark evidence in Brain Ground Zero, then wire packages into runtime.
+    </p>
+    <div class="path-grid">
+      <article class="path-step primary">
+        <p class="step-index">Step 1</p>
+        <h3>Run the repo-local smoke lanes</h3>
+        <p>Run <code>pnpm lifecycle:smoke</code>, <code>pnpm observability:smoke</code>, and <code>pnpm fresh-env:smoke</code> to verify the promoted-pack lifecycle, PG-only <code>route_fn</code> evidence, and operator observability — all provable inside this repo.</p>
+        <a href="/proof/#worked-turn">Open worked-turn evidence</a>
+      </article>
+      <article class="path-step">
+        <p class="step-index">Step 2</p>
+        <h3>Review benchmark proof in Brain Ground Zero</h3>
+        <p>The comparative benchmark families (recorded-session H2H, sparse-feedback 10-seed) live in the separate <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> repo. Keep BGZ proof separate from the package-surface proof here.</p>
+        <a href="/proof/#recorded-session">Open benchmark summary</a>
+      </article>
+      <article class="path-step">
+        <p class="step-index">Step 3</p>
+        <h3>Wire packages into OpenClaw runtime</h3>
+        <p>After reviewing both proof surfaces, integrate the package surface using the attach quickstart and operator observability tools.</p>
+        <a href="/docs/openclaw-integration.md">Open integration docs</a>
       </article>
     </div>
   </section>
 
   <section class="section" id="why-not-rag">
-    <h2>Why this beats ordinary RAG</h2>
+    <h2>Why graph-based routing outperforms RAG on benchmarks</h2>
     <p class="section-intro">
       RAG retrieves text chunks by similarity and hopes the right ones land in the prompt. That works for simple lookups but breaks down when facts depend on each other, queries are ambiguous, or accuracy compounds over time. OpenClawBrain replaces similarity search with learned selection over structure.
     </p>
@@ -582,7 +707,7 @@
       </article>
       <article class="boundary-card">
         <h3>OpenClawBrain owns learning</h3>
-        <p>Watches usage, corrections, and feedback. Builds versioned brain packs &mdash; bundles of context blocks and learned routing weights. Trains the <code>route_fn</code> that decides what context to surface. All of this runs in the background; learning never slows a live response.</p>
+        <p>Builds immutable pack artifacts (graph, vector, provenance, learned <code>route_fn</code>), stages candidates, promotes on activation, and exposes operator observability. Learned route updates are PG-only &mdash; no heuristic overlay. All artifact assembly runs off the hot path; the hot path always reads the promoted pack.</p>
       </article>
     </div>
   </section>
@@ -593,47 +718,61 @@
       Build the workspace and produce a brain pack in four commands.
     </p>
     <pre><code>corepack enable
-pnpm install
+pnpm install --frozen-lockfile
 pnpm check
-pnpm release:pack</code></pre>
+pnpm release:check          # full proof lane + local tarballs
+pnpm fresh-env:smoke        # clean-room outside-consumer install proof</code></pre>
     <p class="quickstart-foot">
-      Then connect to OpenClaw runtime: <a href="/docs/setup-guide/">full setup guide</a>.
+      Distribution today: local tarballs from <code>.release/</code>; not npm-published yet.
+      Operator tools: <code>pnpm operator:status</code>, <code>pnpm operator:doctor</code>, <code>pnpm operator:rollback -- --dry-run</code>.
+      Full setup guide: <a href="/docs/setup-guide.md">docs/setup-guide.md</a>.
     </p>
   </section>
 
   <section class="section" id="evidence">
     <h2>Evidence</h2>
     <p class="section-intro">
-      Two benchmark families, both published and reproducible. Same queries, same data, same scoring rules &mdash; learned routing vs. standard RAG baselines.
+      Two distinct proof surfaces. Repo-local: proved by TypeScript smoke lanes in this repo. Comparative benchmarks: proved in the separate <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> repo on frozen workloads. Neither is a live production claim.
     </p>
 
     <div class="proof-family-grid">
-      <article class="proof-family">
-        <h3>Recorded-session benchmark</h3>
-        <p>800 frozen queries, 8 baselines, one rubric. The learned router answers 97.5% correctly; the best RAG baseline reaches 89.6%. Roughly 1 in 13 queries where RAG fails, the learned router gets right.</p>
+      <article class="proof-family" style="border-color: rgba(156, 224, 188, 0.3); background: rgba(156, 224, 188, 0.05);">
+        <h3>Repo-local: promoted-pack lifecycle</h3>
+        <p>Proved by <code>pnpm lifecycle:smoke</code>, <code>pnpm observability:smoke</code>, and <code>pnpm fresh-env:smoke</code>. Covers PG-only <code>route_fn</code> evidence, candidate-pack refresh, and operator observability.</p>
       </article>
-      <article class="proof-family">
-        <h3>Sparse-feedback benchmark</h3>
-        <p>Real teams do not correct every answer. With minimal feedback across 10 random seeds, the learned router still hits 92% vs. RAG at 67% &mdash; using roughly 5&times; less context per query. More accurate and more efficient, even with sparse corrections.</p>
+      <article class="proof-family" style="border-color: rgba(156, 224, 188, 0.3); background: rgba(156, 224, 188, 0.05);">
+        <h3>Brain Ground Zero: benchmark families</h3>
+        <p>Recorded-session H2H (0.975 vs 0.896, +7.9 pp) and sparse-feedback 10-seed (91.96% vs 67.05%, +24.91 pp, ~5x smaller context). Both live in the separate <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> repo.</p>
       </article>
     </div>
 
     <div class="status-grid">
       <article class="status-card proven">
-        <p class="status-label">Published</p>
-        <h3>Benchmark and mechanism proof</h3>
-        <p>Deterministic simulation, turn-level artifacts, and head-to-head benchmark bundles are published and reproducible.</p>
+        <p class="status-label">Proved in this repo</p>
+        <h3>Promoted-pack lifecycle and PG-only route_fn</h3>
+        <p>Smoke lanes prove pack build, promotion, compilation, learned-route evidence, rollback, and observability locally.</p>
+      </article>
+      <article class="status-card proven">
+        <p class="status-label">Published in brain-ground-zero</p>
+        <h3>Recorded-session and sparse-feedback benchmarks</h3>
+        <p>Benchmark bundles with explicit metrics and reproducibility routes. Not live production claims.</p>
       </article>
       <article class="status-card pending">
         <p class="status-label">Not yet claimed</p>
-        <h3>Live production proof</h3>
-        <p>Production answer-quality claims will follow when matching shadow and online artifacts are published.</p>
+        <h3>Live runtime graph plasticity</h3>
+        <p>Decay/co-firing/pruning as live operations on the active pack. Today these are build-time pack metadata only.</p>
+      </article>
+      <article class="status-card pending">
+        <p class="status-label">Not yet claimed</p>
+        <h3>Shadow and online product proof</h3>
+        <p>Live production answer-quality claims remain gated until shadow and online artifacts are published.</p>
       </article>
     </div>
 
     <p class="quickstart-foot">
       Full evidence: <a href="/proof/">proof package</a>.
-      Reproduce benchmarks: <a href="/docs/reproduce-eval/">reproduce eval</a>.
+      Benchmark proof: <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a>.
+      Reproduce route: <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>.
     </p>
   </section>
 
@@ -646,7 +785,7 @@ pnpm release:pack</code></pre>
       <article class="route-card">
         <h3>Get started</h3>
         <p>Install, connect to OpenClaw, confirm it works, and set up fail-open behavior.</p>
-        <a href="/docs/setup-guide/">Setup guide</a>
+        <a href="/docs/setup-guide.md">Setup guide</a>
       </article>
       <article class="route-card">
         <h3>Evidence</h3>
@@ -660,14 +799,14 @@ pnpm release:pack</code></pre>
       </article>
       <article class="route-card">
         <h3>Integration docs</h3>
-        <p>Runtime wiring, failure semantics, and the package contract between OpenClaw and OpenClawBrain.</p>
-        <a href="/docs/openclaw-integration/">Integration guide</a>
+        <p>Runtime wiring, PG-only route constraint, and the package contract between OpenClaw and OpenClawBrain.</p>
+        <a href="/docs/openclaw-integration.md">Integration guide</a>
       </article>
     </div>
   </section>
 
   <footer class="footer">
-    <p>OpenClawBrain makes OpenClaw self-improving by learning what context to serve.</p>
+    <p>OpenClawBrain: TypeScript-first brain packages for OpenClaw.</p>
     <p>Jonathan Gu &middot; <a href="mailto:jonathangu@gmail.com">jonathangu@gmail.com</a></p>
     <p><a class="back-link" href="https://www.jonathangu.com/">Author site</a></p>
   </footer>
