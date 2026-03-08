@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain Materials</title>
-  <meta name="description" content="Additional OpenClawBrain materials: TypeScript package surface, thesis, evaluation plan, reproduce-eval steps, simulations, and operator quickstart." />
+  <meta name="description" content="Additional OpenClawBrain materials: package surface, proof package, reproduce-eval steps, benchmark artifacts, and current operator docs." />
   <link rel="canonical" href="https://openclawbrain.ai/materials/" />
   <style>
     :root { --bg:#0f1219; --card:#171d29; --text:#d8dfec; --muted:#98a4b8; --bright:#f4f8ff; --border:#2a364c; --accent:#7db9ff; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; }
@@ -32,11 +32,11 @@
         <li><a href="/docs/reproduce-eval.md">Reproduce eval + figures (canonical)</a></li>
         <li><a href="/docs/worked-example.md">Worked turn artifact contract</a></li>
         <li><a href="/paper/">Canonical paper + PDF</a></li>
-        <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/core-thesis-ultimate-policy-gradient.md">Core thesis</a></li>
-        <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/ultimate-policy-gradient-routing-math.md">Math appendix</a></li>
-        <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/evaluation-plan.md">Evaluation plan</a></li>
-        <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/operator-quickstart.md">Operator quickstart</a></li>
-        <li><a href="https://github.com/jonathangu/openclawbrain/tree/main/examples">Simulations: examples and evaluation runs</a></li>
+        <li><a href="/docs/openclaw-integration.md">OpenClaw integration</a></li>
+        <li><a href="/docs/operator-guide.md">Operator guide</a></li>
+        <li><a href="/docs/setup-guide.md">Setup guide</a></li>
+        <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/README.md">Source repo README</a></li>
+        <li><a href="https://github.com/jonathangu/openclawbrain/tree/main/examples/npm-consumer">Minimal npm consumer proof</a></li>
       </ul>
     </div>
 
@@ -46,7 +46,7 @@
 
     <h2 style="font-family:var(--sans); color:var(--bright); margin-top:1.4rem;">TypeScript Package Surface</h2>
     <div class="card">
-      <p style="margin-top:0;">This package surface is the shipped artifact boundary for pack assembly, activation state, deterministic compile, and learning.</p>
+      <p style="margin-top:0;">This package surface is the current technical-alpha artifact boundary for pack assembly, activation state, deterministic compile, and learning. For this wave, treat repo tip plus optional `.release/` tarballs as the truthful distribution surface.</p>
       <ul>
         <li><code>@openclawbrain/contracts</code></li>
         <li><code>@openclawbrain/events</code></li>
@@ -57,6 +57,7 @@
         <li><code>@openclawbrain/activation</code></li>
         <li><code>@openclawbrain/compiler</code></li>
         <li><code>@openclawbrain/learner</code></li>
+        <li><code>@openclawbrain/openclaw</code></li>
       </ul>
     </div>
 
@@ -71,8 +72,9 @@
       </ul>
       <p style="margin:.5rem 0 0;">Regenerate from repo root (see <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>):</p>
       <pre style="overflow:auto; white-space:pre-wrap; margin:.4rem 0 0; background:#111827; border:1px solid var(--border); border-radius:8px; padding:.75rem; color:#c7d2fe; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">corepack enable
-pnpm install
+pnpm install --frozen-lockfile
 pnpm check
+pnpm release:status
 pnpm release:pack
 # Then follow docs/reproduce-eval.md for current figure-generation steps.</pre>
     </div>

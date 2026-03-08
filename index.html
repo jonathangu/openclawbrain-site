@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <title>OpenClawBrain: TypeScript-First Brain Packages for OpenClaw</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain is the TypeScript-first package surface for OpenClaw memory and learning, with published recorded-session and sparse-feedback head-to-head proof bundles.">
+  <meta name="description" content="OpenClawBrain is the TypeScript-first package surface for OpenClaw memory and learning. The current public wave is a technical alpha: repo-tip packages, local proof lanes, and published benchmark bundles with explicit claim boundaries.">
   <meta property="og:title" content="OpenClawBrain: TypeScript-First Brain Packages for OpenClaw">
-  <meta property="og:description" content="OpenClawBrain: TypeScript-first brain packages for OpenClaw with published recorded-session and sparse-feedback head-to-head evidence.">
+  <meta property="og:description" content="OpenClawBrain: TypeScript-first OpenClaw packages with repo-tip technical-alpha install truth, promoted-pack learned-route proof, and published benchmark evidence.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary">
@@ -524,7 +524,7 @@
         <a class="btn btn-secondary" href="/proof/">Open the proof package</a>
       </div>
       <p class="hero-meta">
-        Claim boundary: mechanism, workflow, recorded-session, and sparse-feedback benchmark proof are published. Live production answer-quality proof is not claimed.
+        Claim boundary: local repo proof covers the promoted-pack lifecycle and learned <code>route_fn</code> evidence; broader route-function, traversal-learning, and <code>QTsim</code> benchmark proof lives in Brain Ground Zero. Live production answer-quality proof is not claimed.
       </p>
     </div>
 
@@ -546,6 +546,19 @@
     <p class="section-intro">
       The homepage now routes first-time readers through one narrow funnel instead of a broad menu. Use these steps in order, then branch into docs only after the proof boundary is clear.
     </p>
+    <div class="status-grid" style="margin-bottom: 1.4rem;">
+      <article class="status-card proven">
+        <p class="status-label">Current tier</p>
+        <h3>External technical alpha</h3>
+        <p>Truthful today: a strong operator can install, attach, inspect proof lanes, and verify later learned-route changes. This is not broad public-launch polish.</p>
+      </article>
+      <article class="status-card pending">
+        <p class="status-label">Still gated</p>
+        <h3>Design-partner release proof</h3>
+        <p>The current wave still ships as repo tip plus optional <code>.release/</code> tarballs until <code>pnpm release:status</code> shows a matching tag and closed proof gates.</p>
+      </article>
+    </div>
+
     <div class="path-grid">
       <article class="path-step primary">
         <p class="step-index">Step 1</p>
@@ -556,7 +569,7 @@
       <article class="path-step">
         <p class="step-index">Step 2</p>
         <h3>Read benchmark proof families</h3>
-        <p>Check recorded-session and sparse-feedback head-to-head artifacts. Keep benchmark proof separate from shadow and online claims.</p>
+        <p>Check recorded-session and sparse-feedback head-to-head artifacts. Keep that broader route-function, traversal-learning, and <code>QTsim</code> benchmark story separate from the repo-local promoted-pack proof and from shadow or online claims.</p>
         <a href="/proof/#recorded-session">Open recorded-session benchmark</a>
       </article>
       <article class="path-step">
@@ -589,7 +602,7 @@
       <article class="status-card proven">
         <p class="status-label">Published</p>
         <h3>Mechanism and workflow proof</h3>
-        <p>Deterministic simulation plus inspectable turn-level artifacts are published and reproducible.</p>
+        <p>Deterministic simulation, promoted-pack integration proof, and inspectable turn-level artifacts are published and reproducible.</p>
       </article>
       <article class="status-card proven">
         <p class="status-label">Published</p>
@@ -604,7 +617,7 @@
       <article class="status-card">
         <p class="status-label">Next route</p>
         <h3>Proof package and reproduce docs</h3>
-        <p><a href="/proof/">Proof package</a> and <a href="/docs/reproduce-eval.md">reproduce-eval.md</a> remain the canonical operator paths.</p>
+        <p><a href="/proof/">Proof package</a>, <a href="/docs/openclaw-integration.md">openclaw-integration.md</a>, and <a href="/docs/reproduce-eval.md">reproduce-eval.md</a> remain the canonical operator paths.</p>
       </article>
     </div>
 
@@ -665,12 +678,13 @@
       <article class="package-item"><h3>@openclawbrain/activation</h3></article>
       <article class="package-item"><h3>@openclawbrain/compiler</h3></article>
       <article class="package-item"><h3>@openclawbrain/learner</h3></article>
+      <article class="package-item"><h3>@openclawbrain/openclaw</h3></article>
     </div>
 
     <ul>
-      <li>Boot immediately from existing files; no full-history pre-scan gate before first useful routing.</li>
-      <li>Human labels, self labels, and scanner or harvester labels are default-on inputs to learning.</li>
-      <li>Learned route functions stay on hot path; async teacher and graph updates stay off hot path.</li>
+      <li>Boot immediately from current workspace state and recent normalized events; do not gate first value on a full replay.</li>
+      <li>Use the narrow install lane first, then add inspection packages only when needed.</li>
+      <li>Learned <code>route_fn</code> proof stays centered on the promoted pack; async teacher, graph refresh, and candidate-pack updates stay off the hot path.</li>
     </ul>
   </section>
 
@@ -680,11 +694,14 @@
       Use this after reviewing the proof boundary. Start local checks, then follow integration and reproduce routes.
     </p>
     <pre><code>corepack enable
-pnpm install
+pnpm install --frozen-lockfile
 pnpm check
-pnpm release:pack</code></pre>
+pnpm release:status
+pnpm lifecycle:smoke
+pnpm observability:smoke</code></pre>
     <p class="quickstart-foot">
       Integration route: <a href="/docs/openclaw-integration.md">/docs/openclaw-integration.md</a>.
+      Operator route: <a href="/docs/operator-guide.md">/docs/operator-guide.md</a>.
       Reproduce route: <a href="/docs/reproduce-eval.md">/docs/reproduce-eval.md</a>.
       Canonical paper route: <a href="/paper/">/paper/</a>.
     </p>
