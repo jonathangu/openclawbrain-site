@@ -110,7 +110,7 @@
         The core idea: instead of dumping the nearest text chunks into the prompt (the standard RAG approach), a learned router walks a graph of structured relationships, picks the right context for each query, and improves from corrections and feedback. Each post goes deep on one piece. Start wherever you like.
       </p>
       <div class="callout">
-        Headline numbers: on recorded-session benchmarks the learned router (<code>full_brain</code>) answers 97.5% of queries correctly vs. 89.6% for the best RAG baseline &mdash; roughly 1 in 13 queries where RAG fails, the learned router gets right. Under sparse feedback it widens to 92.0% vs. 67.1%, using about 5x less context per query and winning 9 of 10 random seeds head-to-head. These are benchmark results, not live-traffic claims; see <a href="/proof/">/proof/</a> for the full evidence ladder and artifact links.
+        Benchmark results: the learned router answers 97.5% of queries correctly vs. 89.6% for the best RAG baseline on recorded sessions. Under sparse feedback it widens to 92.0% vs. 67.1%, using about 5x less context per query. Full evidence and artifact links: <a href="/proof/">/proof/</a>.
       </div>
     </section>
 
@@ -152,8 +152,8 @@
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/">
-        <div class="meta">Start here</div>
-        <h3>OpenClaw runtime boundary integration</h3>
+        <div class="meta">Post 6</div>
+        <h3>OpenClaw runtime integration</h3>
         <div class="kicker">How the runtime flow works, which system owns what, and how to roll back instantly if needed.</div>
       </a>
 

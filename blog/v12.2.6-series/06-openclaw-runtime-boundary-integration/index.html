@@ -33,7 +33,7 @@
 <body>
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a> · <a href="/blog/v12.2.6-series/">series</a></div>
-    <h1>Post 6: OpenClaw Runtime Boundary Integration</h1>
+    <h1>OpenClaw Runtime Integration</h1>
     <p class="meta">March 2026 · v12.2.6+ series</p>
 
     <p>This post describes the shipped boundary between the two systems. <strong>OpenClaw</strong> owns the live session: orchestration, prompt assembly, runtime diagnostics, and fail-open behavior. <strong>OpenClawBrain</strong> owns the learning side: normalized contracts/events, brain packs (versioned, immutable bundles of context and routing weights), activation (switching which pack is live, or rolling back to a previous one), deterministic compilation (the compiler always produces the same output from the same pack), and background learning.</p>
@@ -103,8 +103,8 @@ pnpm release:pack</pre>
     <ul>
       <li>Corrections, human labels, and self-harvested labels are part of the default loop, not optional add-ons.</li>
       <li>Learner output is written as candidate packs; activation handles switching to the new pack (or rolling back) without changing runtime boundaries.</li>
-      <li>Continuous graph learning runs in the background: structural edits, decay, and co-firing updates happen while serving traffic.</li>
-      <li>Routing quality improves faster because retrieval, labels, and graph updates are tied to real session flow.</li>
+      <li>Background learning generates candidate packs with updated routing weights. Structural graph fields (decay, co-firing, pruning) are build-time pack metadata today; live graph plasticity during serving is the target end shape, not the current reality.</li>
+      <li>Routing quality improves because retrieval and labels are tied to real session flow; each promoted pack carries better weights.</li>
     </ul>
 
     <h2>Proof boundary (keep claims honest)</h2>

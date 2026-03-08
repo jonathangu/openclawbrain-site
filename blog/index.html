@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain Blog</title>
   <meta name="author" content="Jonathan Gu" />
-  <meta name="description" content="OpenClawBrain blog: real-world evidence, benchmark results, and explicit current-truth vs target-end-shape boundaries." />
+  <meta name="description" content="OpenClawBrain blog: how a learned router over a knowledge graph replaces static retrieval, with architecture deep-dives, benchmark evidence, and release notes." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/" />
   <style>
     :root {
@@ -57,62 +57,27 @@
     <div class="nav"><a href="/">openclawbrain.ai</a></div>
     <h1>OpenClawBrain Blog</h1>
     <p class="meta">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
-    <p>Architecture, evidence, and release notes for OpenClawBrain &mdash; the TypeScript-first brain package surface for OpenClaw. This site describes both the current truthful surface and the target end shape explicitly. Start with the proof-first posts below, or jump to the <a href="/proof/">proof package</a> for the full claim boundary.</p>
+    <p>OpenClawBrain is a learned router over a knowledge graph. Instead of dumping the nearest text chunks into a prompt (standard RAG), it walks structured relationships, picks the right context for each query, and improves from corrections. These posts explain how it works, what the benchmarks show, and how to set it up.</p>
 
     <div class="section">
-      <h2>Proof First</h2>
+      <h2>Start Here</h2>
       <div class="grid">
-        <div class="post featured">
-          <div class="title">Current truth and target end shape: what this repo proves today</div>
-          <div class="meta">March 2026 · CLAIMS.md truth anchor · read this first</div>
-          <div>
-            Two layers described explicitly. <strong>Current truth</strong>: promoted-pack lifecycle (learner → candidate pack → activation → compiler), PG-only <code>route_fn</code> evidence via checksum + PG metadata, operator observability, and local tarball distribution. <strong>Target end shape</strong>: npm-published operator API; scanner/labels/harvest on by default after attach; continuous live graph update (decay, Hebbian co-firing, pruning, reorganizing) on the active pack during serving; hard API enforcement of the OpenClaw/OpenClawBrain split; stronger proof ladder.
-            <br /><br />
-            Key fact: graph-dynamics fields (decay, Hebbian, prune/merge counts) are <em>build-time pack artifact metadata</em> today — not live runtime mutation of the active pack. Live continuous graph update is the target, not the current reality.
-            <br /><br />
-            Comparative benchmark proof (recorded-session +7.9&nbsp;pp, sparse-feedback +24.91&nbsp;pp) lives in the separate <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> repo.
-            Authoritative boundary: <a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">CLAIMS.md</a>.
-          </div>
-        </div>
-        <div class="post featured">
-          <div class="title">Worked example: follow one real OpenClaw conversation turn</div>
-          <div class="meta">Start here · see what actually happens before looking at scores</div>
-          <div>
-            One conversation turn end to end: the routing decision, the bounded context sent to the model, and how a correction feeds into background learning. A clear line between what helps now and what improves later.
-            <br />
-            <a href="/docs/worked-example/">Open worked example</a>.
-            <br />
-            Evidence level: <a href="/proof/#worked-turn">/proof/#worked-turn</a> (traced example, not a live production claim).
-          </div>
-        </div>
-        <div class="post">
-          <div class="title">Head-to-head benchmark: relational_drift_001</div>
-          <div class="meta">March 2026 · 800 queries · 41 steps · 8 baselines</div>
-          <div>
-            A recorded-session benchmark comparing OpenClawBrain against 8 baseline systems on 800 queries. <a href="/proof/#recorded-session">Evidence level</a>: benchmark result, not a live production claim.
-            <br />
-            <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">Open bundle: recorded_h2h_relational_drift_001</a>.
-            <br />
-            OpenClawBrain scored 0.975 vs the best RAG baseline at 0.896 (+7.9 percentage points).
-          </div>
-        </div>
-        <div class="post">
-          <div class="title">Sparse-feedback benchmark: 10-seed proof run</div>
-          <div class="meta">March 2026 · 10 seeds · 8 baselines</div>
-          <div>
-            The harder, more realistic scenario: how well does the system learn when feedback is scarce? Tested against 8 baselines across 10 random seeds.
-            <br />
-            <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">Open bundle: sparse_feedback_10seed</a>.
-            <br />
-            OpenClawBrain hit 91.96% vs the best RAG baseline at 67.05% (+24.91 percentage points), using roughly 5x less context per query, winning 9 out of 10 seeds.
-          </div>
-        </div>
-        <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
-          <div class="title">Mechanism vs product proof ladder</div>
-          <div class="meta">Post 3</div>
-          <div>How we separate "this mechanism works" from "this product works" &mdash; what is proven, and what is not yet claimed.</div>
+        <a class="post featured" href="/docs/worked-example/">
+          <div class="title">Worked example: one conversation turn, end to end</div>
+          <div class="meta">Start here &middot; see what actually happens before looking at scores</div>
+          <div>Follow one real query through the system: the routing decision, the bounded context sent to the model, and how a correction feeds into background learning. The clearest way to understand what OpenClawBrain does.</div>
         </a>
-        <a class="post" href="/docs/openclaw-integration.md">
+        <a class="post featured" href="/blog/v12.2.6-series/">
+          <div class="title">How it works: the v12.2.6+ architecture series</div>
+          <div class="meta">March 2026 &middot; 6 posts</div>
+          <div>The full explanation: shadow routing (learning off the live path), QTsim confidence mixing (blending graph structure with per-query relevance), the unified policy gradient, and how operators plug the two systems together.</div>
+        </a>
+        <a class="post" href="/proof/">
+          <div class="title">Benchmark evidence and proof package</div>
+          <div class="meta">March 2026 &middot; recorded-session and sparse-feedback benchmarks</div>
+          <div>The learned router scores 97.5% vs 89.6% for the best RAG baseline on recorded sessions, and 92.0% vs 67.1% under sparse feedback with ~5x less context. Full artifact links, reproduction steps, and an explicit ladder of what is proven and what is not.</div>
+        </a>
+        <a class="post" href="/docs/openclaw-integration/">
           <div class="title">Operator integration guide</div>
           <div class="meta">Operational setup</div>
           <div>Step-by-step instructions for connecting OpenClawBrain to OpenClaw, including configuration options and safety fallbacks.</div>
@@ -121,13 +86,8 @@
     </div>
 
     <div class="section">
-      <h2>Series: OpenClawBrain v12.2.6+</h2>
+      <h2>Architecture Series: v12.2.6+</h2>
       <div class="grid">
-        <a class="post" href="/blog/v12.2.6-series/">
-          <div class="title">Series Index: OpenClawBrain v12.2.6+</div>
-          <div class="meta">March 2026</div>
-          <div>Overview of the shipped architecture, what we have proven, and how operators get started.</div>
-        </a>
         <a class="post" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
           <div class="title">Post 1: Shadow Routing + Ultimate Policy Gradient</div>
           <div class="meta">March 2026</div>
@@ -141,17 +101,22 @@
         <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
           <div class="title">Post 3: Evaluation and Ablations</div>
           <div class="meta">March 2026</div>
-          <div>Benchmark results and ablation tests that show which components matter. Also draws the line between what is proven so far and what is not yet claimed.</div>
+          <div>Benchmark results, ablation tests, and a clear line between what is proven so far and what still needs live-traffic evidence.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
-          <div class="title">Post 4: Operator Guide — Local Embeddings Out of the Box</div>
+          <div class="title">Post 4: Local Embeddings Out of the Box</div>
           <div class="meta">March 2026</div>
-          <div>How to set up OpenClawBrain with local embeddings, including the fast routing path for real-time queries and the background learning loop that improves over time.</div>
+          <div>How to set up OpenClawBrain with local embeddings, the fast routing path for real-time queries, and the background learning loop.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
           <div class="title">Post 5: Industry Baselines + Ablation Study</div>
           <div class="meta">March 2026</div>
-          <div>Side-by-side comparison against credible baselines: where the learned router wins and where the evidence stops short of live-traffic claims.</div>
+          <div>Side-by-side comparison against credible baselines: where the learned router wins and where the evidence stops.</div>
+        </a>
+        <a class="post" href="/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/">
+          <div class="title">Post 6: OpenClaw Runtime Integration</div>
+          <div class="meta">March 2026</div>
+          <div>How the runtime flow works, which system owns what, and how to roll back instantly if needed.</div>
         </a>
       </div>
     </div>
@@ -161,17 +126,17 @@
       <div class="grid">
         <a class="post" href="/blog/v12.2.6/">
           <div class="title">Shadow routing + Ultimate Policy Gradient</div>
-          <div class="meta">v12.2.6 · March 2026</div>
+          <div class="meta">v12.2.6 &middot; March 2026</div>
           <div>Earlier single-post summary of the same release family.</div>
         </a>
         <a class="post" href="/blog/v12.2.1/">
           <div class="title">We shipped the correct REINFORCE update</div>
-          <div class="meta">v12.2.1 · February 2026</div>
+          <div class="meta">v12.2.1 &middot; February 2026</div>
           <div>Fixed a bug in how the learning algorithm updates itself, and what changed in self-learning behavior as a result.</div>
         </a>
         <a class="post" href="/blog/v12.2.0/">
           <div class="title">CrabPath -> OpenClawBrain</div>
-          <div class="meta">v12.2.0 · February 2026</div>
+          <div class="meta">v12.2.0 &middot; February 2026</div>
           <div>The original rename from CrabPath to OpenClawBrain, with early framing of the retrieval and routing approach.</div>
         </a>
       </div>

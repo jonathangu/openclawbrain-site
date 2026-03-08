@@ -4,13 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain Materials</title>
-  <meta name="description" content="Additional OpenClawBrain materials: package surface, proof package, reproduce-eval steps, benchmark artifacts, and current operator docs." />
+  <meta name="description" content="OpenClawBrain supporting materials: documentation, evaluation figures, TypeScript packages, benchmark artifacts, and reproduction steps." />
   <link rel="canonical" href="https://openclawbrain.ai/materials/" />
   <style>
     :root { --bg:#0f1219; --card:#171d29; --text:#d8dfec; --muted:#98a4b8; --bright:#f4f8ff; --border:#2a364c; --accent:#7db9ff; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; }
     body { margin:0; background:linear-gradient(145deg,#121a2a,#0f1219 48%); color:var(--text); font-family:var(--serif); line-height:1.75; }
     main { max-width:860px; margin:0 auto; padding:2.6rem 1.2rem 3.4rem; }
-    h1 { font-family:var(--sans); color:var(--bright); margin:.4rem 0 .8rem; }
+    h1,h2 { font-family:var(--sans); color:var(--bright); }
+    h1 { margin:.4rem 0 .8rem; }
     .nav,.meta { font-family:var(--sans); color:var(--muted); font-size:.86rem; }
     a { color:var(--accent); }
     ul { padding-left:1.2rem; }
@@ -20,48 +21,45 @@
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> · <a href="/blog/">blog</a></div>
-    <h1>Additional Materials</h1>
-    <p>Docs, references, and evaluation artifacts for OpenClawBrain. Ordered by evidentiary strength.</p>
+    <div class="nav"><a href="/">openclawbrain.ai</a> &middot; <a href="/blog/">blog</a> &middot; <a href="/proof/">proof</a> &middot; <a href="/paper/">paper</a></div>
+    <h1>Supporting Materials</h1>
+    <p>Documentation, benchmark artifacts, evaluation figures, and package references for OpenClawBrain. Start with the proof package for benchmark evidence, or the worked example to see one turn end-to-end.</p>
 
+    <h2 style="margin-top:1.4rem;">Documentation and Evidence</h2>
     <div class="card">
       <ul>
-        <li><a href="/proof/">Proof package (claim ladder + published artifacts)</a></li>
-        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">Recorded-session head-to-head bundle</a> &mdash; 800 queries, 41 steps, 8 baselines; <code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896 (+7.9 pp)</li>
-        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">Sparse-feedback 10-seed bundle</a> &mdash; <code>full_brain</code> 91.96% vs best RAG 67.05% (+24.91 pp), ~5x lower context/query, 9-1 H2H over <code>vector_rag_rerank</code></li>
-        <li><a href="/docs/reproduce-eval.md">Reproduce eval + figures (canonical)</a></li>
-        <li><a href="/docs/worked-example.md">Worked turn artifact contract</a></li>
-        <li><a href="/paper/">Canonical paper + PDF</a></li>
-        <li><a href="/docs/openclaw-integration.md">OpenClaw integration</a></li>
-        <li><a href="/docs/operator-guide.md">Operator guide</a></li>
-        <li><a href="/docs/setup-guide.md">Setup guide</a></li>
+        <li><a href="/proof/">Proof package</a> &mdash; benchmark evidence, evidence ladder, and what is (and is not) proven</li>
+        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">Recorded-session benchmark bundle</a> &mdash; 800 queries, 8 baselines; learned router 97.5% vs best RAG 89.6%</li>
+        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">Sparse-feedback benchmark bundle</a> &mdash; 10 seeds; learned router 92.0% vs best RAG 67.1%, ~5x less context</li>
+        <li><a href="/docs/reproduce-eval/">Reproduce eval + figures</a> &mdash; step-by-step reproduction instructions</li>
+        <li><a href="/docs/worked-example/">Worked example</a> &mdash; one conversation turn traced end-to-end</li>
+        <li><a href="/paper/">Paper + PDF</a></li>
+        <li><a href="/docs/openclaw-integration/">OpenClaw integration guide</a></li>
+        <li><a href="/docs/operator-guide/">Operator guide</a></li>
+        <li><a href="/docs/setup-guide/">Setup guide</a></li>
         <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/README.md">Source repo README</a></li>
-        <li><a href="https://github.com/jonathangu/openclawbrain/tree/main/examples/npm-consumer">Minimal npm consumer proof</a></li>
+        <li><a href="https://github.com/jonathangu/openclawbrain/tree/main/examples/npm-consumer">Minimal npm consumer example</a></li>
       </ul>
     </div>
 
+    <h2 style="margin-top:1.4rem;">TypeScript Packages</h2>
     <div class="card">
-      <p style="margin-top:0;">See the <a href="/proof/">proof package</a> for the full evidence ladder and claim boundaries.</p>
-    </div>
-
-    <h2 style="font-family:var(--sans); color:var(--bright); margin-top:1.4rem;">TypeScript Package Surface</h2>
-    <div class="card">
-      <p style="margin-top:0;">This package surface is the current technical-alpha artifact boundary for pack assembly, activation state, deterministic compile, and learning. For this wave, treat repo tip plus optional `.release/` tarballs as the truthful distribution surface.</p>
+      <p style="margin-top:0;">These are the TypeScript packages that make up OpenClawBrain. Currently distributed as local tarballs; npm publishing is the target.</p>
       <ul>
-        <li><code>@openclawbrain/contracts</code></li>
-        <li><code>@openclawbrain/events</code></li>
-        <li><code>@openclawbrain/event-export</code></li>
-        <li><code>@openclawbrain/workspace-metadata</code></li>
-        <li><code>@openclawbrain/provenance</code></li>
-        <li><code>@openclawbrain/pack-format</code></li>
-        <li><code>@openclawbrain/activation</code></li>
-        <li><code>@openclawbrain/compiler</code></li>
-        <li><code>@openclawbrain/learner</code></li>
-        <li><code>@openclawbrain/openclaw</code></li>
+        <li><code>@openclawbrain/contracts</code> &mdash; shared type definitions and interfaces</li>
+        <li><code>@openclawbrain/events</code> &mdash; event normalization from OpenClaw sessions</li>
+        <li><code>@openclawbrain/event-export</code> &mdash; export pipeline for session data</li>
+        <li><code>@openclawbrain/workspace-metadata</code> &mdash; workspace context and file metadata</li>
+        <li><code>@openclawbrain/provenance</code> &mdash; audit trail for context payloads</li>
+        <li><code>@openclawbrain/pack-format</code> &mdash; brain pack structure (immutable versioned bundles)</li>
+        <li><code>@openclawbrain/activation</code> &mdash; promoting, switching, and rolling back brain packs</li>
+        <li><code>@openclawbrain/compiler</code> &mdash; deterministic compilation from pack to context</li>
+        <li><code>@openclawbrain/learner</code> &mdash; background learning and candidate-pack generation</li>
+        <li><code>@openclawbrain/openclaw</code> &mdash; integration layer for the OpenClaw runtime</li>
       </ul>
     </div>
 
-    <h2 style="font-family:var(--sans); color:var(--bright); margin-top:1.4rem;">Evaluation Figures</h2>
+    <h2 style="margin-top:1.4rem;">Evaluation Figures</h2>
     <div class="card">
       <ul>
         <li><a href="/figures/eval/reward_vs_epoch.svg">reward_vs_epoch.svg</a></li>
@@ -70,16 +68,16 @@
         <li><a href="/figures/eval/alpha_router_conf_hist.svg">alpha_router_conf_hist.svg</a></li>
         <li><a href="/figures/eval/ablation_bar_chart.svg">ablation_bar_chart.svg</a></li>
       </ul>
-      <p style="margin:.5rem 0 0;">Regenerate from repo root (see <a href="/docs/reproduce-eval.md">docs/reproduce-eval.md</a>):</p>
+      <p style="margin:.5rem 0 0;">To regenerate figures from the source repo:</p>
       <pre style="overflow:auto; white-space:pre-wrap; margin:.4rem 0 0; background:#111827; border:1px solid var(--border); border-radius:8px; padding:.75rem; color:#c7d2fe; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">corepack enable
 pnpm install --frozen-lockfile
 pnpm check
 pnpm release:status
 pnpm release:pack
-# Then follow docs/reproduce-eval.md for current figure-generation steps.</pre>
+# Then follow docs/reproduce-eval.md for figure-generation steps.</pre>
     </div>
 
-    <p class="meta" style="margin-top:1rem;">If a file moves, update this page to the new canonical doc path in the code repository.</p>
+    <p class="meta" style="margin-top:1rem;">If a file moves, update this page to the new canonical path.</p>
   </main>
 </body>
 </html>

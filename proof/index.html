@@ -5,7 +5,7 @@
   <title>OpenClawBrain Proof Package</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Jonathan Gu">
-  <meta name="description" content="OpenClawBrain proof package: repo-local smoke-lane proof plus Brain Ground Zero benchmark evidence. Explicit current-truth, target end-shape, and claim boundaries.">
+  <meta name="description" content="OpenClawBrain benchmark evidence: 97.5% vs 89.6% on recorded sessions, 92% vs 67% under sparse feedback, with full artifact links and reproduction steps.">
   <meta property="og:title" content="OpenClawBrain Proof Package">
   <meta property="og:description" content="97.5% vs 89.6% on recorded sessions. 92% vs 67% under sparse feedback. Worked examples, reproduction steps, and clear boundaries on what is proven.">
   <meta property="og:type" content="website">
@@ -99,7 +99,6 @@
     .status-card,
     .figure-card,
     .ladder-card,
-    .check-card,
     .kit-card,
     .callout {
       border: 1px solid var(--line);
@@ -217,37 +216,15 @@
       color: var(--muted);
       max-width: 38rem;
     }
-    .tag-row {
-      display: flex;
-      gap: 0.55rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-    .tag {
-      padding: 0.45rem 0.65rem;
-      border-radius: 999px;
-      border: 1px solid rgba(144, 192, 222, 0.16);
-      background: rgba(6, 14, 22, 0.72);
-      font-family: var(--sans);
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1rem;
-    }
     .status-card,
     .figure-card,
     .ladder-card,
-    .check-card,
     .kit-card {
       padding: 1.1rem 1.15rem 1.05rem;
       background: var(--panel-soft);
       box-shadow: none;
     }
-    .status-card ul,
-    .check-card ul {
+    .status-card ul {
       margin: 0.7rem 0 0;
       padding-left: 1.15rem;
     }
@@ -314,9 +291,14 @@
       gap: 1rem;
       align-items: start;
     }
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
     .ladder-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 1rem;
     }
     .step {
@@ -335,9 +317,8 @@
       margin-bottom: 0.8rem;
     }
     .ladder-card p,
-    .check-card p,
-    .kit-card p,
     .status-card p,
+    .kit-card p,
     .callout p {
       margin: 0.45rem 0 0;
       color: var(--muted);
@@ -346,11 +327,6 @@
       color: var(--muted);
       font-size: 0.82rem;
       margin-top: 0.75rem;
-    }
-    .check-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 1rem;
     }
     .kit-grid {
       display: grid;
@@ -384,8 +360,6 @@
       .hero,
       .status-grid,
       .two-col,
-      .ladder-grid,
-      .check-grid,
       .kit-grid {
         grid-template-columns: 1fr;
       }
@@ -402,7 +376,6 @@
       .status-card,
       .figure-card,
       .ladder-card,
-      .check-card,
       .kit-card,
       .callout {
         border-radius: 20px;
@@ -432,203 +405,62 @@
     <main>
       <section class="hero">
         <div class="hero-copy">
-          <div class="eyebrow">Evidence package</div>
+          <div class="eyebrow">Benchmark evidence</div>
           <h1>Proof package.</h1>
           <p style="font-family:var(--sans); font-size:0.92rem; color:var(--muted); margin:0.5rem 0 0;">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
           <p class="lead">
-            Two distinct proof surfaces. <strong>Repo-local</strong>: TypeScript smoke lanes in this repo prove the promoted-pack lifecycle, PG-only learned <code>route_fn</code> evidence, candidate-pack refresh, and operator observability. <strong>Brain Ground Zero</strong>: the separate public proof repo carries the comparative benchmark families — recorded-session H2H (0.975 vs 0.896, +7.9&nbsp;pp) and sparse-feedback 10-seed (91.96% vs 67.05%, +24.91&nbsp;pp) on frozen workloads. Neither surface makes live production claims.
+            The learned router scores <strong>97.5%</strong> correct vs <strong>89.6%</strong> for the best RAG baseline on 800 recorded-session queries. Under sparse feedback (10 seeds), the gap widens to <strong>92.0% vs 67.1%</strong> with roughly 5x less context per query. This page collects all the evidence, explains exactly what it proves, and draws a clear line where the claims stop.
           </p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="#recorded-session">Recorded-session H2H</a>
-            <a class="btn btn-secondary" href="#sparse-feedback">Sparse-feedback proof</a>
+            <a class="btn btn-primary" href="#recorded-session">Recorded-session benchmark</a>
+            <a class="btn btn-secondary" href="#sparse-feedback">Sparse-feedback benchmark</a>
             <a class="btn btn-secondary" href="#worked-turn">Worked-turn trace</a>
             <a class="btn btn-secondary" href="/docs/reproduce-eval/">Reproduce instructions</a>
           </div>
           <p class="hero-note">
-            Claims only rise as published proof artifacts rise. Graph-dynamics (decay/co-firing/pruning/reorganizing) as live operations on the active pack are the target end shape, not today's reality. See <a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">CLAIMS.md</a> for the authoritative boundary.
+            These are benchmark results, not live-traffic claims. Shadow-mode and online rollout evidence are the next steps. See <a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">CLAIMS.md</a> for the authoritative boundary.
           </p>
         </div>
 
         <div class="hero-panel">
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.34); background: rgba(156, 224, 188, 0.08);">
-            <div class="kicker">Two proof surfaces — both published</div>
-            <h2>Repo-local smoke lanes + Brain Ground Zero benchmarks</h2>
+            <div class="kicker">What is proven today</div>
+            <h2>Two kinds of evidence, both published</h2>
             <ul>
-              <li><strong>Repo-local (this repo):</strong> <code>pnpm lifecycle:smoke</code>, <code>pnpm observability:smoke</code>, <code>pnpm fresh-env:smoke</code> — promoted-pack lifecycle, PG-only <code>route_fn</code> evidence, operator observability. Proved without external deps.</li>
-              <li><strong>BGZ recorded-session:</strong> 800 frozen queries, 8 methods. <code>full_brain</code>: 97.5%. Best RAG: 89.6% (+7.9 pp). Bundle: <code>recorded_h2h_relational_drift_001</code> in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a>.</li>
-              <li><strong>BGZ sparse-feedback (10 seeds):</strong> <code>full_brain</code> 91.96% vs 67.05% (+24.91 pp), ~5&times; less context, 9 of 10 seeds won. Bundle: <code>proof-results/sparse_feedback_10seed</code> in brain-ground-zero.</li>
+              <li><strong>Automated integration tests</strong> (this repo): verify the promoted-pack lifecycle, learned routing function, and operator observability. Run <code>pnpm lifecycle:smoke</code>, <code>pnpm observability:smoke</code>, <code>pnpm fresh-env:smoke</code>.</li>
+              <li><strong>Comparative benchmarks</strong> (<a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> repo): recorded-session and sparse-feedback test suites comparing the learned router against 8 baselines on frozen workloads.</li>
             </ul>
           </article>
-
-          <div class="status-grid">
-            <article class="status-card" id="proven-now">
-              <div class="kicker">Proved in this repo (smoke lanes)</div>
-              <h2>Promoted-pack lifecycle, PG-only route_fn, operator observability</h2>
-              <ul>
-                <li><strong>Lifecycle</strong>: normalized events → candidate pack → promotion → compilation from promoted pack → <code>usedLearnedRouteFn</code> + checksum + PG metadata verifiable. Run <code>pnpm lifecycle:smoke</code>.</li>
-                <li><strong>Observability</strong>: activation health, freshness, rollback lineage, collected-label counts, route artifact diffs, explicit fallback usage. Run <code>pnpm observability:smoke</code>.</li>
-                <li><strong>Fresh-env install</strong>: local tarballs install cleanly into an isolated plain-<code>npm</code> consumer directory; attach/promotion/rollback proved end-to-end. Run <code>pnpm fresh-env:smoke</code>.</li>
-                <li><strong>Worked turn</strong>: one traceable turn with stable <code>turn_id</code>, bounded compiled context, same-turn correction capture, and learner outcome linkage.</li>
-              </ul>
-            </article>
-
-            <article class="status-card">
-              <div class="kicker">Not yet proved</div>
-              <h2>Live graph plasticity, shadow, and online evidence</h2>
-              <ul>
-                <li><strong>Live runtime graph update</strong>: decay, Hebbian co-firing, pruning, and reorganizing as live operations on the active pack during serving. Today these are build-time pack artifact metadata only.</li>
-                <li><strong>npm-published distribution</strong>: current wave ships from local tarballs. The npm-published lane is the target; <code>pnpm release:status</code> gates the honest claim.</li>
-                <li><strong>Shadow-mode</strong>: mirror real OpenClaw traffic, compare brain-on vs brain-off outputs, save every disagreement. Not yet complete.</li>
-                <li><strong>Narrow live rollout</strong>: success rates, correction counts, latency, and cost from actual served traffic. Not yet complete.</li>
-              </ul>
-            </article>
-          </div>
 
           <figure class="figure-card">
-            <div class="kicker">How each retrieval method performs on 4 fixed queries</div>
-            <img src="../figures/eval/workflow_proof_exact_target_success.svg" alt="Bar chart showing exact-target success across the deterministic workflow proof modes: vector_topk zero out of four, pointer_chase one out of four, graph_prior_only two out of four, and learned four out of four">
+            <div class="kicker">Does the right context reach the model?</div>
+            <img src="../figures/eval/workflow_proof_exact_target_success.svg" alt="Bar chart: vector_topk 0/4, pointer_chase 1/4, graph_prior_only 2/4, learned 4/4">
             <figcaption>
-              This chart shows whether each retrieval method surfaces the exact right context for 4 fixed workflow queries. Standard vector search (<code>vector_topk</code>) gets 0 out of 4 right. Following links in the graph (<code>pointer_chase</code>) gets 1 out of 4. Using the graph structure alone (<code>graph_prior_only</code>) gets 2 out of 4. The learned router gets all 4 correct -- it combines graph structure with learned weights to find the right context reliably. Source data: <code>baseline_eval/summary.csv</code>; per-query detail in <code>per_query_matrix.csv</code>. Reproduce from <a href="/docs/reproduce-eval/">reproduce eval</a>; see the <a href="/docs/worked-example/">worked example</a> for how a single turn looks in practice.
+              4 fixed workflow queries. Standard vector search gets 0 right. Graph structure alone gets 2. The learned router gets all 4 &mdash; it combines structure with learned weights. Source: <code>baseline_eval/summary.csv</code>. <a href="/docs/reproduce-eval/">Reproduce</a> | <a href="/docs/worked-example/">Worked example</a>.
             </figcaption>
           </figure>
-
-          <article class="status-card" id="claim-boundary">
-            <div class="kicker">How we label claims</div>
-            <h2>Every claim on this site gets one of three labels</h2>
-            <ul>
-              <li><strong>Proven now</strong>: the evidence exists, you can download it, and you can rerun the test yourself.</li>
-              <li><strong>Requires more evidence</strong>: we believe this is true but need shadow-mode or live-traffic tests to back it up.</li>
-              <li><strong>Not claimed</strong>: we do not have the evidence yet, so we do not make the claim.</li>
-            </ul>
-          </article>
         </div>
       </section>
 
-
-      <section class="section" id="repo-local-proof">
-        <div class="section-head">
-          <div>
-            <h2>Repo-local proof (what this repo proves via smoke lanes)</h2>
-            <p class="section-intro">These proofs run entirely inside the OpenClawBrain TypeScript workspace without external dependencies. They establish the promoted-pack lifecycle, PG-only learned route_fn boundary, and operator observability claims. They are separate from and do not depend on the Brain Ground Zero comparative benchmark families.</p>
-          </div>
-        </div>
-        <div class="status-grid">
-          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
-            <div class="kicker">pnpm lifecycle:smoke</div>
-            <h3>Promoted-pack lifecycle end-to-end</h3>
-            <p>Normalized events → candidate pack build → activation stage → promotion → compiler serving from promoted pack → <code>usedLearnedRouteFn</code>, <code>routerIdentity</code>, router checksum, and PG objective metadata verifiable.</p>
-          </article>
-          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
-            <div class="kicker">pnpm observability:smoke</div>
-            <h3>Operator observability</h3>
-            <p>Activation health, freshness, rollback lineage, collected-label counts, PG objective metadata, route artifact diffs, learned-route evidence, explicit fallback usage, and init mode diagnostics.</p>
-          </article>
-          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
-            <div class="kicker">pnpm fresh-env:smoke</div>
-            <h3>Clean outside-consumer install</h3>
-            <p>Local tarballs install cleanly into an isolated plain-<code>npm</code> directory. Attach, promotion, rollback, and <code>npm ci</code> recovery all proved end-to-end from zero.</p>
-          </article>
-          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
-            <div class="kicker">pnpm continuous-product-loop:smoke</div>
-            <h3>Post-attach loop</h3>
-            <p>Live-style event export → canonical supervision → seed-state first serve → PG-only candidate refresh → promotion → later served-turn route artifact authority.</p>
-          </article>
-        </div>
-        <div class="callout" style="margin-top: 1rem;">
-          <p>These lanes prove the package/mechanism boundary today. They do not prove heuristic learned-label overlays on the active pack, live runtime graph plasticity, or per-query route_fn mutation. Current structural ops and route updates are materialized into packs and served only after promotion.</p>
-        </div>
-      </section>
-
-      <section class="section" id="worked-turn">
-        <div class="section-head">
-          <div>
-            <h2>Worked-turn example (inspect one real turn)</h2>
-            <p class="section-intro">Before trusting aggregate scores, inspect one concrete turn. This section shows what happens when OpenClaw asks the brain for context: the routing decision, the bounded context sent to the model, and how a correction ties back to the exact route that fired.</p>
-          </div>
-        </div>
-        <div class="two-col">
-          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
-            <div class="kicker">Trace from published worked example</div>
-            <h2>Stable <code>turn_id</code>, bounded context, same-turn correction</h2>
-            <pre class="trace-snippet"><code>turn_id: oc-main-2026-03-06-deploy-0142
-summary: deploy note for billing banner patch...
-[COMPILED_CONTEXT v1]
-- freeze window + rollback owner requirement
-- prior correction: no auto-approval language
-[/COMPILED_CONTEXT]
-correction: internal-only patch -> no support contact</code></pre>
-            <p class="meta">
-              Source artifact: <a href="/docs/worked-example/">worked example</a>. The same <code>turn_id</code> ties compile output, correction event capture, and learner outcome.
-            </p>
-          </article>
-
-          <article class="status-card">
-            <div class="kicker">Why this matters</div>
-            <h2>Trust the single turn before trusting the scores</h2>
-            <ul>
-              <li><strong>Proves now:</strong> you can inspect one turn end-to-end &mdash; context sent, answer returned, correction captured.</li>
-              <li><strong>Connects to benchmarks:</strong> aggregate scores below are meaningful because every row traces to this same per-turn contract.</li>
-              <li><strong>Does not prove:</strong> live production answer quality, shadow-mode outcomes, or live rollout success.</li>
-              <li><strong>Learning boundary:</strong> corrections do not update the router immediately. New weights take effect on the next background cycle.</li>
-            </ul>
-            <p class="meta">
-              Next steps in this page: <a href="#recorded-session">recorded-session head-to-head</a> and <a href="#sparse-feedback">sparse-feedback 10-seed</a> benchmark artifacts.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="workflow-proof">
-        <div class="section-head">
-          <div>
-            <h2>Workflow proof: does the right context reach the model?</h2>
-            <p class="section-intro">For 4 fixed workflow queries, does the router surface exactly the right knowledge-graph nodes? Vector search: 0 of 4. Graph structure alone: 2 of 4. Learned router: all 4 &mdash; combining structural edges with learned weights. Learning runs in the background and never slows a live response.</p>
-          </div>
-        </div>
-        <div class="two-col">
-          <figure class="figure-card">
-            <div class="kicker">Learning curve</div>
-            <img src="../figures/eval/workflow_proof_learning_curve.svg" alt="Line chart showing graph_prior_only exact-target success staying at fifty percent while learned routing reaches one hundred percent at epoch fourteen">
-            <figcaption>
-              Without learning, graph-structure-only routing (<code>graph_prior_only</code>) stays stuck at 2 out of 4 correct across all 16 training epochs. With learning enabled, the router starts at the same 2/4 but improves to 4/4 by epoch 14 and stays there -- learning happens in the background without slowing down live responses. Source: <code>learning_curve.csv</code>. Per-query detail: <code>per_query_matrix.csv</code>. Reproduce from <a href="/docs/reproduce-eval/">reproduce eval</a>; see the <a href="/docs/worked-example/">worked example</a> for how this looks in a real turn.
-            </figcaption>
-          </figure>
-
-          <article class="status-card">
-            <div class="kicker">What this tells us</div>
-            <h2>Works out of the box, gets better with learning</h2>
-            <ul>
-              <li>Even before any learning, the graph structure alone gets the right context for 2 of 4 queries -- this is the "cold start" baseline.</li>
-              <li>The detailed per-query matrix (<code>per_query_matrix.csv</code>) shows exactly which knowledge-graph nodes reached the model's context for each query and retrieval mode.</li>
-              <li>After background learning (which runs off the live path), the router gets all 4 queries right by epoch 14 with 100% coverage of required nodes.</li>
-              <li>Simple link-following (<code>pointer_chase</code>) averages 1.25 hops and still only gets 1 out of 4 right -- structure alone is not enough.</li>
-            </ul>
-            <p class="meta">
-              This matrix proves which knowledge-graph nodes reached the model's context in a controlled simulation. It does not prove downstream answer quality, real-session task success, or production latency and cost on live OpenClaw traffic.
-            </p>
-          </article>
-        </div>
-      </section>
 
       <section class="section" id="recorded-session">
         <div class="section-head">
           <div>
             <h2>Recorded-session head-to-head</h2>
-            <p class="section-intro">800 frozen queries, locked knowledge state, one rubric for every method. The learned router answers correctly about 8 pp more often than the best RAG baseline &mdash; using a fraction of the context. Benchmark evidence, not a live production claim.</p>
+            <p class="section-intro">800 frozen queries, locked knowledge state, one rubric for every method. The learned router answers correctly about 8 pp more often than the best RAG baseline while using a fraction of the context.</p>
           </div>
         </div>
         <div class="two-col">
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
             <div class="kicker">Benchmark result</div>
-            <h2>Learned router: 97.5% correct. Best RAG baseline: 89.6%.</h2>
+            <h2>Learned router: 97.5%. Best RAG: 89.6%.</h2>
             <ul>
               <li>800 frozen queries, 41 training steps, 8 retrieval methods compared side by side.</li>
-              <li>Learned router (<code>full_brain</code>) accuracy: <strong>97.5%</strong></li>
-              <li>Best RAG baseline (<code>vector_rag_rerank</code>): <strong>89.6%</strong></li>
-              <li>Gap: <strong>+7.9 percentage points</strong> -- roughly 1 in 12 queries where the learned router is right and RAG is wrong.</li>
+              <li>Gap: <strong>+7.9 percentage points</strong> &mdash; roughly 1 in 12 queries where the learned router is right and RAG is wrong.</li>
+              <li>The learned router uses roughly 5x less context per query than <code>vector_rag_rerank</code>.</li>
             </ul>
             <p class="meta">
-              Public bundle: <code>proof-results/recorded_h2h_relational_drift_001</code> in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> at commit <code>1c54302</code>. Run ID: <code>recorded_h2h_relational_drift_001</code>.
+              Public bundle: <code>proof-results/recorded_h2h_relational_drift_001</code> in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> at commit <code>1c54302</code>.
             </p>
           </article>
 
@@ -636,9 +468,8 @@ correction: internal-only patch -> no support contact</code></pre>
             <div class="kicker">Proof boundary</div>
             <h2>What this does and does not prove</h2>
             <ul>
-              <li>This is a controlled benchmark: frozen queries, locked state, same scoring rubric for every method.</li>
-              <li>It proves the learned router is more accurate than 8 conventional retrieval methods on this workload.</li>
-              <li>It does <strong>not</strong> prove live production answer quality, shadow-mode wins, or live rollout outcomes.</li>
+              <li>Proves the learned router is more accurate than 8 conventional retrieval methods on this frozen workload.</li>
+              <li>Does <strong>not</strong> prove live production answer quality, shadow-mode outcomes, or live rollout results.</li>
               <li>Next steps: shadow-mode testing (mirroring real traffic) and narrow live rollout.</li>
             </ul>
           </article>
@@ -649,23 +480,21 @@ correction: internal-only patch -> no support contact</code></pre>
         <div class="section-head">
           <div>
             <h2>Sparse-feedback proof (10 random seeds)</h2>
-            <p class="section-intro">Real teams do not correct every answer. This benchmark tests the harder scenario: does the learned router still win with sparse corrections? Across 10 independent seeds the advantage widens to nearly 25 pp &mdash; because learned routing compounds even from limited feedback, while RAG cannot improve at all.</p>
+            <p class="section-intro">Real teams do not correct every answer. This benchmark tests the harder scenario: does the learned router still win with sparse corrections? The advantage widens because the router compounds learning from even limited feedback, while RAG has no feedback loop at all.</p>
           </div>
         </div>
         <div class="two-col">
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
             <div class="kicker">Benchmark result</div>
-            <h2>Learned router: 92.0% correct. Best RAG baseline: 67.1%.</h2>
+            <h2>Learned router: 92.0%. Best RAG: 67.1%.</h2>
             <ul>
-              <li>10 independent random seeds, each with sparse (minimal) correction signals.</li>
-              <li>Learned router (<code>full_brain</code>) average accuracy: <strong>91.96%</strong></li>
-              <li>Best RAG baseline average accuracy: <strong>67.05%</strong></li>
-              <li>Gap: <strong>+24.91 percentage points</strong> -- the learned router gets roughly 1 in 4 additional queries right.</li>
-              <li>Efficiency: the learned router sends <strong>roughly 5x less context</strong> to the model per query, meaning faster and cheaper responses.</li>
-              <li>Head-to-head: the learned router wins <strong>9 out of 10 seeds</strong> against the best RAG baseline.</li>
+              <li>10 independent random seeds, each with sparse correction signals.</li>
+              <li>Gap: <strong>+24.9 percentage points</strong>.</li>
+              <li>Roughly <strong>5x less context</strong> per query.</li>
+              <li>Wins <strong>9 out of 10 seeds</strong> head-to-head.</li>
             </ul>
             <p class="meta">
-              Public bundle: <code>proof-results/sparse_feedback_10seed</code> in <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">brain-ground-zero</a> (run date 2026-03-07). Reproduce entrypoint: <code>./scripts/run_sparse_feedback_proof.sh</code>.
+              Public bundle: <code>proof-results/sparse_feedback_10seed</code> in <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">brain-ground-zero</a>.
             </p>
           </article>
 
@@ -673,11 +502,75 @@ correction: internal-only patch -> no support contact</code></pre>
             <div class="kicker">Proof boundary</div>
             <h2>What this does and does not prove</h2>
             <ul>
-              <li>This proves the learned router is significantly more accurate and more efficient than RAG baselines even when correction signals are sparse.</li>
-              <li>It shows the advantage holds across 10 independent random seeds, not just one lucky run.</li>
-              <li>It does <strong>not</strong> prove live production answer quality, real-world latency gains, or live rollout outcomes.</li>
-              <li>Shadow-mode testing and narrow live rollout are the next required evidence steps for those claims.</li>
+              <li>Proves the learned router is more accurate and more efficient than RAG baselines even with sparse corrections, across 10 independent seeds.</li>
+              <li>Does <strong>not</strong> prove live production answer quality, real-world latency gains, or live rollout outcomes.</li>
             </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="worked-turn">
+        <div class="section-head">
+          <div>
+            <h2>Worked-turn example</h2>
+            <p class="section-intro">Before trusting aggregate scores, inspect one concrete turn. This shows what happens when OpenClaw asks the brain for context: the routing decision, the bounded context sent to the model, and how a correction ties back to the exact route that fired.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">Trace from the worked example</div>
+            <h2>One turn: query, context, correction</h2>
+            <pre class="trace-snippet"><code>turn_id: oc-main-2026-03-06-deploy-0142
+summary: deploy note for billing banner patch...
+[COMPILED_CONTEXT v1]
+- freeze window + rollback owner requirement
+- prior correction: no auto-approval language
+[/COMPILED_CONTEXT]
+correction: internal-only patch -> no support contact</code></pre>
+            <p class="meta">
+              Source: <a href="/docs/worked-example/">worked example</a>. The same <code>turn_id</code> ties compile output, correction, and learner outcome.
+            </p>
+          </article>
+
+          <article class="status-card">
+            <div class="kicker">Why this matters</div>
+            <h2>Trust the single turn before trusting the scores</h2>
+            <ul>
+              <li>You can inspect one turn end-to-end: context sent, answer returned, correction captured.</li>
+              <li>Aggregate benchmark scores are meaningful because every row traces to the same per-turn contract.</li>
+              <li>Corrections do not update the router immediately &mdash; new weights take effect on the next background cycle.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="workflow-proof">
+        <div class="section-head">
+          <div>
+            <h2>Workflow proof: does the right context reach the model?</h2>
+            <p class="section-intro">4 fixed queries test whether the router surfaces the exact right knowledge-graph nodes. Vector search: 0/4. Graph structure alone: 2/4. Learned router: 4/4. Learning runs in the background and never slows a live response.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <figure class="figure-card">
+            <div class="kicker">Learning curve</div>
+            <img src="../figures/eval/workflow_proof_learning_curve.svg" alt="graph_prior_only stays at 50% while learned routing reaches 100% at epoch 14">
+            <figcaption>
+              Without learning, graph-only routing stays at 2/4 across all 16 epochs. With learning, the router reaches 4/4 by epoch 14. Source: <code>learning_curve.csv</code>. <a href="/docs/reproduce-eval/">Reproduce</a> | <a href="/docs/worked-example/">Worked example</a>.
+            </figcaption>
+          </figure>
+
+          <article class="status-card">
+            <div class="kicker">What this tells us</div>
+            <h2>Useful on day one, better with learning</h2>
+            <ul>
+              <li>Graph structure alone gets 2/4 right before any learning &mdash; the "cold start" baseline.</li>
+              <li>After background learning (off the live path), the router gets all 4 right by epoch 14.</li>
+              <li>Simple link-following (<code>pointer_chase</code>) gets only 1/4 &mdash; structure alone is not enough.</li>
+            </ul>
+            <p class="meta">
+              This proves which knowledge-graph nodes reached the model's context in a controlled simulation. It does not prove downstream answer quality on live traffic.
+            </p>
           </article>
         </div>
       </section>
@@ -686,107 +579,81 @@ correction: internal-only patch -> no support contact</code></pre>
         <div class="section-head">
           <div>
             <h2>Evidence ladder</h2>
-            <p class="section-intro">Confidence builds in steps &mdash; from one traceable turn to live production traffic. Each rung answers a different question, and we do not skip ahead. Green cards mark rungs we have reached.</p>
+            <p class="section-intro">Confidence builds in steps. Green marks rungs we have reached.</p>
           </div>
         </div>
         <div class="ladder-grid">
           <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
             <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">0</div>
             <h3>Worked-turn trace</h3>
-            <p>Can we inspect one turn end-to-end? Input, selected context, answer, and how a correction feeds back into learning &mdash; all saved with a stable turn ID for later audit.</p>
-            <div class="meta">This rung is reached. Inspect <a href="#worked-turn">worked-turn evidence</a> or open the <a href="/docs/worked-example/">worked example</a>.</div>
+            <p>Inspect one turn end-to-end: input, context, answer, correction feedback.</p>
+            <div class="meta">Reached. <a href="#worked-turn">See above</a>.</div>
           </article>
           <article class="ladder-card">
             <div class="step">1</div>
             <h3>Mechanism proof</h3>
-            <p>Does the routing and learning machinery work as designed? Controlled simulations, component ablations, and verification that the system improves when it should.</p>
-            <div class="meta">This proves the internals work correctly. It does not, by itself, prove the product is better than alternatives.</div>
+            <p>Controlled simulations and component ablations verifying the routing and learning machinery works as designed.</p>
           </article>
           <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
             <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">2</div>
-            <h3>Recorded-session head-to-head</h3>
-            <p>Is the learned router more accurate than conventional retrieval on a fair, frozen test? Yes: 97.5% correct vs 89.6% for the best RAG baseline across 800 queries and 8 compared methods. Bundle: <code>proof-results/recorded_h2h_relational_drift_001</code>.</p>
-            <div class="meta">This rung is reached. This is controlled benchmark evidence, not live production data.</div>
+            <h3>Recorded-session H2H</h3>
+            <p>97.5% vs 89.6% across 800 queries and 8 methods.</p>
+            <div class="meta">Reached. <a href="#recorded-session">See above</a>.</div>
           </article>
           <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
             <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">3</div>
             <h3>Sparse-feedback (10 seeds)</h3>
-            <p>Does the advantage hold when the system gets minimal corrections? Yes: 92.0% vs 67.1% for the best RAG baseline (+24.9 pp), using 5x less context and winning 9 of 10 independent seeds.</p>
-            <div class="meta">This rung is reached. This is still controlled benchmark evidence, not live production data.</div>
+            <p>92.0% vs 67.1%, 5x less context, 9/10 seeds won.</p>
+            <div class="meta">Reached. <a href="#sparse-feedback">See above</a>.</div>
           </article>
           <article class="ladder-card">
             <div class="step">4</div>
             <h3>Live graph plasticity</h3>
-            <p>Decay, Hebbian co-firing, pruning, and reorganizing running on the active pack during serving — not just build-time pack metadata. This is the structural maintenance target end shape.</p>
-            <div class="meta">Not yet proved in this repo. Today's graph-dynamics are immutable pack artifact metadata. See CLAIMS.md.</div>
+            <p>Decay, co-firing, pruning running on the active pack during serving. Today these are build-time metadata only.</p>
+            <div class="meta">Not yet proved.</div>
           </article>
           <article class="ladder-card">
             <div class="step">5</div>
             <h3>Shadow mode</h3>
-            <p>Mirror real OpenClaw traffic without serving it. Compare brain-on vs brain-off, save every disagreement, measure prompt size, latency, and cost.</p>
-            <div class="meta">Not yet complete. This step hardens comparative evidence before live serving.</div>
+            <p>Mirror real OpenClaw traffic, compare brain-on vs brain-off, save every disagreement.</p>
+            <div class="meta">Not yet complete.</div>
           </article>
           <article class="ladder-card">
             <div class="step">6</div>
             <h3>Narrow live rollout</h3>
-            <p>Enable the brain for a small traffic slice with automatic fallback. Claims published only when backed by saved artifacts from that slice.</p>
-            <div class="meta">Not yet complete. This is product proof, not simulation or benchmark proof.</div>
+            <p>Enable the brain for a small traffic slice with automatic fallback.</p>
+            <div class="meta">Not yet complete.</div>
           </article>
         </div>
       </section>
 
-      <section class="section" id="artifact-checklist">
+      <section class="section" id="repo-local-proof">
         <div class="section-head">
           <div>
-            <h2>Artifact checklist</h2>
-            <p class="section-intro">Every claim on this site has a matching evidence bundle. These are the files that back each claim type.</p>
+            <h2>Integration tests (this repo)</h2>
+            <p class="section-intro">These tests run entirely inside the OpenClawBrain TypeScript workspace with no external dependencies. They verify the pack lifecycle, learned routing function, and operator observability.</p>
           </div>
         </div>
-        <div class="check-grid">
-          <article class="check-card">
-            <div class="kicker">Worked turn</div>
-            <h3>One traceable turn</h3>
-            <ul>
-              <li>Stable turn ID and input summary</li>
-              <li>Exact routing parameters used</li>
-              <li>The bounded context block sent to the model</li>
-              <li>The response or answer text</li>
-              <li>Any correction event and its learning outcome</li>
-            </ul>
+        <div class="status-grid">
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">pnpm lifecycle:smoke</div>
+            <h3>Pack lifecycle end-to-end</h3>
+            <p>Events &rarr; candidate pack &rarr; activation &rarr; promotion &rarr; compiler serves from promoted pack &rarr; routing function verified with checksum and PG metadata.</p>
           </article>
-          <article class="check-card">
-            <div class="kicker">Simulation run</div>
-            <h3>Mechanism test bundle</h3>
-            <ul>
-              <li>Exact command and config to reproduce</li>
-              <li>Code commit and random seed</li>
-              <li>Output directory with all generated files</li>
-              <li>Charts (SVG/PNG) and data files (JSON/CSV)</li>
-              <li>Figure paths referenced on this site</li>
-            </ul>
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">pnpm observability:smoke</div>
+            <h3>Operator observability</h3>
+            <p>Activation health, freshness, rollback lineage, label counts, route artifact diffs, and fallback usage.</p>
           </article>
-          <article class="check-card">
-            <div class="kicker">Head-to-head</div>
-            <h3>Benchmark comparison bundles</h3>
-            <ul>
-              <li>Query set, its checksum, and seed list</li>
-              <li>Knowledge-state snapshot identifier</li>
-              <li>Scoring rubric version and per-method outputs</li>
-              <li>Per-query correctness judgments</li>
-              <li>Per-seed summary with context size budgets</li>
-              <li>Sampled worked-turn bundles for spot-checking</li>
-            </ul>
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">pnpm fresh-env:smoke</div>
+            <h3>Clean outside-consumer install</h3>
+            <p>Local tarballs install into an isolated directory. Attach, promotion, and rollback proved end-to-end from zero.</p>
           </article>
-          <article class="check-card">
-            <div class="kicker">Shadow or live</div>
-            <h3>Real-traffic comparison data</h3>
-            <ul>
-              <li>Traffic slice and date range</li>
-              <li>Brain-off vs brain-on outputs for same queries</li>
-              <li>Prompt size, latency, and cost logs</li>
-              <li>Saved disagreement traces (where outputs differed)</li>
-              <li>Rollout window and automatic fallback policy</li>
-            </ul>
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">pnpm continuous-product-loop:smoke</div>
+            <h3>Post-attach loop</h3>
+            <p>Event export &rarr; supervision &rarr; first serve &rarr; candidate refresh &rarr; promotion &rarr; later served-turn route authority.</p>
           </article>
         </div>
       </section>
@@ -794,55 +661,46 @@ correction: internal-only patch -> no support contact</code></pre>
       <section class="section" id="proof-kit">
         <div class="section-head">
           <div>
-            <h2>Proof kit</h2>
-            <p class="section-intro">This page is the summary. The full evidence lives in these source documents.</p>
+            <h2>Go deeper</h2>
           </div>
         </div>
         <div class="kit-grid">
           <a class="kit-card" href="/docs/worked-example/">
             <div class="kicker">Concrete trace</div>
             <h3>Worked example</h3>
-            <p>One OpenClaw turn with stable <code>turn_id</code>, bounded compiled context, same-turn correction capture, and later replay boundaries.</p>
+            <p>One turn with stable <code>turn_id</code>, bounded context, and same-turn correction capture.</p>
           </a>
           <a class="kit-card" href="/docs/openclaw-integration/">
             <div class="kicker">Rollout guide</div>
             <h3>OpenClaw integration</h3>
-            <p>How OpenClaw (the runtime) connects to OpenClawBrain (the learning layer): fail-open behavior, bounded context, and the background learning loop.</p>
+            <p>Fail-open behavior, bounded context, and the background learning loop.</p>
           </a>
           <a class="kit-card" href="../paper/">
             <div class="kicker">Paper</div>
             <h3>Paper + PDF</h3>
-            <p>The full technical paper, direct PDF download, and supporting materials describing the architecture and evidence.</p>
+            <p>Full technical paper describing the architecture and evidence.</p>
           </a>
           <a class="kit-card" href="../blog/v12.2.6-series/">
             <div class="kicker">Blog series</div>
-            <h3>Product narrative</h3>
-            <p>The full story: how OpenClaw owns the runtime, how OpenClawBrain learns from usage to build better brain packs, and how evidence grows over time.</p>
+            <h3>Architecture deep-dive</h3>
+            <p>Six posts: shadow routing, confidence mixing, evaluation, operator setup, baselines, and runtime integration.</p>
           </a>
           <a class="kit-card" href="/docs/reproduce-eval/">
-            <div class="kicker">Raw commands</div>
+            <div class="kicker">Reproduction</div>
             <h3>Reproduce-eval doc</h3>
-            <p>Step-by-step instructions to reproduce every simulation, benchmark evaluation, and figure on this site from scratch.</p>
+            <p>Step-by-step instructions to reproduce every benchmark and figure from scratch.</p>
           </a>
           <a class="kit-card" href="../blog/v12.2.6-series/03-evaluation-ablations/">
             <div class="kicker">Evaluation post</div>
-            <h3>What simulations do and do not prove</h3>
-            <p>An honest look at what simulation and benchmark results do and do not tell you about real-world product performance.</p>
+            <h3>What benchmarks do and do not prove</h3>
+            <p>Mechanism proof vs product proof, and where the evidence stops.</p>
           </a>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="callout">
-          <p>
-            This page is a summary of where the evidence stands today. The source markdown documents are the full references. The goal is clarity: what we have proven with published benchmarks (recorded-session and sparse-feedback), what still needs shadow-mode and live-traffic testing, and what we are not claiming yet.
-          </p>
         </div>
       </section>
     </main>
 
     <footer>
-      OpenClaw owns the runtime. OpenClawBrain owns the learning. Claims on this site rise only as published evidence rises.
+      OpenClaw owns the runtime. OpenClawBrain owns the learning. Claims rise only as published evidence rises.
     </footer>
   </div>
 </body>

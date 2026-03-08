@@ -322,64 +322,42 @@
     <main>
       <section class="hero">
         <div class="hero-copy">
-          <div class="eyebrow">Canonical paper route</div>
-          <h1>Paper and PDF.</h1>
+          <div class="eyebrow">Research paper</div>
+          <h1>Paper</h1>
           <p style="font-family:var(--sans); font-size:0.92rem; color:var(--muted); margin:0.5rem 0 0;">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
           <p class="lead">
-            The full technical paper behind OpenClawBrain &mdash; PG-only learned routing (<code>route_fn</code>) over a knowledge graph, with shadow routing (learning off the live path), QTsim confidence mixing (blending graph structure with per-query relevance), and the unified policy gradient. The OpenClaw runtime / OpenClawBrain learning split is a hard design invariant; the paper describes both the current boundary and the target end shape (continuous live graph update, full RL-native structural maintenance). March 7, 2026 revision (v12.2.6+).
+            The paper argues that a learned router over a knowledge graph beats static retrieval (RAG) by following structured relationships instead of keyword similarity, learning from corrections, and sending less context for better results. It covers the routing function (<code>route_fn</code>), shadow routing (learning off the live path), QTsim confidence mixing, and the unified policy gradient that folds all feedback into one update rule.
           </p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="../openclawbrain.pdf">Open the PDF</a>
-            <a class="btn btn-secondary" href="../proof/">Proof package</a>
+            <a class="btn btn-primary" href="../openclawbrain.pdf">Read the PDF</a>
+            <a class="btn btn-secondary" href="../proof/">Benchmark evidence</a>
             <a class="btn btn-secondary" href="../materials/">Supporting materials</a>
           </div>
           <p class="hero-note">
-            Benchmark evidence is published in the <a href="../proof/">proof package</a>. Shadow and online claims are separate.
+            March 7, 2026 revision (v12.2.6+). Benchmark evidence is published separately in the <a href="../proof/">proof package</a>.
           </p>
         </div>
 
         <div class="hero-panel">
           <article class="status-card">
-            <div class="kicker">Canonical artifact</div>
-            <h2>OpenClawBrain v12.2.6+</h2>
+            <div class="kicker">Paper details</div>
+            <h2>Shadow Routing with QTsim Confidence Mixing and Unified Policy Learning</h2>
             <ul>
-              <li><strong>Title:</strong> Shadow Routing with QTsim Confidence Mixing and Unified Policy Learning</li>
               <li><strong>Author:</strong> Jonathan Gu</li>
-              <li><strong>Canonical route:</strong> <a href="./">/paper/</a></li>
-              <li><strong>Direct artifact:</strong> <a href="../openclawbrain.pdf">/openclawbrain.pdf</a></li>
-              <li><strong>Source:</strong> <a href="../openclawbrain.tex">openclawbrain.tex</a></li>
+              <li><strong>Direct PDF:</strong> <a href="../openclawbrain.pdf">/openclawbrain.pdf</a></li>
+              <li><strong>LaTeX source:</strong> <a href="../openclawbrain.tex">openclawbrain.tex</a></li>
             </ul>
           </article>
 
           <article class="status-card">
-            <div class="kicker">Read it with the boundary</div>
-            <h2>Design settled; repo-local and BGZ evidence building; target shape described.</h2>
+            <div class="kicker">Current evidence</div>
+            <h2>Benchmark results published; live-traffic evidence in progress</h2>
             <ul>
-              <li>The paper covers the hot/cold path split, PG-only route_fn, QTsim confidence mixing, and the unified policy gradient.</li>
-              <li>Repo-local proof (this repo): promoted-pack lifecycle, PG-only route_fn evidence, operator observability — proved via smoke lanes.</li>
-              <li>BGZ benchmarks: 0.975 vs 0.896 (+7.9 pp) recorded-session; 91.96% vs 67.05% (+24.91 pp) sparse-feedback 10-seed — in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a>.</li>
-              <li>Target end shape described in the paper: continuous live graph update (decay, co-firing, pruning, reorganizing) — not yet proved in this repo.</li>
-              <li><a href="../proof/">/proof/</a> shows which claims are already evidenced and which still require shadow/online artifacts.</li>
+              <li>Recorded-session benchmark: 97.5% vs 89.6% for the best RAG baseline (+7.9 pp) across 800 queries and 8 methods.</li>
+              <li>Sparse-feedback benchmark: 92.0% vs 67.1% (+24.9 pp), ~5x less context, 9/10 seeds won.</li>
+              <li>Benchmarks live in the separate <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> repo.</li>
+              <li>Shadow-mode and live-traffic evidence are the next steps. See <a href="../proof/">/proof/</a> for the full evidence ladder.</li>
             </ul>
-          </article>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-head">
-          <h2>Current benchmark evidence</h2>
-          <p class="section-intro">Two frozen test suites compare the learned router against RAG baselines. The paper tracks these published artifacts and keeps benchmark claims separate from shadow-mode and live-traffic claims.</p>
-        </div>
-        <div class="paper-grid">
-          <article class="paper-card">
-            <div class="kicker">Recorded-session head-to-head</div>
-            <h3><code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896</h3>
-            <p>800 frozen queries, 8 baselines. The learned router answers correctly about 8 pp more often than the best RAG system &mdash; roughly 1 in 13 queries where RAG fails, the router gets right. Artifact: <code>recorded_h2h_relational_drift_001</code>.</p>
-          </article>
-          <article class="paper-card">
-            <div class="kicker">Sparse-feedback 10-seed</div>
-            <h3><code>full_brain</code> 91.96% vs best RAG 67.05%</h3>
-            <p>With minimal corrections, the router outperforms the best RAG baseline by nearly 25 pp while sending roughly 5&times; less context per query. It won 9 of 10 seed runs. RAG has no feedback loop, so the gap widens as learning compounds.</p>
           </article>
         </div>
       </section>
@@ -387,28 +365,28 @@
       <section class="section">
         <div class="section-head">
           <h2>What the paper covers</h2>
-          <p class="section-intro">The paper is the full technical write-up. These are its four main claims. Read each with the layer it belongs to: current truth (repo-local smoke lanes + BGZ benchmarks), target end shape (live graph update, full RL-native maintenance), or future evidence (shadow, online).</p>
+          <p class="section-intro">Four main claims, each grounded in a different layer of evidence.</p>
         </div>
         <div class="paper-grid">
           <article class="paper-card">
-            <div class="kicker">System split (hard design invariant)</div>
-            <h3>OpenClaw owns runtime; OpenClawBrain owns learning artifacts</h3>
-            <p>OpenClaw serves from the active promoted pack. Off the hot path, the learner materializes fresher candidate packs; activation promotes them. This split is the core invariant today. The target hardens it with a full API surface that enforces the boundary from the package API, not just docs.</p>
+            <div class="kicker">System split</div>
+            <h3>OpenClaw owns runtime; OpenClawBrain owns learning</h3>
+            <p>OpenClaw serves from a versioned brain pack (an immutable bundle of context and routing weights). Off the hot path, the learner builds fresher candidate packs; activation promotes them. This split means rollback is instant and learning never blocks a live response.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Route signals</div>
-            <h3>Combining graph structure with query-specific relevance</h3>
+            <h3>Graph structure + query-specific relevance</h3>
             <p>The router blends what the graph already knows about how facts relate (<code>graph_prior</code>) with how well each fact fits the current question (<code>QTsim</code>). A confidence gate shifts weight between them: lean on the query signal when it is clear, fall back to structure when it is not.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Learning rule</div>
-            <h3>One learning loop with a clear priority order</h3>
-            <p>Human corrections, self-evaluation, automated signals, and teacher-model feedback all feed into one update loop. Human corrections take priority, followed by the system's own outcomes, then everything else.</p>
+            <h3>One update loop, clear priority order</h3>
+            <p>Human corrections, outcome signals, scanner/harvester labels, and teacher-model feedback all feed into one policy gradient. Human corrections carry the most weight &mdash; if a person says the router picked wrong, that signal wins.</p>
           </article>
           <article class="paper-card">
-            <div class="kicker">Maintenance path (target end shape)</div>
-            <h3>RL-native graph maintenance — the target</h3>
-            <p>The paper frames graph maintenance (connect, split, merge, prune) as a control problem with conservative guardrails. Today, graph-dynamics fields are immutable pack metadata. The target is live structural maintenance on the active pack during serving. See <a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">CLAIMS.md</a> for the current/target boundary.</p>
+            <div class="kicker">Future direction</div>
+            <h3>Live graph maintenance (not yet shipped)</h3>
+            <p>The paper frames graph maintenance (connect, split, merge, prune) as a control problem. Today, graph-dynamics fields are immutable build-time metadata in each pack. The target is live structural maintenance during serving. See <a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">CLAIMS.md</a> for the boundary.</p>
           </article>
         </div>
       </section>
@@ -416,23 +394,22 @@
       <section class="section">
         <div class="section-head">
           <h2>Read next</h2>
-          <p class="section-intro">The paper reads best alongside the proof package, the architecture narrative, and the underlying materials.</p>
         </div>
         <div class="paper-grid">
           <a class="paper-card" href="../proof/">
             <div class="kicker">Proof package</div>
-            <h3>What is proven now</h3>
-            <p>Mechanism proof, the evidence ladder, and the claim boundary that keeps the site from overclaiming beyond published artifacts.</p>
+            <h3>Benchmark evidence</h3>
+            <p>Recorded-session and sparse-feedback benchmarks with full artifact links and reproduction steps.</p>
           </a>
           <a class="paper-card" href="../blog/v12.2.6-series/">
             <div class="kicker">Architecture series</div>
-            <h3>Why this boundary is fixed</h3>
-            <p>The shortest explanation of how the pieces fit: OpenClaw owns the runtime, OpenClawBrain owns the learning, and operators plug the two together.</p>
+            <h3>How the pieces fit</h3>
+            <p>Six posts walking through each component: shadow routing, confidence mixing, evaluation, operator setup, baselines, and runtime integration.</p>
           </a>
           <a class="paper-card" href="../materials/">
             <div class="kicker">Materials</div>
-            <h3>Docs, figures, and repository references</h3>
-            <p>Reproduce-eval steps, figure links, GitHub references, and the supporting material list for the site.</p>
+            <h3>Docs, figures, and references</h3>
+            <p>Reproduction steps, evaluation figures, package list, and links to the source repository.</p>
           </a>
           <a class="paper-card" href="/docs/openclaw-integration/">
             <div class="kicker">Operator docs</div>
@@ -441,16 +418,10 @@
           </a>
         </div>
       </section>
-
-      <section class="section">
-        <div class="callout">
-          <p>Canonical human-facing paper route: <a href="./">/paper/</a>. Direct artifact route: <a href="../openclawbrain.pdf">/openclawbrain.pdf</a>.</p>
-        </div>
-      </section>
     </main>
 
     <footer>
-      The paper stays synchronized with the proof package. Benchmark, shadow, and live claims appear only when their matching artifacts are published.
+      Direct PDF: <a href="../openclawbrain.pdf">/openclawbrain.pdf</a>
     </footer>
   </div>
 </body>
