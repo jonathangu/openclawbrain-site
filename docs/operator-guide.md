@@ -1,148 +1,72 @@
-# OpenClawBrain Principal Operator Guide (Canonical Product)
+> Canonical observability details live on GitHub; this page mirrors the operator truth for the current launch wave.
 
-OpenClawBrain is the shipped TypeScript package system for memory, learning, packs, activation state, and deterministic compile behind an OpenClaw-owned runtime boundary.
+# OpenClawBrain Operator Guide
 
-Operator visuals:
-- [Brains dashboard](/docs/brains-dashboard/)
+## Current operating truth
 
-Companion docs:
-- setup quickstart: [docs/setup-guide.md](setup-guide.md)
-- integration contract: [docs/openclaw-integration.md](openclaw-integration.md)
-- operations playbooks: [docs/ops-recipes.md](ops-recipes.md)
-- new agent SOP: [docs/new-agent-sop.md](new-agent-sop.md)
+Treat the current public wave as an external technical alpha.
 
-## 1) Day-0 bring-up
+- the implementation reality is the current public repo tip on `openclawbrain` `origin/main`, not a private unpublished branch
+- the truthful shipping surface is repo tip plus optional `.release/` tarballs
+- release-proof gates are still pending until `pnpm release:status` says otherwise
+- docs should not imply a finished registry wave or broad-customer polish
 
-From the OpenClawBrain TypeScript workspace root:
+## What healthy operation means today
 
-```bash
-corepack enable
-pnpm install
-pnpm check
-pnpm release:pack
-```
+A healthy attached runtime looks like this:
 
-Promote one versioned pack set into OpenClaw runtime. Do not deploy mixed revisions across core packages.
+- first value appears from a fast-boot promoted pack before any full replay finishes
+- live events keep landing while older history backfills behind the hot path
+- learned-routing proof stays explicit whenever the promoted pack requires it
+- freshness, promotion, rollback lineage, and no-op reasons are inspectable
+- OpenClaw stays fail-open if learning refresh is delayed
 
-## 2) Runtime boundary and ownership
+## Required commands
 
-OpenClaw owns:
-- serving runtime lifecycle
-- fail-open behavior
-- prompt assembly and request routing
-- deployment/canary/rollback controls
-- runtime diagnostics
-
-OpenClawBrain owns:
-- memory structure and learning policy behavior
-- contracts/events/event-export/workspace metadata
-- provenance and immutable pack assembly
-- activation/promotion/rollback state for pack sets
-- deterministic compiler output from active pack state
-- learner logic and off-path teacher updates
-
-Keep this boundary explicit in all runbooks and incidents.
-
-## 3) Pack operations: activate, promote, rollback
-
-Operator pack discipline:
-
-1. Build candidate pack set (`pnpm check`, `pnpm release:pack`).
-2. Activate candidate in canary runtime scope.
-3. Validate hot-path latency, fail-open behavior, and background loop health.
-4. Promote candidate globally.
-5. Roll back to previous active pack set if health regresses.
-
-Deterministic compile means the same active pack state must produce the same context compilation behavior.
-
-## 4) Default-on operating model
-
-Required defaults in production profiles:
-- fast boot from existing files
-- background learning enabled
-- prioritize new events over deep historical backlog
-- allow larger compiled context when it removes avoidable model/tool round-trips
-- human + self label harvesting enabled
-- scanner + harvest loops enabled
-- continuous graph learning enabled (decay, Hebbian co-firing, structural updates)
-- teacher off hot path
-
-## 5) Health signals to monitor
-
-Hot path:
-- turn latency budget
-- fail-open activation rate
-- route function/compile evaluation success rate
-
-Background loops:
-- ingest lag for new events
-- backlog depth for historical data
-- label harvest throughput (human + self)
-- scanner/harvest worker error rates
-- graph update throughput (decay/co-firing/structure)
-
-Provenance/quality:
-- event normalization success/failure counts
-- provenance chain completeness
-- correction retention trend
-
-## 6) Incident handling
-
-If hot path is unhealthy:
-- keep OpenClaw serving via fail-open
-- disable only the failing brain feature flag(s)
-- retain event export/provenance stream for later recovery
-
-If background learning is unhealthy:
-- continue serving on current learned route function
-- prioritize queue repair for new events first
-- backfill historical queues after new-event lag is stable
-
-If scanner/harvest loop is unhealthy:
-- isolate worker faults from serving runtime
-- keep labels and exported events queued durably
-- restart loop workers without resetting runtime identity
-
-## 7) Proof boundary (non-negotiable)
-
-Mechanism/workflow proof supports safe promotion discipline. It is not a stand-in for live answer-quality claims.
-
-Mechanism/workflow proof examples:
-- schema/contract compatibility
-- deterministic normalization and export
-- provenance continuity
-- stable compiler/activation behavior
-
-Live product proof examples:
-- better user-visible relevance/accuracy
-- lower repeat-error rate after corrections
-- stronger reliability under live traffic
-
-## 8) Operator responsibilities
-
-Operator owns:
-- package promotion discipline
-- runtime rollout and rollback hygiene
-- SLO monitoring for hot path and background loops
-- secret handling and environment hardening
-
-Operator does not own:
-- inventing alternate memory contracts outside published package boundaries
-- bypassing provenance requirements for short-term debugging convenience
-
-## 9) Routine checks
-
-Run these checks before each production promotion:
+From the repo root, use these checks first:
 
 ```bash
 corepack enable
-pnpm install
+pnpm install --frozen-lockfile
 pnpm check
-pnpm release:pack
+pnpm release:status
+pnpm observability:smoke
+pnpm observability:report
 ```
 
-Then validate in runtime:
-- canary traffic stable
-- fail-open path tested
-- new-event learning lag within SLO
-- background scanner/harvest healthy
+Use these when you want attach-specific confidence:
+
+```bash
+pnpm lifecycle:smoke
+pnpm continuous-product-loop:smoke
+pnpm runtime-wrapper-path:smoke
+```
+
+## What to inspect
+
+Read the proof surfaces in this order:
+
+1. `pnpm release:status` for ship surface, tag state, proof-gate status, and blocking reasons.
+2. `pnpm observability:report` for activation slots, freshness targets, rollback lineage, route artifact diffs, init handoff, and duplicate no-op reporting.
+3. compile diagnostics for `usedLearnedRouteFn`, `routerIdentity`, router checksum, PG objective metadata, and explicit fallback notes.
+
+If `handoff_state=seed_state_authoritative`, the runtime is still on the fast-boot seed-state pack.
+If `handoff_state=pg_promoted_pack_authoritative`, a later PG-promoted pack has become authoritative.
+
+## Claim boundary for operators
+
+The local operator proof today is narrow but real:
+
+- promoted-pack compilation is real
+- PG-only learned `route_fn` evidence is real
+- later served-turn route changes after candidate refresh and promotion are real
+- explicit fallback visibility is real
+
+Do not treat these as proof of:
+
+- per-query learned `route_fn` mutation on the active pack
+- full live active-pack plasticity during serving
+- finished shadow or online answer-quality proof
+- full local reproduction of the broader traversal-learning and `QTsim` benchmark story
+
+That broader route-function story remains important; it is simply claimed through Brain Ground Zero, not through this repo alone.

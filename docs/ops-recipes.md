@@ -1,120 +1,92 @@
-> Canonical docs live on GitHub; this page is a snapshot.
+> Canonical docs live on GitHub; this page is a trimmed operator snapshot for the current public wave.
 
-# OpenClawBrain Ops Recipes (TypeScript-first)
+# OpenClawBrain Ops Recipes
 
-Practical operator playbooks for the package-first runtime model.
+## Recipe 1: Day-0 attach bootstrap
 
-Canonical runbook: [docs/operator-guide.md](operator-guide.md)
-
-## Recipe 1: Day-0 startup from existing files
-
-Goal: start serving quickly without waiting for full historical replay.
+Goal: attach quickly and get first value without waiting for a full replay.
 
 ```bash
 corepack enable
-pnpm install
+pnpm install --frozen-lockfile
 pnpm check
-pnpm release:pack
+pnpm release:status
+pnpm lifecycle:smoke
+pnpm observability:smoke
 ```
-
-Runtime profile requirements:
-- `fastBootFromExistingFiles = true`
-- `backgroundLearning.enabled = true`
-- `backgroundLearning.prioritizeNewEvents = true`
-- `labels.human = true`
-- `labels.self = true`
-- `scanner.enabled = true`
-- `harvest.enabled = true`
-- `continuousGraphLearning.enabled = true`
 
 Expected result:
-- runtime serves immediately from existing files/exports
-- new events are learned first
-- historical learning continues in background
 
-## Recipe 2: Safe pack-set cutover
+- a fast-boot pack can be materialized and promoted quickly
+- OpenClaw can compile useful context immediately after attach
+- live events can start learning while older history backfills later
 
-Goal: ship a new OpenClawBrain package set without disrupting serving.
+## Recipe 2: Inspect ship surface before any release claim
 
-1. Build and verify pack set:
+Goal: keep repo-tip, tagged-candidate, and published-wave language separate.
 
 ```bash
-corepack enable
-pnpm install
-pnpm check
-pnpm release:pack
+pnpm release:status
 ```
 
-2. Deploy to canary runtime slice.
-3. Validate:
-- hot-path latency unchanged
-- fail-open still works
-- background loops healthy
-4. Promote globally.
+Check for:
 
-If canary fails, roll back to the previous pack set immediately.
+- `shipSurface`
+- matching tag on `HEAD`
+- proof-gate status
+- blocking reasons
+- linked proof bundle counts
 
-## Recipe 3: Backlog catch-up without hot-path risk
+If the surface is still `repo-tip`, do not market the wave as a finished publish.
 
-Goal: reduce historical backlog while keeping serving stable.
+## Recipe 3: Verify learned-route authority
 
-1. Keep hot path on learned route function.
-2. Keep teacher off hot path.
-3. Reserve async worker budget for new events first.
-4. Use remaining capacity for historical backfill, scanner, and harvest.
-5. Watch backlog depth and new-event lag separately.
+Goal: prove that the served compile used the promoted pack's learned router when required.
 
-Do not gate serving on backlog completion.
+Use:
 
-## Recipe 4: Label pipeline hardening
+- `pnpm observability:report`
+- compile diagnostics showing `usedLearnedRouteFn=true`
+- compile diagnostics exposing `routerIdentity` and router checksum
+- handoff notes showing whether the runtime is still on seed state or has handed off to a later PG-promoted pack
 
-Goal: keep human + self labels as default behavior and avoid silent drift.
+## Recipe 4: Handle stale learning safely
 
-1. Keep both human and self labels enabled.
-2. Keep scanner/harvest enabled.
-3. Monitor per-source label throughput:
-- human labels accepted
-- self labels accepted/rejected
-- harvest application rate
-4. Alert on prolonged zero-throughput windows.
+Goal: keep serving stable while background learning catches up.
 
-A zero-throughput label pipeline usually means quality regresses before hot-path errors appear.
+If learning is stale or delayed:
 
-## Recipe 5: Continuous graph learning tuning
+- keep OpenClaw serving through the current promoted pack
+- keep fail-open behavior explicit
+- repair live-event flow before deep backlog work
+- promote only activation-ready candidate packs
 
-Goal: keep live graph adaptation active without overfitting.
+## Recipe 5: Rollback check
 
-Required defaults:
-- decay enabled
-- Hebbian co-firing enabled
-- structural updates enabled
+Goal: prove rollback readiness instead of assuming it.
 
-Tuning order:
-1. Stabilize hot-path latency and fail-open behavior.
-2. Stabilize new-event learning lag.
-3. Tune decay/co-firing/structure rates incrementally.
-4. Re-check correction retention and repeat-error trend.
+```bash
+pnpm observability:report
+```
 
-## Recipe 6: Runtime rollback on quality regression
+Inspect:
 
-Goal: recover quickly when product quality drops after promotion.
+- `rollback.before`
+- `activationSlots.rolledBack`
+- `freshnessTargets.rolledBackActive`
+- `freshnessTargets.rolledBackCandidate`
 
-1. Revert OpenClaw runtime to previous known-good pack set.
-2. Keep serving active with fail-open.
-3. Preserve event exports and provenance for analysis.
-4. Compare mechanism metrics vs product outcomes:
-- mechanism may remain healthy while product quality regresses
-5. Roll forward only after a verified fix.
+## Recipe 6: Keep the proof boundary honest
 
-## Recipe 7: New agent bring-up
+Use these phrases:
 
-Use [docs/new-agent-sop.md](new-agent-sop.md) for full steps.
+- promoted-pack compile proof
+- PG-only learned `route_fn` evidence
+- later served-turn change after promotion
+- broader traversal-learning and `QTsim` story lives in Brain Ground Zero
 
-Minimum policy checklist for a new agent:
-- dedicated workspace
-- dedicated brain profile in OpenClaw runtime
-- package set pinned
-- fast boot enabled
-- background learning enabled
-- labels/scanner/harvest enabled
-- teacher off hot path
+Avoid these phrases:
+
+- live active-pack mutation proved here
+- per-query router updates on the current active pack
+- finished design-partner polish or broad public launch
