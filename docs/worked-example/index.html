@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Worked Example — OpenClawBrain</title>
+  <meta name="description" content="Worked Example documentation for OpenClawBrain." />
+  <link rel="canonical" href="https://openclawbrain.ai/docs/worked-example/" />
+  <style>
+    :root {
+      --bg:#0a0f17;
+      --card:#111a27;
+      --text:#d6dfed;
+      --muted:#93a1b7;
+      --bright:#f5f8ff;
+      --border:#26344a;
+      --accent:#79b7ff;
+      --sans:Inter,system-ui,sans-serif;
+      --serif:"Crimson Pro",Georgia,serif;
+      --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      background:radial-gradient(circle at 15% 0%,#152137,#0a0f17 45%);
+      color:var(--text);
+      font-family:var(--serif);
+      line-height:1.75;
+    }
+    main { max-width:860px; margin:0 auto; padding:2.8rem 1.2rem 4rem; }
+    h1,h2,h3 { font-family:var(--sans); color:var(--bright); margin:1.4rem 0 .6rem; }
+    h1 { margin-top:0; }
+    p { margin:0 0 1rem; }
+    a { color:var(--accent); }
+    ul,ol { margin:0 0 1.2rem; padding-left:1.4rem; }
+    li { margin:.3rem 0; }
+    code { font-family:var(--mono); font-size:.9em; background:rgba(121,183,255,.1); padding:.15em .35em; border-radius:4px; }
+    pre { overflow-x:auto; background:#0d1321; border:1px solid var(--border); border-radius:8px; padding:1rem; margin:1rem 0 1.4rem; }
+    pre code { background:none; padding:0; font-size:.85em; color:#c7d2fe; }
+    table { border-collapse:collapse; width:100%; margin:1rem 0 1.4rem; }
+    th,td { text-align:left; padding:.5rem .7rem; border:1px solid var(--border); }
+    th { background:var(--card); font-family:var(--sans); color:var(--bright); font-size:.9rem; }
+    .nav { font-family:var(--sans); color:var(--muted); font-size:.86rem; margin-bottom:1.4rem; }
+    .source-link { font-family:var(--sans); font-size:.82rem; color:var(--muted); margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border); }
+    .source-link a { color:var(--muted); }
+    .source-link a:hover { color:var(--accent); }
+    img { max-width:100%; height:auto; border-radius:10px; border:1px solid var(--border); }
+    @media (max-width:600px) {
+      main { padding:1.6rem .8rem 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
+    <h1>Worked Example</h1>
+    <p>This page walks through one realistic OpenClaw turn wired through OpenClawBrain &mdash; from the routing decision, through the bounded context sent to the model, to the correction that feeds back into learning.</p>
+<p>This is a concrete operator example, not a benchmark. It shows how <code>route_fn</code> picks context from the knowledge graph, how corrections are tied to the exact routing decision that fired, and how background learning later improves the router for similar future queries.</p>
+<p>Default stack assumed here:</p>
+<ul>
+<li>local embedder: <code>BAAI/bge-large-en-v1.5</code></li>
+<li>local async teacher: <code>Ollama qwen3.5:35b</code></li>
+</ul>
+<p>Companion docs:</p>
+<ul>
+<li><a href="/docs/openclaw-integration/">OpenClaw Integration</a></li>
+<li><a href="/docs/reproduce-eval/">Reproduce Eval</a></li>
+<li><a href="../proof/">/proof/</a></li>
+</ul>
+<p>How this page relates to the published proof families:</p>
+<ul>
+<li>this page is the minimum artifact contract for one real OpenClaw-shaped turn</li>
+<li>the deterministic workflow proof on <code>/proof/</code> is a separate mechanism bundle (evidence the internals work correctly) built from 4 fixed workflow scenarios</li>
+<li>the scenario-level evidence matrix (<code>per_query_matrix.csv</code> / <code>per_query_matrix.md</code>) has 16 rows showing, for each query and retrieval mode, exactly which knowledge-graph nodes made it into prompt context</li>
+<li>recorded-session and sparse-feedback benchmark bundles scale from one turn to fixed multi-query and multi-seed comparisons</li>
+<li>none of these artifacts, by themselves, prove live production answer quality on served OpenClaw traffic</li>
+</ul>
+<h2 id="scenario">Scenario</h2>
+<p>An OpenClaw operator is preparing a deploy note and asks:</p>
+<blockquote>
+<p>"For this billing banner patch, what deploy constraints should I mention?"</p>
+</blockquote>
+<p>OpenClaw should not pass the raw user message to the brain unchanged &mdash; it should pass a stable summary plus a stable <code>turn_id</code>.</p>
+<p>Example turn payload:</p>
+<div class="codehilite"><pre><span></span><code>turn_id: oc-main-2026-03-06-deploy-0142
+summary: deploy note for billing banner patch; need freeze window, rollback owner requirement, and when support contact is required
+</code></pre></div>
+
+<p>Important detail:</p>
+<ul>
+<li><code>turn_id</code> must stay stable across the compile call, later correction capture, and any learner outcome for this turn</li>
+<li>the summary should be compact and operator-meaningful, not a full prompt dump</li>
+</ul>
+<h2 id="1-openclaw-activates-a-compiled-context-block">1. OpenClaw activates a compiled context block</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">activate</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openclawbrain/activation&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">compile</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openclawbrain/compiler&quot;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">turnId</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;oc-main-2026-03-06-deploy-0142&quot;</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">summary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;deploy note for billing banner patch; &quot;</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="s2">&quot;need freeze window, rollback owner requirement, &quot;</span><span class="w"> </span><span class="o">+</span>
+<span class="w">                </span><span class="s2">&quot;and when support contact is required&quot;</span><span class="p">;</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">candidates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">activate</span><span class="p">(</span><span class="nx">state</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">summary</span><span class="p">,</span><span class="w"> </span><span class="nx">turnId</span><span class="w"> </span><span class="p">});</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">compiled</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nx">compile</span><span class="p">(</span><span class="nx">candidates</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">format</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;prompt&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">maxPromptContextChars</span><span class="o">:</span><span class="w"> </span><span class="kt">20_000</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<p>What to save for proof:</p>
+<ul>
+<li>exact activation + compile call parameters</li>
+<li><code>turn_id</code></li>
+<li>state path or state snapshot identifier</li>
+</ul>
+<h2 id="2-the-compiler-returns-a-bounded-context-block">2. The compiler returns a bounded context block</h2>
+<p>Example prompt block returned to OpenClaw:</p>
+<div class="codehilite"><pre><span></span><code>[COMPILED_CONTEXT v1]
+- Deploy policy snapshot: customer-visible changes freeze after 16:00 PT unless the on-call lead approves an exception.
+- Release note rule: always name a rollback owner. Add a support contact only for customer-visible patches.
+- Prior correction from this workspace: do not describe finance-impacting changes as auto-approved; they still need manual review.
+[/COMPILED_CONTEXT]
+</code></pre></div>
+
+<p>What matters here:</p>
+<ul>
+<li>the returned block is bounded</li>
+<li>OpenClaw appends the block to its prompt</li>
+<li>raw retrieval internals are not injected into the prompt</li>
+</ul>
+<p>This is the hot path. No async teacher call belongs here.</p>
+<h2 id="3-the-model-answer-still-happens-in-openclaw">3. The model answer still happens in OpenClaw</h2>
+<p>The brain does not author the final reply. OpenClaw's model does.</p>
+<p>Example OpenClaw answer:</p>
+<div class="codehilite"><pre><span></span><code>For this patch, mention the current freeze window, name a rollback owner, and include a support contact if the patch is customer-visible. If finance-impacting review is still involved, do not call it auto-approved.
+</code></pre></div>
+
+<p>Operator point:</p>
+<ul>
+<li>the current turn benefits from the returned context immediately</li>
+<li>the answer is still produced by the normal OpenClaw model path</li>
+</ul>
+<h2 id="4-same-turn-correction-capture-and-learner-outcome">4. Same-turn correction capture and learner outcome</h2>
+<p>Suppose the user immediately corrects the agent:</p>
+<blockquote>
+<p>"This patch is internal-only. Keep the rollback owner, but do not require a support contact."</p>
+</blockquote>
+<p>Capture the correction against the same <code>turn_id</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">emitCorrectionEvent</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openclawbrain/events&quot;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">recordOutcome</span><span class="w"> </span><span class="p">}</span><span class="w">       </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@openclawbrain/learner&quot;</span><span class="p">;</span>
+
+<span class="nx">emitCorrectionEvent</span><span class="p">(</span><span class="nx">state</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">turnId</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">kind</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;CORRECTION&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;For internal-only patches, keep the rollback owner &quot;</span><span class="w"> </span><span class="o">+</span>
+<span class="w">           </span><span class="s2">&quot;but do not require a support contact.&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">lookback</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">messageId</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;assistant-2026-03-06-0142&quot;</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="nx">recordOutcome</span><span class="p">(</span><span class="nx">state</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">turnId</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">outcome</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">lookback</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<p>What to save for proof:</p>
+<ul>
+<li>correction text</li>
+<li><code>messageId</code></li>
+<li>correction event output</li>
+<li>learner outcome output</li>
+</ul>
+<p>What happens immediately:</p>
+<ul>
+<li>the correction and outcome are attached to the routing decision that was made for this <code>turn_id</code></li>
+<li>OpenClaw can answer the correction in the conversation right away</li>
+</ul>
+<p>What does <strong>not</strong> happen immediately:</p>
+<ul>
+<li>the live <code>route_fn</code> is not replaced inline</li>
+<li>previous turns are not re-answered</li>
+</ul>
+<h2 id="5-later-replay-harvester-and-maintain-cycle">5. Later replay, harvester, and maintain cycle</h2>
+<p>After the live conversation, run the background learning path on historical and newly captured sessions.</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">SESSIONS</span><span class="o">=</span>~/.openclaw/agents/main/sessions
+
+openclawbrain<span class="w"> </span>replay<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--state<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$STATE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--sessions<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SESSIONS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--fast-learning<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resume<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--checkpoint<span class="w"> </span>~/.openclawbrain/main/replay_checkpoint.json
+
+openclawbrain<span class="w"> </span>harvest<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--state<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$STATE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--events<span class="w"> </span>~/.openclawbrain/main/learning_events.jsonl<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--tasks<span class="w"> </span>split,merge,prune,connect,scale<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--json
+
+openclawbrain<span class="w"> </span>maintain<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--state<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$STATE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--tasks<span class="w"> </span>health,decay,prune,merge<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--json
+</code></pre></div>
+
+<p>This is where the correction joins the larger learning stream:</p>
+<ul>
+<li>replay mines the recorded session history</li>
+<li>harvester/scanner turn session events into learning signals</li>
+<li>maintenance applies structural cleanup (split, merge, prune, decay)</li>
+</ul>
+<p>Later turns see the new routing behavior only after the updated state is deployed.</p>
+<h2 id="6-what-changed-now-vs-later">6. What changed now vs later</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Changes on this turn</th>
+<th>Changes only after background learning and redeploy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>turn_id</code> linkage</td>
+<td>compile, correction capture, and outcome all refer to the same turn history</td>
+<td>later analysis can replay the same turn history reliably</td>
+</tr>
+<tr>
+<td>prompt context</td>
+<td>OpenClaw gets the bounded compiled context block immediately</td>
+<td>similar future turns may get a different block only after updated state is served</td>
+</tr>
+<tr>
+<td>OpenClaw answer</td>
+<td>the current answer can use the returned context right away</td>
+<td>past answers do not retroactively change</td>
+</tr>
+<tr>
+<td>correction record</td>
+<td>the correction is stored immediately against the routing decision made for this turn</td>
+<td>the correction influences future routing only after replay/harvest/update work is deployed</td>
+</tr>
+<tr>
+<td>learned <code>route_fn</code></td>
+<td>current live weights stay as they were for this served state</td>
+<td>later served weights can prefer better edges for similar deploy questions</td>
+</tr>
+<tr>
+<td>graph structure</td>
+<td>no need to block the live turn on structural work</td>
+<td>split, merge, prune, connect, and decay effects appear after maintenance and cutover</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-minimum-artifact-bundle-for-one-worked-turn">7. Minimum artifact bundle for one worked turn</h2>
+<p>If you want this turn to count as evidence instead of anecdote, keep at least:</p>
+<ul>
+<li>inbound summary and stable <code>turn_id</code></li>
+<li>exact activation + compile parameters</li>
+<li>returned bounded compiled context block</li>
+<li>OpenClaw answer text or response trace id</li>
+<li>same-turn correction text plus correction event output</li>
+<li>learner outcome output</li>
+<li>later replay, harvest, and maintain commands plus output paths</li>
+<li>commit SHA and state identifier used for the turn and the later cutover</li>
+</ul>
+<p>That bundle is the smallest useful proof unit for OpenClawBrain on real OpenClaw work.</p>
+<h2 id="8-the-operational-lesson">8. The operational lesson</h2>
+<p>The concrete product story is:</p>
+<ol>
+<li>OpenClaw can use the brain on the very next turn &mdash; the graph's structure provides useful routing even before learning has run.</li>
+<li>Corrections are tied to the specific routing decision that was made for that query, not lost in a generic feedback bucket.</li>
+<li>The router improves later, through background learning and a later deploy window. Each correction makes <code>route_fn</code> a little sharper for similar future queries.</li>
+</ol>
+<p>That is the intended separation:</p>
+<ul>
+<li>immediate utility on the live turn (graph structure + current learned weights)</li>
+<li>continuous improvement off the hot path (corrections, outcomes, and automated signals compound over time)</li>
+<li>claims backed by saved artifacts instead of narrative certainty</li>
+</ul>
+    <div class="source-link">
+      <a href="/docs/worked-example.md">View source (Markdown)</a>
+    </div>
+  </main>
+</body>
+</html>

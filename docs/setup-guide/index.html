@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Setup Guide — OpenClawBrain</title>
+  <meta name="description" content="Setup Guide documentation for OpenClawBrain." />
+  <link rel="canonical" href="https://openclawbrain.ai/docs/setup-guide/" />
+  <style>
+    :root {
+      --bg:#0a0f17;
+      --card:#111a27;
+      --text:#d6dfed;
+      --muted:#93a1b7;
+      --bright:#f5f8ff;
+      --border:#26344a;
+      --accent:#79b7ff;
+      --sans:Inter,system-ui,sans-serif;
+      --serif:"Crimson Pro",Georgia,serif;
+      --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      background:radial-gradient(circle at 15% 0%,#152137,#0a0f17 45%);
+      color:var(--text);
+      font-family:var(--serif);
+      line-height:1.75;
+    }
+    main { max-width:860px; margin:0 auto; padding:2.8rem 1.2rem 4rem; }
+    h1,h2,h3 { font-family:var(--sans); color:var(--bright); margin:1.4rem 0 .6rem; }
+    h1 { margin-top:0; }
+    p { margin:0 0 1rem; }
+    a { color:var(--accent); }
+    ul,ol { margin:0 0 1.2rem; padding-left:1.4rem; }
+    li { margin:.3rem 0; }
+    code { font-family:var(--mono); font-size:.9em; background:rgba(121,183,255,.1); padding:.15em .35em; border-radius:4px; }
+    pre { overflow-x:auto; background:#0d1321; border:1px solid var(--border); border-radius:8px; padding:1rem; margin:1rem 0 1.4rem; }
+    pre code { background:none; padding:0; font-size:.85em; color:#c7d2fe; }
+    table { border-collapse:collapse; width:100%; margin:1rem 0 1.4rem; }
+    th,td { text-align:left; padding:.5rem .7rem; border:1px solid var(--border); }
+    th { background:var(--card); font-family:var(--sans); color:var(--bright); font-size:.9rem; }
+    .nav { font-family:var(--sans); color:var(--muted); font-size:.86rem; margin-bottom:1.4rem; }
+    .source-link { font-family:var(--sans); font-size:.82rem; color:var(--muted); margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border); }
+    .source-link a { color:var(--muted); }
+    .source-link a:hover { color:var(--accent); }
+    img { max-width:100%; height:auto; border-radius:10px; border:1px solid var(--border); }
+    @media (max-width:600px) {
+      main { padding:1.6rem .8rem 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
+    <h1>Setup Guide</h1>
+    <p>OpenClawBrain replaces static retrieval with a learned routing function (<code>route_fn</code>) over a knowledge graph. Instead of dumping the nearest text chunks into the prompt, it picks the right context for each query, learns from corrections and feedback, and improves over time. It works alongside <a href="https://github.com/jonathangu/openclaw">OpenClaw</a>, which owns the runtime (sessions, tools, prompts, answers).</p>
+<p>This guide gets you from zero to a working setup.</p>
+<h2 id="what-you-need">What you need</h2>
+<ul>
+<li>Node.js 20+ with <code>corepack</code></li>
+<li>An OpenClaw runtime deployment (OpenClawBrain is a learning layer, not a standalone runtime)</li>
+<li>Workspace files (markdown, docs, memory files) for your agent to learn from</li>
+<li>API keys for your LLM provider(s), stored in OpenClaw's secrets config</li>
+</ul>
+<h2 id="1-build-the-workspace">1. Build the workspace</h2>
+<div class="codehilite"><pre><span></span><code>corepack<span class="w"> </span><span class="nb">enable</span>
+pnpm<span class="w"> </span>install
+pnpm<span class="w"> </span>check<span class="w">            </span><span class="c1"># type-check, lint, test, and verify package integrity</span>
+pnpm<span class="w"> </span>release:pack<span class="w">     </span><span class="c1"># produce a versioned brain pack</span>
+</code></pre></div>
+
+<p>A <strong>brain pack</strong> is a versioned bundle of context blocks (nodes from the knowledge graph) and learned routing weights. It is the artifact OpenClaw loads at runtime so that <code>route_fn</code> can decide what context to surface for a given query.</p>
+<h2 id="2-connect-to-openclaw">2. Connect to OpenClaw</h2>
+<p>OpenClaw owns runtime orchestration. You tell it where to find the brain pack by setting a runtime profile:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;brain&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;packSet&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;versioned-pack-set&gt;&quot;</span><span class="p">,</span><span class="w">       </span><span class="c1">// which brain pack version to load</span>
+<span class="w">    </span><span class="nt">&quot;fastBootFromExistingFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">        </span><span class="c1">// start serving immediately from existing files</span>
+<span class="w">    </span><span class="nt">&quot;backgroundLearning&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;prioritizeNewEvents&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">             </span><span class="c1">// learn from new usage before backfilling history</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;labels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;human&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;self&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span><span class="c1">// collect human and automated feedback signals</span>
+<span class="w">    </span><span class="nt">&quot;scanner&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span><span class="w">           </span><span class="c1">// watch for new workspace and event data</span>
+<span class="w">    </span><span class="nt">&quot;harvest&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span><span class="w">           </span><span class="c1">// extract learning signals from events</span>
+<span class="w">    </span><span class="nt">&quot;teacher&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;onHotPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span><span class="p">}</span><span class="w">         </span><span class="c1">// keep learning off the response path</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Key points:
+- <code>fastBootFromExistingFiles</code> means OpenClaw starts serving immediately from your existing workspace files, even before background learning finishes processing history.
+- <code>teacher.onHotPath: false</code> keeps learning off the serving path. Learning never slows down responses.
+- Labels, scanner, and harvest are on by default to collect feedback and usage signals.</p>
+<h2 id="3-confirm-it-is-working">3. Confirm it is working</h2>
+<p>After connecting, verify these behaviors:</p>
+<ol>
+<li><strong>Agent responds immediately.</strong> OpenClaw boots from existing files without waiting for learning to complete.</li>
+<li><strong>Background learning is running.</strong> New events are learned first; historical backfill continues in the background.</li>
+<li><strong>Fail-open works.</strong> If the brain becomes unavailable or learning processes are delayed, OpenClaw still serves responses normally. The agent keeps working without brain-enhanced context.</li>
+</ol>
+<h2 id="4-rollback-and-fail-open">4. Rollback and fail-open</h2>
+<p>OpenClaw owns fail-open behavior. If something goes wrong:</p>
+<ul>
+<li><strong>Brain becomes unavailable:</strong> OpenClaw automatically falls back to core runtime behavior. Responses continue without brain-enhanced context.</li>
+<li><strong>Bad brain pack:</strong> Roll back to the previous active pack set. Compilation from a given pack is deterministic, so rollback is safe.</li>
+<li><strong>Learning delays:</strong> Scanner, harvest, and learner workers run asynchronously. Delays do not affect the hot path.</li>
+</ul>
+<p>Recovery happens through background loops and pack rollback &mdash; no manual intervention needed.</p>
+<h2 id="next-steps">Next steps</h2>
+<ul>
+<li><a href="/docs/openclaw-integration/">Integration docs</a> &mdash; detailed runtime wiring and failure semantics</li>
+<li><a href="/docs/reproduce-eval/">Reproduce benchmarks</a> &mdash; run the evaluation harness yourself</li>
+<li><a href="/proof/">Proof package</a> &mdash; worked examples and benchmark evidence</li>
+</ul>
+    <div class="source-link">
+      <a href="/docs/setup-guide.md">View source (Markdown)</a>
+    </div>
+  </main>
+</body>
+</html>

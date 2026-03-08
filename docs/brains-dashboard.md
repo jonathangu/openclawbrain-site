@@ -21,8 +21,8 @@ Snapshot date: **2026-03-03**.
 2. Re-run `scripts/gen_brains_dashboard.py` to regenerate the PNGs.
 
 ## Charts
-![Brains dashboard nodes + edges](../assets/brains-dashboard/brains_dashboard_nodes_edges.png)
+![Brains dashboard nodes + edges](/assets/brains-dashboard/brains_dashboard_nodes_edges.png)
 
-![Brains dashboard tiers](../assets/brains-dashboard/brains_dashboard_tiers.png)
+![Brains dashboard tiers](/assets/brains-dashboard/brains_dashboard_tiers.png)
 
-![Brains dashboard inhibitory edges](../assets/brains-dashboard/brains_dashboard_inhibitory.png)
+![Brains dashboard inhibitory edges](/assets/brains-dashboard/brains_dashboard_inhibitory.png)

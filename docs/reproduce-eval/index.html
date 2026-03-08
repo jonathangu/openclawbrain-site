@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reproduce Eval — OpenClawBrain</title>
+  <meta name="description" content="Reproduce Eval documentation for OpenClawBrain." />
+  <link rel="canonical" href="https://openclawbrain.ai/docs/reproduce-eval/" />
+  <style>
+    :root {
+      --bg:#0a0f17;
+      --card:#111a27;
+      --text:#d6dfed;
+      --muted:#93a1b7;
+      --bright:#f5f8ff;
+      --border:#26344a;
+      --accent:#79b7ff;
+      --sans:Inter,system-ui,sans-serif;
+      --serif:"Crimson Pro",Georgia,serif;
+      --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      background:radial-gradient(circle at 15% 0%,#152137,#0a0f17 45%);
+      color:var(--text);
+      font-family:var(--serif);
+      line-height:1.75;
+    }
+    main { max-width:860px; margin:0 auto; padding:2.8rem 1.2rem 4rem; }
+    h1,h2,h3 { font-family:var(--sans); color:var(--bright); margin:1.4rem 0 .6rem; }
+    h1 { margin-top:0; }
+    p { margin:0 0 1rem; }
+    a { color:var(--accent); }
+    ul,ol { margin:0 0 1.2rem; padding-left:1.4rem; }
+    li { margin:.3rem 0; }
+    code { font-family:var(--mono); font-size:.9em; background:rgba(121,183,255,.1); padding:.15em .35em; border-radius:4px; }
+    pre { overflow-x:auto; background:#0d1321; border:1px solid var(--border); border-radius:8px; padding:1rem; margin:1rem 0 1.4rem; }
+    pre code { background:none; padding:0; font-size:.85em; color:#c7d2fe; }
+    table { border-collapse:collapse; width:100%; margin:1rem 0 1.4rem; }
+    th,td { text-align:left; padding:.5rem .7rem; border:1px solid var(--border); }
+    th { background:var(--card); font-family:var(--sans); color:var(--bright); font-size:.9rem; }
+    .nav { font-family:var(--sans); color:var(--muted); font-size:.86rem; margin-bottom:1.4rem; }
+    .source-link { font-family:var(--sans); font-size:.82rem; color:var(--muted); margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border); }
+    .source-link a { color:var(--muted); }
+    .source-link a:hover { color:var(--accent); }
+    img { max-width:100%; height:auto; border-radius:10px; border:1px solid var(--border); }
+    @media (max-width:600px) {
+      main { padding:1.6rem .8rem 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
+    <h1>Reproduce Eval</h1>
+    <p>This is the single source of truth for reproducing every evaluation metric and figure on the OpenClawBrain site and paper. The benchmarks compare OpenClawBrain's learned router (<code>route_fn</code> over a knowledge graph) against conventional RAG baselines on frozen workloads &mdash; same queries, same data, same scoring rules.</p>
+<p>Most workflows below run as npm scripts in the TypeScript workspace; the sparse-feedback multiseed family is reproduced from the <code>brain-ground-zero</code> proof harness repo.</p>
+<h2 id="0-initialize-the-typescript-workspace">0) Initialize the TypeScript workspace</h2>
+<p>All reproduction commands run in the TypeScript workspace using npm scripts.</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/openclawbrain
+corepack<span class="w"> </span><span class="nb">enable</span>
+pnpm<span class="w"> </span>install
+pnpm<span class="w"> </span>check
+pnpm<span class="w"> </span>release:pack
+</code></pre></div>
+
+<h2 id="1-run-the-workflow-proof-harness-deterministic-mechanism-proof">1) Run the workflow-proof harness (deterministic mechanism proof)</h2>
+<p>Use this harness for the published top-of-page mechanism proof slice on the homepage.</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/openclawbrain
+pnpm<span class="w"> </span>run<span class="w"> </span>eval:workflow-proof<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output-dir<span class="w"> </span>scratch/workflow-proof/latest
+</code></pre></div>
+
+<p>Expected artifacts in <code>scratch/workflow-proof/latest/</code>:
+- <code>workflow_snapshot.json</code>
+- <code>train_traces.jsonl</code>
+- <code>train_labels.jsonl</code>
+- <code>eval_queries.jsonl</code>
+- <code>learning_curve.csv</code>
+- <code>baseline_eval/summary.json</code>
+- <code>report.md</code>
+- <code>worked_example.md</code></p>
+<p>Deterministic metrics from the published workflow-proof artifacts:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th style="text-align: right;">Exact target success</th>
+<th style="text-align: right;">Required-node coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vector_topk</code></td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr>
+<td><code>pointer_chase</code></td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.38</td>
+</tr>
+<tr>
+<td><code>graph_prior_only</code></td>
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">0.50</td>
+</tr>
+<tr>
+<td><code>learned</code></td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+</tbody>
+</table>
+<p>Interpretation:
+- <code>vector_topk</code> (standard RAG retrieval) fails completely on these structured workflow queries &mdash; none of the required context is found.
+- Graph priors alone (no learning) already get halfway there, showing the knowledge graph has value before any training.
+- The <code>learned</code> mode (the full trained router) hits 100% on both metrics, reliably surfacing exactly the right context blocks for every held-out query.
+- The jump from 0% to 100% shows why a learned router over a knowledge graph outperforms flat vector search on structured tasks.</p>
+<p>Non-claims:
+- This is mechanism proof, not full product proof.
+- This is not a live production OpenClaw runtime eval.
+- This does not directly prove downstream answer quality; it proves retrieval-routing behavior on deterministic workflow-shaped tasks.</p>
+<h2 id="2-recorded-session-head-to-head-benchmark">2) Recorded-session head-to-head benchmark</h2>
+<p>The first fair comparison layer: a frozen recorded-session query set, fixed state, and one rubric applied to all modes.</p>
+<p>Public bundle: <code>proof-results/recorded_h2h_relational_drift_001</code> in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> at commit <code>1c54302</code>.</p>
+<p>Current recorded-session metrics:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th style="text-align: right;">Accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>full_brain</code></td>
+<td style="text-align: right;">0.975</td>
+</tr>
+<tr>
+<td><code>vector_rag_rerank</code> (best baseline)</td>
+<td style="text-align: right;">0.89625</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>800 queries, 41 training steps, 8 baselines compared.</li>
+<li>Delta: +7.9 percentage points (<code>full_brain</code> vs <code>vector_rag_rerank</code>). In practice, that means roughly 63 additional correct answers out of 800.</li>
+</ul>
+<p>Interpretation:
+- The full brain policy beats all 8 baselines on a frozen recorded-session query set with a fixed rubric.
+- This is benchmark/recorded-session evidence, not a live production answer-quality claim.</p>
+<p>Non-claims:
+- This does not prove live production answer quality on served OpenClaw traffic.
+- This does not prove shadow-mode or online rollout outcomes.
+- The next rungs are shadow-mode and narrow online rollout.</p>
+<h2 id="3-sparse-feedback-10-seed-proof-family">3) Sparse-feedback 10-seed proof family</h2>
+<p>The next benchmark family after recorded-session head-to-head: sparse supervision over fixed workloads and seeds.</p>
+<p>Public bundle: <code>proof-results/sparse_feedback_10seed</code> in <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">brain-ground-zero</a> (run date <code>2026-03-07</code>).</p>
+<p>Published sparse-feedback metrics:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Context/query</th>
+<th style="text-align: right;">H2H vs <code>full_brain</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>full_brain</code></td>
+<td style="text-align: right;">91.96%</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">&mdash;</td>
+</tr>
+<tr>
+<td><code>vector_rag_rerank</code> (best RAG baseline)</td>
+<td style="text-align: right;">67.05%</td>
+<td style="text-align: right;">5.00</td>
+<td style="text-align: right;">1-9-0</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Delta: +24.91 pp (<code>full_brain</code> vs best RAG baseline). The learned router answers roughly a quarter more queries correctly.</li>
+<li>Pairwise: <code>full_brain</code> vs <code>vector_rag_rerank</code> is 9-1-0 across 10 seeds &mdash; the brain wins 9 out of 10 independent runs.</li>
+<li>Sparse feedback condition: only about 19% of turns include an explicit correctness signal in this run. The brain still learns effectively from limited feedback.</li>
+</ul>
+<p>Reproduce from the proof harness repo:</p>
+<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/jonathangu/brain-ground-zero.git
+<span class="nb">cd</span><span class="w"> </span>brain-ground-zero
+./scripts/run_sparse_feedback_proof.sh
+</code></pre></div>
+
+<p>Expected sparse-feedback artifacts in <code>proof-results/sparse_feedback_10seed/</code>:
+- <code>summary.json</code>
+- <code>summary_table.csv</code> + <code>summary_table.md</code>
+- <code>leaderboard.csv</code> + <code>leaderboard.md</code>
+- <code>pairwise_accuracy_delta.csv</code> + <code>pairwise_accuracy_delta.md</code>
+- <code>win_rate_matrix.csv</code> + <code>win_rate_matrix.md</code>
+- <code>per_seed_breakdown.csv</code> + <code>per_seed_breakdown.md</code>
+- <code>per_seed_accuracy_matrix.csv</code> + <code>per_seed_accuracy_matrix.md</code>
+- <code>proof_digest.md</code>
+- <code>worked_example_trace.md</code>
+- <code>learning_curve.png</code>
+- <code>seeds.json</code></p>
+<p>Interpretation:
+- The full brain policy stays materially ahead under sparse feedback while using much less context per query (1 block vs 5) than the strongest RAG baseline.
+- This is fixed-workload benchmark evidence and should be reported as such.</p>
+<p>Non-claims:
+- This does not prove live production answer quality on served OpenClaw traffic.
+- This does not prove shadow-mode or online rollout outcomes.
+- Runtime ownership boundaries are unchanged: OpenClaw owns live runtime, OpenClawBrain owns memory/learning artifacts.</p>
+<h2 id="4-run-the-baseline-ablation-harness-real-query-set">4) Run the baseline + ablation harness (real query set)</h2>
+<p>Use the evaluation package entrypoint in the main <code>openclawbrain</code> workspace.</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/openclawbrain
+pnpm<span class="w"> </span>run<span class="w"> </span>eval:baseline<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--queries<span class="w"> </span>/path/to/queries.jsonl<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--modes<span class="w"> </span>vector_only,edge_sim_legacy,graph_prior_only,qtsim_only,learned<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>/tmp/ocb_eval.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--print-per-query
+</code></pre></div>
+
+<p>Expected output:
+- <code>/tmp/ocb_eval.json</code> (per-mode summaries + optional per-query rows)</p>
+<p>Baseline mapping used in the paper/blog:
+- <strong>Vector top-k</strong> → <code>vector_only</code>
+- <strong>Top-k + reranker</strong> → <code>edge_sim_legacy</code> (deterministic <code>route_mode=edge+sim</code> rerank)
+- <strong>Pointer-chasing</strong> → <code>edge_sim_legacy</code> with multi-hop traversal enabled (default in the harness)</p>
+<p>If you add a dedicated pointer-chasing mode in the harness, include it in <code>--modes</code> and document it in the report.</p>
+<h2 id="5-run-synthetic-simulations-rewardaccuracyoracle-gap-curves">5) Run synthetic simulations (reward/accuracy/oracle-gap curves)</h2>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/openclawbrain
+pnpm<span class="w"> </span>run<span class="w"> </span>eval:sim-expert-regions<span class="w"> </span>--<span class="w"> </span>--output-dir<span class="w"> </span>/tmp/ocb_expert_regions
+pnpm<span class="w"> </span>run<span class="w"> </span>eval:sim-two-cluster<span class="w"> </span>--<span class="w"> </span>--output-dir<span class="w"> </span>/tmp/ocb_two_cluster
+</code></pre></div>
+
+<p>Expected outputs:
+- <code>/tmp/ocb_expert_regions/simulation_curve.csv</code> (columns: <code>epoch,reward,accuracy,oracle_gap_fraction,...</code>)
+- <code>/tmp/ocb_expert_regions/report.md</code>
+- <code>/tmp/ocb_two_cluster/simulation_curve.csv</code> (columns: <code>epoch,ce_loss,cluster_accuracy,top1_accuracy</code>)
+- <code>/tmp/ocb_two_cluster/report.md</code></p>
+<h2 id="6-generate-sitepaper-figures-from-csvs">6) Generate site/paper figures from CSVs</h2>
+<p>From this website repo:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/openclawbrain-site
+pnpm<span class="w"> </span>run<span class="w"> </span>eval:plot<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--inputs<span class="w"> </span>/tmp/ocb_expert_regions<span class="w"> </span>/tmp/ocb_two_cluster<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--out<span class="w"> </span>figures/eval
+</code></pre></div>
+
+<p>Expected outputs in <code>figures/eval/</code>:
+- <code>reward_vs_epoch.svg</code> + <code>reward_vs_epoch.png</code>
+- <code>accuracy_vs_epoch.svg</code> + <code>accuracy_vs_epoch.png</code>
+- <code>oracle_gap_closed.svg</code> + <code>oracle_gap_closed.png</code>
+- <code>alpha_router_conf_hist.svg</code> + <code>alpha_router_conf_hist.png</code> (if data present)
+- <code>ablation_bar_chart.svg</code> + <code>ablation_bar_chart.png</code></p>
+<h2 id="7-paper-table-placeholders">7) Paper table placeholders</h2>
+<p>If a run does not produce the outputs above, leave paper/blog tables as <code>TBD</code> and cite the exact command + output path for the missing artifact (for example, <code>/tmp/ocb_eval.json</code> and <code>/tmp/ocb_expert_regions/simulation_curve.csv</code>).</p>
+    <div class="source-link">
+      <a href="/docs/reproduce-eval.md">View source (Markdown)</a>
+    </div>
+  </main>
+</body>
+</html>

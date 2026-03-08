@@ -423,7 +423,7 @@
         <a href="../">Home</a>
         <a href="./">Proof</a>
         <a href="../blog/">Blog</a>
-        <a href="../docs/worked-example.md">Worked Example</a>
+        <a href="/docs/worked-example/">Worked Example</a>
         <a href="../paper/">Paper</a>
       </nav>
     </header>
@@ -440,7 +440,7 @@
             <a class="btn btn-primary" href="#recorded-session">Recorded-session H2H</a>
             <a class="btn btn-secondary" href="#sparse-feedback">Sparse-feedback proof</a>
             <a class="btn btn-secondary" href="#worked-turn">Worked-turn trace</a>
-            <a class="btn btn-secondary" href="../docs/reproduce-eval.md">Reproduce instructions</a>
+            <a class="btn btn-secondary" href="/docs/reproduce-eval/">Reproduce instructions</a>
           </div>
           <p class="hero-note">
             We only publish claims when we have the matching evidence. Shadow-mode and live-traffic results will appear here once those tests are complete.
@@ -486,7 +486,7 @@
             <div class="kicker">How each retrieval method performs on 4 fixed queries</div>
             <img src="../figures/eval/workflow_proof_exact_target_success.svg" alt="Bar chart showing exact-target success across the deterministic workflow proof modes: vector_topk zero out of four, pointer_chase one out of four, graph_prior_only two out of four, and learned four out of four">
             <figcaption>
-              This chart shows whether each retrieval method surfaces the exact right context for 4 fixed workflow queries. Standard vector search (<code>vector_topk</code>) gets 0 out of 4 right. Following links in the graph (<code>pointer_chase</code>) gets 1 out of 4. Using the graph structure alone (<code>graph_prior_only</code>) gets 2 out of 4. The learned router gets all 4 correct -- it combines graph structure with learned weights to find the right context reliably. Source data: <code>baseline_eval/summary.csv</code>; per-query detail in <code>per_query_matrix.csv</code>. Reproduce from <a href="../docs/reproduce-eval.md">docs/reproduce-eval.md</a>; see the <a href="../docs/worked-example.md">worked example</a> for how a single turn looks in practice.
+              This chart shows whether each retrieval method surfaces the exact right context for 4 fixed workflow queries. Standard vector search (<code>vector_topk</code>) gets 0 out of 4 right. Following links in the graph (<code>pointer_chase</code>) gets 1 out of 4. Using the graph structure alone (<code>graph_prior_only</code>) gets 2 out of 4. The learned router gets all 4 correct -- it combines graph structure with learned weights to find the right context reliably. Source data: <code>baseline_eval/summary.csv</code>; per-query detail in <code>per_query_matrix.csv</code>. Reproduce from <a href="/docs/reproduce-eval/">reproduce eval</a>; see the <a href="/docs/worked-example/">worked example</a> for how a single turn looks in practice.
             </figcaption>
           </figure>
 
@@ -521,7 +521,7 @@ summary: deploy note for billing banner patch...
 [/COMPILED_CONTEXT]
 correction: internal-only patch -> no support contact</code></pre>
             <p class="meta">
-              Source artifact: <a href="../docs/worked-example.md">docs/worked-example.md</a>. The same <code>turn_id</code> ties compile output, correction event capture, and learner outcome.
+              Source artifact: <a href="/docs/worked-example/">worked example</a>. The same <code>turn_id</code> ties compile output, correction event capture, and learner outcome.
             </p>
           </article>
 
@@ -553,7 +553,7 @@ correction: internal-only patch -> no support contact</code></pre>
             <div class="kicker">Learning curve</div>
             <img src="../figures/eval/workflow_proof_learning_curve.svg" alt="Line chart showing graph_prior_only exact-target success staying at fifty percent while learned routing reaches one hundred percent at epoch fourteen">
             <figcaption>
-              Without learning, graph-structure-only routing (<code>graph_prior_only</code>) stays stuck at 2 out of 4 correct across all 16 training epochs. With learning enabled, the router starts at the same 2/4 but improves to 4/4 by epoch 14 and stays there -- learning happens in the background without slowing down live responses. Source: <code>learning_curve.csv</code>. Per-query detail: <code>per_query_matrix.csv</code>. Reproduce from <a href="../docs/reproduce-eval.md">docs/reproduce-eval.md</a>; see the <a href="../docs/worked-example.md">worked example</a> for how this looks in a real turn.
+              Without learning, graph-structure-only routing (<code>graph_prior_only</code>) stays stuck at 2 out of 4 correct across all 16 training epochs. With learning enabled, the router starts at the same 2/4 but improves to 4/4 by epoch 14 and stays there -- learning happens in the background without slowing down live responses. Source: <code>learning_curve.csv</code>. Per-query detail: <code>per_query_matrix.csv</code>. Reproduce from <a href="/docs/reproduce-eval/">reproduce eval</a>; see the <a href="/docs/worked-example/">worked example</a> for how this looks in a real turn.
             </figcaption>
           </figure>
 
@@ -657,7 +657,7 @@ correction: internal-only patch -> no support contact</code></pre>
             <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">0</div>
             <h3>Worked-turn trace</h3>
             <p>Can we inspect one turn end-to-end? Input, selected context, answer, and how a correction feeds back into learning &mdash; all saved with a stable turn ID for later audit.</p>
-            <div class="meta">This rung is reached. Inspect <a href="#worked-turn">worked-turn evidence</a> or open <a href="../docs/worked-example.md">docs/worked-example.md</a>.</div>
+            <div class="meta">This rung is reached. Inspect <a href="#worked-turn">worked-turn evidence</a> or open the <a href="/docs/worked-example/">worked example</a>.</div>
           </article>
           <article class="ladder-card">
             <div class="step">1</div>
@@ -756,12 +756,12 @@ correction: internal-only patch -> no support contact</code></pre>
           </div>
         </div>
         <div class="kit-grid">
-          <a class="kit-card" href="../docs/worked-example.md">
+          <a class="kit-card" href="/docs/worked-example/">
             <div class="kicker">Concrete trace</div>
             <h3>Worked example</h3>
             <p>One OpenClaw turn with stable <code>turn_id</code>, bounded compiled context, same-turn correction capture, and later replay boundaries.</p>
           </a>
-          <a class="kit-card" href="../docs/openclaw-integration.md">
+          <a class="kit-card" href="/docs/openclaw-integration/">
             <div class="kicker">Rollout guide</div>
             <h3>OpenClaw integration</h3>
             <p>How OpenClaw (the runtime) connects to OpenClawBrain (the learning layer): fail-open behavior, bounded context, and the background learning loop.</p>
@@ -776,7 +776,7 @@ correction: internal-only patch -> no support contact</code></pre>
             <h3>Product narrative</h3>
             <p>The full story: how OpenClaw owns the runtime, how OpenClawBrain learns from usage to build better brain packs, and how evidence grows over time.</p>
           </a>
-          <a class="kit-card" href="../docs/reproduce-eval.md">
+          <a class="kit-card" href="/docs/reproduce-eval/">
             <div class="kicker">Raw commands</div>
             <h3>Reproduce-eval doc</h3>
             <p>Step-by-step instructions to reproduce every simulation, benchmark evaluation, and figure on this site from scratch.</p>

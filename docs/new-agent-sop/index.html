@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>New Agent SOP — OpenClawBrain</title>
+  <meta name="description" content="New Agent SOP documentation for OpenClawBrain." />
+  <link rel="canonical" href="https://openclawbrain.ai/docs/new-agent-sop/" />
+  <style>
+    :root {
+      --bg:#0a0f17;
+      --card:#111a27;
+      --text:#d6dfed;
+      --muted:#93a1b7;
+      --bright:#f5f8ff;
+      --border:#26344a;
+      --accent:#79b7ff;
+      --sans:Inter,system-ui,sans-serif;
+      --serif:"Crimson Pro",Georgia,serif;
+      --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      background:radial-gradient(circle at 15% 0%,#152137,#0a0f17 45%);
+      color:var(--text);
+      font-family:var(--serif);
+      line-height:1.75;
+    }
+    main { max-width:860px; margin:0 auto; padding:2.8rem 1.2rem 4rem; }
+    h1,h2,h3 { font-family:var(--sans); color:var(--bright); margin:1.4rem 0 .6rem; }
+    h1 { margin-top:0; }
+    p { margin:0 0 1rem; }
+    a { color:var(--accent); }
+    ul,ol { margin:0 0 1.2rem; padding-left:1.4rem; }
+    li { margin:.3rem 0; }
+    code { font-family:var(--mono); font-size:.9em; background:rgba(121,183,255,.1); padding:.15em .35em; border-radius:4px; }
+    pre { overflow-x:auto; background:#0d1321; border:1px solid var(--border); border-radius:8px; padding:1rem; margin:1rem 0 1.4rem; }
+    pre code { background:none; padding:0; font-size:.85em; color:#c7d2fe; }
+    table { border-collapse:collapse; width:100%; margin:1rem 0 1.4rem; }
+    th,td { text-align:left; padding:.5rem .7rem; border:1px solid var(--border); }
+    th { background:var(--card); font-family:var(--sans); color:var(--bright); font-size:.9rem; }
+    .nav { font-family:var(--sans); color:var(--muted); font-size:.86rem; margin-bottom:1.4rem; }
+    .source-link { font-family:var(--sans); font-size:.82rem; color:var(--muted); margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border); }
+    .source-link a { color:var(--muted); }
+    .source-link a:hover { color:var(--accent); }
+    img { max-width:100%; height:auto; border-radius:10px; border:1px solid var(--border); }
+    @media (max-width:600px) {
+      main { padding:1.6rem .8rem 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
+    <h1>New Agent SOP</h1>
+    <p>Canonical flow for a new profile-style setup:</p>
+<ul>
+<li>one OpenClaw agent workspace</li>
+<li>one dedicated OpenClaw runtime brain profile</li>
+<li>one pinned OpenClawBrain package set</li>
+<li>explicit routing/binding in OpenClaw runtime</li>
+</ul>
+<h2 id="a-decide-ids-and-paths">A) Decide IDs and paths</h2>
+<div class="codehilite"><pre><span></span><code><span class="nv">agentId</span><span class="o">=</span><span class="s2">&quot;pelican&quot;</span>
+<span class="nv">agentName</span><span class="o">=</span><span class="s2">&quot;Pelican&quot;</span>
+<span class="nv">workspaceDir</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.openclaw/workspace-pelican&quot;</span>
+</code></pre></div>
+
+<p>Conventions:
+- <code>agentId</code> is lowercase and stable (<code>main</code>, <code>pelican</code>, <code>bountiful</code>, ...)
+- each agent has its own workspace
+- each agent has its own OpenClaw brain profile</p>
+<h2 id="b-create-workspace-skeleton">B) Create workspace skeleton</h2>
+<div class="codehilite"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/memory&quot;</span>
+
+:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/AGENTS.md&quot;</span>
+:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/SOUL.md&quot;</span>
+:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/USER.md&quot;</span>
+:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/MEMORY.md&quot;</span>
+:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/IDENTITY.md&quot;</span>
+:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/TOOLS.md&quot;</span>
+:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/active-tasks.md&quot;</span>
+:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/memory/</span><span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="s2">.md&quot;</span>
+</code></pre></div>
+
+<p>Populate policy/persona files before live traffic.</p>
+<h2 id="c-build-and-verify-openclawbrain-package-set">C) Build and verify OpenClawBrain package set</h2>
+<p>Run from the OpenClawBrain TypeScript workspace root:</p>
+<div class="codehilite"><pre><span></span><code>corepack<span class="w"> </span><span class="nb">enable</span>
+pnpm<span class="w"> </span>install
+pnpm<span class="w"> </span>check
+pnpm<span class="w"> </span>release:pack
+</code></pre></div>
+
+<p>Promote one versioned pack set for this rollout.</p>
+<h2 id="d-add-agent-brain-profile-in-openclaw-runtime">D) Add agent brain profile in OpenClaw runtime</h2>
+<p>Add a dedicated profile for this <code>agentId</code> with defaults on:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;agentId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pelican&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;brain&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;packSet&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;versioned-pack-set&gt;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;fastBootFromExistingFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;backgroundLearning&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;prioritizeNewEvents&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;labels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;human&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;self&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;scanner&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;harvest&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;continuousGraphLearning&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;decay&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;hebbianCofiring&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;structuralUpdates&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;teacher&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;onHotPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="e-bind-routing">E) Bind routing</h2>
+<p>Bind inbound channels to the new <code>agentId</code> in OpenClaw runtime config.</p>
+<p>Minimum checks:
+- new account/channel maps to <code>agentId</code>
+- no overlap with existing agent bindings
+- fail-open behavior retained for this route</p>
+<h2 id="f-add-workspace-policy-snippet">F) Add workspace policy snippet</h2>
+<p>Copy into <code>SOUL.md</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="gu">## Always-on memory policy (default)</span>
+
+<span class="k">-</span><span class="w"> </span>Treat clear user corrections as immediate labels.
+<span class="k">-</span><span class="w"> </span>Treat durable user teachings as first-class labels.
+<span class="k">-</span><span class="w"> </span>Keep human + self labels enabled.
+<span class="k">-</span><span class="w"> </span>Keep scanner and harvest enabled.
+<span class="k">-</span><span class="w"> </span>Keep teacher off the hot path.
+<span class="k">-</span><span class="w"> </span>Never store secrets in workspace memory files.
+</code></pre></div>
+
+<h2 id="g-verification-checklist">G) Verification checklist</h2>
+<p>Runtime checks:
+- route reaches <code>agentId</code>
+- first response works immediately from existing files
+- background learning workers are active
+- new events are prioritized over backlog
+- labels/scanner/harvest loops are active
+- continuous graph learning updates are visible</p>
+<p>Boundary checks:
+- OpenClaw owns serving/runtime/fail-open
+- OpenClawBrain owns contracts, event/export normalization, provenance, packs, activation, compiler, learner</p>
+<p>Proof checks:
+- mechanism proof collected (contracts/provenance/normalization)
+- product proof measured separately (quality/reliability outcomes)</p>
+<h2 id="h-common-footguns">H) Common footguns</h2>
+<ul>
+<li>sharing one workspace across multiple agents</li>
+<li>deploying mixed package revisions instead of one pack set</li>
+<li>disabling labels/scanner/harvest "temporarily" and forgetting to re-enable</li>
+<li>putting teacher logic on hot path</li>
+<li>claiming product gains from mechanism checks only</li>
+</ul>
+    <div class="source-link">
+      <a href="/docs/new-agent-sop.md">View source (Markdown)</a>
+    </div>
+  </main>
+</body>
+</html>

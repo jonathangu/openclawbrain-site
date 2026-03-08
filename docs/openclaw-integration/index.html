@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpenClaw Integration — OpenClawBrain</title>
+  <meta name="description" content="OpenClaw Integration documentation for OpenClawBrain." />
+  <link rel="canonical" href="https://openclawbrain.ai/docs/openclaw-integration/" />
+  <style>
+    :root {
+      --bg:#0a0f17;
+      --card:#111a27;
+      --text:#d6dfed;
+      --muted:#93a1b7;
+      --bright:#f5f8ff;
+      --border:#26344a;
+      --accent:#79b7ff;
+      --sans:Inter,system-ui,sans-serif;
+      --serif:"Crimson Pro",Georgia,serif;
+      --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      background:radial-gradient(circle at 15% 0%,#152137,#0a0f17 45%);
+      color:var(--text);
+      font-family:var(--serif);
+      line-height:1.75;
+    }
+    main { max-width:860px; margin:0 auto; padding:2.8rem 1.2rem 4rem; }
+    h1,h2,h3 { font-family:var(--sans); color:var(--bright); margin:1.4rem 0 .6rem; }
+    h1 { margin-top:0; }
+    p { margin:0 0 1rem; }
+    a { color:var(--accent); }
+    ul,ol { margin:0 0 1.2rem; padding-left:1.4rem; }
+    li { margin:.3rem 0; }
+    code { font-family:var(--mono); font-size:.9em; background:rgba(121,183,255,.1); padding:.15em .35em; border-radius:4px; }
+    pre { overflow-x:auto; background:#0d1321; border:1px solid var(--border); border-radius:8px; padding:1rem; margin:1rem 0 1.4rem; }
+    pre code { background:none; padding:0; font-size:.85em; color:#c7d2fe; }
+    table { border-collapse:collapse; width:100%; margin:1rem 0 1.4rem; }
+    th,td { text-align:left; padding:.5rem .7rem; border:1px solid var(--border); }
+    th { background:var(--card); font-family:var(--sans); color:var(--bright); font-size:.9rem; }
+    .nav { font-family:var(--sans); color:var(--muted); font-size:.86rem; margin-bottom:1.4rem; }
+    .source-link { font-family:var(--sans); font-size:.82rem; color:var(--muted); margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border); }
+    .source-link a { color:var(--muted); }
+    .source-link a:hover { color:var(--accent); }
+    img { max-width:100%; height:auto; border-radius:10px; border:1px solid var(--border); }
+    @media (max-width:600px) {
+      main { padding:1.6rem .8rem 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
+    <h1>OpenClaw Integration</h1>
+    <p>OpenClawBrain is the learning layer that plugs into OpenClaw. OpenClaw owns the runtime &mdash; sessions, tools, prompts, answers. OpenClawBrain owns learning: it watches real conversations, trains a routing function (<code>route_fn</code>) over a knowledge graph, and packages the result into versioned brain packs that improve what context gets served at query time. The router learns from corrections, outcomes, and automated signals, and improves continuously without manual tuning.</p>
+<p>New here? Start with the <a href="/docs/setup-guide/">setup guide</a>.</p>
+<p>Other docs:
+- <a href="/docs/operator-guide/">Operator runbook</a>
+- <a href="/docs/ops-recipes/">Operational playbooks</a>
+- <a href="/docs/new-agent-sop/">New agent onboarding</a></p>
+<h2 id="who-owns-what">Who owns what</h2>
+<h3 id="openclaw-runtime">OpenClaw (runtime)</h3>
+<ul>
+<li>Sessions, prompt assembly, and serving responses</li>
+<li>Fail-open behavior: if brain degrades, the agent keeps working</li>
+<li>Deployment, routing, and rollback controls</li>
+</ul>
+<h3 id="openclawbrain-learning">OpenClawBrain (learning)</h3>
+<ul>
+<li>Contracts and event schemas</li>
+<li>Event normalization and export</li>
+<li>Workspace metadata extraction and provenance</li>
+<li>Brain pack format, activation helpers, compiler, and learner</li>
+</ul>
+<h2 id="packages">Packages</h2>
+<p>The integration is split into focused npm packages, each handling one piece of the learning pipeline:</p>
+<ul>
+<li><code>@openclawbrain/contracts</code></li>
+<li><code>@openclawbrain/events</code></li>
+<li><code>@openclawbrain/event-export</code></li>
+<li><code>@openclawbrain/workspace-metadata</code></li>
+<li><code>@openclawbrain/provenance</code></li>
+<li><code>@openclawbrain/pack-format</code></li>
+<li><code>@openclawbrain/activation</code></li>
+<li><code>@openclawbrain/compiler</code></li>
+<li><code>@openclawbrain/learner</code></li>
+</ul>
+<h2 id="build-and-deploy">Build and deploy</h2>
+<div class="codehilite"><pre><span></span><code>corepack<span class="w"> </span><span class="nb">enable</span>
+pnpm<span class="w"> </span>install
+pnpm<span class="w"> </span>check
+pnpm<span class="w"> </span>release:pack
+</code></pre></div>
+
+<p>OpenClaw runtime then deploys the released pack set in its own environment.</p>
+<h2 id="runtime-behavior">Runtime behavior</h2>
+<h3 id="serving-hot-path">Serving (hot path)</h3>
+<ol>
+<li>OpenClaw receives a query.</li>
+<li>The learned <code>route_fn</code> (from the deployed brain pack) walks the knowledge graph and picks which context blocks to surface. It blends the graph's structural knowledge (<code>graph_prior</code>) with per-query relevance (<code>QTsim</code>), using a confidence gate to shift weight between them.</li>
+<li>OpenClaw assembles the prompt with that bounded context and serves the response.</li>
+</ol>
+<h3 id="learning-off-the-hot-path">Learning (off the hot path)</h3>
+<p>These run asynchronously and never slow down responses:</p>
+<ul>
+<li>Events (corrections, feedback, usage signals) are collected and cleaned up continuously</li>
+<li>Scanner watches for new workspace files and event streams</li>
+<li>Human and automated feedback labels are collected by default</li>
+<li>The knowledge graph updates continuously: unused edges fade (decay), edges that fire together strengthen (co-firing), and the graph structure is pruned and reorganized as needed</li>
+</ul>
+<p>Teacher logic stays off the hot path.</p>
+<h2 id="fast-boot">Fast boot</h2>
+<p>The runtime starts serving immediately from existing workspace files and prior exports. Background learning backfills historical data while prioritizing new events first. This keeps startup fast even with large archives.</p>
+<h2 id="fail-open-behavior">Fail-open behavior</h2>
+<p>The integration is designed to be fail-open:</p>
+<ul>
+<li>If learning/scanner/harvest workers are delayed, OpenClaw still serves responses normally</li>
+<li>If the brain becomes unavailable or quality degrades, OpenClaw falls back to core runtime behavior</li>
+<li>Recovery happens via background loops and pack rollback</li>
+</ul>
+<h2 id="proof-boundary">Proof boundary</h2>
+<p>Two categories of proof, kept separate:</p>
+<ul>
+<li><strong>Mechanism proof</strong> (required): evidence that the internals work correctly. Contracts compile, events normalize as expected, provenance is intact, and the route function produces the same output given the same input. A prerequisite for any claim.</li>
+<li><strong>Product proof</strong> (separate): evidence that real users see better results. Does answer quality improve? Do errors go down? Are corrections retained under live traffic? This requires live or recorded-session evaluation beyond mechanism checks.</li>
+</ul>
+<p>Mechanism proof is necessary but not sufficient for product claims. The system working correctly does not by itself prove it works <em>well</em> for users.</p>
+    <div class="source-link">
+      <a href="/docs/openclaw-integration.md">View source (Markdown)</a>
+    </div>
+  </main>
+</body>
+</html>

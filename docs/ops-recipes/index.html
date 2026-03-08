@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ops Recipes — OpenClawBrain</title>
+  <meta name="description" content="Ops Recipes documentation for OpenClawBrain." />
+  <link rel="canonical" href="https://openclawbrain.ai/docs/ops-recipes/" />
+  <style>
+    :root {
+      --bg:#0a0f17;
+      --card:#111a27;
+      --text:#d6dfed;
+      --muted:#93a1b7;
+      --bright:#f5f8ff;
+      --border:#26344a;
+      --accent:#79b7ff;
+      --sans:Inter,system-ui,sans-serif;
+      --serif:"Crimson Pro",Georgia,serif;
+      --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      background:radial-gradient(circle at 15% 0%,#152137,#0a0f17 45%);
+      color:var(--text);
+      font-family:var(--serif);
+      line-height:1.75;
+    }
+    main { max-width:860px; margin:0 auto; padding:2.8rem 1.2rem 4rem; }
+    h1,h2,h3 { font-family:var(--sans); color:var(--bright); margin:1.4rem 0 .6rem; }
+    h1 { margin-top:0; }
+    p { margin:0 0 1rem; }
+    a { color:var(--accent); }
+    ul,ol { margin:0 0 1.2rem; padding-left:1.4rem; }
+    li { margin:.3rem 0; }
+    code { font-family:var(--mono); font-size:.9em; background:rgba(121,183,255,.1); padding:.15em .35em; border-radius:4px; }
+    pre { overflow-x:auto; background:#0d1321; border:1px solid var(--border); border-radius:8px; padding:1rem; margin:1rem 0 1.4rem; }
+    pre code { background:none; padding:0; font-size:.85em; color:#c7d2fe; }
+    table { border-collapse:collapse; width:100%; margin:1rem 0 1.4rem; }
+    th,td { text-align:left; padding:.5rem .7rem; border:1px solid var(--border); }
+    th { background:var(--card); font-family:var(--sans); color:var(--bright); font-size:.9rem; }
+    .nav { font-family:var(--sans); color:var(--muted); font-size:.86rem; margin-bottom:1.4rem; }
+    .source-link { font-family:var(--sans); font-size:.82rem; color:var(--muted); margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border); }
+    .source-link a { color:var(--muted); }
+    .source-link a:hover { color:var(--accent); }
+    img { max-width:100%; height:auto; border-radius:10px; border:1px solid var(--border); }
+    @media (max-width:600px) {
+      main { padding:1.6rem .8rem 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
+    <h1>Ops Recipes</h1>
+    <blockquote>
+<p>Canonical docs live on GitHub; this page is a snapshot.</p>
+</blockquote>
+<h1 id="openclawbrain-ops-recipes-typescript-first">OpenClawBrain Ops Recipes (TypeScript-first)</h1>
+<p>Practical operator playbooks for the package-first runtime model.</p>
+<p>Canonical runbook: <a href="/docs/operator-guide/">Operator Guide</a></p>
+<h2 id="recipe-1-day-0-startup-from-existing-files">Recipe 1: Day-0 startup from existing files</h2>
+<p>Goal: start serving quickly without waiting for full historical replay.</p>
+<div class="codehilite"><pre><span></span><code>corepack<span class="w"> </span><span class="nb">enable</span>
+pnpm<span class="w"> </span>install
+pnpm<span class="w"> </span>check
+pnpm<span class="w"> </span>release:pack
+</code></pre></div>
+
+<p>Runtime profile requirements:
+- <code>fastBootFromExistingFiles = true</code>
+- <code>backgroundLearning.enabled = true</code>
+- <code>backgroundLearning.prioritizeNewEvents = true</code>
+- <code>labels.human = true</code>
+- <code>labels.self = true</code>
+- <code>scanner.enabled = true</code>
+- <code>harvest.enabled = true</code>
+- <code>continuousGraphLearning.enabled = true</code></p>
+<p>Expected result:
+- runtime serves immediately from existing files/exports
+- new events are learned first
+- historical learning continues in background</p>
+<h2 id="recipe-2-safe-pack-set-cutover">Recipe 2: Safe pack-set cutover</h2>
+<p>Goal: ship a new OpenClawBrain package set without disrupting serving.</p>
+<ol>
+<li>Build and verify pack set:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>corepack<span class="w"> </span><span class="nb">enable</span>
+pnpm<span class="w"> </span>install
+pnpm<span class="w"> </span>check
+pnpm<span class="w"> </span>release:pack
+</code></pre></div>
+
+<ol>
+<li>Deploy to canary runtime slice.</li>
+<li>Validate:</li>
+<li>hot-path latency unchanged</li>
+<li>fail-open still works</li>
+<li>background loops healthy</li>
+<li>Promote globally.</li>
+</ol>
+<p>If canary fails, roll back to the previous pack set immediately.</p>
+<h2 id="recipe-3-backlog-catch-up-without-hot-path-risk">Recipe 3: Backlog catch-up without hot-path risk</h2>
+<p>Goal: reduce historical backlog while keeping serving stable.</p>
+<ol>
+<li>Keep hot path on learned route function.</li>
+<li>Keep teacher off hot path.</li>
+<li>Reserve async worker budget for new events first.</li>
+<li>Use remaining capacity for historical backfill, scanner, and harvest.</li>
+<li>Watch backlog depth and new-event lag separately.</li>
+</ol>
+<p>Do not gate serving on backlog completion.</p>
+<h2 id="recipe-4-label-pipeline-hardening">Recipe 4: Label pipeline hardening</h2>
+<p>Goal: keep human + self labels as default behavior and avoid silent drift.</p>
+<ol>
+<li>Keep both human and self labels enabled.</li>
+<li>Keep scanner/harvest enabled.</li>
+<li>Monitor per-source label throughput:</li>
+<li>human labels accepted</li>
+<li>self labels accepted/rejected</li>
+<li>harvest application rate</li>
+<li>Alert on prolonged zero-throughput windows.</li>
+</ol>
+<p>A zero-throughput label pipeline usually means quality regresses before hot-path errors appear.</p>
+<h2 id="recipe-5-continuous-graph-learning-tuning">Recipe 5: Continuous graph learning tuning</h2>
+<p>Goal: keep live graph adaptation active without overfitting.</p>
+<p>Required defaults:
+- decay enabled
+- Hebbian co-firing enabled
+- structural updates enabled</p>
+<p>Tuning order:
+1. Stabilize hot-path latency and fail-open behavior.
+2. Stabilize new-event learning lag.
+3. Tune decay/co-firing/structure rates incrementally.
+4. Re-check correction retention and repeat-error trend.</p>
+<h2 id="recipe-6-runtime-rollback-on-quality-regression">Recipe 6: Runtime rollback on quality regression</h2>
+<p>Goal: recover quickly when product quality drops after promotion.</p>
+<ol>
+<li>Revert OpenClaw runtime to previous known-good pack set.</li>
+<li>Keep serving active with fail-open.</li>
+<li>Preserve event exports and provenance for analysis.</li>
+<li>Compare mechanism metrics vs product outcomes:</li>
+<li>mechanism may remain healthy while product quality regresses</li>
+<li>Roll forward only after a verified fix.</li>
+</ol>
+<h2 id="recipe-7-new-agent-bring-up">Recipe 7: New agent bring-up</h2>
+<p>Use <a href="/docs/new-agent-sop/">New Agent SOP</a> for full steps.</p>
+<p>Minimum policy checklist for a new agent:
+- dedicated workspace
+- dedicated brain profile in OpenClaw runtime
+- package set pinned
+- fast boot enabled
+- background learning enabled
+- labels/scanner/harvest enabled
+- teacher off hot path</p>
+    <div class="source-link">
+      <a href="/docs/ops-recipes.md">View source (Markdown)</a>
+    </div>
+  </main>
+</body>
+</html>

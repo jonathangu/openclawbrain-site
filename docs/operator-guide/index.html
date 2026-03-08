@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Operator Guide — OpenClawBrain</title>
+  <meta name="description" content="Operator Guide documentation for OpenClawBrain." />
+  <link rel="canonical" href="https://openclawbrain.ai/docs/operator-guide/" />
+  <style>
+    :root {
+      --bg:#0a0f17;
+      --card:#111a27;
+      --text:#d6dfed;
+      --muted:#93a1b7;
+      --bright:#f5f8ff;
+      --border:#26344a;
+      --accent:#79b7ff;
+      --sans:Inter,system-ui,sans-serif;
+      --serif:"Crimson Pro",Georgia,serif;
+      --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      background:radial-gradient(circle at 15% 0%,#152137,#0a0f17 45%);
+      color:var(--text);
+      font-family:var(--serif);
+      line-height:1.75;
+    }
+    main { max-width:860px; margin:0 auto; padding:2.8rem 1.2rem 4rem; }
+    h1,h2,h3 { font-family:var(--sans); color:var(--bright); margin:1.4rem 0 .6rem; }
+    h1 { margin-top:0; }
+    p { margin:0 0 1rem; }
+    a { color:var(--accent); }
+    ul,ol { margin:0 0 1.2rem; padding-left:1.4rem; }
+    li { margin:.3rem 0; }
+    code { font-family:var(--mono); font-size:.9em; background:rgba(121,183,255,.1); padding:.15em .35em; border-radius:4px; }
+    pre { overflow-x:auto; background:#0d1321; border:1px solid var(--border); border-radius:8px; padding:1rem; margin:1rem 0 1.4rem; }
+    pre code { background:none; padding:0; font-size:.85em; color:#c7d2fe; }
+    table { border-collapse:collapse; width:100%; margin:1rem 0 1.4rem; }
+    th,td { text-align:left; padding:.5rem .7rem; border:1px solid var(--border); }
+    th { background:var(--card); font-family:var(--sans); color:var(--bright); font-size:.9rem; }
+    .nav { font-family:var(--sans); color:var(--muted); font-size:.86rem; margin-bottom:1.4rem; }
+    .source-link { font-family:var(--sans); font-size:.82rem; color:var(--muted); margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border); }
+    .source-link a { color:var(--muted); }
+    .source-link a:hover { color:var(--accent); }
+    img { max-width:100%; height:auto; border-radius:10px; border:1px solid var(--border); }
+    @media (max-width:600px) {
+      main { padding:1.6rem .8rem 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
+    <h1>Operator Guide</h1>
+    <p>OpenClawBrain is the shipped TypeScript package system for memory, learning, packs, activation state, and deterministic compile behind an OpenClaw-owned runtime boundary.</p>
+<p>Operator visuals:
+- <a href="/docs/brains-dashboard/">Brains dashboard</a></p>
+<p>Companion docs:
+- setup quickstart: <a href="/docs/setup-guide/">Setup Guide</a>
+- integration contract: <a href="/docs/openclaw-integration/">OpenClaw Integration</a>
+- operations playbooks: <a href="/docs/ops-recipes/">Ops Recipes</a>
+- new agent SOP: <a href="/docs/new-agent-sop/">New Agent SOP</a></p>
+<h2 id="1-day-0-bring-up">1) Day-0 bring-up</h2>
+<p>From the OpenClawBrain TypeScript workspace root:</p>
+<div class="codehilite"><pre><span></span><code>corepack<span class="w"> </span><span class="nb">enable</span>
+pnpm<span class="w"> </span>install
+pnpm<span class="w"> </span>check
+pnpm<span class="w"> </span>release:pack
+</code></pre></div>
+
+<p>Promote one versioned pack set into OpenClaw runtime. Do not deploy mixed revisions across core packages.</p>
+<h2 id="2-runtime-boundary-and-ownership">2) Runtime boundary and ownership</h2>
+<p>OpenClaw owns:
+- serving runtime lifecycle
+- fail-open behavior
+- prompt assembly and request routing
+- deployment/canary/rollback controls
+- runtime diagnostics</p>
+<p>OpenClawBrain owns:
+- memory structure and learning policy behavior
+- contracts/events/event-export/workspace metadata
+- provenance and immutable pack assembly
+- activation/promotion/rollback state for pack sets
+- deterministic compiler output from active pack state
+- learner logic and off-path teacher updates</p>
+<p>Keep this boundary explicit in all runbooks and incidents.</p>
+<h2 id="3-pack-operations-activate-promote-rollback">3) Pack operations: activate, promote, rollback</h2>
+<p>Operator pack discipline:</p>
+<ol>
+<li>Build candidate pack set (<code>pnpm check</code>, <code>pnpm release:pack</code>).</li>
+<li>Activate candidate in canary runtime scope.</li>
+<li>Validate hot-path latency, fail-open behavior, and background loop health.</li>
+<li>Promote candidate globally.</li>
+<li>Roll back to previous active pack set if health regresses.</li>
+</ol>
+<p>Deterministic compile means the same active pack state must produce the same context compilation behavior.</p>
+<h2 id="4-default-on-operating-model">4) Default-on operating model</h2>
+<p>Required defaults in production profiles:
+- fast boot from existing files
+- background learning enabled
+- prioritize new events over deep historical backlog
+- allow larger compiled context when it removes avoidable model/tool round-trips
+- human + self label harvesting enabled
+- scanner + harvest loops enabled
+- continuous graph learning enabled (decay, Hebbian co-firing, structural updates)
+- teacher off hot path</p>
+<h2 id="5-health-signals-to-monitor">5) Health signals to monitor</h2>
+<p>Hot path:
+- turn latency budget
+- fail-open activation rate
+- route function/compile evaluation success rate</p>
+<p>Background loops:
+- ingest lag for new events
+- backlog depth for historical data
+- label harvest throughput (human + self)
+- scanner/harvest worker error rates
+- graph update throughput (decay/co-firing/structure)</p>
+<p>Provenance/quality:
+- event normalization success/failure counts
+- provenance chain completeness
+- correction retention trend</p>
+<h2 id="6-incident-handling">6) Incident handling</h2>
+<p>If hot path is unhealthy:
+- keep OpenClaw serving via fail-open
+- disable only the failing brain feature flag(s)
+- retain event export/provenance stream for later recovery</p>
+<p>If background learning is unhealthy:
+- continue serving on current learned route function
+- prioritize queue repair for new events first
+- backfill historical queues after new-event lag is stable</p>
+<p>If scanner/harvest loop is unhealthy:
+- isolate worker faults from serving runtime
+- keep labels and exported events queued durably
+- restart loop workers without resetting runtime identity</p>
+<h2 id="7-proof-boundary-non-negotiable">7) Proof boundary (non-negotiable)</h2>
+<p>Mechanism/workflow proof supports safe promotion discipline. It is not a stand-in for live answer-quality claims.</p>
+<p>Mechanism/workflow proof examples:
+- schema/contract compatibility
+- deterministic normalization and export
+- provenance continuity
+- stable compiler/activation behavior</p>
+<p>Live product proof examples:
+- better user-visible relevance/accuracy
+- lower repeat-error rate after corrections
+- stronger reliability under live traffic</p>
+<h2 id="8-operator-responsibilities">8) Operator responsibilities</h2>
+<p>Operator owns:
+- package promotion discipline
+- runtime rollout and rollback hygiene
+- SLO monitoring for hot path and background loops
+- secret handling and environment hardening</p>
+<p>Operator does not own:
+- inventing alternate memory contracts outside published package boundaries
+- bypassing provenance requirements for short-term debugging convenience</p>
+<h2 id="9-routine-checks">9) Routine checks</h2>
+<p>Run these checks before each production promotion:</p>
+<div class="codehilite"><pre><span></span><code>corepack<span class="w"> </span><span class="nb">enable</span>
+pnpm<span class="w"> </span>install
+pnpm<span class="w"> </span>check
+pnpm<span class="w"> </span>release:pack
+</code></pre></div>
+
+<p>Then validate in runtime:
+- canary traffic stable
+- fail-open path tested
+- new-event learning lag within SLO
+- background scanner/harvest healthy</p>
+    <div class="source-link">
+      <a href="/docs/operator-guide.md">View source (Markdown)</a>
+    </div>
+  </main>
+</body>
+</html>
