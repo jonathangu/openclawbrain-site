@@ -104,13 +104,13 @@
       <div class="eyebrow">Shipped series</div>
       <h1>OpenClawBrain v12.2.6+</h1>
       <p>
-        This series explains how OpenClaw and OpenClawBrain divide the work, and why that split matters. OpenClaw handles the live session &mdash; sessions, tools, prompts, answers. OpenClawBrain handles learning &mdash; watching real conversations, training a routing function (<code>route_fn</code>) over a knowledge graph, and packaging the result into versioned brain packs that make the agent sharper over time.
+        This series explains how OpenClaw and OpenClawBrain divide the work, and why that split matters. OpenClaw handles the live runtime &mdash; sessions, tools, prompts, answers. OpenClawBrain handles learning &mdash; watching real conversations, training a routing function (<code>route_fn</code>) over a knowledge graph, and packaging the result into versioned brain packs that sharpen the agent over time.
       </p>
       <p>
-        The core idea: instead of dumping the nearest text chunks into the prompt (RAG), a learned router walks a graph of structured relationships, picks the right context for each query, and improves from corrections and feedback. Each post goes deep on one piece. Start wherever you like.
+        The core idea: instead of dumping the nearest text chunks into the prompt (the standard RAG approach), a learned router walks a graph of structured relationships, picks the right context for each query, and improves from corrections and feedback. Each post goes deep on one piece. Start wherever you like.
       </p>
       <div class="callout">
-        The headline numbers: in recorded-session benchmarks the learned router (<code>full_brain</code>) answers 97.5% of queries correctly vs. 89.6% for the best RAG baseline — roughly 1 in 13 queries where RAG fails, the learned router gets right. In sparse-feedback tests it widens to 92.0% vs. 67.1%, using about 5x less context per query and winning 9 out of 10 random seeds head-to-head. These are benchmark results, not live-traffic claims; see <a href="/proof/">/proof/</a> for the full evidence ladder and artifact links.
+        Headline numbers: on recorded-session benchmarks the learned router (<code>full_brain</code>) answers 97.5% of queries correctly vs. 89.6% for the best RAG baseline &mdash; roughly 1 in 13 queries where RAG fails, the learned router gets right. Under sparse feedback it widens to 92.0% vs. 67.1%, using about 5x less context per query and winning 9 of 10 random seeds head-to-head. These are benchmark results, not live-traffic claims; see <a href="/proof/">/proof/</a> for the full evidence ladder and artifact links.
       </div>
     </section>
 

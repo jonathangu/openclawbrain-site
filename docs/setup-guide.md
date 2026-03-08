@@ -1,6 +1,6 @@
 # Getting Started with OpenClawBrain
 
-OpenClawBrain replaces static retrieval with a learned routing function (`route_fn`) over a knowledge graph. Instead of dumping the nearest text chunks into the prompt, it picks the right context for each query, learns from corrections and feedback, and gets sharper over time. It works alongside [OpenClaw](https://github.com/jonathangu/openclaw), which owns the runtime (sessions, tools, prompts, answers).
+OpenClawBrain replaces static retrieval with a learned routing function (`route_fn`) over a knowledge graph. Instead of dumping the nearest text chunks into the prompt, it picks the right context for each query, learns from corrections and feedback, and improves over time. It works alongside [OpenClaw](https://github.com/jonathangu/openclaw), which owns the runtime (sessions, tools, prompts, answers).
 
 This guide gets you from zero to a working setup.
 
@@ -65,7 +65,7 @@ OpenClaw owns fail-open behavior. If something goes wrong:
 - **Bad brain pack:** Roll back to the previous active pack set. Compilation from a given pack is deterministic, so rollback is safe.
 - **Learning delays:** Scanner, harvest, and learner workers run asynchronously. Delays do not affect the hot path.
 
-Recovery happens through background loops and pack rollback &mdash; no manual intervention required for fail-open.
+Recovery happens through background loops and pack rollback &mdash; no manual intervention needed.
 
 ## Next steps
 

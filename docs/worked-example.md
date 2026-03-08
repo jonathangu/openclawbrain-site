@@ -2,7 +2,7 @@
 
 This page walks through one realistic OpenClaw turn wired through OpenClawBrain &mdash; from the routing decision, through the bounded context sent to the model, to the correction that feeds back into learning.
 
-It is a concrete operator example, not a benchmark. It shows how `route_fn` picks context from the knowledge graph, how corrections are tied to the exact routing decision that fired, and how background learning later improves the router for similar future queries.
+This is a concrete operator example, not a benchmark. It shows how `route_fn` picks context from the knowledge graph, how corrections are tied to the exact routing decision that fired, and how background learning later improves the router for similar future queries.
 
 Default stack assumed here:
 
@@ -18,9 +18,9 @@ Companion docs:
 How this page relates to the published proof families:
 
 - this page is the minimum artifact contract for one real OpenClaw-shaped turn
-- the deterministic workflow proof on `/proof/` is a separate mechanism bundle (evidence that the internals work correctly) built from 4 fixed workflow scenarios
-- its scenario-level evidence matrix is `per_query_matrix.csv` and `per_query_matrix.md`: 16 rows showing, for each query and retrieval mode, exactly which knowledge-graph nodes made it into the prompt context
-- recorded-session and sparse-feedback benchmark bundles scale from one turn contract to fixed multi-query and multi-seed comparisons
+- the deterministic workflow proof on `/proof/` is a separate mechanism bundle (evidence the internals work correctly) built from 4 fixed workflow scenarios
+- the scenario-level evidence matrix (`per_query_matrix.csv` / `per_query_matrix.md`) has 16 rows showing, for each query and retrieval mode, exactly which knowledge-graph nodes made it into prompt context
+- recorded-session and sparse-feedback benchmark bundles scale from one turn to fixed multi-query and multi-seed comparisons
 - none of these artifacts, by themselves, prove live production answer quality on served OpenClaw traffic
 
 ## Scenario
@@ -29,7 +29,7 @@ An OpenClaw operator is preparing a deploy note and asks:
 
 > "For this billing banner patch, what deploy constraints should I mention?"
 
-OpenClaw should not pass the raw user message into the brain unchanged. It should pass a stable summary plus a stable `turn_id`.
+OpenClaw should not pass the raw user message to the brain unchanged &mdash; it should pass a stable summary plus a stable `turn_id`.
 
 Example turn payload:
 
@@ -144,12 +144,12 @@ What happens immediately:
 
 What does **not** happen immediately:
 
-- the current deployed `route_fn` is not magically replaced inline
+- the live `route_fn` is not replaced inline
 - previous turns are not re-answered
 
 ## 5. Later replay, harvester, and maintain cycle
 
-After the live conversation, run the background path on historical and newly captured sessions.
+After the live conversation, run the background learning path on historical and newly captured sessions.
 
 ```bash
 SESSIONS=~/.openclaw/agents/main/sessions
@@ -176,10 +176,10 @@ openclawbrain maintain \
 This is where the correction joins the larger learning stream:
 
 - replay mines the recorded session history
-- harvester/scanner passes turn session events into learning signals
-- maintenance applies structural cleanup and health tasks
+- harvester/scanner turn session events into learning signals
+- maintenance applies structural cleanup (split, merge, prune, decay)
 
-Only after the updated state is deployed or cut over do later turns see the new routing behavior.
+Later turns see the new routing behavior only after the updated state is deployed.
 
 ## 6. What changed now vs later
 

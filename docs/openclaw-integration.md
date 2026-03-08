@@ -1,6 +1,6 @@
 # OpenClaw Integration
 
-OpenClawBrain is the learning layer that plugs into OpenClaw. OpenClaw owns the runtime &mdash; sessions, tools, prompts, answers. OpenClawBrain owns learning: it watches real conversations, trains a routing function (`route_fn`) over a knowledge graph, and packages the result into versioned brain packs that improve what context gets served at query time. The router learns from corrections, outcomes, and automated signals, and gets sharper continuously without manual tuning.
+OpenClawBrain is the learning layer that plugs into OpenClaw. OpenClaw owns the runtime &mdash; sessions, tools, prompts, answers. OpenClawBrain owns learning: it watches real conversations, trains a routing function (`route_fn`) over a knowledge graph, and packages the result into versioned brain packs that improve what context gets served at query time. The router learns from corrections, outcomes, and automated signals, and improves continuously without manual tuning.
 
 New here? Start with the [setup guide](setup-guide.md).
 
@@ -61,7 +61,7 @@ OpenClaw runtime then deploys the released pack set in its own environment.
 
 These run asynchronously and never slow down responses:
 
-- Events (corrections, feedback, usage signals) are cleaned up and collected on an ongoing basis
+- Events (corrections, feedback, usage signals) are collected and cleaned up continuously
 - Scanner watches for new workspace files and event streams
 - Human and automated feedback labels are collected by default
 - The knowledge graph updates continuously: unused edges fade (decay), edges that fire together strengthen (co-firing), and the graph structure is pruned and reorganized as needed
@@ -84,7 +84,7 @@ The integration is designed to be fail-open:
 
 Two categories of proof, kept separate:
 
-- **Mechanism proof** (required): evidence that the internals work correctly. Contracts compile, events normalize as expected, data provenance is intact, and the route function produces the same output given the same input. This is a prerequisite for any claim.
+- **Mechanism proof** (required): evidence that the internals work correctly. Contracts compile, events normalize as expected, provenance is intact, and the route function produces the same output given the same input. A prerequisite for any claim.
 - **Product proof** (separate): evidence that real users see better results. Does answer quality improve? Do errors go down? Are corrections retained under live traffic? This requires live or recorded-session evaluation beyond mechanism checks.
 
-Mechanism proof is required but not sufficient for product claims. The system working correctly does not by itself prove it works *well* for users.
+Mechanism proof is necessary but not sufficient for product claims. The system working correctly does not by itself prove it works *well* for users.

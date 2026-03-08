@@ -65,16 +65,16 @@ background path:    sessions -&gt; scanner/harvester labels + background teacher
     </figure>
 
     <h2>Where the labels come from</h2>
-    <p>The update rule is fed by multiple label sources because OpenClawBrain is meant to live inside a real OpenClaw workflow.</p>
+    <p>The update rule draws from multiple label sources, because OpenClawBrain is built to live inside a real OpenClaw workflow.</p>
     <ol>
       <li><strong>Human feedback</strong>: corrections and teachings tied to the same <code>turn_id</code> as the fired route.</li>
-      <li><strong>Self-learning outcomes</strong>: positive or negative outcomes on turns the brain actually helped serve.</li>
+      <li><strong>Outcome signals</strong>: positive or negative outcomes on turns the brain actually helped serve.</li>
       <li><strong>Scanner / harvester labels</strong>: structured signals mined from historical and ongoing session data.</li>
       <li><strong>Async teacher labels</strong>: background teacher judgments on ambiguous or difficult route decisions.</li>
     </ol>
 
     <h2>Ultimate Policy Gradient (UPG)</h2>
-    <p>The Ultimate Policy Gradient is a single learning rule that folds all feedback sources &mdash; human corrections, outcome signals, scanner/harvester labels, and teacher judgments &mdash; into one routing policy. There are no separate policies for each source. Instead, they merge with a clear priority order: human corrections carry the most weight, then direct outcomes, then automated signals. This means a single correction from a user can override thousands of weaker automated labels &mdash; which is exactly the behavior you want in a product that learns from real people.</p>
+    <p>The Ultimate Policy Gradient is a single learning rule that folds every feedback source &mdash; human corrections, outcome signals, scanner/harvester labels, and teacher judgments &mdash; into one routing policy. There are no separate policies for each source. They merge with a clear priority order: human corrections carry the most weight, then direct outcomes, then automated signals. A single correction from a user can override thousands of weaker automated labels &mdash; exactly the behavior you want in a product that learns from real people.</p>
     <div class="note">
       Human corrections should be able to override automated labels. That is a product requirement, not just a training detail — if a person tells the system it routed wrong, that signal wins.
     </div>
@@ -82,7 +82,7 @@ background path:    sessions -&gt; scanner/harvester labels + background teacher
     <h2>Why this matters for OpenClaw</h2>
     <ul>
       <li>You can use the brain immediately after <code>init</code> and <code>serve</code> &mdash; no waiting for background learning to finish. The graph's built-in structure already provides useful routing on day one.</li>
-      <li>Historical replay and teacher labeling happen asynchronously and never block first use or add latency.</li>
+      <li>Replay and teacher labeling happen asynchronously &mdash; they never block first use or add latency.</li>
       <li>The thing that improves over time is the learned <code>route_fn</code> that OpenClaw actually calls on every turn &mdash; not a separate model, but the same routing function, with better weights.</li>
     </ul>
 

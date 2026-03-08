@@ -46,7 +46,7 @@
     <h1>Baselines and the comparison contract</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>OpenClawBrain should compare itself against retrieval methods operators would plausibly use instead &mdash; not hide behind vague "AI memory" framing. This page leads with the strongest published benchmark artifacts, then ties them back to the mechanism slice and the product-proof boundary. The central question: does learned routing over a knowledge graph actually beat conventional RAG on a fair test? The answer so far is yes, and by a meaningful margin.</p>
+    <p>OpenClawBrain should compare itself against retrieval methods operators would actually use instead &mdash; not hide behind vague "AI memory" framing. This page leads with the strongest published benchmark artifacts, then ties them back to the mechanism slice and the product-proof boundary. The central question: does learned routing over a knowledge graph actually beat conventional RAG on a fair test? So far, yes &mdash; and by a meaningful margin.</p>
 
     <div class="card">
       <p>Current benchmark headline: the learned router (<code>full_brain</code>) answers 97.5% of recorded-session queries correctly vs. 89.6% for the best RAG baseline — roughly 1 in 13 queries where RAG fails, the learned router gets right. In the sparse-feedback test (10 seeds), it widens to 92.0% vs. 67.1%, using about 5x less context per query and winning 9 of 10 seeds head-to-head. These are benchmark results, not live product rollout claims.</p>
@@ -81,12 +81,12 @@
       <tbody>
         <tr>
           <td><code>vector_topk</code></td>
-          <td>Cold-start semantic retrieval floor with no workflow structure and no learned routing.</td>
+          <td>Cold-start semantic retrieval floor &mdash; no workflow structure, no learned routing.</td>
           <td>0/4</td>
         </tr>
         <tr>
           <td><code>pointer_chase</code></td>
-          <td>Simple deterministic traversal over explicit links. It checks whether a plain walk over stored pointers is already enough.</td>
+          <td>Simple deterministic traversal over explicit links. Checks whether a plain walk over stored pointers is already enough.</td>
           <td>1/4</td>
         </tr>
         <tr>
@@ -102,7 +102,7 @@
       </tbody>
     </table></div>
 
-    <p>The learning curve is the second half of the comparison. <code>graph_prior_only</code> (using only the graph's structural knowledge, no learning) stays flat at 2/4 across all 16 epochs, while the learned mode reaches 4/4 at epoch 14. This is the concrete evidence for the core product claim: the graph's structure makes the router useful from day one, and background learning makes it better over time. RAG baselines have no equivalent mechanism &mdash; their accuracy stays the same from day one to day one thousand.</p>
+    <p>The learning curve tells the second half of the story. <code>graph_prior_only</code> (structural knowledge only, no learning) stays flat at 2/4 across all 16 epochs, while the learned mode reaches 4/4 at epoch 14. This is concrete evidence for the core product claim: the graph's structure makes the router useful from day one, and background learning makes it better over time. RAG baselines have no equivalent mechanism &mdash; their accuracy stays the same from day one to day one thousand.</p>
 
     <h2>Recorded-session head-to-head comparison</h2>
     <p>For fixed-session replay, the current published bundle is <code>recorded_h2h_relational_drift_001</code>.</p>
@@ -119,7 +119,7 @@
       </tbody>
     </table></div>
 
-    <p>The learned router scores 97.5% vs. the best RAG baseline's 89.6%. And the best RAG baseline needs 5x more context and 8x more traversal cost to reach that lower number. In intuitive terms: RAG retrieves more text, processes more of it, and still gets more questions wrong &mdash; because it lacks the structural relationships and feedback loop that the learned router uses.</p>
+    <p>The learned router scores 97.5% vs. the best RAG baseline's 89.6% &mdash; and that best RAG baseline needs 5x more context and 8x more traversal cost to reach its lower number. Put simply: RAG retrieves more text, processes more of it, and still gets more questions wrong, because it lacks the structural relationships and feedback loop that the learned router uses.</p>
 
     <h2>Sparse-feedback 10-seed comparison</h2>
     <p>For multi-seed robustness, the strongest published family is <code>sparse_feedback_10seed</code> (10 seeds, 1,800 queries per seed, 8 baselines).</p>
@@ -146,15 +146,15 @@
       <tbody>
         <tr>
           <td>If <code>vector_topk</code> were already enough, why add a memory layer?</td>
-          <td>Because a durable memory product should beat a plain semantic floor on workflow retrieval, not just rename it.</td>
+          <td>A durable memory product should beat a plain semantic floor on workflow retrieval, not just rename it.</td>
         </tr>
         <tr>
           <td>If <code>pointer_chase</code> were enough, why learn anything?</td>
-          <td>Because deterministic link-following is a credible alternative for explicit workflows. It needs to be ruled in or out directly.</td>
+          <td>Deterministic link-following is a credible alternative for explicit workflows. It needs to be ruled in or out directly.</td>
         </tr>
         <tr>
           <td>If <code>graph_prior_only</code> matched <code>learned</code>, why keep the learning path?</td>
-          <td>Because the product claim is not just "there is a graph." It is "the graph helps immediately, and background learning improves later."</td>
+          <td>The product claim is not just "there is a graph." It is "the graph helps immediately, and background learning makes it better over time."</td>
         </tr>
       </tbody>
     </table></div>

@@ -1,8 +1,8 @@
 # Reproduce Evaluation + Figures (Canonical)
 
-This is the single source of truth for reproducing every evaluation metric and figure referenced on the OpenClawBrain site and paper. The benchmarks compare OpenClawBrain's learned router (`route_fn` over a knowledge graph) against conventional RAG baselines on frozen workloads &mdash; same queries, same data, same scoring rules.
+This is the single source of truth for reproducing every evaluation metric and figure on the OpenClawBrain site and paper. The benchmarks compare OpenClawBrain's learned router (`route_fn` over a knowledge graph) against conventional RAG baselines on frozen workloads &mdash; same queries, same data, same scoring rules.
 
-Most workflows below run as npm scripts in the TypeScript workspace and produce reproducible output files; the sparse-feedback multiseed proof family is reproduced from the `brain-ground-zero` proof harness repo.
+Most workflows below run as npm scripts in the TypeScript workspace; the sparse-feedback multiseed family is reproduced from the `brain-ground-zero` proof harness repo.
 
 ## 0) Initialize the TypeScript workspace
 
@@ -46,10 +46,10 @@ Deterministic metrics from the published workflow-proof artifacts:
 | `learned` | 1.00 | 1.00 |
 
 Interpretation:
-- `vector_topk` (standard RAG retrieval) fails completely on these structured workflow queries, finding none of the required context.
-- Graph priors alone (no learning) already get halfway there, showing the knowledge graph structure has value even before any training.
-- The `learned` mode (the full trained router) hits 100% on both metrics, meaning it reliably surfaces exactly the right context blocks for every held-out query.
-- The jump from 0% to 100% illustrates why a learned router over a knowledge graph outperforms flat vector search on structured tasks.
+- `vector_topk` (standard RAG retrieval) fails completely on these structured workflow queries &mdash; none of the required context is found.
+- Graph priors alone (no learning) already get halfway there, showing the knowledge graph has value before any training.
+- The `learned` mode (the full trained router) hits 100% on both metrics, reliably surfacing exactly the right context blocks for every held-out query.
+- The jump from 0% to 100% shows why a learned router over a knowledge graph outperforms flat vector search on structured tasks.
 
 Non-claims:
 - This is mechanism proof, not full product proof.
@@ -83,7 +83,7 @@ Non-claims:
 
 ## 3) Sparse-feedback 10-seed proof family
 
-This is the next major benchmark family after recorded-session head-to-head: sparse supervision over fixed workloads and seeds.
+The next benchmark family after recorded-session head-to-head: sparse supervision over fixed workloads and seeds.
 
 Public bundle: `proof-results/sparse_feedback_10seed` in [brain-ground-zero](https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed) (run date `2026-03-07`).
 
@@ -94,8 +94,8 @@ Published sparse-feedback metrics:
 | `full_brain` | 91.96% | 1.00 | &mdash; |
 | `vector_rag_rerank` (best RAG baseline) | 67.05% | 5.00 | 1-9-0 |
 
-- Delta: +24.91 percentage points (`full_brain` vs best RAG baseline). The learned router answers roughly a quarter more queries correctly.
-- Pairwise headline: `full_brain` vs `vector_rag_rerank` is 9-1-0 across 10 seeds (the brain wins 9 out of 10 independent runs).
+- Delta: +24.91 pp (`full_brain` vs best RAG baseline). The learned router answers roughly a quarter more queries correctly.
+- Pairwise: `full_brain` vs `vector_rag_rerank` is 9-1-0 across 10 seeds &mdash; the brain wins 9 out of 10 independent runs.
 - Sparse feedback condition: only about 19% of turns include an explicit correctness signal in this run. The brain still learns effectively from limited feedback.
 
 Reproduce from the proof harness repo:
