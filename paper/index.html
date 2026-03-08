@@ -326,7 +326,7 @@
           <h1>Paper and PDF.</h1>
           <p style="font-family:var(--sans); font-size:0.92rem; color:var(--muted); margin:0.5rem 0 0;">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
           <p class="lead">
-            The full technical paper behind OpenClawBrain &mdash; a learned routing function (<code>route_fn</code>) that walks a knowledge graph, picks the right facts for each prompt, and improves from corrections. The paper covers shadow routing (learning off the live path), QTsim confidence mixing (blending graph structure with per-query relevance), and the unified policy gradient that folds all feedback into one update. March 7, 2026 revision (v12.2.6+).
+            The full technical paper behind OpenClawBrain &mdash; PG-only learned routing (<code>route_fn</code>) over a knowledge graph, with shadow routing (learning off the live path), QTsim confidence mixing (blending graph structure with per-query relevance), and the unified policy gradient. The OpenClaw runtime / OpenClawBrain learning split is a hard design invariant; the paper describes both the current boundary and the target end shape (continuous live graph update, full RL-native structural maintenance). March 7, 2026 revision (v12.2.6+).
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href="../openclawbrain.pdf">Open the PDF</a>
@@ -353,12 +353,13 @@
 
           <article class="status-card">
             <div class="kicker">Read it with the boundary</div>
-            <h2>The design is shipped; evidence is building in stages.</h2>
+            <h2>Design settled; repo-local and BGZ evidence building; target shape described.</h2>
             <ul>
-              <li>The paper covers fast local serving, background learning, signal combination, and continuous improvement.</li>
-              <li>Strongest benchmarks: 97.5% vs. 89.6% in head-to-head tests (+7.9 pp), and 91.96% vs. 67.05% (+24.91 pp) under sparse feedback.</li>
-              <li><a href="../proof/">/proof/</a> shows which claims are already evidenced and which claims still require shadow/online artifacts.</li>
-              <li><a href="../blog/v12.2.6-series/">/blog/v12.2.6-series/</a> explains how the architecture boundary and rollout path fit together.</li>
+              <li>The paper covers the hot/cold path split, PG-only route_fn, QTsim confidence mixing, and the unified policy gradient.</li>
+              <li>Repo-local proof (this repo): promoted-pack lifecycle, PG-only route_fn evidence, operator observability — proved via smoke lanes.</li>
+              <li>BGZ benchmarks: 0.975 vs 0.896 (+7.9 pp) recorded-session; 91.96% vs 67.05% (+24.91 pp) sparse-feedback 10-seed — in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a>.</li>
+              <li>Target end shape described in the paper: continuous live graph update (decay, co-firing, pruning, reorganizing) — not yet proved in this repo.</li>
+              <li><a href="../proof/">/proof/</a> shows which claims are already evidenced and which still require shadow/online artifacts.</li>
             </ul>
           </article>
         </div>
@@ -386,13 +387,13 @@
       <section class="section">
         <div class="section-head">
           <h2>What the paper covers</h2>
-          <p class="section-intro">The paper is the full technical write-up. These are its four main claims &mdash; each backed by mechanism and benchmark evidence, not yet by live-traffic proof.</p>
+          <p class="section-intro">The paper is the full technical write-up. These are its four main claims. Read each with the layer it belongs to: current truth (repo-local smoke lanes + BGZ benchmarks), target end shape (live graph update, full RL-native maintenance), or future evidence (shadow, online).</p>
         </div>
         <div class="paper-grid">
           <article class="paper-card">
-            <div class="kicker">System split</div>
-            <h3>Fast serving stays local; learning happens in the background</h3>
-            <p>OpenClaw serves each question immediately using the current <code>route_fn</code>. Afterward, the system replays the turn in the background, labels outcomes, and updates routing weights. Learning never adds latency.</p>
+            <div class="kicker">System split (hard design invariant)</div>
+            <h3>OpenClaw owns runtime; OpenClawBrain owns learning artifacts</h3>
+            <p>OpenClaw serves from the active promoted pack. Off the hot path, the learner materializes fresher candidate packs; activation promotes them. This split is the core invariant today. The target hardens it with a full API surface that enforces the boundary from the package API, not just docs.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Route signals</div>
@@ -405,9 +406,9 @@
             <p>Human corrections, self-evaluation, automated signals, and teacher-model feedback all feed into one update loop. Human corrections take priority, followed by the system's own outcomes, then everything else.</p>
           </article>
           <article class="paper-card">
-            <div class="kicker">Maintenance path</div>
-            <h3>The knowledge graph maintains itself</h3>
-            <p>Instead of manual curation, graph upkeep &mdash; connecting, splitting, and merging nodes &mdash; is treated as a learning problem. Conservative guardrails keep changes safe, and evidence gates each action type.</p>
+            <div class="kicker">Maintenance path (target end shape)</div>
+            <h3>RL-native graph maintenance — the target</h3>
+            <p>The paper frames graph maintenance (connect, split, merge, prune) as a control problem with conservative guardrails. Today, graph-dynamics fields are immutable pack metadata. The target is live structural maintenance on the active pack during serving. See <a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">CLAIMS.md</a> for the current/target boundary.</p>
           </article>
         </div>
       </section>

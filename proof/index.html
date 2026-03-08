@@ -5,7 +5,7 @@
   <title>OpenClawBrain Proof Package</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Jonathan Gu">
-  <meta name="description" content="OpenClawBrain proof package: benchmark results for the learned router vs RAG baselines, worked examples, and honest boundaries on what we have and have not yet proven.">
+  <meta name="description" content="OpenClawBrain proof package: repo-local smoke-lane proof plus Brain Ground Zero benchmark evidence. Explicit current-truth, target end-shape, and claim boundaries.">
   <meta property="og:title" content="OpenClawBrain Proof Package">
   <meta property="og:description" content="97.5% vs 89.6% on recorded sessions. 92% vs 67% under sparse feedback. Worked examples, reproduction steps, and clear boundaries on what is proven.">
   <meta property="og:type" content="website">
@@ -436,7 +436,7 @@
           <h1>Proof package.</h1>
           <p style="font-family:var(--sans); font-size:0.92rem; color:var(--muted); margin:0.5rem 0 0;">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
           <p class="lead">
-            RAG retrieves chunks by similarity and hopes the right answer is in the pile. OpenClawBrain replaces that with a learned router &mdash; trained on real usage, it walks a knowledge graph, picks the right context, and improves from corrections. On two frozen benchmark suites, the learned router scores 97.5% vs. 89.6% for the best RAG baseline, and 92.0% vs. 67.1% under sparse feedback &mdash; using roughly 5&times; less context. These are controlled benchmark results, not live production claims.
+            Two distinct proof surfaces. <strong>Repo-local</strong>: TypeScript smoke lanes in this repo prove the promoted-pack lifecycle, PG-only learned <code>route_fn</code> evidence, candidate-pack refresh, and operator observability. <strong>Brain Ground Zero</strong>: the separate public proof repo carries the comparative benchmark families — recorded-session H2H (0.975 vs 0.896, +7.9&nbsp;pp) and sparse-feedback 10-seed (91.96% vs 67.05%, +24.91&nbsp;pp) on frozen workloads. Neither surface makes live production claims.
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href="#recorded-session">Recorded-session H2H</a>
@@ -445,41 +445,41 @@
             <a class="btn btn-secondary" href="/docs/reproduce-eval/">Reproduce instructions</a>
           </div>
           <p class="hero-note">
-            We only publish claims when we have the matching evidence. Shadow-mode and live-traffic results will appear here once those tests are complete.
+            Claims only rise as published proof artifacts rise. Graph-dynamics (decay/co-firing/pruning/reorganizing) as live operations on the active pack are the target end shape, not today's reality. See <a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">CLAIMS.md</a> for the authoritative boundary.
           </p>
         </div>
 
         <div class="hero-panel">
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.34); background: rgba(156, 224, 188, 0.08);">
-            <div class="kicker">Latest benchmark results</div>
-            <h2>Both benchmark suites are now published</h2>
+            <div class="kicker">Two proof surfaces — both published</div>
+            <h2>Repo-local smoke lanes + Brain Ground Zero benchmarks</h2>
             <ul>
-              <li><strong>Recorded-session:</strong> 800 frozen queries, 8 methods. Learned router (<code>full_brain</code>): 97.5%. Best RAG baseline (<code>vector_rag_rerank</code>): 89.6% &mdash; a +7.9 pp gap. Run: <code>recorded_h2h_relational_drift_001</code>.</li>
-              <li><strong>Sparse-feedback (10 seeds):</strong> Minimal corrections. Learned router: 91.96% vs. 67.05% (+24.91 pp), roughly 5&times; less context, 9 of 10 seeds won. Bundle: <code>proof-results/sparse_feedback_10seed</code>.</li>
+              <li><strong>Repo-local (this repo):</strong> <code>pnpm lifecycle:smoke</code>, <code>pnpm observability:smoke</code>, <code>pnpm fresh-env:smoke</code> — promoted-pack lifecycle, PG-only <code>route_fn</code> evidence, operator observability. Proved without external deps.</li>
+              <li><strong>BGZ recorded-session:</strong> 800 frozen queries, 8 methods. <code>full_brain</code>: 97.5%. Best RAG: 89.6% (+7.9 pp). Bundle: <code>recorded_h2h_relational_drift_001</code> in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a>.</li>
+              <li><strong>BGZ sparse-feedback (10 seeds):</strong> <code>full_brain</code> 91.96% vs 67.05% (+24.91 pp), ~5&times; less context, 9 of 10 seeds won. Bundle: <code>proof-results/sparse_feedback_10seed</code> in brain-ground-zero.</li>
             </ul>
           </article>
 
           <div class="status-grid">
             <article class="status-card" id="proven-now">
-              <div class="kicker">Proven now</div>
-              <h2>Router works, two benchmark wins, fully reproducible</h2>
+              <div class="kicker">Proved in this repo (smoke lanes)</div>
+              <h2>Promoted-pack lifecycle, PG-only route_fn, operator observability</h2>
               <ul>
-                <li>Controlled simulations confirm routing and learning work as designed &mdash; each component tested alone and together.</li>
-                <li>A worked example traces one real turn end-to-end: stable turn ID, bounded context, correction captured against the exact route that fired.</li>
-                <li>Recorded-session: 97.5% vs. 89.6% for the best of 8 RAG baselines (+7.9 pp) on 800 frozen queries.</li>
-                <li>Sparse-feedback: 91.96% vs. 67.05% (+24.91 pp) across 10 seeds, using roughly 5&times; less context.</li>
-                <li>All figures and scripts are provided so you can rerun locally.</li>
+                <li><strong>Lifecycle</strong>: normalized events → candidate pack → promotion → compilation from promoted pack → <code>usedLearnedRouteFn</code> + checksum + PG metadata verifiable. Run <code>pnpm lifecycle:smoke</code>.</li>
+                <li><strong>Observability</strong>: activation health, freshness, rollback lineage, collected-label counts, route artifact diffs, explicit fallback usage. Run <code>pnpm observability:smoke</code>.</li>
+                <li><strong>Fresh-env install</strong>: local tarballs install cleanly into an isolated plain-<code>npm</code> consumer directory; attach/promotion/rollback proved end-to-end. Run <code>pnpm fresh-env:smoke</code>.</li>
+                <li><strong>Worked turn</strong>: one traceable turn with stable <code>turn_id</code>, bounded compiled context, same-turn correction capture, and learner outcome linkage.</li>
               </ul>
             </article>
 
             <article class="status-card">
-              <div class="kicker">What still needs testing</div>
-              <h2>Shadow-mode and live-traffic evidence are next</h2>
+              <div class="kicker">Not yet proved</div>
+              <h2>Live graph plasticity, shadow, and online evidence</h2>
               <ul>
-                <li>For recorded-session claims: we publish the exact queries, state snapshot, and scoring rubric used across all modes so anyone can verify.</li>
-                <li>For sparse-feedback claims: we publish per-seed results plus context size and graph traversal budgets for each mode.</li>
-                <li>For shadow-mode claims (not yet complete): we will mirror real OpenClaw traffic, compare brain-on vs brain-off outputs, and save every disagreement.</li>
-                <li>For live rollout claims (not yet complete): we will publish success rates, correction counts, prompt sizes, latency, and cost from actual served traffic.</li>
+                <li><strong>Live runtime graph update</strong>: decay, Hebbian co-firing, pruning, and reorganizing as live operations on the active pack during serving. Today these are build-time pack artifact metadata only.</li>
+                <li><strong>npm-published distribution</strong>: current wave ships from local tarballs. The npm-published lane is the target; <code>pnpm release:status</code> gates the honest claim.</li>
+                <li><strong>Shadow-mode</strong>: mirror real OpenClaw traffic, compare brain-on vs brain-off outputs, save every disagreement. Not yet complete.</li>
+                <li><strong>Narrow live rollout</strong>: success rates, correction counts, latency, and cost from actual served traffic. Not yet complete.</li>
               </ul>
             </article>
           </div>
@@ -501,6 +501,41 @@
               <li><strong>Not claimed</strong>: we do not have the evidence yet, so we do not make the claim.</li>
             </ul>
           </article>
+        </div>
+      </section>
+
+
+      <section class="section" id="repo-local-proof">
+        <div class="section-head">
+          <div>
+            <h2>Repo-local proof (what this repo proves via smoke lanes)</h2>
+            <p class="section-intro">These proofs run entirely inside the OpenClawBrain TypeScript workspace without external dependencies. They establish the promoted-pack lifecycle, PG-only learned route_fn boundary, and operator observability claims. They are separate from and do not depend on the Brain Ground Zero comparative benchmark families.</p>
+          </div>
+        </div>
+        <div class="status-grid">
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">pnpm lifecycle:smoke</div>
+            <h3>Promoted-pack lifecycle end-to-end</h3>
+            <p>Normalized events → candidate pack build → activation stage → promotion → compiler serving from promoted pack → <code>usedLearnedRouteFn</code>, <code>routerIdentity</code>, router checksum, and PG objective metadata verifiable.</p>
+          </article>
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">pnpm observability:smoke</div>
+            <h3>Operator observability</h3>
+            <p>Activation health, freshness, rollback lineage, collected-label counts, PG objective metadata, route artifact diffs, learned-route evidence, explicit fallback usage, and init mode diagnostics.</p>
+          </article>
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">pnpm fresh-env:smoke</div>
+            <h3>Clean outside-consumer install</h3>
+            <p>Local tarballs install cleanly into an isolated plain-<code>npm</code> directory. Attach, promotion, rollback, and <code>npm ci</code> recovery all proved end-to-end from zero.</p>
+          </article>
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">pnpm continuous-product-loop:smoke</div>
+            <h3>Post-attach loop</h3>
+            <p>Live-style event export → canonical supervision → seed-state first serve → PG-only candidate refresh → promotion → later served-turn route artifact authority.</p>
+          </article>
+        </div>
+        <div class="callout" style="margin-top: 1rem;">
+          <p>These lanes prove the package/mechanism boundary today. They do not prove heuristic learned-label overlays on the active pack, live runtime graph plasticity, or per-query route_fn mutation. Current structural ops and route updates are materialized into packs and served only after promotion.</p>
         </div>
       </section>
 
@@ -681,15 +716,21 @@ correction: internal-only patch -> no support contact</code></pre>
           </article>
           <article class="ladder-card">
             <div class="step">4</div>
-            <h3>Shadow mode</h3>
-            <p>Does it work on real traffic? The brain runs alongside the live system without serving answers. We compare outputs, save every disagreement, and measure prompt size, latency, and cost.</p>
-            <div class="meta">This step builds confidence before we start serving live answers. Not yet complete.</div>
+            <h3>Live graph plasticity</h3>
+            <p>Decay, Hebbian co-firing, pruning, and reorganizing running on the active pack during serving — not just build-time pack metadata. This is the structural maintenance target end shape.</p>
+            <div class="meta">Not yet proved in this repo. Today's graph-dynamics are immutable pack artifact metadata. See CLAIMS.md.</div>
           </article>
           <article class="ladder-card">
             <div class="step">5</div>
+            <h3>Shadow mode</h3>
+            <p>Mirror real OpenClaw traffic without serving it. Compare brain-on vs brain-off, save every disagreement, measure prompt size, latency, and cost.</p>
+            <div class="meta">Not yet complete. This step hardens comparative evidence before live serving.</div>
+          </article>
+          <article class="ladder-card">
+            <div class="step">6</div>
             <h3>Narrow live rollout</h3>
-            <p>Does it improve real outcomes for real users? The brain serves a small slice of live traffic with automatic fallback. Claims are published only when backed by saved data from that slice.</p>
-            <div class="meta">This is the real product proof -- not simulation, not benchmark. Not yet complete.</div>
+            <p>Enable the brain for a small traffic slice with automatic fallback. Claims published only when backed by saved artifacts from that slice.</p>
+            <div class="meta">Not yet complete. This is product proof, not simulation or benchmark proof.</div>
           </article>
         </div>
       </section>
