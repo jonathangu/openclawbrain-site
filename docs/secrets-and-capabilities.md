@@ -92,7 +92,7 @@ Each registry entry should track:
 - `required_keys`: `OPENAI_API_KEY`
 - `storage_pointer`: `.env*` key location
 - `verify`: key assignment is non-empty (`true/false`)
-- `notes`: required for OpenAI-based embedder/LLM paths
+- `notes`: used by the broader OpenClaw runtime if configured for OpenAI-based agent or tool paths. OpenClawBrain itself does not require this key — its default stack uses local BGE-large embeddings and a local Ollama teacher.
 
 ### SEC/EDGAR
 

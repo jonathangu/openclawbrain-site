@@ -141,7 +141,7 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~
 <li><code>required_keys</code>: <code>OPENAI_API_KEY</code></li>
 <li><code>storage_pointer</code>: <code>.env*</code> key location</li>
 <li><code>verify</code>: key assignment is non-empty (<code>true/false</code>)</li>
-<li><code>notes</code>: required for OpenAI-based embedder/LLM paths</li>
+<li><code>notes</code>: used by the broader OpenClaw runtime if configured for OpenAI-based agent or tool paths. OpenClawBrain itself does not require this key — its default stack uses local BGE-large embeddings and a local Ollama teacher.</li>
 </ul>
 <h3 id="secedgar">SEC/EDGAR</h3>
 <ul>

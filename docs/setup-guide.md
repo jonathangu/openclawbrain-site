@@ -9,7 +9,7 @@ This guide gets you from zero to a working setup.
 - Node.js 20+ with `corepack`
 - An OpenClaw runtime deployment (OpenClawBrain is a learning layer, not a standalone runtime)
 - Workspace files (markdown, docs, memory files) for your agent to learn from
-- API keys for your LLM provider(s), stored in OpenClaw's secrets config
+- **No provider API keys required for OpenClawBrain itself.** The default stack uses local BGE-large embeddings and a local Ollama/Qwen teacher. The broader OpenClaw runtime may still need provider keys for its own agent and tool calls — see [Secrets and Capabilities](secrets-and-capabilities.md).
 
 ## 1. Build the workspace
 
