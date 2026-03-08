@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain Blog</title>
   <meta name="author" content="Jonathan Gu" />
-  <meta name="description" content="OpenClawBrain blog: how a learned router over a knowledge graph replaces static retrieval, with architecture deep-dives, benchmark evidence, and release notes." />
+  <meta name="description" content="OpenClawBrain blog: how a trained guide over a knowledge map replaces keyword-style retrieval — with architecture deep-dives, benchmark evidence, and release notes." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/" />
   <style>
     :root {
@@ -57,7 +57,7 @@
     <div class="nav"><a href="/">openclawbrain.ai</a></div>
     <h1>OpenClawBrain Blog</h1>
     <p class="meta">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
-    <p>OpenClawBrain is a learned router over a knowledge graph. Instead of dumping the nearest text chunks into a prompt (standard RAG), it walks structured relationships, picks the right context for each query, and improves from corrections. These posts explain how it works, what the benchmarks show, and how to set it up.</p>
+    <p>Most AI agents retrieve knowledge like a keyword search &mdash; find the closest-sounding text, hope it's the right stuff. OpenClawBrain is more like a trail guide: it builds a map of everything your agent knows, learns which paths lead to good answers, and gets better from corrections. These posts explain how it works, what the benchmarks show, and how to set it up.</p>
 
     <div class="section">
       <h2>Start Here</h2>
@@ -65,22 +65,22 @@
         <a class="post featured" href="/docs/worked-example/">
           <div class="title">Worked example: one conversation turn, end to end</div>
           <div class="meta">Start here &middot; see what actually happens before looking at scores</div>
-          <div>Follow one real query through the system: the routing decision, the bounded context sent to the model, and how a correction feeds into background learning. The clearest way to understand what OpenClawBrain does.</div>
+          <div>Follow one real question through the system: what the guide picks, what lands in the prompt, and how a correction makes it smarter next time. The fastest way to understand what OpenClawBrain actually does.</div>
         </a>
         <a class="post featured" href="/blog/v12.2.6-series/">
           <div class="title">How it works: the v12.2.6+ architecture series</div>
           <div class="meta">March 2026 &middot; 6 posts</div>
-          <div>The full explanation: shadow routing (learning off the live path), QTsim confidence mixing (blending graph structure with per-query relevance), the unified policy gradient, and how operators plug the two systems together.</div>
+          <div>The full explanation: how learning happens off the live path, how the routing function blends structural knowledge with per-query relevance, and how operators plug the two systems together.</div>
         </a>
         <a class="post" href="/proof/">
           <div class="title">Benchmark evidence and proof package</div>
           <div class="meta">March 2026 &middot; recorded-session and sparse-feedback benchmarks</div>
-          <div>The learned router scores 97.5% vs 89.6% for the best RAG baseline on recorded sessions, and 92.0% vs 67.1% under sparse feedback with ~5x less context. Full artifact links, reproduction steps, and an explicit ladder of what is proven and what is not.</div>
+          <div>The trained guide scores 97.5% vs 89.6% for the best RAG baseline on recorded sessions, and 92.0% vs 67.1% under sparse feedback with ~5x less context. Full artifact links, reproduction steps, and an honest line between proven and aspirational.</div>
         </a>
         <a class="post" href="/docs/openclaw-integration/">
           <div class="title">Operator integration guide</div>
           <div class="meta">Operational setup</div>
-          <div>Step-by-step instructions for connecting OpenClawBrain to OpenClaw, including configuration options and safety fallbacks.</div>
+          <div>Step-by-step instructions for connecting OpenClawBrain to your OpenClaw agent, including safety fallbacks so your agent keeps working no matter what.</div>
         </a>
       </div>
     </div>
@@ -89,32 +89,32 @@
       <h2>Architecture Series: v12.2.6+</h2>
       <div class="grid">
         <a class="post" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
-          <div class="title">Post 1: Shadow Routing + Ultimate Policy Gradient</div>
+          <div class="title">Post 1: How the guide learns without disrupting the agent</div>
           <div class="meta">March 2026</div>
-          <div>How the learned router picks context, why the teacher stays off the live path, and how corrections, outcomes, and automated signals fold into one update rule.</div>
+          <div>The routing function trains in the background — off the live path — so learning never interrupts serving. Corrections, outcomes, and automated signals all fold into one update rule.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
-          <div class="title">Post 2: QTsim + Confidence Mixing</div>
+          <div class="title">Post 2: Blending map knowledge with per-query relevance</div>
           <div class="meta">March 2026</div>
-          <div>How the router blends the graph's structural knowledge (<code>graph_prior</code>) with a per-query relevance score (<code>QTsim</code>), and how a confidence gate shifts weight between them depending on query clarity.</div>
+          <div>The guide combines what it knows about the knowledge map's structure with how relevant each piece is to the current question — and shifts the balance depending on query clarity.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
-          <div class="title">Post 3: Evaluation and Ablations</div>
+          <div class="title">Post 3: What the benchmarks prove (and what they don't)</div>
           <div class="meta">March 2026</div>
-          <div>Benchmark results, ablation tests, and a clear line between what is proven so far and what still needs live-traffic evidence.</div>
+          <div>Benchmark results, ablation tests, and an honest line between what's proven so far and what still needs live-traffic evidence.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
-          <div class="title">Post 4: Local Embeddings Out of the Box</div>
+          <div class="title">Post 4: Local-first setup, no external services required</div>
           <div class="meta">March 2026</div>
           <div>How to set up OpenClawBrain with local embeddings, the fast routing path for real-time queries, and the background learning loop.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
-          <div class="title">Post 5: Industry Baselines + Ablation Study</div>
+          <div class="title">Post 5: How it compares to established baselines</div>
           <div class="meta">March 2026</div>
-          <div>Side-by-side comparison against credible baselines: where the learned router wins and where the evidence stops.</div>
+          <div>Side-by-side comparison against credible baselines: where the trained guide wins and where the evidence stops.</div>
         </a>
         <a class="post" href="/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/">
-          <div class="title">Post 6: OpenClaw Runtime Integration</div>
+          <div class="title">Post 6: Plugging the two systems together</div>
           <div class="meta">March 2026</div>
           <div>How the runtime flow works, which system owns what, and how to roll back instantly if needed.</div>
         </a>

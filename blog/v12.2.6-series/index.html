@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain v12.2.6+ Series</title>
-  <meta name="description" content="OpenClawBrain v12.2.6+ series: how OpenClaw and OpenClawBrain split responsibilities, how the learned router works, and the published evidence behind it." />
+  <meta name="description" content="OpenClawBrain v12.2.6+ series: how your agent gets a second brain that learns — the architecture, the evidence, and how to set it up." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -101,78 +101,78 @@
     <div class="nav"><a href="/">openclawbrain.ai</a> | <a href="/blog/">blog</a> | <a href="/proof/">proof</a> | <a href="/paper/">paper</a></div>
 
     <section class="hero">
-      <div class="eyebrow">Shipped series</div>
-      <h1>OpenClawBrain v12.2.6+</h1>
+      <div class="eyebrow">Architecture series</div>
+      <h1>How your agent gets a second brain</h1>
       <p>
-        This series explains how OpenClaw and OpenClawBrain divide the work, and why that split matters. OpenClaw handles the live runtime &mdash; sessions, tools, prompts, answers. OpenClawBrain handles learning &mdash; watching real conversations, training a routing function (<code>route_fn</code>) over a knowledge graph, and packaging the result into versioned brain packs that sharpen the agent over time.
+        Imagine two colleagues. One handles the front desk &mdash; talking to users, running tools, assembling answers. That's <strong>OpenClaw</strong>. The other works in a back office, studying every conversation, building a map of what the agent knows, and training a guide that picks the right knowledge for each question. That's <strong>OpenClawBrain</strong>.
       </p>
       <p>
-        The core idea: instead of dumping the nearest text chunks into the prompt (the standard RAG approach), a learned router walks a graph of structured relationships, picks the right context for each query, and improves from corrections and feedback. Each post goes deep on one piece. Start wherever you like.
+        The usual approach (RAG) is like a keyword search: find the closest-sounding text chunks and hope they help. OpenClawBrain replaces that with a guide who walks a map of connected knowledge, learns from corrections, and gets sharper over time. Each post in this series goes deep on one piece. Start wherever you like.
       </p>
       <div class="callout">
-        Benchmark results: the learned router answers 97.5% of queries correctly vs. 89.6% for the best RAG baseline on recorded sessions. Under sparse feedback it widens to 92.0% vs. 67.1%, using about 5x less context per query. Full evidence and artifact links: <a href="/proof/">/proof/</a>.
+        In benchmarks, the trained guide answers 97.5% of queries correctly vs. 89.6% for the best RAG baseline on recorded sessions. Under sparse feedback it widens to 92.0% vs. 67.1%, using about 5x less context per query. Full evidence: <a href="/proof/">/proof/</a>.
       </div>
     </section>
 
     <div class="grid">
       <a class="card" href="/proof/">
         <div class="meta">Evidence hub</div>
-        <h3>Proof package: what is proven and what is not</h3>
-        <div class="kicker">Each rung of the evidence ladder — mechanism tests, recorded-session benchmarks, and what still needs live-traffic proof — with links to every artifact.</div>
+        <h3>What's proven and what's not &mdash; the honest scorecard</h3>
+        <div class="kicker">Each rung of the evidence ladder &mdash; mechanism tests, benchmark comparisons, and what still needs live-traffic proof &mdash; with links to every artifact.</div>
       </a>
 
       <a class="card" href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">
-        <div class="meta">Strongest artifact</div>
-        <h3>Recorded head-to-head bundle</h3>
-        <div class="kicker">800 queries, 41 steps, 8 baselines. The learned router scores 97.5% accuracy vs. 89.6% for the best RAG approach.</div>
+        <div class="meta">Strongest benchmark</div>
+        <h3>Recorded head-to-head: 800 queries, 8 baselines</h3>
+        <div class="kicker">The trained guide scores 97.5% accuracy vs. 89.6% for the best RAG approach across 41 steps of conversation.</div>
       </a>
 
       <a class="card" href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">
-        <div class="meta">Strongest 10-seed run</div>
-        <h3>Sparse-feedback proof bundle</h3>
-        <div class="kicker">The learned router scores 92.0% vs. 67.1% for the best RAG baseline, uses roughly 5x less context per query, and wins 9 of 10 random seeds.</div>
+        <div class="meta">Hardest test</div>
+        <h3>Sparse feedback: learning from very little signal</h3>
+        <div class="kicker">92.0% vs. 67.1% for the best RAG baseline, with roughly 5x less context per query. Wins 9 of 10 random seeds.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/03-evaluation-ablations/">
         <div class="meta">Post 3</div>
-        <h3>Evaluation: what is proven now</h3>
-        <div class="kicker">The benchmark numbers, what they actually prove, and where the evidence stops short of live-traffic claims.</div>
+        <h3>What the benchmarks actually prove</h3>
+        <div class="kicker">The numbers, what they mean, and where the evidence honestly stops short of live-traffic claims.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
         <div class="meta">Post 5</div>
-        <h3>Baselines and comparison contract</h3>
-        <div class="kicker">Why these baselines matter, where the learned router wins today, and what still needs live-traffic evidence.</div>
+        <h3>How it compares to established baselines</h3>
+        <div class="kicker">Side-by-side against credible baselines: where the trained guide wins today and what still needs more evidence.</div>
       </a>
 
       <a class="card" href="/paper/">
         <div class="meta">Paper + PDF</div>
-        <h3>Canonical paper route</h3>
-        <div class="kicker">Paper framing and direct PDF with citations aligned to the same proof artifacts.</div>
+        <h3>The full write-up</h3>
+        <div class="kicker">Approach, architecture, and comparative results in paper form, with citations to the same proof artifacts.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/">
         <div class="meta">Post 6</div>
-        <h3>OpenClaw runtime integration</h3>
+        <h3>Plugging the two systems together</h3>
         <div class="kicker">How the runtime flow works, which system owns what, and how to roll back instantly if needed.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
         <div class="meta">Post 1</div>
-        <h3>Shadow routing + the unified learning rule</h3>
-        <div class="kicker">Why the teacher stays off the live path, and how human corrections, outcomes, and automated signals fold into a single update rule with a clear priority order.</div>
+        <h3>How the guide learns without disrupting the agent</h3>
+        <div class="kicker">Learning happens off the live path. Corrections, outcomes, and automated signals fold into a single update rule with a clear priority order.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
         <div class="meta">Post 2</div>
-        <h3>The learned runtime route function</h3>
-        <div class="kicker">How the router blends the graph's structural knowledge (<code>graph_prior</code>) with per-query relevance (<code>QTsim</code>), and how a confidence gate shifts weight between them.</div>
+        <h3>Blending map knowledge with per-query relevance</h3>
+        <div class="kicker">How the guide combines what it knows about the knowledge map's structure with how relevant each piece is to the current question.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
         <div class="meta">Post 4</div>
-        <h3>Local-first operator flow</h3>
-        <div class="kicker">Default stack, fast startup, and what should stay out of the live request path.</div>
+        <h3>Local-first setup, no external services required</h3>
+        <div class="kicker">Default stack, fast startup, and what stays out of the live request path.</div>
       </a>
     </div>
   </main>
