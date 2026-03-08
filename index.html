@@ -491,8 +491,8 @@
       <h1>A learned router that makes your AI agent sharper over time</h1>
       <p class="lead">
         <a href="https://github.com/jonathangu/openclaw">OpenClaw</a> runs your agent &mdash; sessions, tools, prompts, answers. OpenClawBrain makes it learn.
-        Instead of dumping the nearest text chunks into the prompt (that is what RAG does), OpenClawBrain trains a routing function that walks a knowledge graph, picks the right context for each query, and gets better from every correction and conversation.
-        The result: your agent serves more accurate answers using less context, and improves continuously without manual tuning.
+        Ordinary retrieval (RAG) dumps the nearest text chunks into the prompt and hopes the answer is in the pile. OpenClawBrain trains a routing function that walks a knowledge graph, picks the right context for each query, and gets better from every correction.
+        The result: more accurate answers, less context, and continuous improvement without manual tuning.
       </p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="/docs/setup-guide.md">Get started</a>
@@ -528,12 +528,12 @@
       <article class="path-step">
         <p class="step-index">Step 2</p>
         <h3>OpenClawBrain builds a knowledge graph</h3>
-        <p>Your agent's memory is a graph, not a pile of text chunks. Each node is a context block &mdash; a fact, a rule, a correction. Edges capture how those blocks relate: "this deploy policy connects to that rollback rule," "this correction supersedes that old guidance." The structure lets the router follow relationships, not just match keywords.</p>
+        <p>Your agent's memory is a graph, not a pile of text chunks. Each node is a fact, a rule, or a correction. Edges capture how they relate &mdash; "this deploy policy depends on that rollback rule," "this correction supersedes that old guidance." Structure lets the router follow relationships, not just match keywords.</p>
       </article>
       <article class="path-step">
         <p class="step-index">Step 3</p>
         <h3>A learned router picks what matters</h3>
-        <p>At query time, <code>route_fn</code> walks the graph and selects the right context. It blends two signals: the graph's durable structure (<code>graph_prior</code>) and a per-query relevance score (<code>QTsim</code>). A confidence gate decides how much to trust each signal &mdash; leaning on the graph when the query is ambiguous, and on the query signal when it is clear. The router improves continuously from corrections, outcomes, and background learning.</p>
+        <p>At query time, <code>route_fn</code> walks the graph and selects the right context. It blends two signals: what the graph already knows about how facts relate (<code>graph_prior</code>) and how well each fact fits this specific question (<code>QTsim</code>). A confidence gate shifts weight between them &mdash; leaning on structure when the query is ambiguous, on the query signal when it is clear. The router improves continuously from corrections and outcomes.</p>
       </article>
     </div>
   </section>
@@ -541,23 +541,23 @@
   <section class="section" id="why-not-rag">
     <h2>Why this beats ordinary RAG</h2>
     <p class="section-intro">
-      RAG retrieves the nearest text chunks by semantic similarity and hopes the answer is in the pile. That works for simple lookups but falls apart on structured tasks, ambiguous queries, and anything that requires following relationships between facts. OpenClawBrain replaces that with learned selection over structure.
+      RAG retrieves text chunks by similarity and hopes the right ones land in the prompt. That works for simple lookups but breaks down when facts depend on each other, queries are ambiguous, or accuracy compounds over time. OpenClawBrain replaces similarity search with learned selection over structure.
     </p>
     <div class="path-grid">
       <article class="path-step primary">
         <p class="step-index">Difference 1</p>
         <h3>It learns from corrections</h3>
-        <p>When a user corrects the agent, the router learns from that correction &mdash; tied to the exact routing decision that produced the wrong answer. Next time a similar question comes in, it routes differently. RAG has no feedback loop: correct it a hundred times, and it returns the same chunks tomorrow.</p>
+        <p>When a user corrects the agent, the correction is tied to the exact routing decision that produced the wrong answer. Next time a similar question comes in, the router picks differently. RAG has no feedback loop: correct it a hundred times, and it returns the same chunks tomorrow.</p>
       </article>
       <article class="path-step">
         <p class="step-index">Difference 2</p>
         <h3>It follows relationships, not just similarity</h3>
-        <p>RAG treats your knowledge as isolated text chunks and ranks them by how similar they sound to the query. The knowledge graph stores actual relationships &mdash; "this deploy policy depends on that rollback rule" &mdash; and the router follows those edges. It can reach context that is structurally relevant even when the wording does not match.</p>
+        <p>RAG ranks isolated text chunks by how similar they sound to the query. The knowledge graph stores actual relationships &mdash; "this deploy policy depends on that rollback rule" &mdash; and the router follows those edges to reach context that matters even when the wording does not match.</p>
       </article>
       <article class="path-step">
         <p class="step-index">Difference 3</p>
         <h3>It compounds over time</h3>
-        <p>Every correction, every outcome, every conversation makes the routing function a little better. After a few hundred interactions, the agent is measurably sharper &mdash; not because someone manually tuned it, but because the router learned what works. A static RAG index never improves.</p>
+        <p>Every correction and outcome makes the routing function a little better. After a few hundred interactions the agent is measurably sharper &mdash; not because someone tuned it, but because the router learned what works. A static RAG index never improves.</p>
       </article>
       <article class="path-step">
         <p class="step-index">Difference 4</p>
@@ -570,17 +570,17 @@
   <section class="section" id="two-systems">
     <h2>Two systems, one goal</h2>
     <p class="section-intro">
-      OpenClaw and OpenClawBrain have distinct jobs. This separation is intentional &mdash; it keeps the live path fast and the learning safe to iterate on.
+      OpenClaw and OpenClawBrain have distinct jobs. The split keeps serving fast and learning safe to iterate on.
     </p>
 
     <div class="boundary-grid">
       <article class="boundary-card">
         <h3>OpenClaw owns runtime</h3>
-        <p>Sessions, tools, prompt assembly, answers, and fail-open behavior. If learning degrades or the brain goes offline, your agent keeps working &mdash; it just serves without brain-enhanced context until the next healthy pack is ready.</p>
+        <p>Sessions, tools, prompt assembly, answers, and fail-open behavior. If the brain goes offline, your agent keeps working &mdash; it just serves without learned context until the next healthy pack is ready.</p>
       </article>
       <article class="boundary-card">
         <h3>OpenClawBrain owns learning</h3>
-        <p>Watches usage, corrections, and feedback. Builds versioned brain packs (bundles of context blocks and learned routing weights). Trains the <code>route_fn</code> that decides what context to surface. All of this runs off the hot path &mdash; learning never slows down a single response.</p>
+        <p>Watches usage, corrections, and feedback. Builds versioned brain packs &mdash; bundles of context blocks and learned routing weights. Trains the <code>route_fn</code> that decides what context to surface. All of this runs in the background; learning never slows a live response.</p>
       </article>
     </div>
   </section>
@@ -602,17 +602,17 @@ pnpm release:pack</code></pre>
   <section class="section" id="evidence">
     <h2>Evidence</h2>
     <p class="section-intro">
-      Two benchmark families are published and reproducible. They compare OpenClawBrain's learned routing against standard RAG baselines on frozen workloads &mdash; same queries, same data, same scoring rules.
+      Two benchmark families, both published and reproducible. Same queries, same data, same scoring rules &mdash; learned routing vs. standard RAG baselines.
     </p>
 
     <div class="proof-family-grid">
       <article class="proof-family">
         <h3>Recorded-session benchmark</h3>
-        <p>800 frozen queries, 8 baselines, same rubric. The learned router answers 97.5% correctly; the best RAG baseline reaches 89.6%. That gap means roughly 1 in 13 queries where RAG gets it wrong, the learned router gets it right.</p>
+        <p>800 frozen queries, 8 baselines, one rubric. The learned router answers 97.5% correctly; the best RAG baseline reaches 89.6%. Roughly 1 in 13 queries where RAG fails, the learned router gets right.</p>
       </article>
       <article class="proof-family">
         <h3>Sparse-feedback benchmark</h3>
-        <p>Real teams do not correct every answer. With minimal feedback signals across 10 random seeds, the learned router still hits 92% vs RAG at 67% &mdash; while using roughly 5&times; less context per query. More accurate and more efficient, even with sparse supervision.</p>
+        <p>Real teams do not correct every answer. With minimal feedback across 10 random seeds, the learned router still hits 92% vs. RAG at 67% &mdash; using roughly 5&times; less context per query. More accurate and more efficient, even with sparse corrections.</p>
       </article>
     </div>
 
@@ -665,7 +665,7 @@ pnpm release:pack</code></pre>
   </section>
 
   <footer class="footer">
-    <p>OpenClawBrain makes OpenClaw stateful and self-improving by learning what context to serve at runtime.</p>
+    <p>OpenClawBrain makes OpenClaw self-improving by learning what context to serve.</p>
     <p>Jonathan Gu &middot; <a href="mailto:jonathangu@gmail.com">jonathangu@gmail.com</a></p>
     <p><a class="back-link" href="https://www.jonathangu.com/">Author site</a></p>
   </footer>

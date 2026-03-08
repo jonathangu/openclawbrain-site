@@ -434,7 +434,7 @@
           <div class="eyebrow">Evidence package</div>
           <h1>Proof package.</h1>
           <p class="lead">
-            RAG retrieves chunks by similarity and hopes the right answer is in the pile. OpenClawBrain replaces that with a learned router &mdash; a function trained on real usage that walks a knowledge graph, picks the right context for each question, and improves from corrections and feedback. We tested it against the best RAG baselines on two frozen benchmark suites. The learned router answers correctly 97.5% of the time vs 89.6% for the best RAG baseline (+7.9 pp), and under sparse feedback it reaches 92.0% vs 67.1% (+24.9 pp) while using roughly 5x less context. These are controlled benchmark results, not live production claims.
+            RAG retrieves chunks by similarity and hopes the right answer is in the pile. OpenClawBrain replaces that with a learned router &mdash; trained on real usage, it walks a knowledge graph, picks the right context, and improves from corrections. On two frozen benchmark suites, the learned router scores 97.5% vs. 89.6% for the best RAG baseline, and 92.0% vs. 67.1% under sparse feedback &mdash; using roughly 5&times; less context. These are controlled benchmark results, not live production claims.
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href="#recorded-session">Recorded-session H2H</a>
@@ -452,21 +452,21 @@
             <div class="kicker">Latest benchmark results</div>
             <h2>Both benchmark suites are now published</h2>
             <ul>
-              <li><strong>Recorded-session test:</strong> We replayed 800 frozen queries through 8 different retrieval methods. The learned router (<code>full_brain</code>) answered correctly 97.5% of the time; the best RAG baseline (<code>vector_rag_rerank</code>) reached 89.6% -- a gap of +7.9 percentage points. Run ID: <code>recorded_h2h_relational_drift_001</code>.</li>
-              <li><strong>Sparse-feedback test (10 seeds):</strong> With minimal correction signals, the learned router reached 91.96% accuracy vs 67.05% for the best RAG baseline (+24.91 pp), used roughly 5x less context per query, and won 9 out of 10 head-to-head seed comparisons. Bundle: <code>proof-results/sparse_feedback_10seed</code>.</li>
+              <li><strong>Recorded-session:</strong> 800 frozen queries, 8 methods. Learned router (<code>full_brain</code>): 97.5%. Best RAG baseline (<code>vector_rag_rerank</code>): 89.6% &mdash; a +7.9 pp gap. Run: <code>recorded_h2h_relational_drift_001</code>.</li>
+              <li><strong>Sparse-feedback (10 seeds):</strong> Minimal corrections. Learned router: 91.96% vs. 67.05% (+24.91 pp), roughly 5&times; less context, 9 of 10 seeds won. Bundle: <code>proof-results/sparse_feedback_10seed</code>.</li>
             </ul>
           </article>
 
           <div class="status-grid">
             <article class="status-card" id="proven-now">
               <div class="kicker">Proven now</div>
-              <h2>How the router works, two benchmark wins, and you can reproduce it locally</h2>
+              <h2>Router works, two benchmark wins, fully reproducible</h2>
               <ul>
-                <li>Controlled simulations confirm the routing and learning loop works as designed -- each component is tested in isolation and together.</li>
-                <li>A worked example shows one real turn end-to-end: a stable turn ID, bounded context sent to the model, and correction feedback captured against the exact route that fired.</li>
-                <li>Recorded-session benchmark: the learned router answered 97.5% of 800 frozen queries correctly vs 89.6% for the best of 8 RAG baselines (+7.9 pp).</li>
-                <li>Sparse-feedback benchmark: with minimal supervision across 10 random seeds, the learned router reached 91.96% vs 67.05% for the best RAG baseline (+24.91 pp), using roughly 5x less context per query.</li>
-                <li>All figures and evaluation scripts are provided so you can rerun and inspect the results locally.</li>
+                <li>Controlled simulations confirm routing and learning work as designed &mdash; each component tested alone and together.</li>
+                <li>A worked example traces one real turn end-to-end: stable turn ID, bounded context, correction captured against the exact route that fired.</li>
+                <li>Recorded-session: 97.5% vs. 89.6% for the best of 8 RAG baselines (+7.9 pp) on 800 frozen queries.</li>
+                <li>Sparse-feedback: 91.96% vs. 67.05% (+24.91 pp) across 10 seeds, using roughly 5&times; less context.</li>
+                <li>All figures and scripts are provided so you can rerun locally.</li>
               </ul>
             </article>
 
@@ -506,7 +506,7 @@
         <div class="section-head">
           <div>
             <h2>Worked-turn example (inspect one real turn)</h2>
-            <p class="section-intro">Before trusting aggregate scores, inspect one concrete turn. This section shows exactly what happens when OpenClaw asks OpenClawBrain for context: the routing decision, the bounded context block sent to the model, and how a correction gets tied to the exact route that fired &mdash; so the router can learn from it on the next background cycle.</p>
+            <p class="section-intro">Before trusting aggregate scores, inspect one concrete turn. This section shows what happens when OpenClaw asks the brain for context: the routing decision, the bounded context sent to the model, and how a correction ties back to the exact route that fired.</p>
           </div>
         </div>
         <div class="two-col">
@@ -527,12 +527,12 @@ correction: internal-only patch -> no support contact</code></pre>
 
           <article class="status-card">
             <div class="kicker">Why this matters</div>
-            <h2>You need to trust the single turn before trusting the aggregate scores</h2>
+            <h2>Trust the single turn before trusting the scores</h2>
             <ul>
-              <li><strong>Proves now:</strong> you can inspect one exact turn end-to-end -- the context that was sent, the answer that came back, and the correction that was captured.</li>
-              <li><strong>Connects to benchmarks:</strong> the aggregate scores below are only meaningful because every row traces back to this same per-turn contract.</li>
+              <li><strong>Proves now:</strong> you can inspect one turn end-to-end &mdash; context sent, answer returned, correction captured.</li>
+              <li><strong>Connects to benchmarks:</strong> aggregate scores below are meaningful because every row traces to this same per-turn contract.</li>
               <li><strong>Does not prove:</strong> live production answer quality, shadow-mode outcomes, or live rollout success.</li>
-              <li><strong>Learning boundary:</strong> when a correction is captured, the learned router does not update immediately. It improves on a background cycle and the new weights take effect on future turns.</li>
+              <li><strong>Learning boundary:</strong> corrections do not update the router immediately. New weights take effect on the next background cycle.</li>
             </ul>
             <p class="meta">
               Next steps in this page: <a href="#recorded-session">recorded-session head-to-head</a> and <a href="#sparse-feedback">sparse-feedback 10-seed</a> benchmark artifacts.
@@ -545,7 +545,7 @@ correction: internal-only patch -> no support contact</code></pre>
         <div class="section-head">
           <div>
             <h2>Workflow proof: does the right context reach the model?</h2>
-            <p class="section-intro">A focused test: for 4 fixed workflow queries, does the router surface exactly the right knowledge-graph nodes into the model's context window? Standard vector search finds 0 of 4. The graph's built-in structure (no learning) gets 2 of 4. The learned router gets all 4 &mdash; by combining structural edges with learned weights. Background learning improves routing over epochs without ever slowing a live response.</p>
+            <p class="section-intro">For 4 fixed workflow queries, does the router surface exactly the right knowledge-graph nodes? Vector search: 0 of 4. Graph structure alone: 2 of 4. Learned router: all 4 &mdash; combining structural edges with learned weights. Learning runs in the background and never slows a live response.</p>
           </div>
         </div>
         <div class="two-col">
@@ -577,7 +577,7 @@ correction: internal-only patch -> no support contact</code></pre>
         <div class="section-head">
           <div>
             <h2>Recorded-session head-to-head</h2>
-            <p class="section-intro">An apples-to-apples comparison: 800 frozen queries, locked knowledge state, one rubric for every method. The learned router answers correctly about 8 percentage points more often than the best RAG baseline &mdash; and uses a fraction of the context to do it. This is benchmark evidence, not a claim about live production quality.</p>
+            <p class="section-intro">800 frozen queries, locked knowledge state, one rubric for every method. The learned router answers correctly about 8 pp more often than the best RAG baseline &mdash; using a fraction of the context. Benchmark evidence, not a live production claim.</p>
           </div>
         </div>
         <div class="two-col">
@@ -612,7 +612,7 @@ correction: internal-only patch -> no support contact</code></pre>
         <div class="section-head">
           <div>
             <h2>Sparse-feedback proof (10 random seeds)</h2>
-            <p class="section-intro">Real teams do not correct every answer &mdash; they fix the ones that matter and move on. This benchmark tests the harder, more realistic scenario: does the learned router still win when it only gets sparse correction signals? We ran 10 independent random seeds under the same conditions. The advantage widens &mdash; nearly 25 percentage points &mdash; because learned routing compounds even from limited feedback, while RAG has no way to improve at all.</p>
+            <p class="section-intro">Real teams do not correct every answer. This benchmark tests the harder scenario: does the learned router still win with sparse corrections? Across 10 independent seeds the advantage widens to nearly 25 pp &mdash; because learned routing compounds even from limited feedback, while RAG cannot improve at all.</p>
           </div>
         </div>
         <div class="two-col">
@@ -649,20 +649,20 @@ correction: internal-only patch -> no support contact</code></pre>
         <div class="section-head">
           <div>
             <h2>Evidence ladder</h2>
-            <p class="section-intro">Confidence builds in steps, from "does one turn work?" to "does it work in production?" Each rung answers a different question, and we do not skip ahead. Green-highlighted cards are rungs we have reached.</p>
+            <p class="section-intro">Confidence builds in steps &mdash; from one traceable turn to live production traffic. Each rung answers a different question, and we do not skip ahead. Green cards mark rungs we have reached.</p>
           </div>
         </div>
         <div class="ladder-grid">
           <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
             <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">0</div>
             <h3>Worked-turn trace</h3>
-            <p>Can we inspect one single turn end-to-end? This shows the input, the context the router selected, the answer, and how a correction feeds back into learning. Every field is saved with a stable turn ID so it can be audited later.</p>
+            <p>Can we inspect one turn end-to-end? Input, selected context, answer, and how a correction feeds back into learning &mdash; all saved with a stable turn ID for later audit.</p>
             <div class="meta">This rung is reached. Inspect <a href="#worked-turn">worked-turn evidence</a> or open <a href="../docs/worked-example.md">docs/worked-example.md</a>.</div>
           </article>
           <article class="ladder-card">
             <div class="step">1</div>
             <h3>Mechanism proof</h3>
-            <p>Does the routing and learning machinery work as designed? We run controlled simulations, turn components on and off (ablations), and verify the system improves when it should.</p>
+            <p>Does the routing and learning machinery work as designed? Controlled simulations, component ablations, and verification that the system improves when it should.</p>
             <div class="meta">This proves the internals work correctly. It does not, by itself, prove the product is better than alternatives.</div>
           </article>
           <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
@@ -680,13 +680,13 @@ correction: internal-only patch -> no support contact</code></pre>
           <article class="ladder-card">
             <div class="step">4</div>
             <h3>Shadow mode</h3>
-            <p>Does it work on real traffic? In shadow mode, the brain runs alongside the live system but does not serve answers yet. We compare its outputs to the current system, save every disagreement, and measure prompt size, latency, and cost.</p>
+            <p>Does it work on real traffic? The brain runs alongside the live system without serving answers. We compare outputs, save every disagreement, and measure prompt size, latency, and cost.</p>
             <div class="meta">This step builds confidence before we start serving live answers. Not yet complete.</div>
           </article>
           <article class="ladder-card">
             <div class="step">5</div>
             <h3>Narrow live rollout</h3>
-            <p>Does it improve real outcomes for real users? We enable the brain for a small slice of live traffic with automatic fallback if anything goes wrong, and only publish claims backed by the saved data from that slice.</p>
+            <p>Does it improve real outcomes for real users? The brain serves a small slice of live traffic with automatic fallback. Claims are published only when backed by saved data from that slice.</p>
             <div class="meta">This is the real product proof -- not simulation, not benchmark. Not yet complete.</div>
           </article>
         </div>
@@ -696,7 +696,7 @@ correction: internal-only patch -> no support contact</code></pre>
         <div class="section-head">
           <div>
             <h2>Artifact checklist</h2>
-            <p class="section-intro">Every claim on this site must have a matching evidence bundle. If you see a claim, these are the files that should back it up.</p>
+            <p class="section-intro">Every claim on this site has a matching evidence bundle. These are the files that back each claim type.</p>
           </div>
         </div>
         <div class="check-grid">
@@ -799,7 +799,7 @@ correction: internal-only patch -> no support contact</code></pre>
     </main>
 
     <footer>
-      OpenClaw owns the runtime &mdash; sessions, tools, prompts, answers. OpenClawBrain owns the learning &mdash; turning usage, corrections, and feedback into better brain packs that sharpen future routing. Claims on this site rise only as published evidence rises.
+      OpenClaw owns the runtime. OpenClawBrain owns the learning. Claims on this site rise only as published evidence rises.
     </footer>
   </div>
 </body>

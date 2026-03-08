@@ -324,7 +324,7 @@
           <div class="eyebrow">Canonical paper route</div>
           <h1>Paper and PDF.</h1>
           <p class="lead">
-            The full technical paper behind OpenClawBrain &mdash; a learned routing function (<code>route_fn</code>) that walks a knowledge graph, picks which facts to pull into the prompt, and gets sharper from corrections, outcomes, and background learning. The paper covers shadow routing (keeping the teacher off the live path), QTsim confidence mixing (blending graph structure with query-specific signals), and the unified policy gradient that folds all feedback into a single update. March 7, 2026 revision (v12.2.6+).
+            The full technical paper behind OpenClawBrain &mdash; a learned routing function (<code>route_fn</code>) that walks a knowledge graph, picks the right facts for each prompt, and improves from corrections. The paper covers shadow routing (learning off the live path), QTsim confidence mixing (blending graph structure with per-query relevance), and the unified policy gradient that folds all feedback into one update. March 7, 2026 revision (v12.2.6+).
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href="../openclawbrain.pdf">Open the PDF</a>
@@ -353,8 +353,8 @@
             <div class="kicker">Read it with the boundary</div>
             <h2>The design is shipped; evidence is building in stages.</h2>
             <ul>
-              <li>The paper covers how fast serving stays local while learning happens in the background, how routing signals are combined, and how the system improves over time.</li>
-              <li>The strongest benchmarks so far: the learned router scores 0.975 vs RAG at 0.896 in head-to-head tests (+7.9 pp), and reaches 91.96% vs 67.05% (+24.91 pp) with minimal training data.</li>
+              <li>The paper covers fast local serving, background learning, signal combination, and continuous improvement.</li>
+              <li>Strongest benchmarks: 97.5% vs. 89.6% in head-to-head tests (+7.9 pp), and 91.96% vs. 67.05% (+24.91 pp) under sparse feedback.</li>
               <li><a href="../proof/">/proof/</a> shows which claims are already evidenced and which claims still require shadow/online artifacts.</li>
               <li><a href="../blog/v12.2.6-series/">/blog/v12.2.6-series/</a> explains how the architecture boundary and rollout path fit together.</li>
             </ul>
@@ -365,18 +365,18 @@
       <section class="section">
         <div class="section-head">
           <h2>Current benchmark evidence</h2>
-          <p class="section-intro">RAG retrieves chunks by similarity. OpenClawBrain replaces that with a learned router over a knowledge graph &mdash; one that follows structural relationships, learns from corrections, and uses a fraction of the context. The benchmarks below show the gap on two frozen test suites. The paper tracks these published artifacts while keeping benchmark claims cleanly separate from shadow-mode and live-traffic claims.</p>
+          <p class="section-intro">Two frozen test suites compare the learned router against RAG baselines. The paper tracks these published artifacts and keeps benchmark claims separate from shadow-mode and live-traffic claims.</p>
         </div>
         <div class="paper-grid">
           <article class="paper-card">
             <div class="kicker">Recorded-session head-to-head</div>
             <h3><code>full_brain</code> 0.975 vs <code>vector_rag_rerank</code> 0.896</h3>
-            <p>Artifact: <code>recorded_h2h_relational_drift_001</code>. Across 800 frozen queries against 8 baselines, the learned router answered correctly about 8 percentage points more often than the best RAG system &mdash; roughly 1 in 13 queries where RAG fails, the learned router gets right.</p>
+            <p>800 frozen queries, 8 baselines. The learned router answers correctly about 8 pp more often than the best RAG system &mdash; roughly 1 in 13 queries where RAG fails, the router gets right. Artifact: <code>recorded_h2h_relational_drift_001</code>.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Sparse-feedback 10-seed</div>
             <h3><code>full_brain</code> 91.96% vs best RAG 67.05%</h3>
-            <p>With minimal correction signals, the router still outperforms the best RAG baseline by nearly 25 percentage points &mdash; while sending roughly 5x less context to the model per query. It won 9 out of 10 independent seed runs. RAG has no feedback loop, so the gap widens as learning compounds.</p>
+            <p>With minimal corrections, the router outperforms the best RAG baseline by nearly 25 pp while sending roughly 5&times; less context per query. It won 9 of 10 seed runs. RAG has no feedback loop, so the gap widens as learning compounds.</p>
           </article>
         </div>
       </section>
@@ -390,22 +390,22 @@
           <article class="paper-card">
             <div class="kicker">System split</div>
             <h3>Fast serving stays local; learning happens in the background</h3>
-            <p>When a user asks a question, OpenClaw serves it immediately using the current learned <code>route_fn</code>. Afterward &mdash; off the hot path &mdash; the system replays the turn, labels outcomes, and updates routing weights so future answers improve. Learning never adds latency.</p>
+            <p>OpenClaw serves each question immediately using the current <code>route_fn</code>. Afterward, the system replays the turn in the background, labels outcomes, and updates routing weights. Learning never adds latency.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Route signals</div>
             <h3>Combining graph structure with query-specific relevance</h3>
-            <p>The router blends two signals: the graph's durable structure (<code>graph_prior</code> &mdash; what it already knows about how facts relate) and a per-query relevance score (<code>QTsim</code> &mdash; what fits this specific question). A learned confidence gate shifts weight between them: when the query signal is clear, lean on it; when it is ambiguous, fall back to structure.</p>
+            <p>The router blends what the graph already knows about how facts relate (<code>graph_prior</code>) with how well each fact fits the current question (<code>QTsim</code>). A confidence gate shifts weight between them: lean on the query signal when it is clear, fall back to structure when it is not.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Learning rule</div>
             <h3>One learning loop with a clear priority order</h3>
-            <p>All learning — whether from human corrections, self-evaluation, harvested signals, or a teacher model — feeds into a single update loop. Human corrections always take priority, followed by the system's own outcomes, then everything else.</p>
+            <p>Human corrections, self-evaluation, automated signals, and teacher-model feedback all feed into one update loop. Human corrections take priority, followed by the system's own outcomes, then everything else.</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Maintenance path</div>
             <h3>The knowledge graph maintains itself</h3>
-            <p>Instead of manual curation, the system treats graph upkeep — connecting, splitting, and merging nodes — as a learning problem. Conservative guardrails keep changes safe, and evidence gates each action class.</p>
+            <p>Instead of manual curation, graph upkeep &mdash; connecting, splitting, and merging nodes &mdash; is treated as a learning problem. Conservative guardrails keep changes safe, and evidence gates each action type.</p>
           </article>
         </div>
       </section>
@@ -413,7 +413,7 @@
       <section class="section">
         <div class="section-head">
           <h2>Read next</h2>
-          <p class="section-intro">The paper is easier to evaluate when it is paired with the packaged proof, the architecture narrative, and the underlying materials.</p>
+          <p class="section-intro">The paper reads best alongside the proof package, the architecture narrative, and the underlying materials.</p>
         </div>
         <div class="paper-grid">
           <a class="paper-card" href="../proof/">
@@ -434,7 +434,7 @@
           <a class="paper-card" href="../docs/openclaw-integration.md">
             <div class="kicker">Operator docs</div>
             <h3>OpenClaw integration</h3>
-            <p>How to wire OpenClawBrain into OpenClaw: fail-safe defaults, bounded prompt context, and the background learning loop that makes later turns better.</p>
+            <p>How to wire OpenClawBrain into OpenClaw: fail-safe defaults, bounded context, and the background learning loop.</p>
           </a>
         </div>
       </section>
