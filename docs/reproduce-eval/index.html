@@ -54,209 +54,127 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
     <h1>Reproduce Eval</h1>
-    <p>This is the single source of truth for reproducing every evaluation metric and figure on the OpenClawBrain site and paper. The benchmarks compare OpenClawBrain's learned router (<code>route_fn</code> over a knowledge graph) against conventional RAG baselines on frozen workloads &mdash; same queries, same data, same scoring rules.</p>
-<p>Most workflows below run as npm scripts in the TypeScript workspace; the sparse-feedback multiseed family is reproduced from the <code>brain-ground-zero</code> proof harness repo.</p>
-<h2 id="0-initialize-the-typescript-workspace">0) Initialize the TypeScript workspace</h2>
-<p>All reproduction commands run in the TypeScript workspace using npm scripts.</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/openclawbrain
-corepack<span class="w"> </span><span class="nb">enable</span>
-pnpm<span class="w"> </span>install
-pnpm<span class="w"> </span>check
-pnpm<span class="w"> </span>release:pack
-</code></pre></div>
-
-<h2 id="1-run-the-workflow-proof-harness-deterministic-mechanism-proof">1) Run the workflow-proof harness (deterministic mechanism proof)</h2>
-<p>Use this harness for the published top-of-page mechanism proof slice on the homepage.</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/openclawbrain
-pnpm<span class="w"> </span>run<span class="w"> </span>eval:workflow-proof<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--output-dir<span class="w"> </span>scratch/workflow-proof/latest
-</code></pre></div>
-
-<p>Expected artifacts in <code>scratch/workflow-proof/latest/</code>:
-- <code>workflow_snapshot.json</code>
-- <code>train_traces.jsonl</code>
-- <code>train_labels.jsonl</code>
-- <code>eval_queries.jsonl</code>
-- <code>learning_curve.csv</code>
-- <code>baseline_eval/summary.json</code>
-- <code>report.md</code>
-- <code>worked_example.md</code></p>
-<p>Deterministic metrics from the published workflow-proof artifacts:</p>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th style="text-align: right;">Exact target success</th>
-<th style="text-align: right;">Required-node coverage</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>vector_topk</code></td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-</tr>
-<tr>
-<td><code>pointer_chase</code></td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.38</td>
-</tr>
-<tr>
-<td><code>graph_prior_only</code></td>
-<td style="text-align: right;">0.50</td>
-<td style="text-align: right;">0.50</td>
-</tr>
-<tr>
-<td><code>learned</code></td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">1.00</td>
-</tr>
-</tbody>
-</table>
-<p>Interpretation:
-- <code>vector_topk</code> (standard RAG retrieval) fails completely on these structured workflow queries &mdash; none of the required context is found.
-- Graph priors alone (no learning) already get halfway there, showing the knowledge graph has value before any training.
-- The <code>learned</code> mode (the full trained router) hits 100% on both metrics, reliably surfacing exactly the right context blocks for every held-out query.
-- The jump from 0% to 100% shows why a learned router over a knowledge graph outperforms flat vector search on structured tasks.</p>
-<p>Non-claims:
-- This is mechanism proof, not full product proof.
-- This is not a live production OpenClaw runtime eval.
-- This does not directly prove downstream answer quality; it proves retrieval-routing behavior on deterministic workflow-shaped tasks.</p>
-<h2 id="2-recorded-session-head-to-head-benchmark">2) Recorded-session head-to-head benchmark</h2>
-<p>The first fair comparison layer: a frozen recorded-session query set, fixed state, and one rubric applied to all modes.</p>
-<p>Public bundle: <code>proof-results/recorded_h2h_relational_drift_001</code> in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> at commit <code>1c54302</code>.</p>
-<p>Current recorded-session metrics:</p>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th style="text-align: right;">Accuracy</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>full_brain</code></td>
-<td style="text-align: right;">0.975</td>
-</tr>
-<tr>
-<td><code>vector_rag_rerank</code> (best baseline)</td>
-<td style="text-align: right;">0.89625</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>800 queries, 41 training steps, 8 baselines compared.</li>
-<li>Delta: +7.9 percentage points (<code>full_brain</code> vs <code>vector_rag_rerank</code>). In practice, that means roughly 63 additional correct answers out of 800.</li>
+    <p>This document is the reproducibility entrypoint for the current public OpenClawBrain surface.</p>
+<p>Read <code>CLAIMS.md</code> alongside this page when you need exact OCB-vs-BGZ claim boundaries.</p>
+<h2>1) Bootstrap the workspace</h2>
+<p>``<code>bash
+cd /path/to/openclawbrain
+corepack enable
+pnpm install --frozen-lockfile
+pnpm check
+pnpm release:status
+pnpm release:pack
+pnpm release:proofs:status
+</code>`<code></p>
+<h2>2) Reproduce the mechanism proofs in this repo</h2>
+<p>These are the proofs implemented directly in the public package workspace today.</p>
+<h3>Lifecycle proof</h3>
+</code>`<code>bash
+pnpm lifecycle:smoke
+</code>`<code>
+<p>This proves the learning lifecycle across:</p>
+<ul><li>normalized events</li>
+<li>event export</li>
+<li>learner pack materialization</li>
+<li>activation staging and promotion</li>
+<li>promoted-pack compilation</li>
 </ul>
-<p>Interpretation:
-- The full brain policy beats all 8 baselines on a frozen recorded-session query set with a fixed rubric.
-- This is benchmark/recorded-session evidence, not a live production answer-quality claim.</p>
-<p>Non-claims:
-- This does not prove live production answer quality on served OpenClaw traffic.
-- This does not prove shadow-mode or online rollout outcomes.
-- The next rungs are shadow-mode and narrow online rollout.</p>
-<h2 id="3-sparse-feedback-10-seed-proof-family">3) Sparse-feedback 10-seed proof family</h2>
-<p>The next benchmark family after recorded-session head-to-head: sparse supervision over fixed workloads and seeds.</p>
-<p>Public bundle: <code>proof-results/sparse_feedback_10seed</code> in <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">brain-ground-zero</a> (run date <code>2026-03-07</code>).</p>
-<p>Published sparse-feedback metrics:</p>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th style="text-align: right;">Accuracy</th>
-<th style="text-align: right;">Context/query</th>
-<th style="text-align: right;">H2H vs <code>full_brain</code></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>full_brain</code></td>
-<td style="text-align: right;">91.96%</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">&mdash;</td>
-</tr>
-<tr>
-<td><code>vector_rag_rerank</code> (best RAG baseline)</td>
-<td style="text-align: right;">67.05%</td>
-<td style="text-align: right;">5.00</td>
-<td style="text-align: right;">1-9-0</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>Delta: +24.91 pp (<code>full_brain</code> vs best RAG baseline). The learned router answers roughly a quarter more queries correctly.</li>
-<li>Pairwise: <code>full_brain</code> vs <code>vector_rag_rerank</code> is 9-1-0 across 10 seeds &mdash; the brain wins 9 out of 10 independent runs.</li>
-<li>Sparse feedback condition: only about 19% of turns include an explicit correctness signal in this run. The brain still learns effectively from limited feedback.</li>
+<h3>Observability proof</h3>
+</code>`<code>bash
+pnpm observability:smoke
+pnpm observability:report
+</code>`<code>
+<p>This proves the operator-facing diagnostics surface for:</p>
+<ul><li>activation health</li>
+<li>promotion freshness</li>
+<li>rollback readiness and rollback lineage</li>
+<li>supervision freshness by source</li>
+<li>teacher freshness</li>
+<li>async teacher-loop no-op detection</li>
+<li>learned </code>route_fn<code> freshness/version</li>
+<li>graph-dynamics artifact freshness</li>
+<li>learned </code>route_fn<code> evidence</li>
+<li>explicit fallback usage</li>
 </ul>
-<p>Reproduce from the proof harness repo:</p>
-<div class="codehilite"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/jonathangu/brain-ground-zero.git
-<span class="nb">cd</span><span class="w"> </span>brain-ground-zero
-./scripts/run_sparse_feedback_proof.sh
-</code></pre></div>
-
-<p>Expected sparse-feedback artifacts in <code>proof-results/sparse_feedback_10seed/</code>:
-- <code>summary.json</code>
-- <code>summary_table.csv</code> + <code>summary_table.md</code>
-- <code>leaderboard.csv</code> + <code>leaderboard.md</code>
-- <code>pairwise_accuracy_delta.csv</code> + <code>pairwise_accuracy_delta.md</code>
-- <code>win_rate_matrix.csv</code> + <code>win_rate_matrix.md</code>
-- <code>per_seed_breakdown.csv</code> + <code>per_seed_breakdown.md</code>
-- <code>per_seed_accuracy_matrix.csv</code> + <code>per_seed_accuracy_matrix.md</code>
-- <code>proof_digest.md</code>
-- <code>worked_example_trace.md</code>
-- <code>learning_curve.png</code>
-- <code>seeds.json</code></p>
-<p>Interpretation:
-- The full brain policy stays materially ahead under sparse feedback while using much less context per query (1 block vs 5) than the strongest RAG baseline.
-- This is fixed-workload benchmark evidence and should be reported as such.</p>
-<p>Non-claims:
-- This does not prove live production answer quality on served OpenClaw traffic.
-- This does not prove shadow-mode or online rollout outcomes.
-- Runtime ownership boundaries are unchanged: OpenClaw owns live runtime, OpenClawBrain owns memory/learning artifacts.</p>
-<h2 id="4-run-the-baseline-ablation-harness-real-query-set">4) Run the baseline + ablation harness (real query set)</h2>
-<p>Use the evaluation package entrypoint in the main <code>openclawbrain</code> workspace.</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/openclawbrain
-pnpm<span class="w"> </span>run<span class="w"> </span>eval:baseline<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--queries<span class="w"> </span>/path/to/queries.jsonl<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--modes<span class="w"> </span>vector_only,edge_sim_legacy,graph_prior_only,qtsim_only,learned<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--output<span class="w"> </span>/tmp/ocb_eval.json<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--print-per-query
-</code></pre></div>
-
-<p>Expected output:
-- <code>/tmp/ocb_eval.json</code> (per-mode summaries + optional per-query rows)</p>
-<p>Baseline mapping used in the paper/blog:
-- <strong>Vector top-k</strong> → <code>vector_only</code>
-- <strong>Top-k + reranker</strong> → <code>edge_sim_legacy</code> (deterministic <code>route_mode=edge+sim</code> rerank)
-- <strong>Pointer-chasing</strong> → <code>edge_sim_legacy</code> with multi-hop traversal enabled (default in the harness)</p>
-<p>If you add a dedicated pointer-chasing mode in the harness, include it in <code>--modes</code> and document it in the report.</p>
-<h2 id="5-run-synthetic-simulations-rewardaccuracyoracle-gap-curves">5) Run synthetic simulations (reward/accuracy/oracle-gap curves)</h2>
-<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/openclawbrain
-pnpm<span class="w"> </span>run<span class="w"> </span>eval:sim-expert-regions<span class="w"> </span>--<span class="w"> </span>--output-dir<span class="w"> </span>/tmp/ocb_expert_regions
-pnpm<span class="w"> </span>run<span class="w"> </span>eval:sim-two-cluster<span class="w"> </span>--<span class="w"> </span>--output-dir<span class="w"> </span>/tmp/ocb_two_cluster
-</code></pre></div>
-
-<p>Expected outputs:
-- <code>/tmp/ocb_expert_regions/simulation_curve.csv</code> (columns: <code>epoch,reward,accuracy,oracle_gap_fraction,...</code>)
-- <code>/tmp/ocb_expert_regions/report.md</code>
-- <code>/tmp/ocb_two_cluster/simulation_curve.csv</code> (columns: <code>epoch,ce_loss,cluster_accuracy,top1_accuracy</code>)
-- <code>/tmp/ocb_two_cluster/report.md</code></p>
-<h2 id="6-generate-sitepaper-figures-from-csvs">6) Generate site/paper figures from CSVs</h2>
-<p>From this website repo:</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/openclawbrain-site
-pnpm<span class="w"> </span>run<span class="w"> </span>eval:plot<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--inputs<span class="w"> </span>/tmp/ocb_expert_regions<span class="w"> </span>/tmp/ocb_two_cluster<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--out<span class="w"> </span>figures/eval
-</code></pre></div>
-
-<p>Expected outputs in <code>figures/eval/</code>:
-- <code>reward_vs_epoch.svg</code> + <code>reward_vs_epoch.png</code>
-- <code>accuracy_vs_epoch.svg</code> + <code>accuracy_vs_epoch.png</code>
-- <code>oracle_gap_closed.svg</code> + <code>oracle_gap_closed.png</code>
-- <code>alpha_router_conf_hist.svg</code> + <code>alpha_router_conf_hist.png</code> (if data present)
-- <code>ablation_bar_chart.svg</code> + <code>ablation_bar_chart.png</code></p>
-<h2 id="7-paper-table-placeholders">7) Paper table placeholders</h2>
-<p>If a run does not produce the outputs above, leave paper/blog tables as <code>TBD</code> and cite the exact command + output path for the missing artifact (for example, <code>/tmp/ocb_eval.json</code> and <code>/tmp/ocb_expert_regions/simulation_curve.csv</code>).</p>
+</code>pnpm observability:report<code> prints the local JSON report for those proofs. It only claims what is materialized inside the repo fixture lane; it does not claim live production telemetry coverage.
+<p>Those proofs keep learned </code>route_fn<code> evidence central, but they do not yet prove full live runtime plasticity on the active pack or per-query learned </code>route_fn<code> mutation. Current structural ops are verified as pack-build metadata plus promoted-artifact freshness.</p>
+<h3>Recorded-session replay proof</h3>
+</code>`<code>bash
+pnpm recorded-session-replay:smoke
+pnpm recorded-session-replay:report
+</code>`<code>
+<p>This proves the recorded-session closure lane for the checked-in sanitized replay fixture and scored bundle:</p>
+<ul><li>sanitized trace → deterministic fixture conversion</li>
+<li>deterministic replay across </code>no_brain<code>, </code>seed_pack<code>, and </code>learned_replay<code></li>
+<li>checked-in </code>traceHash<code>, </code>fixtureHash<code>, </code>scoreHash<code>, and </code>bundleHash<code> stability</li>
+<li>rescore verification over the checked-in bundle</li>
+</ul>
+See <a href="https://github.com/jonathangu/openclawbrain/blob/main/Recorded Session Replay">Recorded Session Replay</a> for the fixture, bundle, and refresh workflow.
+<h3>OCB-native comparative eval proof</h3>
+</code>`<code>bash
+pnpm eval:ocb-native
+pnpm eval:ocb-native:smoke
+</code>`<code>
+<p>This proof lane runs the required comparative modes directly through the public OpenClaw activation + promoted-pack compile path:</p>
+<ul><li></code>no_brain<code></li>
+<li></code>vector_only<code></li>
+<li></code>graph_prior_only<code></li>
+<li></code>learned_route<code></li>
+</ul>
+It emits deterministic proof artifacts under </code>.artifacts/ocb-native-comparative-eval/<code>:
+<ul><li></code>summary_table.{md,csv,json}<code></li>
+<li></code>pairwise_delta.{md,csv,json}<code></li>
+<li></code>win_rate_matrix.{md,csv,json}<code></li>
+<li></code>per_seed_breakdowns.{md,csv,json}<code></li>
+<li></code>worked_traces.{md,json}<code></li>
+</ul>
+The quality/context/correction numbers are explicit compile-path proxies over gold context coverage. The latency and cost columns are deterministic proxy units derived from the compile surface itself, not hand-waved prose claims and not noisy wall-clock timing.
+<h2>3) Reproduce outside-consumer proof from local release tarballs</h2>
+<p>Use the checked-in outside-consumer smoke after </code>pnpm release:pack<code> creates </code>.release/<code> tarballs. The shortest lane is:</p>
+</code>`<code>bash
+pnpm fresh-env:smoke
+</code>`<code>
+<p>If you want the underlying manual outside-consumer commands instead, use:</p>
+</code>`<code>bash
+repo_root="$(pwd)"
+tmpdir="$(mktemp -d)"
+cp examples/npm-consumer/package.json "$tmpdir/package.json"
+cp examples/npm-consumer/smoke.mjs "$tmpdir/smoke.mjs"
+cp examples/npm-consumer/attach-smoke.mjs "$tmpdir/attach-smoke.mjs"
+cd "$tmpdir"
+npm install "$repo_root"/.release/*.tgz
+npm run smoke
+npm run attach-smoke
+</code>`<code>
+<p>This is the truthful outside-consumer proof for the current repo-only wave. It proves the current tarballs install cleanly with plain </code>npm<code>, the attach lane promotes a fresher learned pack from live-style supervision, and rollback can restore the prior active pack without claiming that the registry has already been updated.</p>
+<h2>4) Optional post-publish registry proof</h2>
+<p>After a matching </code>v0.1.2<code> tag has shipped and post-publish checks succeed, you can rerun the same smoke using registry versions instead of local tarball paths.</p>
+<h2>Claim boundary</h2>
+<h3>Proven directly in this repo today</h3>
+<ul><li>package build and typecheck</li>
+<li>promoted-pack mechanism proof via lifecycle smoke</li>
+<li>operator observability proof via observability smoke/report</li>
+<li>OCB-native comparative eval + proof artifact generation over the public runtime/compile path</li>
+<li>versioned package surface and local tarball install path</li>
+</ul>
+<h3>Maintained separately</h3>
+<p>Broader comparative benchmark families and the route-function / </code>QTsim<code> proof story that go beyond this repo's OCB-native compile/runtime proof surface still live in the separate public proof repo </code>brain-ground-zero<code>.</p>
+<p>Use that repo's own instructions for benchmark reproduction.</p>
+<p>When real BGZ proof bundle ids and digests are available, link them into </code>proofs/release-proof-input.json<code> and regenerate </code>.release/release-proof-manifest.json<code> with </code>pnpm release:proofs:manifest<code>.</p>
+<h3>Not claimed here</h3>
+<ul><li>full comparative benchmark coverage inside this repo</li>
+<li>full runtime graph plasticity on the live active pack</li>
+<li>per-query learned </code>route_fn` updates on the active pack</li>
+<li>live production answer-quality proof on served OpenClaw traffic</li>
+<li>shadow-mode or online rollout proof</li>
+<li>npm publication for the current wave unless post-publish verification has been completed</li>
+</ul>
+<h2>Related docs</h2>
+<ul><li><a href="/docs/openclaw-integration/">OpenClaw Integration</a></li>
+<li><a href="https://github.com/jonathangu/openclawbrain/blob/main/Openclaw Attach Quickstart">Openclaw Attach Quickstart</a></li>
+<li><a href="https://github.com/jonathangu/openclawbrain/blob/main/Operator Observability">Operator Observability</a></li>
+<li><a href="https://github.com/jonathangu/openclawbrain/blob/main/Raw Workspace Migration">Raw Workspace Migration</a></li>
+</ul>
     <div class="source-link">
       <a href="/docs/reproduce-eval.md">View source (Markdown)</a>
     </div>

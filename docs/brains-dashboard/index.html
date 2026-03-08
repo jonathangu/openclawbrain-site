@@ -56,27 +56,23 @@
     <h1>Brains Dashboard</h1>
     <p>This dashboard summarizes per-agent brain graph size and edge composition for a single snapshot.</p>
 <p>Snapshot date: <strong>2026-03-03</strong>.</p>
-<h2 id="what-the-charts-show">What the charts show</h2>
-<ul>
-<li><strong>Nodes + edges:</strong> Total nodes and edges in each agent's brain graph.</li>
+<h2>What the charts show</h2>
+<ul><li><strong>Nodes + edges:</strong> Total nodes and edges in each agent's brain graph.</li>
 <li><strong>Tiers:</strong> Percent share of edges that are reflex, habitual, or dormant.</li>
 <li><strong>Inhibitory edges:</strong> Count of inhibitory edges per agent.</li>
 </ul>
-<h2 id="tier-meanings-high-level">Tier meanings (high level)</h2>
-<ul>
-<li><strong>Reflex:</strong> Fast, high-confidence edges that fire immediately for common or critical routes.</li>
+<h2>Tier meanings (high level)</h2>
+<ul><li><strong>Reflex:</strong> Fast, high-confidence edges that fire immediately for common or critical routes.</li>
 <li><strong>Habitual:</strong> Stable, well-reinforced edges that represent consistent patterns.</li>
 <li><strong>Dormant:</strong> Low-activation edges retained for long-tail or rarely used knowledge.</li>
 </ul>
-<h2 id="refreshing-the-snapshot">Refreshing the snapshot</h2>
-<ol>
-<li>Edit the data table in <code>scripts/gen_brains_dashboard.py</code> with the latest snapshot.</li>
-<li>Re-run <code>scripts/gen_brains_dashboard.py</code> to regenerate the PNGs.</li>
-</ol>
-<h2 id="charts">Charts</h2>
-<p><img alt="Brains dashboard nodes + edges" src="/assets/brains-dashboard/brains_dashboard_nodes_edges.png" /></p>
-<p><img alt="Brains dashboard tiers" src="/assets/brains-dashboard/brains_dashboard_tiers.png" /></p>
-<p><img alt="Brains dashboard inhibitory edges" src="/assets/brains-dashboard/brains_dashboard_inhibitory.png" /></p>
+<h2>Refreshing the snapshot</h2>
+1. Edit the data table in <code>scripts/gen_brains_dashboard.py</code> with the latest snapshot.
+2. Re-run <code>scripts/gen_brains_dashboard.py</code> to regenerate the PNGs.
+<h2>Charts</h2>
+!<a href="/assets/brains-dashboard/brains_dashboard_nodes_edges.png">Brains dashboard nodes + edges</a>
+<p>!<a href="/assets/brains-dashboard/brains_dashboard_tiers.png">Brains dashboard tiers</a></p>
+<p>!<a href="/assets/brains-dashboard/brains_dashboard_inhibitory.png">Brains dashboard inhibitory edges</a></p>
     <div class="source-link">
       <a href="/docs/brains-dashboard.md">View source (Markdown)</a>
     </div>

@@ -55,115 +55,116 @@
     <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
     <h1>New Agent SOP</h1>
     <p>Canonical flow for a new profile-style setup:</p>
-<ul>
-<li>one OpenClaw agent workspace</li>
+<ul><li>one OpenClaw agent workspace</li>
 <li>one dedicated OpenClaw runtime brain profile</li>
 <li>one pinned OpenClawBrain package set</li>
 <li>explicit routing/binding in OpenClaw runtime</li>
 </ul>
-<h2 id="a-decide-ids-and-paths">A) Decide IDs and paths</h2>
-<div class="codehilite"><pre><span></span><code><span class="nv">agentId</span><span class="o">=</span><span class="s2">&quot;pelican&quot;</span>
-<span class="nv">agentName</span><span class="o">=</span><span class="s2">&quot;Pelican&quot;</span>
-<span class="nv">workspaceDir</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.openclaw/workspace-pelican&quot;</span>
-</code></pre></div>
-
+<h2>A) Decide IDs and paths</h2>
+<p>``<code>bash
+agentId="pelican"
+agentName="Pelican"
+workspaceDir="$HOME/.openclaw/workspace-pelican"
+</code>`<code></p>
 <p>Conventions:
-- <code>agentId</code> is lowercase and stable (<code>main</code>, <code>pelican</code>, <code>bountiful</code>, ...)
-- each agent has its own workspace
-- each agent has its own OpenClaw brain profile</p>
-<h2 id="b-create-workspace-skeleton">B) Create workspace skeleton</h2>
-<div class="codehilite"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/memory&quot;</span>
-
-:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/AGENTS.md&quot;</span>
-:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/SOUL.md&quot;</span>
-:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/USER.md&quot;</span>
-:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/MEMORY.md&quot;</span>
-:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/IDENTITY.md&quot;</span>
-:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/TOOLS.md&quot;</span>
-:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/active-tasks.md&quot;</span>
-:<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$workspaceDir</span><span class="s2">/memory/</span><span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="s2">.md&quot;</span>
-</code></pre></div>
-
+<ul><li></code>agentId<code> is lowercase and stable (</code>main<code>, </code>pelican<code>, </code>bountiful<code>, ...)</li>
+<li>each agent has its own workspace</li>
+<li>each agent has its own OpenClaw brain profile</li>
+</ul>
+<h2>B) Create workspace skeleton</h2></p>
+</code>`<code>bash
+mkdir -p "$workspaceDir/memory"
+<p>: > "$workspaceDir/AGENTS.md"
+: > "$workspaceDir/SOUL.md"
+: > "$workspaceDir/USER.md"
+: > "$workspaceDir/MEMORY.md"
+: > "$workspaceDir/IDENTITY.md"
+: > "$workspaceDir/TOOLS.md"
+: > "$workspaceDir/active-tasks.md"
+: > "$workspaceDir/memory/$(date +%F).md"
+</code>`<code></p>
 <p>Populate policy/persona files before live traffic.</p>
-<h2 id="c-build-and-verify-openclawbrain-package-set">C) Build and verify OpenClawBrain package set</h2>
+<h2>C) Build and verify OpenClawBrain package set</h2>
 <p>Run from the OpenClawBrain TypeScript workspace root:</p>
-<div class="codehilite"><pre><span></span><code>corepack<span class="w"> </span><span class="nb">enable</span>
-pnpm<span class="w"> </span>install
-pnpm<span class="w"> </span>check
-pnpm<span class="w"> </span>release:pack
-</code></pre></div>
-
+</code>`<code>bash
+corepack enable
+pnpm install
+pnpm check
+pnpm release:pack
+</code>`<code>
 <p>Promote one versioned pack set for this rollout.</p>
-<h2 id="d-add-agent-brain-profile-in-openclaw-runtime">D) Add agent brain profile in OpenClaw runtime</h2>
-<p>Add a dedicated profile for this <code>agentId</code> with defaults on:</p>
-<div class="codehilite"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;agentId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pelican&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;brain&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;packSet&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;versioned-pack-set&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;fastBootFromExistingFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;backgroundLearning&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;prioritizeNewEvents&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;labels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;human&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;self&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;scanner&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;harvest&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;continuousGraphLearning&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;decay&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;hebbianCofiring&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;structuralUpdates&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;teacher&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;onHotPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h2 id="e-bind-routing">E) Bind routing</h2>
-<p>Bind inbound channels to the new <code>agentId</code> in OpenClaw runtime config.</p>
+<h2>D) Add agent brain profile in OpenClaw runtime</h2>
+<p>Add a dedicated profile for this </code>agentId<code> with defaults on:</p>
+</code>`<code>json
+{
+  "agentId": "pelican",
+  "brain": {
+    "enabled": true,
+    "packSet": "<versioned-pack-set>",
+    "fastBootFromExistingFiles": true,
+    "backgroundLearning": {
+      "enabled": true,
+      "prioritizeNewEvents": true
+    },
+    "labels": {
+      "human": true,
+      "self": true
+    },
+    "scanner": {
+      "enabled": true
+    },
+    "harvest": {
+      "enabled": true
+    },
+    "continuousGraphLearning": {
+      "enabled": true,
+      "decay": true,
+      "hebbianCofiring": true,
+      "structuralUpdates": true
+    },
+    "teacher": {
+      "onHotPath": false
+    }
+  }
+}
+</code>`<code>
+<h2>E) Bind routing</h2>
+<p>Bind inbound channels to the new </code>agentId<code> in OpenClaw runtime config.</p>
 <p>Minimum checks:
-- new account/channel maps to <code>agentId</code>
-- no overlap with existing agent bindings
-- fail-open behavior retained for this route</p>
-<h2 id="f-add-workspace-policy-snippet">F) Add workspace policy snippet</h2>
-<p>Copy into <code>SOUL.md</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="gu">## Always-on memory policy (default)</span>
-
-<span class="k">-</span><span class="w"> </span>Treat clear user corrections as immediate labels.
-<span class="k">-</span><span class="w"> </span>Treat durable user teachings as first-class labels.
-<span class="k">-</span><span class="w"> </span>Keep human + self labels enabled.
-<span class="k">-</span><span class="w"> </span>Keep scanner and harvest enabled.
-<span class="k">-</span><span class="w"> </span>Keep teacher off the hot path.
-<span class="k">-</span><span class="w"> </span>Never store secrets in workspace memory files.
-</code></pre></div>
-
-<h2 id="g-verification-checklist">G) Verification checklist</h2>
+<ul><li>new account/channel maps to </code>agentId<code></li>
+<li>no overlap with existing agent bindings</li>
+<li>fail-open behavior retained for this route</li>
+</ul>
+<h2>F) Add workspace policy snippet</h2></p>
+<p>Copy into </code>SOUL.md<code>:</p>
+</code>`<code>md
+<h2>Always-on memory policy (default)</h2>
+<ul><li>Treat clear user corrections as immediate labels.</li>
+<li>Treat durable user teachings as first-class labels.</li>
+<li>Keep human + self labels enabled.</li>
+<li>Keep scanner and harvest enabled.</li>
+<li>Keep teacher off the hot path.</li>
+<li>Never store secrets in workspace memory files.</li>
+</ul></code>`<code>
+<h2>G) Verification checklist</h2>
 <p>Runtime checks:
-- route reaches <code>agentId</code>
-- first response works immediately from existing files
-- background learning workers are active
-- new events are prioritized over backlog
-- labels/scanner/harvest loops are active
-- continuous graph learning updates are visible</p>
-<p>Boundary checks:
-- OpenClaw owns serving/runtime/fail-open
-- OpenClawBrain owns contracts, event/export normalization, provenance, packs, activation, compiler, learner</p>
-<p>Proof checks:
-- mechanism proof collected (contracts/provenance/normalization)
-- product proof measured separately (quality/reliability outcomes)</p>
-<h2 id="h-common-footguns">H) Common footguns</h2>
-<ul>
-<li>sharing one workspace across multiple agents</li>
+<ul><li>route reaches </code>agentId`</li>
+<li>first response works immediately from existing files</li>
+<li>background learning workers are active</li>
+<li>new events are prioritized over backlog</li>
+<li>labels/scanner/harvest loops are active</li>
+<li>continuous graph learning updates are visible</li>
+</ul>
+Boundary checks:
+<ul><li>OpenClaw owns serving/runtime/fail-open</li>
+<li>OpenClawBrain owns contracts, event/export normalization, provenance, packs, activation, compiler, learner</li>
+</ul>
+Proof checks:
+<ul><li>mechanism proof collected (contracts/provenance/normalization)</li>
+<li>product proof measured separately (quality/reliability outcomes)</li>
+</ul>
+<h2>H) Common footguns</h2></p>
+<ul><li>sharing one workspace across multiple agents</li>
 <li>deploying mixed package revisions instead of one pack set</li>
 <li>disabling labels/scanner/harvest "temporarily" and forgetting to re-enable</li>
 <li>putting teacher logic on hot path</li>
