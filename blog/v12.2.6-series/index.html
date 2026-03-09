@@ -110,7 +110,7 @@
         The usual approach (RAG) is like a keyword search: find the closest-sounding text chunks and hope they help. OpenClawBrain replaces that with a guide who walks a map of connected knowledge, learns from corrections, and gets sharper over time. Each post in this series goes deep on one piece. Start wherever you like.
       </p>
       <div class="callout">
-        In benchmarks, the trained guide answers 97.5% of queries correctly vs. 89.6% for the best RAG baseline on recorded sessions. Under sparse feedback it widens to 92.0% vs. 67.1%, using about 5x less context per query. Full evidence: <a href="/proof/">/proof/</a>.
+        Across three benchmark families at 10-seed scale, the full-brain mechanism scores +9.7 to +26.9 pp over the best RAG baseline &mdash; winning 29 of 30 seed-level comparisons while using 5x less context per query. Recorded head-to-head: 99.15% vs 89.44%. Recurring workflows: 97.6% vs 70.6%. Sparse feedback: 92.0% &plusmn; 18.3% vs 67.0%. Full evidence and charts: <a href="/proof/">/proof/</a>.
       </div>
     </section>
 
@@ -121,16 +121,22 @@
         <div class="kicker">Each rung of the evidence ladder &mdash; mechanism tests, benchmark comparisons, and what still needs live-traffic proof &mdash; with links to every artifact.</div>
       </a>
 
-      <a class="card" href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">
+      <a class="card" href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_10seed">
         <div class="meta">Strongest benchmark</div>
-        <h3>Recorded head-to-head: 800 queries, 8 baselines</h3>
-        <div class="kicker">The trained guide scores 97.5% accuracy vs. 89.6% for the best RAG approach across 41 steps of conversation.</div>
+        <h3>Recorded head-to-head: 10 seeds, 800 queries each, 8 baselines</h3>
+        <div class="kicker">99.15% &plusmn; 0.27% vs 89.44% for the best RAG baseline. 10-0-0 head-to-head with deterministic fixture replay and SHA-256 verification.</div>
+      </a>
+
+      <a class="card" href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recurring_workflows_10seed">
+        <div class="meta">Widest margin</div>
+        <h3>Recurring workflows: +26.9 pp over best RAG</h3>
+        <div class="kicker">97.6% &plusmn; 0.4% vs 70.6% across 10 seeds and 3,522 queries per seed. 10-0-0 head-to-head, 5x less context.</div>
       </a>
 
       <a class="card" href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">
         <div class="meta">Hardest test</div>
         <h3>Sparse feedback: learning from very little signal</h3>
-        <div class="kicker">92.0% vs. 67.1% for the best RAG baseline, with roughly 5x less context per query. Wins 9 of 10 random seeds.</div>
+        <div class="kicker">92.0% &plusmn; 18.3% vs 67.0% for the best RAG baseline, 5x less context, 9-1-0 head-to-head. High seed variance disclosed.</div>
       </a>
 
       <a class="card" href="/blog/v12.2.6-series/03-evaluation-ablations/">

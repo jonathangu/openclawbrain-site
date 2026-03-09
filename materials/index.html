@@ -28,9 +28,10 @@
     <h2 style="margin-top:1.4rem;">Docs and Evidence</h2>
     <div class="card">
       <ul>
-        <li><a href="/proof/">Proof package</a> &mdash; benchmark evidence, the evidence ladder, and where the claims stop</li>
-        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">Recorded-session benchmark</a> &mdash; 800 queries, 8 methods; the learned guide scores 97.5% vs the best search method's 89.6%</li>
-        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">Sparse-feedback benchmark</a> &mdash; 10 seeds; the learned guide scores 92.0% vs 67.1%, using ~5x less context</li>
+        <li><a href="/proof/">Proof package</a> &mdash; three-family benchmark evidence (+9.7 to +26.9 pp, 29-1-0 H2H, 5x less context), charts, and where the claims stop</li>
+        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_10seed">Recorded H2H benchmark</a> &mdash; relational drift, 10 seeds, 800 queries/seed; full_brain 99.15% vs best RAG 89.44%</li>
+        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recurring_workflows_10seed">Recurring workflows benchmark</a> &mdash; 10 seeds, 3,522 queries/seed; full_brain 97.6% vs best RAG 70.6%</li>
+        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">Sparse-feedback benchmark</a> &mdash; 10 seeds, 1,800 queries/seed; full_brain 92.0% (&plusmn;18.3%) vs best RAG 67.0%, 9-1-0</li>
         <li><a href="/docs/reproduce-eval/">Reproduce the evaluation</a> &mdash; step-by-step instructions to regenerate every number and figure</li>
         <li><a href="/docs/worked-example/">Worked example</a> &mdash; one conversation turn traced end-to-end</li>
         <li><a href="/paper/">Paper + PDF</a></li>
@@ -62,6 +63,15 @@
     <h2 style="margin-top:1.4rem;">Charts and Figures</h2>
     <div class="card">
       <p style="margin-top:0;">The charts behind the headline numbers. Each one regenerates from source data &mdash; no screenshots, no static images you have to trust.</p>
+      <p><strong>Brain-vs-RAG Ground-Zero (3-family proof)</strong></p>
+      <ul>
+        <li><a href="/figures/bgz/f1_margin_context.png">F1: Margin and context efficiency (two-panel)</a></li>
+        <li><a href="/figures/bgz/f2_ablation_ladder.png">F2: Ablation ladder across families</a></li>
+        <li><a href="/figures/bgz/f3_recorded_h2h_seed.png">F3: Recorded H2H seed-by-seed (relational drift)</a></li>
+        <li><a href="/figures/bgz/f4_recurring_workflows_seed.png">F4: Recurring workflows seed-by-seed</a></li>
+        <li><a href="/figures/bgz/f5_sparse_feedback_seed.png">F5: Sparse feedback seed-by-seed</a></li>
+      </ul>
+      <p><strong>Earlier evaluation figures</strong></p>
       <ul>
         <li><a href="/figures/eval/reward_vs_epoch.svg">reward_vs_epoch.svg</a></li>
         <li><a href="/figures/eval/accuracy_vs_epoch.svg">accuracy_vs_epoch.svg</a></li>

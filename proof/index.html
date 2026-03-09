@@ -5,9 +5,9 @@
   <title>OpenClawBrain Proof Package</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Jonathan Gu">
-  <meta name="description" content="OpenClawBrain benchmark evidence: 97.5% vs 89.6% on recorded sessions, 92% vs 67% under sparse feedback, with full artifact links and reproduction steps.">
+  <meta name="description" content="OpenClawBrain beats the best RAG baseline by +9.7 to +26.9 pp across three benchmark families (30 seeds, 29-1-0 head-to-head) while using 5x less context per query.">
   <meta property="og:title" content="OpenClawBrain Proof Package">
-  <meta property="og:description" content="97.5% vs 89.6% on recorded sessions. 92% vs 67% under sparse feedback. Worked examples, reproduction steps, and clear boundaries on what is proven.">
+  <meta property="og:description" content="+9.7 to +26.9 pp over the best RAG baseline across three families. 29-1-0 head-to-head. 5x less context. Charts, reproduction steps, and clear boundaries.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/proof/">
   <meta name="twitter:card" content="summary_large_image">
@@ -291,10 +291,19 @@
       gap: 1rem;
       align-items: start;
     }
+    .full-width-figure {
+      margin: 1rem 0;
+    }
     .status-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1rem;
+    }
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      align-items: start;
     }
     .ladder-grid {
       display: grid;
@@ -360,6 +369,7 @@
       .hero,
       .status-grid,
       .two-col,
+      .three-col,
       .kit-grid {
         grid-template-columns: 1fr;
       }
@@ -403,117 +413,219 @@
     </header>
 
     <main>
+      <!-- ───────────────────── HERO ───────────────────── -->
       <section class="hero">
         <div class="hero-copy">
-          <div class="eyebrow">Benchmark evidence</div>
+          <div class="eyebrow">Three-family benchmark evidence</div>
           <h1>Does it actually work?</h1>
           <p style="font-family:var(--sans); font-size:0.92rem; color:var(--muted); margin:0.5rem 0 0;">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
           <p class="lead">
-            Think of OpenClawBrain as a librarian who learns which shelves matter for each question &mdash; instead of keyword-searching every book. On 800 recorded queries, this librarian answers <strong>97.5%</strong> correctly vs <strong>89.6%</strong> for the best search-everything approach. When corrections are scarce (10 random seeds), the gap widens to <strong>92.0% vs 67.1%</strong> with roughly 5x less material pulled per question. This page collects the evidence, explains what it proves, and draws a clear line where the claims stop.
+            We tested the full-brain mechanism &mdash; graph memory, learned routing, policy-gradient updates, and structural plasticity &mdash; against 8 baselines on three distinct long-lived memory tasks, each at 10-seed scale. The result: <strong>+9.7 to +26.9 pp</strong> over the best RAG baseline, a <strong>29-1-0</strong> head-to-head record across 30 seed-level comparisons, and <strong>5x less context</strong> per query. This page shows the charts, explains each family, and draws a clear line where the claims stop.
           </p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="#recorded-session">Recorded-session test</a>
-            <a class="btn btn-secondary" href="#sparse-feedback">Sparse-feedback test</a>
-            <a class="btn btn-secondary" href="#worked-turn">See one turn end-to-end</a>
-            <a class="btn btn-secondary" href="/docs/reproduce-eval/">Reproduce it yourself</a>
+            <a class="btn btn-primary" href="#overview">The big picture</a>
+            <a class="btn btn-secondary" href="#relational-drift">Relational drift</a>
+            <a class="btn btn-secondary" href="#recurring-workflows">Recurring workflows</a>
+            <a class="btn btn-secondary" href="#sparse-feedback">Sparse feedback</a>
           </div>
           <p class="hero-note">
-            These are benchmark results, not live-traffic claims. Testing against real user traffic is the next step. See <a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">CLAIMS.md</a> for the authoritative boundary.
+            These are benchmark results, not live-traffic claims. The harness uses simulated policy functions, not live LLM calls. See <a href="https://github.com/jonathangu/brain-ground-zero/blob/main/CLAIMS.md">CLAIMS.md</a> for the authoritative boundary.
           </p>
         </div>
 
         <div class="hero-panel">
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.34); background: rgba(156, 224, 188, 0.08);">
-            <div class="kicker">What we can show today</div>
-            <h2>Two kinds of evidence, both public</h2>
+            <div class="kicker">Cross-family headline</div>
+            <h2>29-1-0 across three families</h2>
             <ul>
-              <li><strong>Integration tests</strong> (this repo): verify the full lifecycle &mdash; building a knowledge snapshot, activating it, and confirming the guide picks the right context. Run <code>pnpm lifecycle:smoke</code>, <code>pnpm observability:smoke</code>, <code>pnpm fresh-env:smoke</code>.</li>
-              <li><strong>Head-to-head benchmarks</strong> (<a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> repo): the learned guide vs 8 conventional search methods on frozen workloads, scored by the same rubric.</li>
+              <li><strong>Relational drift</strong> (recorded H2H): 99.15% vs 89.44%, +9.71 pp, 10-0-0</li>
+              <li><strong>Recurring workflows</strong> (simulation): 97.6% vs 70.6%, +26.9 pp, 10-0-0</li>
+              <li><strong>Sparse feedback</strong> (simulation): 92.0% vs 67.0%, +24.9 pp, 9-1-0</li>
             </ul>
+            <p class="meta">
+              10 seeds per family. 8 baselines each. 5x less context everywhere. Full artifacts in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a>.
+            </p>
           </article>
 
+          <article class="status-card">
+            <div class="kicker">Two evaluation modes</div>
+            <h3>Recorded H2H vs simulation</h3>
+            <p>Relational drift has <strong>recorded head-to-head</strong> results: deterministic fixture replay with SHA-256 verification. The other two families use <strong>simulation</strong> with the harness policy function. Both are deterministic given a seed, but they are different kinds of evidence and must not be conflated.</p>
+          </article>
+        </div>
+      </section>
+
+
+      <!-- ───────────────────── OVERVIEW CHARTS ───────────────────── -->
+      <section class="section" id="overview">
+        <div class="section-head">
+          <div>
+            <h2>The big picture: margin, context, and ablation</h2>
+            <p class="section-intro">Two charts tell the cross-family story. The first shows how much full_brain wins by and how much less context it uses. The second shows where the advantage comes from &mdash; structural plasticity is the largest contributor in every family.</p>
+          </div>
+        </div>
+
+        <div class="two-col">
           <figure class="figure-card">
-            <div class="kicker">Does the right context reach the model?</div>
-            <img src="../figures/eval/workflow_proof_exact_target_success.svg" alt="Bar chart: vector_topk 0/4, pointer_chase 1/4, graph_prior_only 2/4, learned 4/4">
+            <div class="kicker">F1 &middot; Margin and context efficiency</div>
+            <img src="../figures/bgz/f1_margin_context.png" alt="Two-panel chart: accuracy margin of full_brain over best RAG (+9.7 to +26.9 pp) and context cost ratio (5x lower) across three benchmark families">
             <figcaption>
-              4 fixed queries. Keyword search finds none of the right context. The knowledge map alone gets 2. The learned guide gets all 4 &mdash; it combines the map with what it learned from past corrections. Source: <code>baseline_eval/summary.csv</code>. <a href="/docs/reproduce-eval/">Reproduce</a> | <a href="/docs/worked-example/">Worked example</a>.
+              Accuracy margin of full_brain over the best RAG baseline (left) and context cost ratio (right) across three benchmark families. full_brain achieves +9.7 to +26.9 pp margins while consuming 5x less context per query.
+            </figcaption>
+          </figure>
+
+          <figure class="figure-card">
+            <div class="kicker">F2 &middot; Ablation ladder</div>
+            <img src="../figures/bgz/f2_ablation_ladder.png" alt="Ablation ladder showing accuracy at each mechanism stage across three families, with structural plasticity contributing the largest jump every time">
+            <figcaption>
+              Accuracy at each mechanism stage (route function only, graph + route + policy gradient, full brain) across three families. Structural plasticity &mdash; Hebbian co-firing, decay, connect/split/merge/prune &mdash; contributes the largest accuracy jump in every family (+20.8 to +42.6 pp).
             </figcaption>
           </figure>
         </div>
       </section>
 
 
-      <section class="section" id="recorded-session">
+      <!-- ───────────────────── FAMILY 1: RELATIONAL DRIFT ───────────────────── -->
+      <section class="section" id="relational-drift">
         <div class="section-head">
           <div>
-            <h2>800 recorded queries, same rules for everyone</h2>
-            <p class="section-intro">Every method gets the same frozen queries, the same knowledge state, and the same scoring rubric. The learned guide answers correctly about 8 percentage points more often than the best search-based method, while pulling a fraction of the material.</p>
+            <h2>Family 1: Relational drift</h2>
+            <p class="section-intro">Entity relationships change over time. The guide has to track who reports to whom, which teams own which services, and how these shift. This is the strongest evidence &mdash; recorded head-to-head with deterministic replay and hash verification.</p>
           </div>
         </div>
         <div class="two-col">
+          <figure class="figure-card">
+            <div class="kicker">F3 &middot; Seed-by-seed head-to-head</div>
+            <img src="../figures/bgz/f3_recorded_h2h_seed.png" alt="Per-seed accuracy comparison: full_brain wins every seed (10-0-0) against vector_rag_rerank on relational drift recorded H2H">
+            <figcaption>
+              Per-seed accuracy comparison between full_brain and vector_rag_rerank on the recorded H2H relational-drift benchmark (10 seeds, 800 queries each). full_brain wins every seed (10-0-0).
+            </figcaption>
+          </figure>
+
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
-            <div class="kicker">The numbers</div>
-            <h2>Learned guide: 97.5%. Best search method: 89.6%.</h2>
+            <div class="kicker">Recorded H2H &middot; 10 seeds &middot; 800 queries/seed</div>
+            <h2>99.15% vs 89.44%</h2>
             <ul>
-              <li>800 frozen queries, 41 training steps, 8 retrieval methods compared side by side.</li>
-              <li>Gap: <strong>+7.9 percentage points</strong> &mdash; roughly 1 in 12 queries where the guide is right and search gets it wrong.</li>
-              <li>The guide uses roughly 5x less context per query than the best search method.</li>
+              <li>Margin: <strong>+9.71 pp</strong>. Head-to-head: <strong>10-0-0</strong>.</li>
+              <li>Context: <strong>5x lower</strong> (800 vs 4,000 tokens per query).</li>
+              <li>Evaluation: deterministic fixture replay with SHA-256 verification. This is the strongest kind of evidence &mdash; fully reproducible, no simulation ambiguity.</li>
+              <li>8 baselines tested: oracle, full_brain, vector_rag_rerank, vector_rag, heuristic_stateful, graph_route_pg, route_fn_only, and more.</li>
             </ul>
             <p class="meta">
-              Public bundle: <code>proof-results/recorded_h2h_relational_drift_001</code> in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> at commit <code>1c54302</code>.
+              Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_10seed"><code>proof-results/recorded_h2h_relational_drift_10seed</code></a>.
             </p>
-          </article>
-
-          <article class="status-card">
-            <div class="kicker">Where the claim stops</div>
-            <h2>What this does and doesn't prove</h2>
-            <ul>
-              <li>Proves the learned guide is more accurate than 8 conventional retrieval methods on this frozen workload.</li>
-              <li>Does <strong>not</strong> prove live production quality, real-traffic outcomes, or live rollout results. Those come next.</li>
-              <li>Next steps: shadow-mode testing (mirroring real traffic) and narrow live rollout.</li>
-            </ul>
           </article>
         </div>
       </section>
 
+
+      <!-- ───────────────────── FAMILY 2: RECURRING WORKFLOWS ───────────────────── -->
+      <section class="section" id="recurring-workflows">
+        <div class="section-head">
+          <div>
+            <h2>Family 2: Recurring workflows</h2>
+            <p class="section-intro">Repetitive tasks that the system should recognize and handle better over time &mdash; deploy checklists, review protocols, onboarding flows. This is where the full-brain advantage is largest: +26.9 pp.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <figure class="figure-card">
+            <div class="kicker">F4 &middot; Seed-by-seed head-to-head</div>
+            <img src="../figures/bgz/f4_recurring_workflows_seed.png" alt="Per-seed accuracy comparison on recurring workflows: full_brain wins every seed (10-0-0) with margins exceeding 25 pp">
+            <figcaption>
+              Per-seed accuracy comparison on the recurring-workflows benchmark (10 seeds, 3,522 queries each). full_brain wins every seed (10-0-0) with margins exceeding 25 pp.
+            </figcaption>
+          </figure>
+
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">Simulation &middot; 10 seeds &middot; 3,522 queries/seed</div>
+            <h2>97.6% vs 70.6%</h2>
+            <ul>
+              <li>Margin: <strong>+26.9 pp</strong>. Head-to-head: <strong>10-0-0</strong>.</li>
+              <li>Context: <strong>5x lower</strong>.</li>
+              <li>Evaluation: simulated policy functions, deterministic given seed. This is the family with the largest query count (3,522 per seed) and the widest margin.</li>
+            </ul>
+            <p class="meta">
+              Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recurring_workflows_10seed"><code>proof-results/recurring_workflows_10seed</code></a>.
+            </p>
+          </article>
+        </div>
+      </section>
+
+
+      <!-- ───────────────────── FAMILY 3: SPARSE FEEDBACK ───────────────────── -->
       <section class="section" id="sparse-feedback">
         <div class="section-head">
           <div>
-            <h2>What happens when corrections are rare</h2>
-            <p class="section-intro">Real teams don't correct every answer. This test checks the harder scenario: can the guide still win when it only occasionally hears "that was wrong"? The advantage actually widens, because the guide compounds learning from even limited feedback. Search methods have no feedback loop at all &mdash; they perform the same on day one and day one thousand.</p>
+            <h2>Family 3: Sparse feedback</h2>
+            <p class="section-intro">Real teams don't correct every answer. This family tests the harder scenario: can the guide win when only ~19% of queries get explicit feedback? The advantage holds, but with an honest asterisk.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <figure class="figure-card">
+            <div class="kicker">F5 &middot; Seed-by-seed head-to-head</div>
+            <img src="../figures/bgz/f5_sparse_feedback_seed.png" alt="Per-seed accuracy comparison on sparse feedback: full_brain wins 9 of 10 seeds (9-1-0)">
+            <figcaption>
+              Per-seed accuracy comparison on the sparse-feedback benchmark (10 seeds, 1,800 queries each, ~19% feedback coverage). full_brain wins 9 of 10 seeds (9-1-0). The seed-level loss prevents claiming a perfect sweep.
+            </figcaption>
+          </figure>
+
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">Simulation &middot; 10 seeds &middot; 1,800 queries/seed</div>
+            <h2>92.0% vs 67.0%</h2>
+            <ul>
+              <li>Margin: <strong>+24.9 pp</strong>. Head-to-head: <strong>9-1-0</strong>.</li>
+              <li>Context: <strong>5x lower</strong>.</li>
+              <li><strong>Variance note:</strong> The &plusmn;18.3% std on full_brain reflects high seed-level variance under ~19% explicit feedback coverage. Accuracy depends on which queries receive corrections. One seed loss prevents an unqualified "always wins" claim.</li>
+            </ul>
+            <p class="meta">
+              Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed"><code>proof-results/sparse_feedback_10seed</code></a>.
+            </p>
+          </article>
+        </div>
+      </section>
+
+
+      <!-- ───────────────────── WHAT THIS PROVES ───────────────────── -->
+      <section class="section" id="boundaries">
+        <div class="section-head">
+          <div>
+            <h2>What this proves &mdash; and what it doesn't</h2>
           </div>
         </div>
         <div class="two-col">
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
-            <div class="kicker">The numbers</div>
-            <h2>Learned guide: 92.0%. Best search: 67.1%.</h2>
+            <div class="kicker">Proven</div>
+            <h3>The mechanism dominates RAG on three tasks</h3>
             <ul>
-              <li>10 independent random seeds, each with sparse correction signals.</li>
-              <li>Gap: <strong>+24.9 percentage points</strong>.</li>
-              <li>Roughly <strong>5x less context</strong> per query.</li>
-              <li>Wins <strong>9 out of 10 seeds</strong> head-to-head.</li>
+              <li>The full-brain mechanism &mdash; graph memory + learned routing + policy-gradient updates + structural plasticity &mdash; beats the best RAG baseline and all partial-brain ablations on three distinct long-lived memory tasks.</li>
+              <li>Each family runs at 10-seed scale with 8 baselines. Results are deterministic given a seed.</li>
+              <li>Structural plasticity is the single largest contributor in every family (ablation ladder holds without reversal).</li>
+              <li>Context efficiency: 5x lower across all families.</li>
             </ul>
-            <p class="meta">
-              Public bundle: <code>proof-results/sparse_feedback_10seed</code> in <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">brain-ground-zero</a>.
-            </p>
           </article>
 
           <article class="status-card">
-            <div class="kicker">Where the claim stops</div>
-            <h2>What this does and doesn't prove</h2>
+            <div class="kicker">Not proven</div>
+            <h3>Where the claims stop</h3>
             <ul>
-              <li>Proves the learned guide is more accurate and efficient than search methods even with sparse corrections, across 10 independent seeds.</li>
-              <li>Does <strong>not</strong> prove live production quality, real-world latency gains, or live rollout outcomes.</li>
+              <li>Performance on <code>memory_compaction</code> (designed but not run).</li>
+              <li>Behavior at larger world sizes (current: 50 entities / 80 workflows).</li>
+              <li>End-to-end performance with live LLM routing (harness uses simulated policy functions).</li>
+              <li>Production latency or cost.</li>
+              <li>Real-session head-to-head on product traces (spec defined, no scored results).</li>
+              <li>"Always wins" across all families (sparse feedback is 9-1-0).</li>
             </ul>
           </article>
         </div>
       </section>
 
+
+      <!-- ───────────────────── WORKED TURN ───────────────────── -->
       <section class="section" id="worked-turn">
         <div class="section-head">
           <div>
             <h2>Look at one turn before trusting the scores</h2>
-            <p class="section-intro">Aggregate numbers only matter if each individual turn is honest. Here's one concrete turn: what OpenClaw asked for, what context the guide chose, and how a correction fed back into the system. If this single turn doesn't make sense, the scores above shouldn't convince you either.</p>
+            <p class="section-intro">Aggregate numbers only matter if each individual turn is honest. Here's one concrete turn: what OpenClaw asked for, what context the guide chose, and how a correction fed back into the system.</p>
           </div>
         </div>
         <div class="two-col">
@@ -544,37 +656,8 @@ correction: internal-only patch -> no support contact</code></pre>
         </div>
       </section>
 
-      <section class="section" id="workflow-proof">
-        <div class="section-head">
-          <div>
-            <h2>Does the right knowledge actually reach the model?</h2>
-            <p class="section-intro">4 fixed queries test whether the guide surfaces exactly the right pieces of knowledge. Keyword search: 0/4. The knowledge map alone: 2/4. The learned guide: 4/4. Think of it like asking a new librarian vs an experienced one &mdash; the experienced one knows which facts connect to your question, not just which words match.</p>
-          </div>
-        </div>
-        <div class="two-col">
-          <figure class="figure-card">
-            <div class="kicker">The guide improves with practice</div>
-            <img src="../figures/eval/workflow_proof_learning_curve.svg" alt="graph_prior_only stays at 50% while learned routing reaches 100% at epoch 14">
-            <figcaption>
-              Without learning, the map alone stays at 2/4 across all 16 rounds. With background learning, the guide reaches 4/4 by round 14 &mdash; like a librarian who gets better every week. Source: <code>learning_curve.csv</code>. <a href="/docs/reproduce-eval/">Reproduce</a> | <a href="/docs/worked-example/">Worked example</a>.
-            </figcaption>
-          </figure>
 
-          <article class="status-card">
-            <div class="kicker">What this tells us</div>
-            <h2>Useful on day one, better with practice</h2>
-            <ul>
-              <li>The knowledge map alone gets 2/4 right before any learning &mdash; that's the "useful from the start" baseline.</li>
-              <li>After background learning (which never slows a live response), the guide gets all 4 right by round 14.</li>
-              <li>Simple link-following gets only 1/4 &mdash; following obvious connections isn't enough without learning which connections matter most.</li>
-            </ul>
-            <p class="meta">
-              This proves which pieces of knowledge reached the model in a controlled test. It does not prove downstream answer quality on live traffic.
-            </p>
-          </article>
-        </div>
-      </section>
-
+      <!-- ───────────────────── EVIDENCE LADDER ───────────────────── -->
       <section class="section" id="evidence-ladder">
         <div class="section-head">
           <div>
@@ -589,27 +672,28 @@ correction: internal-only patch -> no support contact</code></pre>
             <p>Inspect one turn end-to-end: input, context chosen, answer, correction feedback.</p>
             <div class="meta">Reached. <a href="#worked-turn">See above</a>.</div>
           </article>
-          <article class="ladder-card">
-            <div class="step">1</div>
+          <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
+            <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">1</div>
             <h3>Mechanism test</h3>
             <p>Controlled tests verifying the guide and learning machinery work as designed.</p>
+            <div class="meta">Reached. Integration tests pass.</div>
           </article>
           <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
             <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">2</div>
-            <h3>Recorded-session head-to-head</h3>
-            <p>97.5% vs 89.6% across 800 queries and 8 methods.</p>
-            <div class="meta">Reached. <a href="#recorded-session">See above</a>.</div>
+            <h3>Recorded H2H (10 seeds)</h3>
+            <p>99.15% vs 89.44% on relational drift. Deterministic replay, SHA-256 verified, 10-0-0.</p>
+            <div class="meta">Reached. <a href="#relational-drift">See above</a>.</div>
           </article>
           <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
             <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">3</div>
-            <h3>Sparse-feedback (10 seeds)</h3>
-            <p>92.0% vs 67.1%, 5x less context, 9/10 seeds won.</p>
-            <div class="meta">Reached. <a href="#sparse-feedback">See above</a>.</div>
+            <h3>Three-family proof (10 seeds each)</h3>
+            <p>+9.7 to +26.9 pp across relational drift, recurring workflows, and sparse feedback. 29-1-0 cross-family.</p>
+            <div class="meta">Reached. <a href="#overview">See charts</a>.</div>
           </article>
           <article class="ladder-card">
             <div class="step">4</div>
             <h3>Live knowledge updates</h3>
-            <p>The knowledge map updating itself during live serving &mdash; not just between builds. Today, map structure is set at build time.</p>
+            <p>The knowledge map updating itself during live serving &mdash; not just between builds.</p>
             <div class="meta">Not yet proved.</div>
           </article>
           <article class="ladder-card">
@@ -627,6 +711,8 @@ correction: internal-only patch -> no support contact</code></pre>
         </div>
       </section>
 
+
+      <!-- ───────────────────── INTEGRATION TESTS ───────────────────── -->
       <section class="section" id="repo-local-proof">
         <div class="section-head">
           <div>
@@ -658,6 +744,8 @@ correction: internal-only patch -> no support contact</code></pre>
         </div>
       </section>
 
+
+      <!-- ───────────────────── GO DEEPER ───────────────────── -->
       <section class="section" id="proof-kit">
         <div class="section-head">
           <div>

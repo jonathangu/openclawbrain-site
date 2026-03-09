@@ -52,45 +52,95 @@
     <h1>The scorecard: does it actually win?</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>You wouldn't trust a mechanic who says "trust me, it's fixed" without showing you the receipts. This page is the receipts: the strongest published benchmarks, what each test proves, where the evidence honestly stops, and why a guide that follows connections between facts outperforms keyword search on these workloads.</p>
+    <p>You wouldn't trust a mechanic who says "trust me, it's fixed" without showing you the receipts. This page is the receipts: three benchmark families, 30 seed-level comparisons, eight baselines each, charts and ablations &mdash; and an honest line where the claims stop.</p>
 
     <div class="grid">
       <div class="card">
         <h3>Proven now</h3>
-        <p>Recorded sessions: the learned guide answers 97.5% correctly vs. 89.6% for the best search method &mdash; roughly 1 in 13 queries where search fails, the guide gets right. Sparse-feedback (10 seeds): 92.0% vs. 67.1% accuracy, about 5x less context per query, and the guide wins 9 of 10 seeds head-to-head.</p>
+        <p>Three families at 10-seed proof scale. The full-brain mechanism beats the best RAG baseline by +9.7 to +26.9 pp across all three, winning 29 of 30 seed-level comparisons while using 5x less context per query. Structural plasticity is the single largest contributor in every family.</p>
       </div>
       <div class="card">
         <h3>Needs real-traffic tests</h3>
-        <p>Shadow traffic (mirroring real queries in the background) and narrow live rollout evidence are needed before claiming better outcomes on live OpenClaw workloads.</p>
+        <p>Shadow traffic (mirroring real queries in the background) and narrow live rollout evidence are needed before claiming better outcomes on live OpenClaw workloads. The benchmark uses simulated policy functions, not live LLM calls.</p>
       </div>
       <div class="card">
         <h3>Not claimed</h3>
-        <p>No blanket performance wins, no production latency or cost claims, and no claim that controlled tests alone prove production superiority.</p>
+        <p>No blanket "always wins" (sparse feedback is 9-1-0). No production latency or cost claims. No claim that controlled benchmarks alone prove production superiority.</p>
       </div>
     </div>
 
-    <h2>Strongest published benchmarks (March 2026)</h2>
+    <h2>The proof package: three families, 10 seeds each (March 2026)</h2>
     <div class="table-wrap"><table>
       <thead>
-        <tr><th>Test</th><th>Scope</th><th>Key result</th><th>Public bundle</th></tr>
+        <tr><th>Family</th><th>Eval mode</th><th>full_brain</th><th>Best RAG</th><th>Margin</th><th>H2H</th><th>Context</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td>Recorded session head-to-head<br /><code>recorded_h2h_relational_drift_001</code></td>
-          <td>800 queries, 41 steps, 8 methods</td>
-          <td>Learned guide 0.975 vs best search 0.896 (+7.9 pp)</td>
-          <td><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">proof-results/recorded_h2h_relational_drift_001</a></td>
+          <td>Relational drift</td>
+          <td>Recorded H2H (10 seeds, 800 q/seed)</td>
+          <td><strong>99.15% &plusmn; 0.27%</strong></td>
+          <td>89.44% &plusmn; 1.68%</td>
+          <td>+9.71 pp</td>
+          <td>10-0-0</td>
+          <td>5x lower</td>
         </tr>
         <tr>
-          <td>Sparse-feedback 10-seed<br /><code>sparse_feedback_10seed</code></td>
-          <td>10 seeds, 1,800 queries/seed, 8 methods</td>
-          <td>Learned guide 91.96% vs best search 67.05% (+24.91 pp), ~5x lower context/query, 9-1 head-to-head</td>
-          <td><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">proof-results/sparse_feedback_10seed</a></td>
+          <td>Recurring workflows</td>
+          <td>Simulation (10 seeds, 3,522 q/seed)</td>
+          <td><strong>97.6% &plusmn; 0.4%</strong></td>
+          <td>70.6% &plusmn; 1.2%</td>
+          <td>+26.9 pp</td>
+          <td>10-0-0</td>
+          <td>5x lower</td>
+        </tr>
+        <tr>
+          <td>Sparse feedback</td>
+          <td>Simulation (10 seeds, 1,800 q/seed)</td>
+          <td><strong>92.0% &plusmn; 18.3%</strong></td>
+          <td>67.0% &plusmn; 1.4%</td>
+          <td>+24.9 pp</td>
+          <td>9-1-0</td>
+          <td>5x lower</td>
         </tr>
       </tbody>
     </table></div>
 
-    <p>These are benchmark results, not live rollout evidence. They sit in the middle of the evidence ladder: stronger than the small controlled test, but still below real-traffic proof.</p>
+    <p><strong>Cross-family headline:</strong> +9.7 to +26.9 pp over the best RAG baseline, 29-1-0 across 30 seed-level comparisons, 5x less context per query. The sparse-feedback &plusmn;18.3% std reflects high seed variance under ~19% explicit feedback coverage; the one seed loss prevents claiming a perfect sweep.</p>
+
+    <p>These are benchmark results using simulated policy functions, not live rollout evidence. They sit in the middle of the evidence ladder: stronger than a small controlled test, but still below real-traffic proof. Public bundles: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_10seed">recorded_h2h (10-seed)</a>, <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recurring_workflows_10seed">recurring_workflows (10-seed)</a>, <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">sparse_feedback (10-seed)</a>.</p>
+
+    <h2>Ablation ladder: what each mechanism layer adds</h2>
+    <p>Strip away the system layer by layer and accuracy drops in the same order every time. Structural plasticity &mdash; the ability to connect, split, merge, and prune knowledge nodes &mdash; is the single largest contributor in every family.</p>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Family</th><th>Route fn only</th><th>Graph + PG routing</th><th>Full brain</th><th>Plasticity delta</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Relational drift (sim)</td>
+          <td>64.7% &plusmn; 1.6%</td>
+          <td>76.5% &plusmn; 2.5%</td>
+          <td><strong>97.2% &plusmn; 5.8%</strong></td>
+          <td>+20.8 pp</td>
+        </tr>
+        <tr>
+          <td>Recurring workflows</td>
+          <td>34.1% &plusmn; 9.0%</td>
+          <td>60.4% &plusmn; 1.7%</td>
+          <td><strong>97.6% &plusmn; 0.4%</strong></td>
+          <td>+37.2 pp</td>
+        </tr>
+        <tr>
+          <td>Sparse feedback</td>
+          <td>37.0% &plusmn; 1.7%</td>
+          <td>49.4% &plusmn; 13.8%</td>
+          <td><strong>92.0% &plusmn; 18.3%</strong></td>
+          <td>+42.6 pp</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <p>The ordering is consistent with no reversals: <code>route_fn_only &lt; graph_route_pg &lt; full_brain</code>. This isn't a lucky run &mdash; every family shows the same staircase.</p>
 
     <h2>The small controlled test: can the guide find the right facts?</h2>
     <p>This is intentionally narrow: 4 fixed queries testing whether the guide surfaces exactly the right pieces of knowledge. Think of it as asking four specific questions and checking whether the librarian pulled the right books. Keyword search finds none. The learned guide finds all of them.</p>
@@ -135,42 +185,66 @@
       <figcaption>Useful from day one with map structure, better with practice: the map alone stays at 2/4, while the learned guide reaches 4/4 by round 14. Still controlled-test evidence, not live-traffic proof.</figcaption>
     </figure>
 
-    <h2>Recorded-session head-to-head: the full table</h2>
-    <p>800 frozen queries, same rules for everyone. The learned guide gets more right while pulling a fraction of the material.</p>
+    <h2>Recorded head-to-head: 10 seeds, deterministic replay</h2>
+    <p>The strongest evidence. 10 seeds, 800 queries each, deterministic fixture replay with SHA-256 verification. Same frozen queries, same rules for everyone. The full-brain mechanism wins every seed.</p>
 
     <div class="table-wrap"><table>
       <thead>
-        <tr><th>Method</th><th>Accuracy</th><th>Context used</th><th>Traversal cost</th></tr>
+        <tr><th>Metric</th><th>Value</th></tr>
       </thead>
       <tbody>
-        <tr><td>Learned guide</td><td><strong>0.9750</strong></td><td>800</td><td>800</td></tr>
-        <tr><td>Best search method (with reranking)</td><td>0.8962</td><td>4 000</td><td>6 400</td></tr>
-        <tr><td>Stateful heuristic</td><td>0.8163</td><td>800</td><td>800</td></tr>
-        <tr><td>Basic search</td><td>0.7875</td><td>800</td><td>800</td></tr>
+        <tr><td>full_brain accuracy</td><td><strong>99.15% &plusmn; 0.27%</strong></td></tr>
+        <tr><td>Best RAG (vector_rag_rerank)</td><td>89.44% &plusmn; 1.68%</td></tr>
+        <tr><td>Margin</td><td>+9.71 pp</td></tr>
+        <tr><td>Head-to-head</td><td>10-0-0</td></tr>
+        <tr><td>Context efficiency</td><td>5x lower (1.0 vs 5.0 per query)</td></tr>
+        <tr><td>Seeds &times; queries</td><td>10 &times; 800 = 8,000 queries</td></tr>
       </tbody>
     </table></div>
 
-    <p>The best search method needs 5x more context and 8x more work yet still scores lower. The learned guide gets more right with less, because it follows relationships between facts instead of just matching words.</p>
+    <p>The best RAG method needs 5x more context yet still scores nearly 10 pp lower. The full-brain mechanism follows relationships between facts instead of just matching words &mdash; and it wins every seed without exception. Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_10seed">recorded_h2h_relational_drift_10seed</a>.</p>
 
-    <h2>Sparse-feedback: what happens when corrections are rare</h2>
-    <p>The strongest multi-seed test. Real teams rarely correct every answer &mdash; so this checks whether the guide still wins when feedback is sparse.</p>
+    <h2>Recurring workflows: the widest margin</h2>
+    <p>80 recurring workflows, 3,522 queries per seed. The full-brain mechanism opens a 27-point lead because it learns workflow patterns that keyword search cannot represent.</p>
 
     <div class="table-wrap"><table>
       <thead>
-        <tr><th>Method</th><th>Accuracy (mean)</th><th>Context/query</th><th>Traversal/query</th><th>Seeds won vs guide</th></tr>
+        <tr><th>Metric</th><th>Value</th></tr>
       </thead>
       <tbody>
-        <tr><td>Learned guide</td><td><strong>91.96%</strong></td><td>1.00</td><td>1.00</td><td>&mdash;</td></tr>
-        <tr><td>Best search (with reranking)</td><td>67.05%</td><td>5.00</td><td>8.00</td><td>1/10</td></tr>
-        <tr><td>Basic search</td><td>60.49%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
-        <tr><td>Stateful heuristic</td><td>51.38%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
+        <tr><td>full_brain accuracy</td><td><strong>97.6% &plusmn; 0.4%</strong></td></tr>
+        <tr><td>Best RAG (vector_rag_rerank)</td><td>70.6% &plusmn; 1.2%</td></tr>
+        <tr><td>Margin</td><td>+26.9 pp</td></tr>
+        <tr><td>Head-to-head</td><td>10-0-0</td></tr>
+        <tr><td>Context efficiency</td><td>5x lower</td></tr>
+        <tr><td>Seeds &times; queries</td><td>10 &times; 3,522 = 35,220 queries</td></tr>
       </tbody>
     </table></div>
 
-    <p>Nearly 25 percentage points ahead (92.0% vs. 67.1%), winning 9 of 10 seeds, using about 5x less context. The guide compounds learning from even limited corrections; search methods have no feedback loop at all.</p>
+    <p>Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recurring_workflows_10seed">recurring_workflows_10seed</a>.</p>
+
+    <h2>Sparse feedback: what happens when corrections are rare</h2>
+    <p>Real teams rarely correct every answer. This family checks whether the guide still wins when only ~19% of queries receive explicit feedback. It does &mdash; but with caveats.</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Metric</th><th>Value</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>full_brain accuracy</td><td><strong>92.0% &plusmn; 18.3%</strong></td></tr>
+        <tr><td>Best RAG (vector_rag_rerank)</td><td>67.0% &plusmn; 1.4%</td></tr>
+        <tr><td>Margin</td><td>+24.9 pp</td></tr>
+        <tr><td>Head-to-head</td><td>9-1-0</td></tr>
+        <tr><td>Context efficiency</td><td>5x lower</td></tr>
+        <tr><td>Seeds &times; queries</td><td>10 &times; 1,800 = 18,000 queries</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>Nearly 25 pp ahead, winning 9 of 10 seeds, using 5x less context. The guide compounds learning from even limited corrections; search methods have no feedback loop at all. <strong>Variance disclosure:</strong> the &plusmn;18.3% std reflects high seed-level variance under sparse signal. One seed loss prevents an unqualified "always wins" claim across families. Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">sparse_feedback_10seed</a>.</p>
 
     <h2>What this proves &mdash; and where it stops</h2>
-    <p>The controlled test plus the two benchmarks prove something real but bounded: the knowledge map helps retrieval from day one, background learning makes it better, and the learned guide beats credible search methods on frozen workloads. Why? Not magic &mdash; the guide follows relationships between facts instead of keyword similarity, it learns from corrections (search has no feedback loop), and it sends less context for better results. It still does <strong>not</strong> prove better outcomes on live OpenClaw traffic &mdash; that requires real-traffic testing and live rollout evidence.</p>
+    <p>The full-brain mechanism &mdash; graph memory, learned route function, policy-gradient updates, and structural plasticity &mdash; dominates RAG and partial-brain ablations across three distinct long-lived memory tasks, each at 10-seed scale with 8 baselines, while using 5x less context. The ablation ladder holds without reversal in every family. Why? Not magic &mdash; the guide follows relationships between facts instead of keyword similarity, it learns from corrections (search has no feedback loop), and structural plasticity lets the knowledge map grow and prune itself.</p>
+    <p><strong>Not proven:</strong> performance at larger world sizes (current: 50 entities / 80 workflows), end-to-end performance with live LLM routing (harness uses simulated policy functions), production latency or cost, and real-traffic outcomes on live OpenClaw workloads.</p>
 
     <h2>The evidence ladder: what each level proves</h2>
     <div class="table-wrap"><table>
@@ -208,7 +282,7 @@
       <li>Don't describe the 4-query controlled test as a product win on OpenClaw traffic.</li>
     </ol>
 
-    <p>Packaged view: <a href="/proof/">/proof/</a>. Benchmark bundles: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">recorded_h2h_relational_drift_001</a> and <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">sparse_feedback_10seed</a>. Rerun steps: <a href="/docs/reproduce-eval/">reproduce eval</a>. Smallest real-turn proof unit: <a href="/docs/worked-example/">worked example</a>.</p>
+    <p>Packaged view: <a href="/proof/">/proof/</a>. Paper: <a href="/paper/">/paper/</a>. Benchmark bundles: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_10seed">recorded_h2h (10-seed)</a>, <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recurring_workflows_10seed">recurring_workflows (10-seed)</a>, <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">sparse_feedback (10-seed)</a>. Rerun steps: <a href="/docs/reproduce-eval/">reproduce eval</a>. Smallest real-turn proof unit: <a href="/docs/worked-example/">worked example</a>.</p>
 
     <p>Next: <a href="/blog/v12.2.6-series/04-operator-local-embeddings/">Post 4 on local-first rollout</a>.</p>
   </main>
