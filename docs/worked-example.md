@@ -1,6 +1,6 @@
 # Worked Example: One OpenClaw Turn End to End
 
-This page shows an illustrative but generic OpenClaw turn wired through the current OpenClawBrain package surface.
+The fastest way to understand OpenClawBrain is to watch one question travel through the system. This page traces a single conversation turn from the moment your agent receives it to the moment a correction makes the guide smarter for next time.
 
 ## Boundary
 

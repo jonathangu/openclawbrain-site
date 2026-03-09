@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Post 1: Shadow Routing + Ultimate Policy Gradient</title>
+  <title>Post 1: How the Guide Learns Without Slowing Your Agent</title>
+  <meta name="description" content="OpenClawBrain learns in the background — like a librarian studying the stacks after hours. The live agent never waits. Here's how the two paths stay separate." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/01-shadow-routing-upg/" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,13 +48,13 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> | <a href="/blog/">blog</a> | <a href="/proof/">proof</a> | <a href="/paper/">paper</a> | <a href="/blog/v12.2.6-series/">series</a></div>
     <div class="eyebrow">Post 1</div>
-    <h1>Shadow routing + Ultimate Policy Gradient</h1>
+    <h1>How the guide learns without slowing your agent</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>OpenClawBrain is easiest to understand if you separate two paths. The <strong>live path</strong> answers queries right now &mdash; it runs inside OpenClaw and must be fast. The <strong>learning path</strong> runs in the background, digesting corrections and feedback to produce better routing weights for future turns. The two paths never block each other.</p>
+    <p>Imagine a librarian who studies the stacks every night &mdash; reorganizing shelves, noting which books get asked for together &mdash; but during the day answers your questions instantly from what they already know. That's OpenClawBrain: the <strong>live path</strong> answers queries fast using the guide's current knowledge, while the <strong>learning path</strong> runs in the background, digesting corrections and feedback to make the guide smarter for next time. The two paths never block each other.</p>
 
-    <h2>Shadow routing</h2>
-    <p>"Shadow routing" means the expensive teacher model never sits in the live request path &mdash; the path the user is waiting on. When a query arrives, OpenClaw calls the learned routing function (<code>route_fn</code>), which walks the knowledge graph and picks bounded context for the prompt. That is the entire live-path cost. Replay, scanner/harvester passes, and the background teacher all run later &mdash; on historical and new data &mdash; to produce updated routing weights that take effect on future turns.</p>
+    <h2>Why learning stays off the live path</h2>
+    <p>The expensive work &mdash; replaying sessions, mining signals, running the background teacher &mdash; never sits in the path the user is waiting on. When a query arrives, OpenClaw calls the learned routing function (<code>route_fn</code>), which walks the knowledge map and picks bounded context for the prompt. That's the entire live-path cost. Everything else runs later, on historical and new data, to produce updated routing weights that take effect on future turns.</p>
     <div class="box">
       <pre>live request path:  OpenClaw -&gt; activate brain pack + compile -&gt; learned route function -&gt; bounded context for prompt
 background path:    sessions -&gt; scanner/harvester labels + background teacher labels -&gt; Ultimate Policy Gradient -&gt; updated route function</pre>

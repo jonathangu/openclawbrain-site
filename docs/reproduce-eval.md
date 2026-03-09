@@ -1,8 +1,8 @@
 # Reproduce Evaluation + Proofs
 
-This document is the reproducibility entrypoint for the current public OpenClawBrain surface.
+Don't trust our numbers — run them yourself. This page walks you through regenerating every benchmark, figure, and proof artifact from scratch.
 
-Read `CLAIMS.md` alongside this page when you need exact OCB-vs-BGZ claim boundaries.
+Read `CLAIMS.md` alongside this page for exact boundaries on what each test proves.
 
 ## 1) Bootstrap the workspace
 

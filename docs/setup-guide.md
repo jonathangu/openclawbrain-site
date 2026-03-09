@@ -1,8 +1,8 @@
 # Getting Started with OpenClawBrain
 
-OpenClawBrain is the TypeScript-first package surface for OpenClaw memory and learning. The promoted pack is the only supported learning and serve boundary in this repo. OpenClaw owns runtime orchestration; OpenClawBrain owns contracts, event normalization, immutable pack artifacts, activation helpers, compiler output, and learner updates.
+OpenClawBrain is a second brain for your OpenClaw agent — a guide that learns which knowledge matters for each question, instead of keyword-searching every document. Think of it as hiring a librarian who gets smarter every day.
 
-This guide is the day-0 setup path. It describes both what the repo delivers today and what the target end shape looks like — clearly separated.
+This guide is the day-0 setup path. It covers what the repo delivers today and what's coming next — clearly separated. OpenClaw owns the live runtime (front of house); OpenClawBrain owns the knowledge, learning, and context compilation (the kitchen).
 
 > **Current truth**: promoted-pack lifecycle, PG-only `route_fn` evidence, operator observability, local tarball distribution.
 > **Target end shape**: npm-published API, scanner/labels/harvest on by default after attach, continuous live graph update (decay/co-firing/pruning/reorganizing), hard API enforcement of the OpenClaw/OpenClawBrain split.

@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Post 2: The Learned Runtime Route Function</title>
+  <title>Post 2: How the Guide Decides What Your Agent Needs Right Now</title>
+  <meta name="description" content="The guide blends two instincts — what the knowledge map knows about how facts connect, and what fits this specific question — like a librarian checking both the catalog and your actual request." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/02-qtsim-confidence-mixing/" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,13 +47,13 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> | <a href="/blog/">blog</a> | <a href="/proof/">proof</a> | <a href="/paper/">paper</a> | <a href="/blog/v12.2.6-series/">series</a></div>
     <div class="eyebrow">Post 2</div>
-    <h1>The learned runtime route function</h1>
+    <h1>How the guide decides what your agent needs right now</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>The real product value is not "shadow routing" as a concept &mdash; it is the learned routing function (<code>route_fn</code>) that OpenClaw calls on every live query. This is the function that decides which knowledge to pull into the prompt, and it is the thing that gets better over time.</p>
+    <p>When your agent gets a question, the guide has to make a fast decision: which knowledge matters <em>right now</em>? Think of a librarian with two instincts &mdash; one says "I know which shelves connect to this topic," the other says "this specific question sounds like it needs the deploy policy." The guide blends both, and that blend is the thing that gets better over time. This is the function (<code>route_fn</code>) that OpenClaw calls on every live query.</p>
 
-    <h2>What the route function does</h2>
-    <p>At query time, the brain needs to decide which edges to follow from the currently active memory nodes in the knowledge graph. It blends two sources of information: what the graph already knows about how facts relate to each other, and what the current query specifically needs.</p>
+    <h2>Two instincts, one decision</h2>
+    <p>At query time, the guide blends two sources of information: what the knowledge map already knows about how facts relate to each other, and what the current question specifically needs.</p>
     <div class="box">
       <p style="margin:0;">The two sources, plus the gate that blends them:</p>
       <ul>

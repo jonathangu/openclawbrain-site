@@ -1,6 +1,6 @@
 # OpenClaw Integration
 
-OpenClawBrain is the TypeScript-first package surface behind the OpenClaw-owned runtime boundary. The promoted pack is the only supported learning and serve boundary in this repo.
+OpenClawBrain is your agent's second brain — it builds a knowledge map, trains a guide that picks the right context for each question, and learns from corrections. OpenClaw is front of house (live conversations); OpenClawBrain is the kitchen (knowledge, learning, compilation). This page describes how the two systems connect.
 
 > **Current truth**: the learner builds candidate packs off the hot path; activation stages and promotes them; compiler serves only from the active promoted pack; route updates are PG-only from explicit labels.
 > **Target end shape**: continuous live graph update (decay, co-firing, pruning, reorganizing) on the active pack during serving; scanner/labels/harvest on by default after attach; hard API enforcement of the OpenClaw/OpenClawBrain split.
