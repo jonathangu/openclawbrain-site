@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Post 5: Baselines and the Comparison Contract</title>
-  <meta name="description" content="How OpenClawBrain should compare itself, what baseline modes matter, and which claims still need head-to-head evidence." />
+  <meta name="description" content="How OpenClawBrain compares itself fairly: which methods matter, what the benchmarks show, and which claims still need live evidence." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/05-industry-baselines-ablations/" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,156 +43,157 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> | <a href="/blog/">blog</a> | <a href="/proof/">proof</a> | <a href="/paper/">paper</a> | <a href="/blog/v12.2.6-series/">series</a></div>
     <div class="eyebrow">Post 5</div>
-    <h1>Baselines and the comparison contract</h1>
+    <h1>Baselines: what are we comparing against?</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>OpenClawBrain should compare itself against retrieval methods operators would actually use instead &mdash; not hide behind vague "AI memory" framing. This page leads with the strongest published benchmark artifacts, then ties them back to the mechanism slice and the product-proof boundary. The central question: does learned routing over a knowledge graph actually beat conventional RAG on a fair test? So far, yes &mdash; and by a meaningful margin.</p>
+    <p>If OpenClawBrain is going to claim it's better, it needs to compare against methods people would actually use instead. Not straw men, not vague "AI memory" framing &mdash; real retrieval methods that a reasonable team might choose. This page leads with the numbers, then explains why each comparison method matters and where the evidence boundary sits.</p>
 
     <div class="card">
-      <p>Current benchmark headline: the learned router (<code>full_brain</code>) answers 97.5% of recorded-session queries correctly vs. 89.6% for the best RAG baseline — roughly 1 in 13 queries where RAG fails, the learned router gets right. In the sparse-feedback test (10 seeds), it widens to 92.0% vs. 67.1%, using about 5x less context per query and winning 9 of 10 seeds head-to-head. These are benchmark results, not live product rollout claims.</p>
+      <p>The bottom line: the learned guide answers 97.5% of recorded-session queries correctly vs. 89.6% for the best search method &mdash; roughly 1 in 13 queries where search fails, the guide gets right. In the sparse-feedback test (10 seeds), the gap widens to 92.0% vs. 67.1%, using about 5x less context per query and winning 9 of 10 seeds head-to-head. These are benchmark results, not live rollout claims.</p>
     </div>
 
-    <h2>Strongest baseline evidence first</h2>
+    <h2>The headline numbers</h2>
     <div class="table-wrap"><table>
       <thead>
-        <tr><th>Artifact</th><th>Scope</th><th>Result vs best RAG</th><th>Bundle</th></tr>
+        <tr><th>Test</th><th>Scope</th><th>Result vs best search</th><th>Bundle</th></tr>
       </thead>
       <tbody>
         <tr>
           <td><code>recorded_h2h_relational_drift_001</code></td>
-          <td>800 queries, 41 steps, 8 baselines</td>
-          <td><code>full_brain</code> 0.975 vs 0.896 (+7.9 pp)</td>
+          <td>800 queries, 41 steps, 8 methods</td>
+          <td>Learned guide 0.975 vs 0.896 (+7.9 pp)</td>
           <td><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">recorded_h2h_relational_drift_001</a></td>
         </tr>
         <tr>
           <td><code>sparse_feedback_10seed</code></td>
-          <td>10 seeds, 1,800 queries/seed, 8 baselines</td>
-          <td><code>full_brain</code> 91.96% vs 67.05% (+24.91 pp), ~5x lower context/query, 9-1 H2H</td>
+          <td>10 seeds, 1,800 queries/seed, 8 methods</td>
+          <td>Learned guide 91.96% vs 67.05% (+24.91 pp), ~5x less context, 9-1 head-to-head</td>
           <td><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">sparse_feedback_10seed</a></td>
         </tr>
       </tbody>
     </table></div>
 
-    <h2>Current published baseline slice</h2>
+    <h2>The controlled test: what happens when you remove each piece</h2>
+    <p>Think of this like removing parts from a car to see which ones matter. Each row takes away a capability and shows what breaks.</p>
     <div class="table-wrap"><table>
       <thead>
-        <tr><th>Baseline</th><th>Why it matters</th><th>Current exact-target success</th></tr>
+        <tr><th>Method</th><th>What it tests</th><th>Right answers (of 4)</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td><code>vector_topk</code></td>
-          <td>Cold-start semantic retrieval floor &mdash; no workflow structure, no learned routing.</td>
+          <td>Keyword search</td>
+          <td>The floor: searching by word similarity, no knowledge of how facts relate. Like using Google instead of asking a librarian.</td>
           <td>0/4</td>
         </tr>
         <tr>
-          <td><code>pointer_chase</code></td>
-          <td>Simple deterministic traversal over explicit links. Checks whether a plain walk over stored pointers is already enough.</td>
+          <td>Link-following</td>
+          <td>Walking obvious connections between facts, without learning which matter most. Like following hyperlinks without judgement.</td>
           <td>1/4</td>
         </tr>
         <tr>
-          <td><code>graph_prior_only</code></td>
-          <td>Durable structure without learned routing. This is the "start useful fast" baseline.</td>
+          <td>Map structure only</td>
+          <td>Using the knowledge map's built-in relationships, before any learning. The "useful from day one" baseline.</td>
           <td>2/4</td>
         </tr>
         <tr>
-          <td><code>learned</code></td>
-          <td>The same memory layer after background learning has improved the runtime route policy.</td>
+          <td>Learned guide</td>
+          <td>The same map after background learning has improved which paths the guide follows.</td>
           <td>4/4</td>
         </tr>
       </tbody>
     </table></div>
 
-    <p>The learning curve tells the second half of the story. <code>graph_prior_only</code> (structural knowledge only, no learning) stays flat at 2/4 across all 16 epochs, while the learned mode reaches 4/4 at epoch 14. This is concrete evidence for the core product claim: the graph's structure makes the router useful from day one, and background learning makes it better over time. RAG baselines have no equivalent mechanism &mdash; their accuracy stays the same from day one to day one thousand.</p>
+    <p>The learning curve tells the second half of the story. Map structure alone stays flat at 2/4 across all 16 rounds, while the learned guide reaches 4/4 by round 14. This is the core product story in concrete form: the knowledge map makes the guide useful from day one, and background learning makes it better over time. Search methods have no equivalent &mdash; they perform the same on day one and day one thousand.</p>
 
-    <h2>Recorded-session head-to-head comparison</h2>
-    <p>For fixed-session replay, the current published bundle is <code>recorded_h2h_relational_drift_001</code>.</p>
-
-    <div class="table-wrap"><table>
-      <thead>
-        <tr><th>Baseline</th><th>Accuracy</th><th>Context used</th><th>Traversal cost</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>full_brain</code></td><td><strong>0.9750</strong></td><td>800</td><td>800</td></tr>
-        <tr><td><code>vector_rag_rerank</code></td><td>0.8962</td><td>4 000</td><td>6 400</td></tr>
-        <tr><td><code>heuristic_stateful</code></td><td>0.8163</td><td>800</td><td>800</td></tr>
-        <tr><td><code>vector_rag</code></td><td>0.7875</td><td>800</td><td>800</td></tr>
-      </tbody>
-    </table></div>
-
-    <p>The learned router scores 97.5% vs. the best RAG baseline's 89.6% &mdash; and that best RAG baseline needs 5x more context and 8x more traversal cost to reach its lower number. Put simply: RAG retrieves more text, processes more of it, and still gets more questions wrong, because it lacks the structural relationships and feedback loop that the learned router uses.</p>
-
-    <h2>Sparse-feedback 10-seed comparison</h2>
-    <p>For multi-seed robustness, the strongest published family is <code>sparse_feedback_10seed</code> (10 seeds, 1,800 queries per seed, 8 baselines).</p>
+    <h2>Recorded-session head-to-head</h2>
+    <p>800 frozen queries, same rules for everyone.</p>
 
     <div class="table-wrap"><table>
       <thead>
-        <tr><th>Baseline</th><th>Accuracy (mean)</th><th>Context/query</th><th>Traversal/query</th><th>H2H vs <code>full_brain</code></th></tr>
+        <tr><th>Method</th><th>Accuracy</th><th>Context used</th><th>Traversal cost</th></tr>
       </thead>
       <tbody>
-        <tr><td><code>full_brain</code></td><td><strong>91.96%</strong></td><td>1.00</td><td>1.00</td><td>&mdash;</td></tr>
-        <tr><td><code>vector_rag_rerank</code> (best RAG)</td><td>67.05%</td><td>5.00</td><td>8.00</td><td>1/10</td></tr>
-        <tr><td><code>vector_rag</code></td><td>60.49%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
-        <tr><td><code>heuristic_stateful</code></td><td>51.38%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
+        <tr><td>Learned guide</td><td><strong>0.9750</strong></td><td>800</td><td>800</td></tr>
+        <tr><td>Best search (with reranking)</td><td>0.8962</td><td>4 000</td><td>6 400</td></tr>
+        <tr><td>Stateful heuristic</td><td>0.8163</td><td>800</td><td>800</td></tr>
+        <tr><td>Basic search</td><td>0.7875</td><td>800</td><td>800</td></tr>
       </tbody>
     </table></div>
 
-    <p>The learned router leads the best RAG baseline by nearly 25 percentage points (92.0% vs. 67.1%) and wins 9 of 10 seeds head-to-head.</p>
+    <p>The best search method needs 5x more context and 8x more work yet still scores lower. Put simply: search retrieves more text, processes more of it, and still gets more questions wrong &mdash; because it lacks the structural relationships and feedback loop that the guide uses. It's like searching a library by keyword vs. asking a librarian who knows the layout and remembers what worked last time.</p>
 
-    <h2>Why these baselines belong</h2>
+    <h2>Sparse-feedback: when corrections are rare</h2>
+    <p>10 seeds, 1,800 queries per seed, 8 methods. This tests the harder real-world scenario where teams rarely correct every answer.</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Method</th><th>Accuracy (mean)</th><th>Context/query</th><th>Traversal/query</th><th>Seeds won vs guide</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Learned guide</td><td><strong>91.96%</strong></td><td>1.00</td><td>1.00</td><td>&mdash;</td></tr>
+        <tr><td>Best search (with reranking)</td><td>67.05%</td><td>5.00</td><td>8.00</td><td>1/10</td></tr>
+        <tr><td>Basic search</td><td>60.49%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
+        <tr><td>Stateful heuristic</td><td>51.38%</td><td>1.00</td><td>1.00</td><td>1/10</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>Nearly 25 percentage points ahead, winning 9 of 10 seeds. The guide compounds learning from even limited corrections; search methods have no way to improve from feedback.</p>
+
+    <h2>Why these comparisons belong</h2>
     <div class="table-wrap"><table>
       <thead>
         <tr><th>Question</th><th>Why the answer matters</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td>If <code>vector_topk</code> were already enough, why add a memory layer?</td>
-          <td>A durable memory product should beat a plain semantic floor on workflow retrieval, not just rename it.</td>
+          <td>If keyword search were already enough, why build a memory layer?</td>
+          <td>A memory product should beat a plain search floor, not just rename it.</td>
         </tr>
         <tr>
-          <td>If <code>pointer_chase</code> were enough, why learn anything?</td>
-          <td>Deterministic link-following is a credible alternative for explicit workflows. It needs to be ruled in or out directly.</td>
+          <td>If following links were enough, why learn anything?</td>
+          <td>Simple link-following is a credible alternative. It needs to be tested head-to-head.</td>
         </tr>
         <tr>
-          <td>If <code>graph_prior_only</code> matched <code>learned</code>, why keep the learning path?</td>
-          <td>The product claim is not just "there is a graph." It is "the graph helps immediately, and background learning makes it better over time."</td>
+          <td>If map structure alone matched the learned guide, why keep the learning path?</td>
+          <td>The product claim isn't just "there is a knowledge map." It's "the map helps immediately, and background learning makes it better over time."</td>
         </tr>
       </tbody>
     </table></div>
 
-    <h2>What the current comparison says honestly</h2>
+    <h2>What the comparison says honestly</h2>
     <div class="card">
       <ul>
-        <li>The workflow-proof slice cleanly separates cold-start semantic retrieval, deterministic traversal, durable graph priors, and the learned policy.</li>
-        <li>Recorded-session replay shows the learned router at 97.5% accuracy vs. 89.6% for the best RAG baseline on 800 queries with fixed state and rubric.</li>
-        <li>Sparse-feedback (10 seeds) extends this to 18,000 total queries: 92.0% vs. 67.1% accuracy at about 5x less context per query.</li>
-        <li>The site still does <strong>not</strong> publish broad operator wins from real OpenClaw traffic. This is bounded benchmark evidence, not live-traffic proof.</li>
+        <li>The controlled test cleanly separates keyword search, link-following, map structure, and the learned guide.</li>
+        <li>Recorded-session replay: the guide scores 97.5% vs. 89.6% for the best search method on 800 queries.</li>
+        <li>Sparse-feedback (10 seeds) extends this to 18,000 total queries: 92.0% vs. 67.1% at about 5x less context.</li>
+        <li>We still do <strong>not</strong> have broad wins from real OpenClaw traffic. This is benchmark evidence, not live-traffic proof.</li>
       </ul>
     </div>
 
-    <h2>The evidence ladder: what stronger comparison evidence looks like</h2>
+    <h2>What stronger evidence looks like</h2>
     <div class="table-wrap"><table>
       <thead>
-        <tr><th>Stage</th><th>Use</th><th>Still too weak for broad product claims?</th></tr>
+        <tr><th>Level</th><th>What it shows</th><th>Enough for broad claims?</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td>Current deterministic workflow proof</td>
-          <td>Mechanism proof on one fixed, reproducible query slice</td>
-          <td>Yes</td>
+          <td>Controlled test (4 queries)</td>
+          <td>The mechanism works on a small, reproducible set</td>
+          <td>No</td>
         </tr>
         <tr>
-          <td>Offline recorded-session eval</td>
-          <td>Head-to-head on the same workload (published: <code>recorded_h2h_relational_drift_001</code>, <code>sparse_feedback_10seed</code>)</td>
+          <td>Recorded-session eval (published)</td>
+          <td>Head-to-head on the same frozen workload</td>
           <td>Stronger, but still not live</td>
         </tr>
         <tr>
-          <td>Shadow traffic</td>
+          <td>Shadow traffic (not yet)</td>
           <td>Real OpenClaw traffic with side-by-side scoring</td>
           <td>Often enough for narrow claims</td>
         </tr>
         <tr>
-          <td>Narrow online rollout</td>
-          <td>Operational decision support</td>
+          <td>Narrow live rollout (not yet)</td>
+          <td>Serving real users with measurable outcomes</td>
           <td>Best basis for public product claims</td>
         </tr>
       </tbody>
@@ -200,15 +201,15 @@
 
     <h2>Comparison discipline</h2>
     <ul>
-      <li>Use the same query set, scoring rubric, and prompt budget rules across all modes.</li>
+      <li>Use the same query set, scoring rubric, and prompt budget rules across all methods.</li>
       <li>Keep the command, artifact path, and commit SHA for every published number.</li>
-      <li>Leave cells as <code>TBD</code> when the artifact does not exist yet.</li>
-      <li>Do not describe the current 4-query deterministic slice as a real operator win.</li>
+      <li>Leave cells as <code>TBD</code> when the artifact doesn't exist yet.</li>
+      <li>Don't describe the 4-query controlled test as a real-world win.</li>
     </ul>
 
-    <p>Packaged proof boundary: <a href="/proof/">/proof/</a>. Benchmark bundles: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">recorded_h2h_relational_drift_001</a> and <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">sparse_feedback_10seed</a>. Reproduction steps: <a href="/docs/reproduce-eval/">reproduce eval</a>. Turn-level artifact contract: <a href="/docs/worked-example/">worked example</a>.</p>
+    <p>Packaged proof: <a href="/proof/">/proof/</a>. Benchmark bundles: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">recorded_h2h_relational_drift_001</a> and <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">sparse_feedback_10seed</a>. Reproduction: <a href="/docs/reproduce-eval/">reproduce eval</a>. Turn-level trace: <a href="/docs/worked-example/">worked example</a>.</p>
 
-    <p>Next: <a href="/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/">Post 6 on OpenClaw runtime boundary integration</a>.</p>
+    <p>Next: <a href="/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/">Post 6 on how the guide plugs into OpenClaw</a>.</p>
   </main>
 </body>
 </html>

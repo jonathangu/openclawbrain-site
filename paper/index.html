@@ -5,9 +5,9 @@
   <title>OpenClawBrain Paper</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Jonathan Gu">
-  <meta name="description" content="The OpenClawBrain paper: how a learned router over a knowledge graph replaces static retrieval, with benchmark evidence and explicit proof boundaries.">
+  <meta name="description" content="The OpenClawBrain paper: how a learned guide over a knowledge map replaces keyword search, with benchmark evidence and explicit proof boundaries.">
   <meta property="og:title" content="OpenClawBrain Paper">
-  <meta property="og:description" content="A learned router over a knowledge graph that picks the right context for each query and improves from corrections. Paper, PDF, and current benchmark evidence.">
+  <meta property="og:description" content="A guide that learns which context matters for each query &mdash; following relationships instead of matching keywords. Paper, PDF, and current benchmark evidence.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/paper/">
   <meta name="twitter:card" content="summary_large_image">
@@ -326,7 +326,7 @@
           <h1>Paper</h1>
           <p style="font-family:var(--sans); font-size:0.92rem; color:var(--muted); margin:0.5rem 0 0;">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
           <p class="lead">
-            The paper argues that a learned router over a knowledge graph beats static retrieval (RAG) by following structured relationships instead of keyword similarity, learning from corrections, and sending less context for better results. It covers the routing function (<code>route_fn</code>), shadow routing (learning off the live path), QTsim confidence mixing, and the unified policy gradient that folds all feedback into one update rule.
+            Most retrieval systems work like a search engine &mdash; they match keywords and return whatever looks similar. The paper argues for a different approach: a guide that follows the relationships between facts (like a librarian who knows the deploy checklist connects to the rollback policy), learns from corrections, and sends less context to the model for better results. It covers how the guide decides what to show you, how it practices in the background without slowing live answers, how it balances map knowledge with question-specific relevance, and how all feedback feeds into one learning rule.
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href="../openclawbrain.pdf">Read the PDF</a>
@@ -341,7 +341,7 @@
         <div class="hero-panel">
           <article class="status-card">
             <div class="kicker">Paper details</div>
-            <h2>Shadow Routing with QTsim Confidence Mixing and Unified Policy Learning</h2>
+            <h2>How a learned guide beats keyword search</h2>
             <ul>
               <li><strong>Author:</strong> Jonathan Gu</li>
               <li><strong>Direct PDF:</strong> <a href="../openclawbrain.pdf">/openclawbrain.pdf</a></li>
@@ -351,12 +351,12 @@
 
           <article class="status-card">
             <div class="kicker">Current evidence</div>
-            <h2>Benchmark results published; live-traffic evidence in progress</h2>
+            <h2>Benchmarks published; live-traffic evidence is next</h2>
             <ul>
-              <li>Recorded-session benchmark: 97.5% vs 89.6% for the best RAG baseline (+7.9 pp) across 800 queries and 8 methods.</li>
+              <li>Recorded-session benchmark: 97.5% vs 89.6% for the best search method (+7.9 pp) across 800 queries and 8 methods.</li>
               <li>Sparse-feedback benchmark: 92.0% vs 67.1% (+24.9 pp), ~5x less context, 9/10 seeds won.</li>
               <li>Benchmarks live in the separate <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a> repo.</li>
-              <li>Shadow-mode and live-traffic evidence are the next steps. See <a href="../proof/">/proof/</a> for the full evidence ladder.</li>
+              <li>Shadow-mode and live-traffic evidence are next. See <a href="../proof/">/proof/</a> for the full evidence ladder.</li>
             </ul>
           </article>
         </div>
@@ -365,28 +365,28 @@
       <section class="section">
         <div class="section-head">
           <h2>What the paper covers</h2>
-          <p class="section-intro">Four main claims, each grounded in a different layer of evidence.</p>
+          <p class="section-intro">Four main ideas, each grounded in a different layer of evidence.</p>
         </div>
         <div class="paper-grid">
           <article class="paper-card">
-            <div class="kicker">System split</div>
-            <h3>OpenClaw owns runtime; OpenClawBrain owns learning</h3>
-            <p>OpenClaw serves from a versioned brain pack (an immutable bundle of context and routing weights). Off the hot path, the learner builds fresher candidate packs; activation promotes them. This split means rollback is instant and learning never blocks a live response.</p>
+            <div class="kicker">Clean split</div>
+            <h3>OpenClaw serves; OpenClawBrain learns</h3>
+            <p>OpenClaw serves answers from a frozen knowledge snapshot (an immutable bundle of context and routing weights). Off the live path, the learner builds fresher snapshots; promotion switches to the new one. This split means rollback is instant and learning never blocks a live response &mdash; like swapping a new edition of a reference book onto the shelf without closing the library.</p>
           </article>
           <article class="paper-card">
-            <div class="kicker">Route signals</div>
-            <h3>Graph structure + query-specific relevance</h3>
-            <p>The router blends what the graph already knows about how facts relate (<code>graph_prior</code>) with how well each fact fits the current question (<code>QTsim</code>). A confidence gate shifts weight between them: lean on the query signal when it is clear, fall back to structure when it is not.</p>
+            <div class="kicker">Two signals, blended</div>
+            <h3>Map knowledge + question fit</h3>
+            <p>The guide blends two signals: what the knowledge map already knows about how facts relate to each other, and how well each fact fits the current question. A confidence gate shifts weight between them &mdash; lean on the question match when it's clear, fall back to map structure when it's ambiguous. Think of it like a librarian who checks both the card catalog and the question itself.</p>
           </article>
           <article class="paper-card">
-            <div class="kicker">Learning rule</div>
-            <h3>One update loop, clear priority order</h3>
-            <p>Human corrections, outcome signals, scanner/harvester labels, and teacher-model feedback all feed into one policy gradient. Human corrections carry the most weight &mdash; if a person says the router picked wrong, that signal wins.</p>
+            <div class="kicker">One learning rule</div>
+            <h3>All feedback feeds into one update</h3>
+            <p>Human corrections, outcome signals, automated labels, and teacher-model feedback all feed into a single learning rule. Human corrections carry the most weight &mdash; if a person says the guide picked wrong, that signal wins. It's like a librarian who listens most carefully to the patron who says "that wasn't the right book."</p>
           </article>
           <article class="paper-card">
             <div class="kicker">Future direction</div>
-            <h3>Live graph maintenance (not yet shipped)</h3>
-            <p>The paper frames graph maintenance (connect, split, merge, prune) as a control problem. Today, graph-dynamics fields are immutable build-time metadata in each pack. The target is live structural maintenance during serving. See <a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">CLAIMS.md</a> for the boundary.</p>
+            <h3>A living map (not yet shipped)</h3>
+            <p>The paper frames map maintenance (connecting, splitting, merging, and pruning knowledge) as a control problem. Today, the map's structure is set at build time. The target is a map that reshapes itself during live serving. See <a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">CLAIMS.md</a> for the boundary.</p>
           </article>
         </div>
       </section>
@@ -404,7 +404,7 @@
           <a class="paper-card" href="../blog/v12.2.6-series/">
             <div class="kicker">Architecture series</div>
             <h3>How the pieces fit</h3>
-            <p>Six posts walking through each component: shadow routing, confidence mixing, evaluation, operator setup, baselines, and runtime integration.</p>
+            <p>Six posts walking through each layer: how the guide practices, how it balances signals, how it's evaluated, and how it plugs into OpenClaw.</p>
           </a>
           <a class="paper-card" href="../materials/">
             <div class="kicker">Materials</div>

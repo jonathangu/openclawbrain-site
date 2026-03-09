@@ -23,15 +23,15 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> &middot; <a href="/blog/">blog</a> &middot; <a href="/proof/">proof</a> &middot; <a href="/paper/">paper</a></div>
     <h1>Supporting Materials</h1>
-    <p>Documentation, benchmark artifacts, evaluation figures, and package references for OpenClawBrain. Start with the proof package for benchmark evidence, or the worked example to see one turn end-to-end.</p>
+    <p>Everything you need to dig into OpenClawBrain beyond the headline numbers. Start with the <a href="/proof/">proof package</a> for benchmark evidence, or the <a href="/docs/worked-example/">worked example</a> to see one turn traced from question to answer to correction.</p>
 
     <h2 style="margin-top:1.4rem;">Documentation and Evidence</h2>
     <div class="card">
       <ul>
-        <li><a href="/proof/">Proof package</a> &mdash; benchmark evidence, evidence ladder, and what is (and is not) proven</li>
-        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">Recorded-session benchmark bundle</a> &mdash; 800 queries, 8 baselines; learned router 97.5% vs best RAG 89.6%</li>
-        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">Sparse-feedback benchmark bundle</a> &mdash; 10 seeds; learned router 92.0% vs best RAG 67.1%, ~5x less context</li>
-        <li><a href="/docs/reproduce-eval/">Reproduce eval + figures</a> &mdash; step-by-step reproduction instructions</li>
+        <li><a href="/proof/">Proof package</a> &mdash; benchmark evidence, the evidence ladder, and where the claims stop</li>
+        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/recorded_h2h_relational_drift_001">Recorded-session benchmark</a> &mdash; 800 queries, 8 methods; the learned guide scores 97.5% vs the best search method's 89.6%</li>
+        <li><a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed">Sparse-feedback benchmark</a> &mdash; 10 seeds; the learned guide scores 92.0% vs 67.1%, using ~5x less context</li>
+        <li><a href="/docs/reproduce-eval/">Reproduce the evaluation</a> &mdash; step-by-step instructions to regenerate every number and figure</li>
         <li><a href="/docs/worked-example/">Worked example</a> &mdash; one conversation turn traced end-to-end</li>
         <li><a href="/paper/">Paper + PDF</a></li>
         <li><a href="/docs/openclaw-integration/">OpenClaw integration guide</a></li>
@@ -44,18 +44,18 @@
 
     <h2 style="margin-top:1.4rem;">TypeScript Packages</h2>
     <div class="card">
-      <p style="margin-top:0;">These are the TypeScript packages that make up OpenClawBrain. Currently distributed as local tarballs; npm publishing is the target.</p>
+      <p style="margin-top:0;">These are the building blocks of OpenClawBrain. Think of them like layers in a stack &mdash; from raw events at the bottom to the learning engine at the top. Currently distributed as local tarballs; npm publishing is the target.</p>
       <ul>
-        <li><code>@openclawbrain/contracts</code> &mdash; shared type definitions and interfaces</li>
-        <li><code>@openclawbrain/events</code> &mdash; event normalization from OpenClaw sessions</li>
-        <li><code>@openclawbrain/event-export</code> &mdash; export pipeline for session data</li>
+        <li><code>@openclawbrain/contracts</code> &mdash; shared type definitions (the common language all packages speak)</li>
+        <li><code>@openclawbrain/events</code> &mdash; normalizes raw OpenClaw session events into a consistent shape</li>
+        <li><code>@openclawbrain/event-export</code> &mdash; exports session data for the learning pipeline</li>
         <li><code>@openclawbrain/workspace-metadata</code> &mdash; workspace context and file metadata</li>
-        <li><code>@openclawbrain/provenance</code> &mdash; audit trail for context payloads</li>
-        <li><code>@openclawbrain/pack-format</code> &mdash; brain pack structure (immutable versioned bundles)</li>
-        <li><code>@openclawbrain/activation</code> &mdash; promoting, switching, and rolling back brain packs</li>
-        <li><code>@openclawbrain/compiler</code> &mdash; deterministic compilation from pack to context</li>
-        <li><code>@openclawbrain/learner</code> &mdash; background learning and candidate-pack generation</li>
-        <li><code>@openclawbrain/openclaw</code> &mdash; integration layer for the OpenClaw runtime</li>
+        <li><code>@openclawbrain/provenance</code> &mdash; audit trail: tracks where every piece of context came from</li>
+        <li><code>@openclawbrain/pack-format</code> &mdash; the knowledge snapshot format (frozen, versioned bundles)</li>
+        <li><code>@openclawbrain/activation</code> &mdash; promoting, switching, and rolling back knowledge snapshots</li>
+        <li><code>@openclawbrain/compiler</code> &mdash; turns a snapshot into the context the model actually sees (same input, same output, every time)</li>
+        <li><code>@openclawbrain/learner</code> &mdash; background learning engine that builds better snapshots over time</li>
+        <li><code>@openclawbrain/openclaw</code> &mdash; the integration layer that plugs into the OpenClaw runtime</li>
       </ul>
     </div>
 
