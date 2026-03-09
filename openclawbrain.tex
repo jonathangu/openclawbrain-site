@@ -7,228 +7,548 @@
 \usepackage{float}
 \usepackage{hyperref}
 
-\title{OpenClawBrain v12.2.6+: Shadow Routing with QTsim Confidence Mixing and Unified Policy Learning}
+\title{OpenClawBrain: A Learning Memory System That Beats RAG on Long-Lived Agent Tasks}
 \author{Jonathan Gu}
-\date{March 7, 2026}
+\date{March 2026}
 
 \begin{document}
 \maketitle
 
-\noindent\textbf{Version: v12.2.6+}
+\begin{abstract}
+Long-lived AI agents need memory that changes shape as the world changes.
+Retrieval-augmented generation (RAG) treats memory as a static index:
+embed everything, retrieve the top-$k$ chunks, and hope the answer is in them.
+That works for single-turn lookups, but it breaks down when relationships drift,
+workflows recur with variation, and feedback is sparse.
 
-\section{Abstract}
-OpenClawBrain is a TypeScript-first package workspace for retrieval routing in long-lived agents, deployed behind an OpenClaw-owned runtime boundary. The system is built around a strict hot/cold path split: the hot path is local and bounded for latency-critical routing, while the cold path runs asynchronous learning and structure updates.
-We define a \emph{turn} as a single LLM API call. End-to-end cost is $C=\sum_{i=1}^{T} \mathrm{tokens}_i \cdot \mathrm{price}_i$, and the system targets lower $T$ (fewer calls per user-visible request) and lower per-call token counts on the hot path.
-The system uses two route signals: a structural prior ($\mathrm{graph\_prior}$) and a query-time compatibility signal (QTsim). A confidence mixer combines those signals using uncertainty features, including entropy and margin, to decide how much weight each source gets per decision.
-Learning is performed through teacher distillation plus policy-gradient updates under a reward-source hierarchy. Human corrections have highest authority, then self-learning outcomes, then harvested signals, then high-volume teacher labels.
-This release includes RL-native maintenance of graph structure: Phase 2a is shipped, and the architecture defines connect/split/merge actions under policy control.
-The strongest current comparative artifacts are fixed-session benchmarks: \texttt{recorded\_h2h\_relational\_drift\_001} (800 queries, 41 steps, 8 baselines; \texttt{full\_brain} 0.975 vs \texttt{vector\_rag\_rerank} 0.896) and sparse-feedback 10-seed evaluation (\texttt{full\_brain} 91.96\% vs best RAG 67.05\% with $\sim$5x lower context/query).
+OpenClawBrain is an artifact-side learning system that replaces the static index
+with a graph memory that rewires itself.
+It combines a learned routing function, policy-gradient updates, and structural
+plasticity---the ability to connect, split, merge, and prune nodes under policy
+control---so that the memory topology tracks how the world actually evolves.
 
-\section{1. System Overview}
-OpenClawBrain is designed around a strict split. OpenClawBrain owns memory structure and learning packages, while OpenClaw owns runtime orchestration and fail-open control:
+We evaluate the full mechanism against the best RAG baseline
+(\texttt{vector\_rag\_rerank}) and seven other baselines across three benchmark
+families, each at 10-seed scale (30 seed-level comparisons total).
+Results:
 \begin{itemize}
-  \item \textbf{Hot path:} local embedding retrieval and bounded traversal only.
-  \item \textbf{Cold path:} asynchronous learning and structure updates.
+  \item \textbf{Accuracy:} +9.7\,pp to +26.9\,pp over best RAG across families
+        (relational drift 99.15\% vs 89.44\%;
+         recurring workflows 97.6\% vs 70.6\%;
+         sparse feedback 92.0\% vs 67.0\%).
+  \item \textbf{Head-to-head:} 29-1-0 across 30 seed-level comparisons.
+  \item \textbf{Context cost:} 5$\times$ lower context per query than the best RAG baseline.
 \end{itemize}
-We define a \emph{turn} as a single LLM API call. Total cost can be written as
+
+Ablations confirm that structural plasticity is the single largest contributor
+in every family.
+OpenClawBrain ships as an artifact-side package behind the OpenClaw runtime
+boundary; it owns memory and learning while OpenClaw owns orchestration and
+fail-open control.
+\end{abstract}
+
+%% ===================================================================
+%% Section 1: System Overview  (from: frontmatter-intro lane)
+%% ===================================================================
+\section{System Overview}
+\label{sec:overview}
+
+OpenClawBrain exists to solve a specific problem: agents that live for weeks or
+months need memory that keeps up with a changing world, and today's dominant
+approach---retrieve-then-read over a vector index---does not keep up.
+The core result is that a graph memory with learned routing and structural
+plasticity outperforms the best RAG baseline by +9.7 to +26.9 percentage points
+across three distinct long-lived memory tasks, while using 5$\times$ less
+context per query.
+
+The system is organized around a clean boundary.
+\textbf{OpenClawBrain} (artifact side) owns memory structure, routing, and
+learning.
+\textbf{OpenClaw} (runtime side) owns orchestration, tool dispatch, and
+fail-open control.
+This boundary is load-bearing: the artifact side can be tested, versioned,
+and benchmarked independently of the runtime, and the runtime can swap or
+disable the artifact side without downtime.
+
+Within OpenClawBrain, computation splits into two paths:
+\begin{itemize}
+  \item \textbf{Hot path} (latency-critical): local embedding lookup plus
+        bounded graph traversal. No external calls. This is what runs on every
+        user-facing query.
+  \item \textbf{Cold path} (asynchronous): teacher distillation, policy-gradient
+        updates, and structural maintenance. Runs offline; never blocks a
+        user-visible request.
+\end{itemize}
+
+We define a \emph{turn} as a single LLM API call. Total cost is
 \[
 C=\sum_{i=1}^{T} \mathrm{tokens}_i \cdot \mathrm{price}_i
 \]
-and OpenClawBrain reduces $T$ and per-call token counts by keeping routing local and context bounded on the hot path, while allowing optional teacher calls only in the cold path.
+OpenClawBrain reduces both $T$ (fewer calls per user-visible request) and
+per-call token counts by keeping routing local on the hot path. Teacher calls
+happen only in the cold path and never block user-facing latency.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.76\textwidth]{architecture-vertical.jpg}
-\caption{System diagram: latency-critical hot path stays local and bounded, while offline replay and policy updates run asynchronously in the cold path.}
+\caption{Architecture boundary: the hot path stays local and bounded for every
+user-facing query, while the cold path runs learning and structure updates
+asynchronously.}
 \label{fig:system-diagram}
 \end{figure}
 
-\subsection*{1.1 Routing Inputs}
-At each route decision over candidate targets $\mathcal{A}(s)$ from state $s$:
+\subsection{What the system learns}
+\label{sec:what-learns}
+
+At each routing decision, OpenClawBrain combines two signals over candidate
+targets $\mathcal{A}(s)$:
 \begin{itemize}
-  \item $\mathrm{graph\_prior}(a\mid s)$ captures persistent graph structure.
-  \item $\mathrm{QTsim}(a\mid q,s)$ captures query-conditioned fit.
+  \item \textbf{Graph prior} $\mathrm{graph\_prior}(a\mid s)$: persistent
+        structure learned from past traffic---which nodes tend to follow which.
+  \item \textbf{Query-time similarity} $\mathrm{QTsim}(a\mid q,s)$: how well
+        each candidate fits the current query, computed from embeddings.
 \end{itemize}
+Neither signal is sufficient alone. The graph prior captures long-range
+sequential patterns that embedding similarity misses; QTsim captures
+query-specific relevance that the graph cannot predict from structure alone.
 
-\subsection*{1.2 Confidence Mixing}
-The router computes a query-local mix coefficient $\lambda \in [0,1]$ from confidence features.
-Two required features are:
-\begin{itemize}
-  \item \textbf{Entropy} of QTsim over candidates (high entropy means low confidence).
-  \item \textbf{Margin} between top-1 and top-2 QTsim scores (low margin means ambiguity).
-\end{itemize}
-A simple form is:
+\subsection{How the signals combine}
+\label{sec:mixing}
+
+A confidence mixer produces a per-query weight $\lambda \in [0,1]$ from two
+features: the \emph{margin} between the top two QTsim scores (high margin means
+QTsim is decisive) and the \emph{entropy} of the QTsim distribution (high
+entropy means QTsim is uncertain):
 \[
-\lambda = \sigma\!\big(\alpha_0 + \alpha_1\,\mathrm{margin}_{\mathrm{QTsim}} - \alpha_2\,H(\mathrm{QTsim})\big)
+\lambda = \sigma\!\big(\alpha_0 + \alpha_1\,\mathrm{margin}_{\mathrm{QTsim}}
+  - \alpha_2\,H(\mathrm{QTsim})\big)
 \]
 \[
-\pi(a\mid q,s) = \lambda\,\mathrm{QTsim}(a\mid q,s) + (1-\lambda)\,\mathrm{graph\_prior}(a\mid s)
+\pi(a\mid q,s) = \lambda\,\mathrm{QTsim}(a\mid q,s)
+  + (1-\lambda)\,\mathrm{graph\_prior}(a\mid s)
 \]
-where $\sigma$ is a logistic gate and $H$ is entropy.
-When QTsim is sharp and separated, $\lambda$ increases. When QTsim is uncertain, the policy falls back toward graph prior.
+When QTsim is sharp and separated, $\lambda$ rises and the router trusts the
+embedding signal. When QTsim is uncertain, $\lambda$ drops and the router falls
+back to graph structure. This adaptive fallback is one reason the full system
+holds up under sparse feedback, where embedding quality alone is not reliable.
 
-\section{2. Learning Loop: Distillation + Policy Gradient}
-The learning loop combines distillation-style supervision with policy-gradient refinement.
+%% ===================================================================
+%% Section 2: Learning Loop  (from: methods-mechanism lane)
+%% ===================================================================
+\section{Learning Loop: Distillation + Policy Gradient}
+\label{sec:learning}
 
-\subsection*{2.1 Teacher Distillation}
-Offline replay samples route decisions and asks a teacher policy for preferred actions (or distributions). Distillation improves route quality quickly and provides dense supervision for states with sparse human labels.
+Think of the learning loop as two gears turning together. The first
+gear---\emph{teacher distillation}---gives the brain a fast head start by
+imitating an expert. The second gear---\emph{policy-gradient updates}---lets
+the brain improve on its own by learning from outcomes. Both gears turn the
+same routing function, $\mathrm{route\_fn}$, which mixes a structural graph
+prior with a query-time compatibility signal (QTsim).
 
-\subsection*{2.2 Policy-Gradient Update}
-Given route trajectory $\tau=(s_0,a_0,\dots,s_T,a_T)$ and scalar return $R(\tau)$:
+\subsection{Teacher Distillation (The Fast Gear)}
+\label{sec:distillation}
+
+An asynchronous teacher replays recent route decisions offline and labels better
+alternatives. This works like a driving instructor reviewing dashcam footage:
+the brain never has to stall a live session, but it gets dense
+supervision---especially valuable early on, when human corrections are sparse.
+
+The teacher produces soft targets over candidate actions. The learner minimizes
+a cross-entropy loss against those targets, pulling $\mathrm{route\_fn}$'s
+weights toward the teacher's preferred distribution.
+
+\subsection{Policy-Gradient Update (The Outcome Gear)}
+\label{sec:pg}
+
+Once the brain has a reasonable starting policy, outcome-based learning takes
+over as the primary driver. Given a route trajectory
+$\tau=(s_0,a_0,\dots,s_T,a_T)$ with scalar return $R(\tau)$:
 \[
-\nabla J(\theta) = \mathbb{E}_{\tau\sim\pi_\theta}\left[\sum_{t=0}^{T} (R(\tau)-b_t)\nabla_\theta \log \pi_\theta(a_t\mid s_t)\right]
+\nabla J(\theta) = \mathbb{E}_{\tau\sim\pi_\theta}\!\left[\sum_{t=0}^{T}
+  \bigl(R(\tau)-b_t\bigr)\,\nabla_\theta \log \pi_\theta(a_t\mid s_t)\right]
 \]
-where $b_t$ is a baseline. Distillation targets and reward-weighted gradients are both applied; the exact blend is implementation-defined per run mode.
+where $b_t$ is a per-step baseline that reduces variance. In plain terms:
+routes that led to good outcomes get reinforced; routes that led to poor
+outcomes get weakened. The gradient flows through the same $\mathrm{route\_fn}$
+parameters that control the QTsim/graph-prior confidence mix~$\lambda$.
 
-\subsection*{2.3 Reward-Source Hierarchy}
-The system resolves conflicting supervision by ordered authority:
+The ablation ladder confirms this design. Across every proof family the
+ordering is consistent and never reverses:
+\[
+\mathrm{route\_fn\_only} \;<\; \mathrm{graph\_route\_pg} \;<\;
+\mathrm{full\_brain}
+\]
+Adding policy-gradient updates on top of the base $\mathrm{route\_fn}$ yields
++11.8 to +26.3~pp; adding structural plasticity (Section~\ref{sec:structure})
+on top of that yields another +20.8 to +42.6~pp.
+
+\subsection{Reward-Source Hierarchy}
+\label{sec:reward}
+
+Different supervision signals carry different authority. The system resolves
+conflicts by an explicit ordering:
 \begin{enumerate}
-  \item Human correction/approval (highest authority)
-  \item Self-learning outcomes from deployed agents
-  \item Harvested weak signals
-  \item Teacher labels from async replay (lowest per-sample authority, highest volume)
+  \item \textbf{Human corrections} (highest authority)---a user saying ``no,
+        route to X'' always wins.
+  \item \textbf{Self-learning outcomes}---did the chosen route actually help the
+        downstream agent?
+  \item \textbf{Harvested weak signals}---implicit feedback such as follow-up
+        patterns.
+  \item \textbf{Teacher labels} (lowest per-sample authority, highest
+        volume)---bulk coverage from async replay.
 \end{enumerate}
-This hierarchy constrains updates so high-authority signals can override lower-level noise.
+This ordering ensures that a single human correction can override thousands of
+teacher labels, while teacher labels still fill the gaps where human feedback is
+absent.
 
-\section{3. RL-Native Maintenance (Structure Learning)}
-OpenClawBrain treats structure maintenance as a control problem over graph actions.
+%% ===================================================================
+%% Section 3: Structure Learning  (from: methods-mechanism lane)
+%% ===================================================================
+\section{RL-Native Maintenance (Structure Learning)}
+\label{sec:structure}
 
-\subsection*{3.1 Phase 2a (Shipped)}
-Phase 2a ships RL-native maintenance controls that integrate policy outcomes with structure scoring and safe-apply gates. In practice, this means structure candidates are generated, scored with policy-derived signals, and applied only when guardrails pass.
+A static graph cannot keep up with a world that changes. OpenClawBrain treats
+graph maintenance as an ongoing control problem---more like a living nervous
+system that grows new connections and prunes unused ones than a database that
+waits for a human to reorganize it.
 
-\subsection*{3.2 Action Space: connect/split/merge}
-The policy-governed action space includes explicit graph edits:
+The maintenance pipeline runs in the cold path and follows a fixed sequence on
+each cycle:
+\[
+\text{health} \;\to\; \text{decay} \;\to\; \text{scale} \;\to\; \text{split}
+\;\to\; \text{merge} \;\to\; \text{prune} \;\to\; \text{connect}
+\]
+
+\subsection{Structural Plasticity: The Largest Contributor}
+\label{sec:plasticity}
+
+Structural plasticity---the ability to connect, split, merge, and prune graph
+nodes---is the single largest contributor to accuracy in every proof family
+tested. Without plasticity the graph slowly drifts out of alignment with the
+real world; with it, the brain reshapes itself to match.
+
+The ablation data is stark: plasticity adds +20.8 to +42.6~pp over the
+policy-gradient-only stage across all families (Table~\ref{tab:ablation} in
+Section~\ref{sec:ablation}).
+
+\subsection{How the Actions Work}
+\label{sec:actions}
+
+Think of the graph like a city road map that re-draws itself:
 \begin{itemize}
-  \item \textbf{Connect:} create/reweight candidate edges when repeated successful transitions lack direct structure.
-  \item \textbf{Split:} divide overloaded nodes when policy confidence or error patterns indicate topic collapse.
-  \item \textbf{Merge:} combine nodes with persistent redundancy and equivalent downstream behavior.
-\end{itemize}
-Each action class is executed with conservative thresholds, rollback support, and offline replay evaluation before broad enablement.
-
-\section{4. Evaluation: Evidence Ladder + Comparative Results}
-Evaluation is organized around a strict evidence ladder. The architecture split is fixed (OpenClaw runtime boundary, OpenClawBrain artifact boundary), and each claim is tied to a rung with its own artifact type.
-
-\subsection*{4.1 Proof Boundary (What Is Proven vs Not Claimed)}
-\begin{itemize}
-  \item \textbf{Proven now:} deterministic mechanism proof plus fixed-session comparative benchmarks.
-  \item \textbf{Not claimed in this paper:} shadow-traffic or online production superiority without those dedicated artifacts.
-  \item \textbf{Rule:} benchmark wins are benchmark claims unless shadow/online artifacts are also published.
-\end{itemize}
-
-\subsection*{4.2 Top Comparative Rung: Recorded-Session H2H}
-Artifact: \texttt{recorded\_h2h\_relational\_drift\_001} (public bundle in \texttt{brain-ground-zero} at commit \texttt{1c54302}; see \texttt{docs/reproduce-eval.md}).
-
-\begin{table}[h]
-\centering
-\small
-\begin{tabular}{lccc}
-\toprule
-Mode & Accuracy & Delta vs Best Baseline & Notes \\
-\midrule
-\texttt{full\_brain} & \textbf{0.975} & \textbf{+7.9 pp} & Best overall \\
-\texttt{vector\_rag\_rerank} & 0.89625 & --- & Best baseline \\
-\bottomrule
-\end{tabular}
-\caption{Recorded-session head-to-head benchmark on a fixed relational-drift set (800 queries, 41 steps, 8 baselines).}
-\end{table}
-
-Interpretation: this rung demonstrates comparative advantage on a fixed recorded-session benchmark with shared state/query/rubric conditions.
-
-\subsection*{4.3 Sparse-Feedback Benchmark (10 Seeds)}
-Sparse-feedback 10-seed results provide a second comparative rung focused on sparse supervision and context efficiency:
-
-\begin{table}[h]
-\centering
-\small
-\begin{tabular}{lccc}
-\toprule
-Mode & Accuracy & Relative Context/Query & H2H Wins (10 seeds) \\
-\midrule
-\texttt{full\_brain} & \textbf{91.96\%} & \textbf{1.0x} & \textbf{9} \\
-Best RAG baseline & 67.05\% & $\sim$5.0x & 1 \\
-\bottomrule
-\end{tabular}
-\caption{Sparse-feedback 10-seed comparison. \texttt{full\_brain} leads by +24.91 percentage points while using approximately 5x less context per query than the best RAG baseline.}
-\end{table}
-
-Interpretation: the learned full-brain policy remains stronger under sparse feedback while holding lower context/query cost.
-
-\subsection*{4.4 Baselines and Ablations (Mechanism Layer)}
-We compare against three industry baselines plus the learned router in the reproducible harness:
-\begin{itemize}
-  \item \textbf{Vector top-k} (\texttt{vector\_only}): plain embedding retrieval, no traversal.
-  \item \textbf{Top-k + reranker} (\texttt{edge\_sim\_legacy}): deterministic re-ranking with \texttt{route\_mode=edge+sim}.
-  \item \textbf{Pointer-chasing} (\texttt{edge\_sim\_legacy} with multi-hop traversal): iterative retrieval without learned routing.
-  \item \textbf{OpenClawBrain learned} (\texttt{learned}) with ablation bounds \texttt{graph\_prior\_only} and \texttt{qtsim\_only}.
-\end{itemize}
-These modes are exposed in the evaluation harness in the main \texttt{openclawbrain} repo.
-
-\subsection*{4.5 Core Metrics}
-\begin{itemize}
-  \item \textbf{Reward / accuracy}: task success or correctness rate (dataset dependent).
-  \item \textbf{\% oracle gap closed}: fraction of the oracle gap closed over training epochs (expert-regions simulation).
-  \item \textbf{Latency}: p50/p95 end-to-end query time from the eval harness.
-  \item \textbf{Tool calls, tokens, cost}: measured in downstream agent runs; report as \texttt{TBD} if not available.
+  \item \textbf{Connect:} when the brain repeatedly routes through an indirect
+        path successfully, it paves a direct road---creating or strengthening an
+        edge that reflects the learned shortcut.
+  \item \textbf{Split:} when one node is doing double duty (like a single highway
+        exit serving two towns), the brain splits it into specialized nodes so
+        each route can be scored independently.
+  \item \textbf{Merge:} when two nodes carry redundant content and behave
+        identically downstream, they collapse into one, reducing noise in the
+        graph.
+  \item \textbf{Prune:} edges and nodes that have decayed below a Hebbian
+        co-firing threshold are removed, keeping the graph lean.
+  \item \textbf{Decay:} connection weights decrease over time unless reinforced
+        by successful use---the ``use it or lose it'' principle.
 \end{itemize}
 
-\subsection*{4.6 Figures (SVGs in \texttt{figures/eval})}
-SVG sources live in \texttt{figures/eval/*.svg}; the PDF renders the PNG versions below.
+Every structural action runs through a safe-apply gate: candidates are scored
+using policy-derived signals, and the change is applied only when guardrails
+pass. If a structural edit degrades routing performance on replay, it is rolled
+back.
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.95\textwidth]{figures/eval/reward_vs_epoch.png}
-\vspace{0.4em}
-\includegraphics[width=0.95\textwidth]{figures/eval/oracle_gap_closed.png}
-\caption{Expert-regions simulation learning behavior: reward trajectory and fraction of oracle gap closed across training epochs.}
-\label{fig:expert-regions-learning}
-\end{figure}
+%% ===================================================================
+%% Section 4: Evaluation  (from: results + figures + limits lanes)
+%% ===================================================================
+\section{Evaluation: Evidence Ladder and Comparative Results}
+\label{sec:eval}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.9\textwidth]{figures/eval/ablation_bar_chart.png}
-\caption{Ablation comparison across \texttt{vector\_only}, \texttt{graph\_prior\_only}, \texttt{qtsim\_only}, and learned routing.}
-\label{fig:ablation-bar}
-\end{figure}
+Evidence in this section comes from the Brain-vs-RAG Ground-Zero benchmark,
+a purpose-built harness that evaluates the full-brain retrieval-routing mechanism
+against eight baselines on three distinct task families, each at 10-seed scale.
+Two evaluation modes are used and must not be conflated:
 
-\subsection*{4.7 Reporting Template (Do Not Invent Numbers)}
-All unreproduced results must be marked \texttt{TBD} and tied to an output file path.
+\begin{itemize}
+  \item \textbf{Recorded head-to-head (H2H):} deterministic fixture replay with
+        SHA-256 hash verification. Fully reproducible and the strongest evidence
+        tier. Used for the relational-drift family.
+  \item \textbf{Simulation:} live simulation with the harness policy function,
+        deterministic given a seed. Used for recurring-workflows and
+        sparse-feedback families (and additionally for relational-drift
+        ablations).
+\end{itemize}
+
+\subsection{Proof Boundary}
+\label{sec:proof-boundary}
+
+\noindent\textbf{Proven.}
+The full-brain mechanism---graph memory, learned route function, policy-gradient
+updates, and structural plasticity---dominates the best RAG baseline and all
+partial-brain ablations on three long-lived memory tasks at 10-seed scale with
+8~baselines, while using 5$\times$ less context per query.
+Cross-family head-to-head record: 29-1-0 across 30 seed-level comparisons.
+
+\noindent\textbf{Not claimed.}
+Performance on untested families (e.g., memory compaction); behavior at larger
+world sizes (current: 50 entities, 80 workflows); end-to-end performance with
+live LLM routing (the harness uses simulated policy functions); production
+latency or cost; shadow-traffic or online superiority.
+
+\noindent\textbf{Rule.}
+Benchmark wins are benchmark claims. Shadow and online production claims remain
+out of scope until their artifacts are published.
+
+\subsection{Cross-Family Results}
+\label{sec:cross-family}
+
+Table~\ref{tab:cross-family} summarizes the three proof families.
+Across 30 seed-level comparisons, \texttt{full\_brain} wins 29, loses 1,
+and ties 0 against the best RAG baseline (\texttt{vector\_rag\_rerank}).
+The overall accuracy margin ranges from +9.7~pp to +26.9~pp.
 
 \begin{table}[h]
 \centering
 \small
 \begin{tabular}{lcccccc}
 \toprule
-Setting & Reward/Acc & \% Oracle Gap & Latency p50/p95 & Tool Calls & Tokens & Cost \\
+Family & Eval Mode & \texttt{full\_brain} & Best RAG & Margin & H2H & Context \\
 \midrule
-Vector top-k (expert-regions sim) & 0.878629 / 0.8920 & TBD & TBD & TBD & TBD & TBD \\
-Top-k + reranker & 0.879762 / 0.8935 & TBD & TBD & TBD & TBD & TBD \\
-Pointer-chasing (graph prior only) & 0.555147 / 0.5290 & TBD & TBD & TBD & TBD & TBD \\
-OpenClawBrain learned (mixed) & 0.935126 / 0.9680 & 96.74\% & TBD & TBD & TBD & TBD \\
+Relational drift & Recorded H2H & $99.15 \pm 0.27$\% & $89.44 \pm 1.68$\% & +9.71~pp & 10-0-0 & 5$\times$ lower \\
+Recurring workflows & Simulation & $97.6 \pm 0.4$\% & $70.6 \pm 1.2$\% & +26.9~pp & 10-0-0 & 5$\times$ lower \\
+Sparse feedback & Simulation & $92.0 \pm 18.3$\% & $67.0 \pm 1.4$\% & +24.9~pp & 9-1-0 & 5$\times$ lower \\
 \bottomrule
 \end{tabular}
-\caption{Expert-regions simulation baselines from reproducible runs. Each \texttt{TBD} must cite commit SHA, command, and artifact path (e.g., \texttt{/tmp/ocb\_eval.json}).}
+\caption{Cross-family evidence summary (T1). Each cell reports mean $\pm$ std
+over 10 seeds. Context ratio is \texttt{full\_brain} context units per query
+vs.\ \texttt{vector\_rag\_rerank}. See Figures~\ref{fig:margin-context}
+and~\ref{fig:recorded-h2h} for visual summaries.}
+\label{tab:cross-family}
 \end{table}
 
-\subsection*{4.8 Reproduction Workflow (TypeScript-First Package Surface)}
-Commands (from \texttt{openclawbrain} repo) and expected outputs:
-\begin{verbatim}
-cd /path/to/openclawbrain
-corepack enable
-pnpm install
-pnpm check
-pnpm release:pack
+\noindent\textbf{Relational drift (recorded H2H).}
+10~seeds $\times$ 800~queries per seed $\times$ 8~baselines.
+Deterministic fixture replay with hash verification.
+\texttt{full\_brain} achieves 99.15\% accuracy ($\pm\,0.27$\%) against
+89.44\% ($\pm\,1.68$\%) for the best RAG baseline, a margin of +9.71~pp
+and a perfect 10-0-0 seed record (Figure~\ref{fig:recorded-h2h}).
 
-pnpm run eval:workflow-proof -- --output-dir scratch/workflow-proof/latest
-pnpm run eval:baseline -- --queries /path/to/queries.jsonl --output /tmp/ocb_eval.json
-pnpm run eval:sim-expert-regions -- --output-dir /tmp/ocb_expert_regions
-pnpm run eval:sim-two-cluster -- --output-dir /tmp/ocb_two_cluster
-\end{verbatim}
-Expected outputs include \texttt{/tmp/ocb\_eval.json}, \texttt{/tmp/ocb\_expert\_regions/simulation\_curve.csv}, and regenerated SVGs in \texttt{figures/eval/} using the plotting entrypoint documented in \texttt{docs/reproduce-eval.md}.
+\noindent\textbf{Recurring workflows (simulation).}
+10~seeds $\times$ 3{,}522~queries per seed $\times$ 8~baselines.
+\texttt{full\_brain} reaches 97.6\% ($\pm\,0.4$\%) vs.\ 70.6\% ($\pm\,1.2$\%)
+for the best RAG baseline, a margin of +26.9~pp and a 10-0-0 record.
+This is the largest margin observed across families.
 
-\section{5. Operational Notes}
-OpenClawBrain supports local embeddings out-of-the-box for operator-first deployment. This enables deterministic startup and private/offline-friendly operation while keeping optional teacher workflows in asynchronous jobs.
+\noindent\textbf{Sparse feedback (simulation).}
+10~seeds $\times$ 1{,}800~queries per seed $\times$ 8~baselines.
+Explicit feedback covers approximately 19\% of queries.
+\texttt{full\_brain} reaches 92.0\% ($\pm\,18.3$\%) vs.\ 67.0\% ($\pm\,1.4$\%),
+a margin of +24.9~pp.
+The high standard deviation ($\pm\,18.3$\%) reflects seed-level variance under
+sparse supervision: accuracy depends on which subset of queries receives explicit
+feedback. The head-to-head record is 9-1-0, preventing an unqualified
+``always wins'' claim across families.
 
-\section{6. Conclusion}
-The v12.2.6+ system is defined by a fixed runtime boundary and four commitments: OpenClaw-owned runtime control, local hot-path retrieval, QTsim+graph-prior confidence mixing, distillation plus policy-gradient learning, and RL-native structure maintenance. The current top comparative rung is benchmark evidence (\texttt{recorded\_h2h\_relational\_drift\_001} and sparse-feedback 10-seed), while shadow/online claims remain explicitly out of scope until their artifacts are published.
+\subsection{Context Efficiency}
+\label{sec:context}
+
+Across all three families, \texttt{full\_brain} uses 1~context unit per query
+vs.\ 5 for \texttt{vector\_rag\_rerank}---a consistent 5$\times$ context
+advantage. In the relational-drift family this translates to 800 vs.\
+4{,}000 context tokens per query (Figure~\ref{fig:margin-context}, right panel).
+
+\subsection{Ablation Ladder}
+\label{sec:ablation}
+
+We ablate the full-brain mechanism into three stages to isolate component
+contributions. The ordering is consistent across all families with no reversals:
+\[
+\texttt{route\_fn\_only} \;<\; \texttt{graph\_route\_pg} \;<\;
+\texttt{full\_brain}
+\]
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lcccc}
+\toprule
+Family & \texttt{route\_fn\_only} & \texttt{graph\_route\_pg} & \texttt{full\_brain} & Plasticity $\Delta$ \\
+\midrule
+Relational drift (rec.\ H2H) & --- & $75.86$\% & $99.15$\% & +23.3~pp \\
+Relational drift (sim.) & $64.7 \pm 1.6$\% & $76.5 \pm 2.5$\% & $97.2 \pm 5.8$\% & +20.8~pp \\
+Recurring workflows & $34.1 \pm 9.0$\% & $60.4 \pm 1.7$\% & $97.6 \pm 0.4$\% & +37.2~pp \\
+Sparse feedback & $37.0 \pm 1.7$\% & $49.4 \pm 13.8$\% & $92.0 \pm 18.3$\% & +42.6~pp \\
+\bottomrule
+\end{tabular}
+\caption{Ablation ladder across families (10 seeds each). Plasticity $\Delta$ is
+the accuracy gain from structural plasticity (\texttt{full\_brain} minus
+\texttt{graph\_route\_pg}). See Figure~\ref{fig:ablation-ladder}.}
+\label{tab:ablation}
+\end{table}
+
+Structural plasticity---Hebbian co-firing, decay, and connect/split/merge/prune
+actions---is the single largest contributor in every family, adding +20.8 to
++42.6~pp over the graph-routing-with-policy-gradient stage. Policy-gradient
+routing itself adds +11.8 to +26.3~pp over route-function-only.
+
+\subsection{Baselines and Fairness}
+\label{sec:baselines}
+
+Each family runs 8~baselines under identical conditions: same world state, entity
+set, query stream order, context budget, correction stream, and scoring rubric.
+The baseline set includes:
+
+\begin{itemize}
+  \item \texttt{oracle} (ceiling; always correct)
+  \item \texttt{full\_brain} (graph memory + learned route + PG + plasticity)
+  \item \texttt{graph\_route\_pg} (ablation: no structural plasticity)
+  \item \texttt{route\_fn\_only} (ablation: no graph, no PG)
+  \item \texttt{vector\_rag\_rerank} (best RAG baseline; top-k + reranker)
+  \item \texttt{vector\_rag} (top-k embedding retrieval, no reranking)
+  \item \texttt{heuristic\_stateful} (deterministic heuristic with state tracking)
+  \item Additional baselines as defined per family
+\end{itemize}
+
+\noindent All results are deterministic given a seed. Baselines that inherently
+require more context (e.g., \texttt{vector\_rag\_rerank} at 5$\times$) are
+measured but not artificially capped.
+
+\subsection{Figures}
+\label{sec:figures}
+
+The following figures support the claims above. F1--F3 are mandatory; F4--F5
+strengthen the story if space permits and may be moved to the appendix.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/bgz/f1_margin_context.png}
+\caption{Accuracy margin of \texttt{full\_brain} over the best RAG baseline
+(left) and context cost ratio (right) across three benchmark families (F1).
+\texttt{full\_brain} achieves +9.7 to +26.9~pp margins while consuming
+5$\times$ less context per query.}
+\label{fig:margin-context}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/bgz/f2_ablation_ladder.png}
+\caption{Ablation ladder showing accuracy at each mechanism stage (route function
+only, graph + route + policy gradient, full brain) across three benchmark
+families (F2). Structural plasticity contributes the largest accuracy jump in
+every family.}
+\label{fig:ablation-ladder}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/bgz/f3_recorded_h2h_seed.png}
+\caption{Per-seed accuracy comparison between \texttt{full\_brain} and
+\texttt{vector\_rag\_rerank} on the recorded H2H relational-drift benchmark
+(F3). 10~seeds, 800~queries each. \texttt{full\_brain} wins every seed
+(10-0-0).}
+\label{fig:recorded-h2h}
+\end{figure}
+
+% F4 (conditional): recurring-workflows seed-by-seed H2H
+% \begin{figure}[t]
+% \centering
+% \includegraphics[width=0.9\textwidth]{figures/bgz/f4_recurring_workflows_seed.png}
+% \caption{Per-seed accuracy comparison on the recurring-workflows benchmark
+% (10 seeds, 3{,}522 queries each). \texttt{full\_brain} wins every seed
+% (10-0-0) with margins exceeding 25~pp.}
+% \label{fig:recurring-workflows-seed}
+% \end{figure}
+
+% F5 (conditional): sparse-feedback seed-by-seed H2H
+% \begin{figure}[t]
+% \centering
+% \includegraphics[width=0.9\textwidth]{figures/bgz/f5_sparse_feedback_seed.png}
+% \caption{Per-seed accuracy comparison on the sparse-feedback benchmark
+% (10 seeds, 1{,}800 queries each, $\sim$19\% feedback coverage).
+% \texttt{full\_brain} wins 9 of 10 seeds (9-1-0). Note: seed-77 loss and
+% high \texttt{full\_brain} std (18.3\%) discussed in text.}
+% \label{fig:sparse-feedback-seed}
+% \end{figure}
+
+%% ===================================================================
+%% Section 5: Operational Notes  (from: limits-conclusion lane)
+%% ===================================================================
+\section{Operational Notes}
+\label{sec:ops}
+
+OpenClawBrain supports local embeddings out-of-the-box for operator-first
+deployment. This enables deterministic startup and private/offline-friendly
+operation while keeping optional teacher workflows in asynchronous jobs.
+
+All proof-scale evaluations use simulated policy functions with deterministic
+outcomes given a seed, not live LLM calls. The benchmark therefore validates the
+retrieval-routing mechanism in isolation. End-to-end performance with live model
+inference is not measured at proof scale; that rung belongs to shadow-traffic
+evaluation (Section~\ref{sec:proof-boundary}).
+
+All baselines in every run receive the same world state, query stream, context
+budget, correction stream, and scoring rubric. Context cost is measured, not
+estimated: \texttt{full\_brain} uses 1 context unit per query versus 5 for
+\texttt{vector\_rag\_rerank} across all families.
+
+%% ===================================================================
+%% Section 6: Conclusion  (from: limits-conclusion lane)
+%% ===================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+The full-brain mechanism---graph memory with structural plasticity, learned
+routing with QTsim confidence mixing, and policy-gradient learning under a
+reward-source hierarchy---achieves +9.7 to +26.9~pp over the best RAG baseline
+across three proof-scale benchmark families, while using 5$\times$ less context
+per query. The cross-family head-to-head record is 29-1-0 across 30 seed-level
+comparisons with 8~baselines per family.
+
+The ablation ladder holds without reversal in every family: structural plasticity
+is the single largest contributor, adding +20.8 to +42.6~pp over the
+policy-gradient-only stage. This consistency across families with different
+failure modes---relational drift, recurring workflows, and sparse teacher
+feedback---suggests the mechanism is not overfit to a single task structure.
+
+These results are benchmark claims, not production claims. The honest gaps are
+stated in Section~\ref{sec:limitations}. Shadow-traffic and online evaluation
+remain the next rungs on the evidence ladder.
+
+\subsection{Limitations and Honest Gaps}
+\label{sec:limitations}
+
+\textbf{Simulated policy functions.} All proof-scale families use simulated
+policy functions with deterministic outcomes, not live LLM calls. The benchmark
+validates the retrieval-routing mechanism in isolation; end-to-end performance
+with a live model in the loop is unmeasured.
+
+\textbf{Moderate world sizes.} The largest family uses 80~workflows and
+3{,}522~queries per seed. Scaling behavior at 10$\times$--100$\times$ is
+unknown. Graph traversal cost, plasticity convergence, and homeostatic stability
+at larger scales are untested.
+
+\textbf{Seed sensitivity under sparse feedback.} The sparse-feedback family
+reports $\pm\,18.3$\% standard deviation across seeds, reflecting high variance
+when only $\sim$19\% of queries receive explicit feedback. One seed loss
+(9-1-0 head-to-head) prevents an unqualified ``always wins'' claim across
+families.
+
+\textbf{Memory compaction not evaluated.} A memory-compaction stress-test family
+was designed but not run. The system's behavior under sustained structural churn
+is therefore unproven.
+
+\textbf{Custom benchmark.} Ground Zero is purpose-built to test specific failure
+modes (relational drift, workflow recurrence, sparse signal). It does not
+establish generality on community benchmarks, and results do not directly compare
+to other systems on shared evaluation sets.
+
+\textbf{No ablation of teacher supervision.} The teacher signal is part of the
+full system but is not ablated independently. The relative contribution of
+teacher distillation versus outcome-only learning is not isolated.
+
+\textbf{Embedding dependency.} Retrieval quality is bounded by embedding quality
+at the seeding stage. If the correct node is never surfaced by embedding
+similarity, the system cannot learn a route to it.
+
+\textbf{No production latency or cost claims.} Latency and cost under production
+load are not measured at proof scale.
 
 \end{document}
