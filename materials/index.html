@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain Materials</title>
-  <meta name="description" content="OpenClawBrain supporting materials: documentation, evaluation figures, TypeScript packages, benchmark artifacts, and reproduction steps." />
+  <meta name="description" content="The OpenClawBrain toolbox: docs, benchmark bundles, evaluation figures, TypeScript packages, and step-by-step reproduction — everything you need to dig in." />
   <link rel="canonical" href="https://openclawbrain.ai/materials/" />
   <style>
     :root { --bg:#0f1219; --card:#171d29; --text:#d8dfec; --muted:#98a4b8; --bright:#f4f8ff; --border:#2a364c; --accent:#7db9ff; --sans:Inter,system-ui,sans-serif; --serif:"Crimson Pro",Georgia,serif; }
@@ -22,10 +22,10 @@
 <body>
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> &middot; <a href="/blog/">blog</a> &middot; <a href="/proof/">proof</a> &middot; <a href="/paper/">paper</a></div>
-    <h1>Supporting Materials</h1>
-    <p>Everything you need to dig into OpenClawBrain beyond the headline numbers. Start with the <a href="/proof/">proof package</a> for benchmark evidence, or the <a href="/docs/worked-example/">worked example</a> to see one turn traced from question to answer to correction.</p>
+    <h1>The Toolbox</h1>
+    <p>Think of this page as the workbench drawer. Everything you need to dig into OpenClawBrain lives here &mdash; docs, benchmark bundles, evaluation charts, package descriptions, and reproduction recipes. Grab what you need: the <a href="/proof/">proof package</a> for benchmark evidence, or the <a href="/docs/worked-example/">worked example</a> to watch one question travel through the system end-to-end.</p>
 
-    <h2 style="margin-top:1.4rem;">Documentation and Evidence</h2>
+    <h2 style="margin-top:1.4rem;">Docs and Evidence</h2>
     <div class="card">
       <ul>
         <li><a href="/proof/">Proof package</a> &mdash; benchmark evidence, the evidence ladder, and where the claims stop</li>
@@ -42,9 +42,9 @@
       </ul>
     </div>
 
-    <h2 style="margin-top:1.4rem;">TypeScript Packages</h2>
+    <h2 style="margin-top:1.4rem;">The Building Blocks (TypeScript Packages)</h2>
     <div class="card">
-      <p style="margin-top:0;">These are the building blocks of OpenClawBrain. Think of them like layers in a stack &mdash; from raw events at the bottom to the learning engine at the top. Currently distributed as local tarballs; npm publishing is the target.</p>
+      <p style="margin-top:0;">Each package is one layer of the stack, like floors in a building &mdash; raw events at ground level, the learning engine on top. Currently shipped as local tarballs; npm publishing is the next step.</p>
       <ul>
         <li><code>@openclawbrain/contracts</code> &mdash; shared type definitions (the common language all packages speak)</li>
         <li><code>@openclawbrain/events</code> &mdash; normalizes raw OpenClaw session events into a consistent shape</li>
@@ -59,8 +59,9 @@
       </ul>
     </div>
 
-    <h2 style="margin-top:1.4rem;">Evaluation Figures</h2>
+    <h2 style="margin-top:1.4rem;">Charts and Figures</h2>
     <div class="card">
+      <p style="margin-top:0;">The charts behind the headline numbers. Each one regenerates from source data &mdash; no screenshots, no static images you have to trust.</p>
       <ul>
         <li><a href="/figures/eval/reward_vs_epoch.svg">reward_vs_epoch.svg</a></li>
         <li><a href="/figures/eval/accuracy_vs_epoch.svg">accuracy_vs_epoch.svg</a></li>

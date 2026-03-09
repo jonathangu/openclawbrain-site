@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Post 5: Baselines and the Comparison Contract</title>
-  <meta name="description" content="How OpenClawBrain compares itself fairly: which methods matter, what the benchmarks show, and which claims still need live evidence." />
+  <title>Post 5: Road Test — How the Guide Stacks Up Against Real Alternatives</title>
+  <meta name="description" content="Side-by-side comparison: the learned guide vs keyword search, reranking, and heuristic methods. Where it wins, by how much, and where the evidence stops." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/v12.2.6-series/05-industry-baselines-ablations/" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,10 +43,10 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> | <a href="/blog/">blog</a> | <a href="/proof/">proof</a> | <a href="/paper/">paper</a> | <a href="/blog/v12.2.6-series/">series</a></div>
     <div class="eyebrow">Post 5</div>
-    <h1>Baselines: what are we comparing against?</h1>
+    <h1>Road test: how does the guide stack up?</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
 
-    <p>If OpenClawBrain is going to claim it's better, it needs to compare against methods people would actually use instead. Not straw men, not vague "AI memory" framing &mdash; real retrieval methods that a reasonable team might choose. This page leads with the numbers, then explains why each comparison method matters and where the evidence boundary sits.</p>
+    <p>A road test only matters if you race against cars people actually drive. This page compares the learned guide against real retrieval methods a reasonable team would choose &mdash; keyword search, reranked search, stateful heuristics &mdash; not straw men. Numbers first, then what each competitor is and why the comparison is fair.</p>
 
     <div class="card">
       <p>The bottom line: the learned guide answers 97.5% of recorded-session queries correctly vs. 89.6% for the best search method &mdash; roughly 1 in 13 queries where search fails, the guide gets right. In the sparse-feedback test (10 seeds), the gap widens to 92.0% vs. 67.1%, using about 5x less context per query and winning 9 of 10 seeds head-to-head. These are benchmark results, not live rollout claims.</p>
@@ -139,7 +139,7 @@
 
     <p>Nearly 25 percentage points ahead, winning 9 of 10 seeds. The guide compounds learning from even limited corrections; search methods have no way to improve from feedback.</p>
 
-    <h2>Why these comparisons belong</h2>
+    <h2>Why these are the right competitors</h2>
     <div class="table-wrap"><table>
       <thead>
         <tr><th>Question</th><th>Why the answer matters</th></tr>
@@ -160,7 +160,7 @@
       </tbody>
     </table></div>
 
-    <h2>What the comparison says honestly</h2>
+    <h2>The honest summary</h2>
     <div class="card">
       <ul>
         <li>The controlled test cleanly separates keyword search, link-following, map structure, and the learned guide.</li>
@@ -199,7 +199,7 @@
       </tbody>
     </table></div>
 
-    <h2>Comparison discipline</h2>
+    <h2>Keeping the race fair</h2>
     <ul>
       <li>Use the same query set, scoring rubric, and prompt budget rules across all methods.</li>
       <li>Keep the command, artifact path, and commit SHA for every published number.</li>
