@@ -54,7 +54,7 @@
   <main>
     <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
     <h1>OpenClaw Integration</h1>
-    <p>OpenClawBrain is the TypeScript-first package surface behind the OpenClaw-owned runtime boundary. The promoted pack is the only supported learning and serve boundary in this repo.</p>
+    <p>OpenClawBrain is your agent's second brain — it builds a knowledge map, trains a guide that picks the right context for each question, and learns from corrections. OpenClaw is front of house (live conversations); OpenClawBrain is the kitchen (knowledge, learning, compilation). This page describes how the two systems connect.</p>
 <p>> <strong>Current truth</strong>: the learner builds candidate packs off the hot path; activation stages and promotes them; compiler serves only from the active promoted pack; route updates are PG-only from explicit labels.
 > <strong>Target end shape</strong>: continuous live graph update (decay, co-firing, pruning, reorganizing) on the active pack during serving; scanner/labels/harvest on by default after attach; hard API enforcement of the OpenClaw/OpenClawBrain split.</p>
 <p>New here? Start with the <a href="/docs/setup-guide/">setup guide</a>.</p>
