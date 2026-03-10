@@ -27,11 +27,23 @@
       font-family:var(--serif);
       line-height:1.75;
     }
+    nav {
+      font-family:var(--sans);
+      font-size:.86rem;
+      border-bottom:1px solid var(--border);
+      padding:.7rem 1.2rem;
+      display:flex;
+      gap:1.6rem;
+      align-items:center;
+    }
+    nav a { color:var(--muted); text-decoration:none; }
+    nav a:hover { color:var(--accent); }
+    nav a.brand { color:var(--bright); font-weight:600; margin-right:.4rem; }
     main { max-width:920px; margin:0 auto; padding:2.8rem 1.2rem 4rem; }
     h1,h2 { font-family:var(--sans); color:var(--bright); margin:0 0 .8rem; }
+    h2 { font-size:1rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-top:2.4rem; margin-bottom:.6rem; }
     p { margin:0 0 1rem; }
     a { color:var(--accent); }
-    .nav { font-family:var(--sans); color:var(--muted); font-size:.86rem; margin-bottom:1.4rem; }
     .grid { display:grid; grid-template-columns:1fr; gap:.8rem; }
     .post {
       display:block;
@@ -45,102 +57,140 @@
     .post:hover { border-color:#5384c3; }
     .title { font-family:var(--sans); font-weight:700; color:var(--bright); }
     .meta { font-family:var(--sans); color:var(--muted); font-size:.82rem; margin:.2rem 0 .3rem; }
-    .section { margin-top:2rem; }
     .post.featured {
       border-color:#4f7db8;
       background:linear-gradient(180deg, rgba(121,183,255,0.10), var(--card));
     }
+    footer {
+      font-family:var(--sans);
+      font-size:.82rem;
+      color:var(--muted);
+      border-top:1px solid var(--border);
+      padding:1.4rem 1.2rem;
+      display:flex;
+      gap:1.4rem;
+      flex-wrap:wrap;
+      max-width:920px;
+      margin:0 auto;
+    }
+    footer a { color:var(--muted); text-decoration:none; }
+    footer a:hover { color:var(--accent); }
   </style>
 </head>
 <body>
+  <nav>
+    <a class="brand" href="/">OpenClawBrain</a>
+    <a href="/">Product</a>
+    <a href="/docs/worked-example/">How It Works</a>
+    <a href="/proof/">Proof</a>
+    <a href="/docs/setup-guide/">Developers</a>
+  </nav>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a></div>
-    <h1>OpenClawBrain Blog</h1>
-    <p class="meta">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
-    <p>Your OpenClaw agent is smart, but it starts every conversation with amnesia. OpenClawBrain fixes that &mdash; it's a second brain that builds a map of what your agent knows, learns which knowledge matters for each question, and gets sharper from corrections. Think of a librarian who remembers every question you've ever asked. These posts explain how it works, what the benchmarks prove, and how to wire it up.</p>
+    <h1>Blog</h1>
+    <p>Your OpenClaw agent starts every conversation with amnesia. OpenClawBrain fixes that &mdash; a second brain that learns which context matters, selects it per query, and gets sharper from corrections. These posts explain how it works, what the benchmarks prove, and how to wire it up.</p>
 
-    <div class="section">
-      <h2>Start Here</h2>
-      <div class="grid">
-        <a class="post featured" href="/docs/worked-example/">
-          <div class="title">Worked example: one conversation turn, end to end</div>
-          <div class="meta">Start here &middot; see what actually happens before looking at scores</div>
-          <div>Follow one real question through the system: what the guide picks, what lands in the prompt, and how a correction makes it smarter next time. The fastest way to understand what OpenClawBrain actually does.</div>
-        </a>
-        <a class="post featured" href="/blog/v12.2.6-series/">
-          <div class="title">How it works: the v12.2.6+ architecture series</div>
-          <div class="meta">March 2026 &middot; 6 posts</div>
-          <div>The full explanation: how learning happens off the live path, how the routing function blends structural knowledge with per-query relevance, and how operators plug the two systems together.</div>
-        </a>
-        <a class="post featured" href="/proof/">
-          <div class="title">Proof package: 3 families, 29-1-0 head-to-head, 5x less context</div>
-          <div class="meta">March 2026 &middot; 10-seed proof-scale benchmarks across 3 task families</div>
-          <div>The full-brain mechanism beats the best RAG baseline by +9.7 to +26.9 pp across three benchmark families (relational drift, recurring workflows, sparse feedback), winning 29 of 30 seed-level comparisons while using 5x less context per query. Charts, tables, ablation ladder, reproduction steps, and an honest line where the claims stop.</div>
-        </a>
-        <a class="post" href="/docs/openclaw-integration/">
-          <div class="title">Operator integration guide</div>
-          <div class="meta">Operational setup</div>
-          <div>Step-by-step instructions for connecting OpenClawBrain to your OpenClaw agent, including safety fallbacks so your agent keeps working no matter what.</div>
-        </a>
-      </div>
+    <h2>Start Here</h2>
+    <div class="grid">
+      <a class="post featured" href="/docs/worked-example/">
+        <div class="title">Worked example: one conversation turn, end to end</div>
+        <div class="meta">Start here &middot; see what actually happens before looking at scores</div>
+        <div>Follow one real question through the system: what the guide picks, what lands in the prompt, and how a correction makes it smarter next time. The fastest way to understand what OpenClawBrain actually does.</div>
+      </a>
+      <a class="post featured" href="/proof/">
+        <div class="title">Proof package: 3 families, 29-1-0 head-to-head, 5x less context</div>
+        <div class="meta">March 2026 &middot; 10-seed proof-scale benchmarks across 3 task families</div>
+        <div>The full-brain mechanism beats the best RAG baseline by +9.7 to +26.9 pp across three benchmark families, winning 29 of 30 seed-level comparisons while using 5x less context per query. Charts, tables, ablation ladder, reproduction steps, and an honest line where the claims stop.</div>
+      </a>
+      <a class="post featured" href="/blog/v12.2.6-series/">
+        <div class="title">What OpenClawBrain is: the v12.2.6+ architecture series</div>
+        <div class="meta">March 2026 &middot; 6 posts</div>
+        <div>The full explanation: how learning happens off the live path, how the routing function blends structural knowledge with per-query relevance, and how operators plug the two systems together.</div>
+      </a>
     </div>
 
-    <div class="section">
-      <h2>Architecture Series: v12.2.6+</h2>
-      <div class="grid">
-        <a class="post" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
-          <div class="title">Post 1: How the guide learns without slowing your agent</div>
-          <div class="meta">March 2026</div>
-          <div>Like a librarian who studies the stacks after hours: learning happens in the background, off the live path, so the agent never waits. Corrections, outcomes, and automated signals all fold into one update rule.</div>
-        </a>
-        <a class="post" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
-          <div class="title">Post 2: How the guide decides what your agent needs right now</div>
-          <div class="meta">March 2026</div>
-          <div>Two instincts, one decision: the guide blends what the knowledge map knows about how facts connect with what fits this specific question — like a librarian checking both the catalog and your actual request.</div>
-        </a>
-        <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
-          <div class="title">Post 3: What the benchmarks prove (and what they don't)</div>
-          <div class="meta">March 2026</div>
-          <div>Benchmark results, ablation tests, and an honest line between what's proven so far and what still needs live-traffic evidence.</div>
-        </a>
-        <a class="post" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
-          <div class="title">Post 4: Works out of the box, no cloud required</div>
-          <div class="meta">March 2026</div>
-          <div>No API keys, no external services — four commands and the guide is serving context. Like a librarian who lives in your office instead of a call center.</div>
-        </a>
-        <a class="post" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
-          <div class="title">Post 5: How it compares to established baselines</div>
-          <div class="meta">March 2026</div>
-          <div>Side-by-side comparison against credible baselines: where the trained guide wins and where the evidence stops.</div>
-        </a>
-        <a class="post" href="/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/">
-          <div class="title">Post 6: Plugging the two systems together</div>
-          <div class="meta">March 2026</div>
-          <div>How the runtime flow works, which system owns what, and how to roll back instantly if needed.</div>
-        </a>
-      </div>
+    <h2>Concepts</h2>
+    <div class="grid">
+      <a class="post" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
+        <div class="title">Why agents forget — and how learning fixes it</div>
+        <div class="meta">Concept</div>
+        <div>Every conversation starts from scratch. OpenClawBrain builds a persistent map of what your agent knows and updates it in the background from corrections and outcomes — so the next conversation starts smarter.</div>
+      </a>
+      <a class="post" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
+        <div class="title">Context selection vs. keyword search</div>
+        <div class="meta">Concept</div>
+        <div>RAG finds text that looks similar. OpenClawBrain blends two signals — what the knowledge map knows about how facts connect, and what fits this specific question — so the right context surfaces even when the words don't match.</div>
+      </a>
+      <a class="post" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
+        <div class="title">Learning from corrections</div>
+        <div class="meta">Concept</div>
+        <div>When your agent makes a mistake and you correct it, OpenClawBrain records what went wrong and updates its routing weights off the live path. The agent keeps running; the guide gets better.</div>
+      </a>
+      <a class="post" href="/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/">
+        <div class="title">OpenClaw vs. OpenClawBrain</div>
+        <div class="meta">Concept</div>
+        <div>OpenClaw is the runtime and orchestration layer. OpenClawBrain is the memory and context-selection layer that runs behind it. The agent keeps working if OpenClawBrain is unavailable — it's fail-open by design.</div>
+      </a>
     </div>
 
-    <div class="section">
-      <h2>Earlier Posts</h2>
-      <div class="grid">
-        <a class="post" href="/blog/v12.2.6/">
-          <div class="title">Your agent's second brain ships here</div>
-          <div class="meta">v12.2.6 &middot; March 2026</div>
-          <div>Earlier single-post summary: how the second brain becomes useful on day one and keeps learning in the background.</div>
-        </a>
-        <a class="post" href="/blog/v12.2.1/">
-          <div class="title">We shipped the correct REINFORCE update</div>
-          <div class="meta">v12.2.1 &middot; February 2026</div>
-          <div>Fixed a bug in how the learning algorithm updates itself, and what changed in self-learning behavior as a result.</div>
-        </a>
-        <a class="post" href="/blog/v12.2.0/">
-          <div class="title">CrabPath -> OpenClawBrain</div>
-          <div class="meta">v12.2.0 &middot; February 2026</div>
-          <div>The original rename from CrabPath to OpenClawBrain, with early framing of the retrieval and routing approach.</div>
-        </a>
-      </div>
+    <h2>Proof Explained</h2>
+    <div class="grid">
+      <a class="post" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
+        <div class="title">Shadow routing: how the guide learns without slowing your agent</div>
+        <div class="meta">Architecture &middot; March 2026</div>
+        <div>Learning happens in the background, off the live path, so the agent never waits. Corrections, outcomes, and automated signals all fold into one update rule.</div>
+      </a>
+      <a class="post" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
+        <div class="title">QTsim confidence mixing: how the guide decides what your agent needs right now</div>
+        <div class="meta">Architecture &middot; March 2026</div>
+        <div>Two instincts, one decision: the guide blends the knowledge map's structural signal with per-query relevance — like a librarian checking both the catalog and your actual request.</div>
+      </a>
+      <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
+        <div class="title">Ablations: what the benchmarks prove (and what they don't)</div>
+        <div class="meta">Evaluation &middot; March 2026</div>
+        <div>Benchmark results, ablation ladder, and an honest line between what's proven so far and what still needs live-traffic evidence.</div>
+      </a>
+      <a class="post" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
+        <div class="title">Local embeddings: no cloud required</div>
+        <div class="meta">Architecture &middot; March 2026</div>
+        <div>No API keys, no external services — four commands and the guide is serving context. Works entirely on your infrastructure.</div>
+      </a>
+      <a class="post" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
+        <div class="title">Industry baselines: how it compares to established alternatives</div>
+        <div class="meta">Evaluation &middot; March 2026</div>
+        <div>Side-by-side comparison against credible baselines: where the trained guide wins and where the evidence stops.</div>
+      </a>
+      <a class="post" href="/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/">
+        <div class="title">Runtime boundary: plugging the two systems together</div>
+        <div class="meta">Architecture &middot; March 2026</div>
+        <div>How the runtime flow works, which system owns what, and how to roll back instantly if needed.</div>
+      </a>
+    </div>
+
+    <h2>Release Notes</h2>
+    <div class="grid">
+      <a class="post" href="/blog/v12.2.6/">
+        <div class="title">v12.2.6: your agent's second brain ships here</div>
+        <div class="meta">v12.2.6 &middot; March 2026</div>
+        <div>How the second brain becomes useful on day one and keeps learning in the background. Includes the full shadow-routing and QTsim architecture.</div>
+      </a>
+      <a class="post" href="/blog/v12.2.1/">
+        <div class="title">v12.2.1: correct REINFORCE update</div>
+        <div class="meta">v12.2.1 &middot; February 2026</div>
+        <div>Fixed a bug in how the learning algorithm updates itself, and what changed in self-learning behavior as a result.</div>
+      </a>
+      <a class="post" href="/blog/v12.2.0/">
+        <div class="title">v12.2.0: CrabPath becomes OpenClawBrain</div>
+        <div class="meta">v12.2.0 &middot; February 2026</div>
+        <div>The rename from CrabPath to OpenClawBrain, with early framing of the retrieval and routing approach.</div>
+      </a>
     </div>
   </main>
+  <footer>
+    <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
+    <a href="/paper/">Paper</a>
+    <a href="/materials/">Materials</a>
+    <a href="/changelog/">Changelog</a>
+    <a href="mailto:jonathangu@gmail.com">Contact</a>
+  </footer>
 </body>
 </html>

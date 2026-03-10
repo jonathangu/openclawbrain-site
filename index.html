@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain: A Second Brain for Your OpenClaw Agent</title>
+  <title>OpenClawBrain: Stop Your Agent from Making the Same Mistake Twice</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain gives your OpenClaw agent a memory that learns. Instead of searching text by keywords, a trained guide picks the right knowledge for every question — and gets smarter from corrections.">
-  <meta property="og:title" content="OpenClawBrain: A Second Brain for Your OpenClaw Agent">
-  <meta property="og:description" content="Give your OpenClaw agent a memory that learns. A trained guide picks the right knowledge for every question — and gets smarter from corrections.">
+  <meta name="description" content="OpenClawBrain is a memory layer for OpenClaw that learns from corrections, picks better context, and reduces prompt waste over time. No cloud required.">
+  <meta property="og:title" content="OpenClawBrain: Stop Your Agent from Making the Same Mistake Twice">
+  <meta property="og:description" content="OpenClawBrain helps your agent stop repeating mistakes by learning what context matters. Local-first, fail-open, no cloud required.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary">
@@ -60,8 +60,9 @@
       padding: 2.5rem 1.4rem 5rem;
     }
 
+    /* ── NAV ── */
     .site-header {
-      margin-bottom: 2.2rem;
+      margin-bottom: 2.4rem;
     }
 
     .utility-row {
@@ -69,7 +70,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 1rem;
-      margin-bottom: 1rem;
+      margin-bottom: 1.1rem;
     }
 
     .brand {
@@ -103,10 +104,12 @@
     .utility-links a:hover {
       border-color: var(--border-strong);
       background: rgba(121, 211, 255, 0.1);
+      text-decoration: none;
     }
 
+    /* ── HERO ── */
     .hero-card {
-      padding: 1.35rem 1.4rem;
+      padding: 2rem 1.75rem 1.6rem;
       border: 1px solid var(--border-strong);
       border-radius: var(--radius);
       background: linear-gradient(165deg, rgba(121, 211, 255, 0.15), rgba(10, 15, 24, 0.88) 55%);
@@ -114,7 +117,7 @@
     }
 
     .eyebrow {
-      margin: 0 0 0.45rem;
+      margin: 0 0 0.5rem;
       font-family: var(--sans);
       font-size: 0.74rem;
       color: var(--text-muted);
@@ -123,27 +126,26 @@
     }
 
     h1 {
-      margin: 0 0 0.65rem;
+      margin: 0 0 0.7rem;
       font-family: var(--sans);
-      font-size: clamp(1.5rem, 3.3vw, 2.1rem);
-      line-height: 1.25;
+      font-size: clamp(1.55rem, 3.5vw, 2.2rem);
+      line-height: 1.22;
       color: var(--text-bright);
     }
 
     .lead {
-      margin: 0 0 0.9rem;
+      margin: 0 0 1.1rem;
       font-family: var(--sans);
       font-size: 0.97rem;
-      line-height: 1.65;
+      line-height: 1.68;
       color: var(--text);
-      max-width: 70ch;
+      max-width: 68ch;
     }
 
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 0.6rem;
-      margin-bottom: 0.7rem;
     }
 
     .btn {
@@ -171,154 +173,218 @@
       color: var(--accent);
     }
 
-    .page-nav {
+    /* ── PROOF CHIPS ── */
+    .proof-chips {
       display: flex;
+      flex-wrap: wrap;
       gap: 0.5rem;
-      overflow-x: auto;
-      padding: 0.2rem 0;
-      scrollbar-width: thin;
+      margin-bottom: 1.6rem;
     }
 
-    .page-nav a {
-      flex: 0 0 auto;
-      display: inline-block;
-      padding: 0.42rem 0.76rem;
-      border-radius: 8px;
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.75rem;
       border: 1px solid var(--border);
+      border-radius: 999px;
       font-family: var(--sans);
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       color: var(--text-muted);
-      background: rgba(10, 15, 24, 0.85);
+      background: rgba(10, 14, 22, 0.82);
+    }
+
+    .chip strong {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      margin-bottom: 1.55rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.4rem;
+      background: rgba(10, 14, 22, 0.84);
+    }
+
+    .section h2 {
+      margin: 0 0 0.5rem;
+      font-family: var(--sans);
+      font-size: 1.2rem;
+      color: var(--text-bright);
+      line-height: 1.3;
+    }
+
+    .section-intro {
+      margin: 0 0 1rem;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.65;
+      max-width: 78ch;
+    }
+
+    /* ── CARDS GRID ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.72rem;
+    }
+
+    .card {
+      padding: 0.95rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--bg-panel);
+      display: flex;
+      flex-direction: column;
+      gap: 0.42rem;
+    }
+
+    .card.accent-card {
+      border-color: var(--border-strong);
+      background: linear-gradient(165deg, rgba(121, 211, 255, 0.1), rgba(12, 18, 28, 0.92) 60%);
+    }
+
+    .card-label {
+      font-family: var(--sans);
+      font-size: 0.71rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      line-height: 1.35;
+      color: var(--text-bright);
+    }
+
+    .card p {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: 0.83rem;
+      line-height: 1.57;
+      color: var(--text);
+    }
+
+    .card a {
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-top: 0.1rem;
+    }
+
+    /* ── WORKED EXAMPLE CALLOUT ── */
+    .worked-example-block {
+      margin-bottom: 1.55rem;
+      padding: 1.25rem 1.4rem;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: linear-gradient(165deg, rgba(121, 211, 255, 0.08), rgba(10, 15, 24, 0.92) 55%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .worked-example-block .we-text {
+      flex: 1 1 auto;
+    }
+
+    .worked-example-block h2 {
+      font-family: var(--sans);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin: 0 0 0.3rem;
+    }
+
+    .worked-example-block p {
+      font-family: var(--sans);
+      font-size: 0.86rem;
+      color: var(--text);
+      margin: 0;
+      line-height: 1.55;
+    }
+
+    /* ── PROOF HIGHLIGHT ── */
+    .proof-highlight {
+      border-color: var(--border-strong);
+      background: linear-gradient(165deg, rgba(121, 211, 255, 0.08), rgba(10, 15, 24, 0.92) 55%);
+    }
+
+    .proof-chart-link {
+      display: block;
+      margin: 0.8rem 0 0.55rem;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: box-shadow 180ms ease;
+    }
+
+    .proof-chart-link:hover {
+      box-shadow: 0 0 0 2px var(--accent-strong);
       text-decoration: none;
     }
 
-    .page-nav a:hover {
-      color: var(--text-bright);
-      border-color: var(--border-strong);
-    }
-
     .fig {
-      margin: 0 0 1.9rem;
+      margin: 0;
       border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: 10px;
       overflow: hidden;
       background: var(--bg-panel);
     }
 
     .fig img { width: 100%; display: block; }
 
-    .section {
-      margin-bottom: 1.55rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.2rem 1.25rem;
-      background: rgba(10, 14, 22, 0.84);
-    }
-
-    .section h2 {
-      margin: 0 0 0.45rem;
-      font-family: var(--sans);
-      font-size: 1.24rem;
-      color: var(--text-bright);
-      line-height: 1.3;
-    }
-
-    .section-intro {
-      margin: 0 0 0.9rem;
-      font-family: var(--sans);
-      font-size: 0.9rem;
-      color: var(--text);
-      line-height: 1.62;
-      max-width: 80ch;
-    }
-
-    .path-grid,
-    .route-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.72rem;
-    }
-
-    .path-step,
-    .route-card {
-      padding: 0.82rem 0.88rem;
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      background: var(--bg-panel);
-    }
-
-    .path-step {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .step-index {
-      margin: 0;
-      font-family: var(--sans);
-      font-size: 0.73rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-    }
-
-    .path-step h3,
-    .route-card h3 {
-      margin: 0;
-      font-family: var(--sans);
-      font-size: 0.97rem;
-      line-height: 1.35;
-      color: var(--text-bright);
-    }
-
-    .path-step p,
-    .route-card p {
-      margin: 0;
-      font-family: var(--sans);
-      font-size: 0.84rem;
-      line-height: 1.55;
-      color: var(--text);
-    }
-
-    .path-step a,
-    .route-card a {
-      margin-top: 0.15rem;
-      display: inline-block;
-      font-family: var(--sans);
-      font-size: 0.83rem;
-      font-weight: 600;
-    }
-
-    .path-step.primary {
-      border-color: var(--border-strong);
-      background: linear-gradient(165deg, rgba(121, 211, 255, 0.13), rgba(12, 18, 28, 0.92) 60%);
-    }
-
-    .table-wrap { overflow-x: auto; margin-top: 0.72rem; }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    .proof-chart-caption {
+      margin: 0.4rem 0 0;
       font-family: var(--sans);
       font-size: 0.8rem;
-      min-width: 580px;
+      color: var(--text-muted);
+      line-height: 1.5;
     }
 
-    th {
-      text-align: left;
-      padding: 0.5rem 0.58rem;
-      color: var(--text-bright);
-      border-bottom: 2px solid var(--border);
-      background: var(--bg-panel-soft);
+    /* ── CALLOUT NOTE ── */
+    .callout-note {
+      margin-top: 0.82rem;
+      padding: 0.72rem 0.88rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(10, 14, 22, 0.84);
+      font-family: var(--sans);
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.52;
     }
 
-    td {
-      padding: 0.5rem 0.58rem;
-      border-bottom: 1px solid var(--border);
-      color: var(--text);
-      vertical-align: top;
+    /* ── STATUS ── */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.28rem 0.7rem;
+      border: 1px solid var(--orange);
+      border-radius: 999px;
+      font-family: var(--sans);
+      font-size: 0.74rem;
+      color: var(--orange);
+      background: rgba(255, 190, 114, 0.08);
+      margin-bottom: 0.75rem;
     }
 
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+
+    /* ── DEV CTA ── */
     code {
       font-family: var(--mono);
       font-size: 0.84em;
@@ -329,18 +395,8 @@
       padding: 0.13em 0.36em;
     }
 
-    ul {
-      margin: 0.15rem 0 0;
-      padding-left: 1.15rem;
-      font-family: var(--sans);
-      font-size: 0.87rem;
-      line-height: 1.58;
-    }
-
-    li { margin-bottom: 0.35rem; }
-
     pre {
-      margin: 0;
+      margin: 0.9rem 0 0;
       padding: 0.95rem 1rem;
       border: 1px solid var(--border);
       border-radius: 10px;
@@ -352,136 +408,170 @@
       line-height: 1.6;
     }
 
-    .quickstart-foot {
-      margin-top: 0.7rem;
-      font-family: var(--sans);
-      font-size: 0.84rem;
-      color: var(--text-muted);
-      line-height: 1.55;
+    .dev-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
     }
 
-    .route-card h3 code {
-      font-size: 0.76em;
-    }
-
+    /* ── FOOTER ── */
     .footer {
-      margin-top: 2.3rem;
+      margin-top: 2.5rem;
       border-top: 1px solid var(--border);
-      padding-top: 1rem;
+      padding-top: 1.1rem;
       text-align: center;
       font-family: var(--sans);
     }
 
-    .footer p {
-      margin: 0.15rem 0;
-      font-size: 0.77rem;
-      color: var(--text-muted);
-      line-height: 1.5;
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.3rem 1.1rem;
+      margin-bottom: 0.65rem;
     }
 
-    .footer .back-link {
-      color: var(--text-muted);
-      font-size: 0.74rem;
-      opacity: 0.85;
-    }
-
-
-    .callout-note {
-      margin-top: 0.72rem;
-      padding: 0.72rem 0.85rem;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: rgba(10, 14, 22, 0.84);
-      font-family: var(--sans);
-      font-size: 0.83rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-    /* proof highlight section */
-    .proof-highlight {
-      border-color: var(--border-strong);
-      background: linear-gradient(165deg, rgba(121, 211, 255, 0.08), rgba(10, 15, 24, 0.92) 55%);
-    }
-    .proof-chart-link {
-      display: block;
-      margin: 0.8rem 0 0.55rem;
-      border-radius: 10px;
-      overflow: hidden;
-      transition: box-shadow 180ms ease;
-    }
-    .proof-chart-link:hover {
-      box-shadow: 0 0 0 2px var(--accent-strong);
-      text-decoration: none;
-    }
-    .proof-chart-caption {
-      margin: 0.35rem 0 0;
-      font-family: var(--sans);
+    .footer-links a {
       font-size: 0.8rem;
       color: var(--text-muted);
+    }
+
+    .footer-links a:hover {
+      color: var(--text-bright);
+    }
+
+    .footer p {
+      margin: 0.15rem 0;
+      font-size: 0.75rem;
+      color: var(--text-muted);
       line-height: 1.5;
     }
 
+    /* ── RESPONSIVE ── */
     @media (max-width: 880px) {
-      .path-grid,
-      .route-grid { grid-template-columns: 1fr; }
+      .card-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
       body { font-size: 16px; }
       .page { padding: 1.7rem 0.92rem 3.5rem; }
       .utility-row { flex-direction: column; align-items: flex-start; }
-      .hero-card,
-      .section { padding: 1rem 0.95rem; }
+      .hero-card { padding: 1.2rem 1rem; }
+      .section { padding: 1.1rem 1rem; }
       .hero-actions .btn { width: 100%; text-align: center; }
-      table { min-width: 520px; }
+      .worked-example-block { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 <article class="page">
+
+  <!-- ── TOP NAV ── -->
   <header class="site-header">
     <div class="utility-row">
       <a class="brand" href="/">openclawbrain.ai</a>
-      <nav class="utility-links" aria-label="Primary routes">
-        <a href="/docs/setup-guide.md">Setup guide</a>
+      <nav class="utility-links" aria-label="Primary navigation">
+        <a href="/">Product</a>
+        <a href="/docs/worked-example/">How It Works</a>
         <a href="/proof/">Proof</a>
-        <a href="/paper/">Paper</a>
-        <a href="/docs/openclaw-integration.md">Docs</a>
-        <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
+        <a href="/docs/setup-guide/">Developers</a>
       </nav>
     </div>
 
-    <div class="hero-card" id="start-here">
-      <p class="eyebrow">A learned memory layer for OpenClaw agents</p>
-      <h1>Your agent gets a second brain &mdash; one that learns</h1>
+    <!-- ── HERO ── -->
+    <div class="hero-card">
+      <p class="eyebrow">Memory &amp; learning layer for OpenClaw</p>
+      <h1>Stop your agent from making the same mistake twice.</h1>
       <p class="lead">
-        Most AI agents search their notes by keyword and hope for the best.
-        OpenClawBrain replaces that search bar with a <strong>trained guide</strong> that maps how your agent's knowledge connects, picks the right context for each question, and learns from corrections so the same mistake never happens twice.
+        OpenClawBrain is a memory layer for OpenClaw that learns from corrections, picks better context, and reduces prompt waste over time. Your agent starts every conversation with amnesia &mdash; OpenClawBrain fixes that.
       </p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#quickstart">Get started</a>
-        <a class="btn btn-secondary" href="#proof-at-a-glance">See the proof</a>
-        <a class="btn btn-secondary" href="/paper/">Read the paper</a>
+        <a class="btn btn-primary" href="/docs/setup-guide/">Get started</a>
+        <a class="btn btn-secondary" href="/docs/worked-example/">See how it works</a>
+        <a class="btn btn-secondary" href="/proof/">See the proof</a>
       </div>
     </div>
-
-    <nav class="page-nav" aria-label="On this page">
-      <a href="#proof-at-a-glance">Proof</a>
-      <a href="#how-it-works">How it works</a>
-      <a href="#quickstart">Quick start</a>
-      <a href="#links">Go deeper</a>
-    </nav>
   </header>
 
+  <!-- ── PROOF CHIPS ── -->
+  <div class="proof-chips" aria-label="Key results">
+    <span class="chip"><strong>+9.7 to +26.9 pp</strong> over best RAG</span>
+    <span class="chip"><strong>5&times; less</strong> context per query</span>
+    <span class="chip"><strong>29&ndash;1&ndash;0</strong> head-to-head vs. baselines</span>
+    <span class="chip"><strong>Fail-open</strong> behind OpenClaw</span>
+    <span class="chip"><strong>Local-first</strong> &mdash; no cloud required</span>
+  </div>
+
+  <!-- ── WHAT CHANGES IN PRACTICE ── -->
+  <section class="section" id="what-changes">
+    <h2>What changes in practice</h2>
+    <p class="section-intro">
+      OpenClaw runs the agent. OpenClawBrain improves its memory and context selection over time. The difference shows up in three ways.
+    </p>
+    <div class="card-grid">
+      <article class="card accent-card">
+        <span class="card-label">Fewer repeated mistakes</span>
+        <h3>Corrections stick</h3>
+        <p>When you fix a mistake, OpenClawBrain records what went wrong and why. The next time a similar situation comes up, the agent retrieves the correction instead of repeating the error.</p>
+      </article>
+      <article class="card">
+        <span class="card-label">Cleaner prompts</span>
+        <h3>Less noise, more signal</h3>
+        <p>A trained routing function picks only the context that matters for each question &mdash; not everything that matches a keyword. Smaller, more precise prompts with better results.</p>
+      </article>
+      <article class="card">
+        <span class="card-label">Better recurring workflows</span>
+        <h3>Improves with use</h3>
+        <p>Outcomes and feedback feed back into training. Workflows your agent runs repeatedly get better over time as the routing function learns what context actually helps.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="section" id="how-it-works">
+    <h2>How it works</h2>
+    <p class="section-intro">
+      Three ideas, in plain English.
+    </p>
+    <div class="card-grid">
+      <article class="card">
+        <span class="card-label">Knowledge graph</span>
+        <h3>Facts stored as connections, not documents</h3>
+        <p>Instead of a pile of text chunks, knowledge lives in a graph. "This deploy policy depends on that rollback rule" is a real edge, not two documents that share a word. Relationships are first-class.</p>
+      </article>
+      <article class="card">
+        <span class="card-label">Learned routing</span>
+        <h3>A trained function picks what to retrieve</h3>
+        <p>When a question arrives, the router walks the graph and selects the most useful nodes. It learns from corrections and outcomes, so it gets better at picking the right context every time.</p>
+      </article>
+      <article class="card">
+        <span class="card-label">Structural plasticity</span>
+        <h3>The graph reshapes as things change</h3>
+        <p>Nodes connect, split, merge, and prune under policy control. Stale knowledge fades; active connections strengthen. Ablations show this is the largest single accuracy contributor across every benchmark.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ── WORKED EXAMPLE ── -->
+  <div class="worked-example-block" id="worked-example">
+    <div class="we-text">
+      <h2>See it in action</h2>
+      <p>A full worked example walks through a real agent session: a mistake is made, a correction is applied, and the brain learns. Before and after, with diffs.</p>
+    </div>
+    <a class="btn btn-secondary" href="/docs/worked-example/" style="flex-shrink: 0;">Read the worked example &rarr;</a>
+  </div>
+
+  <!-- ── PROOF AT A GLANCE ── -->
   <section class="section proof-highlight" id="proof-at-a-glance">
     <h2>Proof at a glance</h2>
     <p class="section-intro">
       Across three benchmark families (10 seeds each, 8 baselines), the learned router beats the best RAG baseline by
       <strong>+9.7 to +26.9 pp</strong> while using <strong>5&times; less context</strong> per query.
-      Head-to-head: <strong>29&ndash;1&ndash;0</strong> across 30 seed-level comparisons.
+      Head-to-head record: <strong>29&ndash;1&ndash;0</strong> across 30 seed-level comparisons.
     </p>
     <a href="/proof/" class="proof-chart-link" aria-label="View full proof details">
-      <figure class="fig" style="margin-bottom: 0;">
+      <figure class="fig">
         <img src="figures/bgz/f1_margin_context.png"
              alt="Two-panel chart: accuracy margin of full_brain over best RAG baseline (left, +9.7 to +26.9 pp) and context cost ratio (right, 5x less context) across three benchmark families">
       </figure>
@@ -497,90 +587,46 @@
     </p>
   </section>
 
-  <section class="section" id="how-it-works">
-    <h2>How it works</h2>
-    <p class="section-intro">
-      OpenClaw handles conversations (the front desk). OpenClawBrain handles memory (the back office).
-      If the brain is ever unavailable, the agent keeps working &mdash; no single point of failure.
+  <!-- ── CURRENT STATUS ── -->
+  <section class="section" id="status">
+    <h2>Current status</h2>
+    <div class="status-badge"><span class="status-dot"></span> Alpha &mdash; v0.1.11</div>
+    <p class="section-intro" style="margin-bottom: 0;">
+      OpenClawBrain is in early alpha. The benchmark results are real; the production surface is not yet hardened.
+      The routing function, graph structure, and plasticity policy are all working and tested.
+      The CLI exposes <code>status</code> and <code>rollback</code>. Bootstrap attach is programmatic (TypeScript).
+      Expect breaking changes before a stable release. Apache-2.0 licensed. Requires Node 20+.
     </p>
-    <div class="path-grid">
-      <article class="path-step primary">
-        <p class="step-index">Knowledge graph</p>
-        <h3>Facts, rules, and corrections &mdash; connected as a map</h3>
-        <p>Instead of a pile of text chunks, the brain organizes knowledge as a graph where nodes are facts and edges are real relationships. "This deploy policy depends on that rollback rule" is a connection, not two documents that happen to share words.</p>
-      </article>
-      <article class="path-step">
-        <p class="step-index">Learned routing</p>
-        <h3>A trained function picks the right context</h3>
-        <p>When a question arrives, the routing function walks the graph and selects the most useful nodes &mdash; not just the most similar-sounding text. Corrections and outcomes feed back into training, so the guide improves with every interaction.</p>
-      </article>
-      <article class="path-step">
-        <p class="step-index">Structural plasticity</p>
-        <h3>The map reshapes as the world changes</h3>
-        <p>Nodes connect, split, merge, and prune under policy control. Stale knowledge fades; active connections strengthen. Ablations show this is the single largest accuracy contributor across every benchmark family.</p>
-        <a href="/paper/">Details in the paper</a>
-      </article>
+  </section>
+
+  <!-- ── DEVELOPER CTA ── -->
+  <section class="section" id="developers">
+    <h2>For developers</h2>
+    <p class="section-intro">
+      Install from the registry and connect to your OpenClaw agent. The CLI surface is <code>status</code> and <code>rollback</code>. Bootstrap attach is done programmatically in TypeScript.
+    </p>
+    <pre><code>npm install @openclawbrain/openclaw
+npm exec openclawbrain -- --help</code></pre>
+    <div class="dev-links">
+      <a class="btn btn-primary" href="/docs/setup-guide/">Setup guide</a>
+      <a class="btn btn-secondary" href="https://github.com/jonathangu/openclawbrain">GitHub</a>
+      <a class="btn btn-secondary" href="/docs/worked-example/">Integration walkthrough</a>
     </div>
   </section>
 
-  <section class="section" id="quickstart">
-    <h2>Quick start</h2>
-    <p class="section-intro">
-      Build the workspace and produce your first brain pack in four commands.
-    </p>
-    <pre><code>corepack enable
-pnpm install --frozen-lockfile
-pnpm check
-pnpm release:check          # proof tests + local package build
-pnpm fresh-env:smoke        # verifies clean install end to end</code></pre>
-    <p class="quickstart-foot">
-      Distributed as local tarballs for now (npm packages coming).
-      Full walkthrough: <a href="/docs/setup-guide.md">setup guide</a>.
-      Integration with OpenClaw: <a href="/docs/openclaw-integration.md">integration guide</a>.
-    </p>
-  </section>
-
-  <section class="section" id="links">
-    <h2>Go deeper</h2>
-    <div class="route-grid">
-      <article class="route-card">
-        <h3>Setup guide</h3>
-        <p>Install, connect to your OpenClaw agent, confirm it works, set up the safety fallback.</p>
-        <a href="/docs/setup-guide.md">Setup guide</a>
-      </article>
-      <article class="route-card">
-        <h3>Proof package</h3>
-        <p>Worked examples, benchmark results, honest gaps, and the line between proven and aspirational.</p>
-        <a href="/proof/">Full evidence</a>
-      </article>
-      <article class="route-card">
-        <h3>Paper</h3>
-        <p>Architecture, approach, ablations, and comparative results across three benchmark families.</p>
-        <a href="/paper/">Read the paper</a>
-      </article>
-      <article class="route-card">
-        <h3>Integration guide</h3>
-        <p>How to wire the two systems together, what each one owns, and how rollbacks work.</p>
-        <a href="/docs/openclaw-integration.md">Integration guide</a>
-      </article>
-      <article class="route-card">
-        <h3>Claims &amp; status</h3>
-        <p>What's proven today vs. what we're building toward. Precise scope with no hedging.</p>
-        <a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">CLAIMS.md</a>
-      </article>
-      <article class="route-card">
-        <h3>Reproduce the eval</h3>
-        <p>Run the benchmarks yourself in the independent brain-ground-zero repo.</p>
-        <a href="/docs/reproduce-eval.md">Reproduce</a>
-      </article>
-    </div>
-  </section>
-
+  <!-- ── FOOTER ── -->
   <footer class="footer">
-    <p>OpenClawBrain: a second brain for your OpenClaw agent.</p>
-    <p>Jonathan Gu &middot; <a href="mailto:jonathangu@gmail.com">jonathangu@gmail.com</a></p>
-    <p><a class="back-link" href="https://www.jonathangu.com/">Author site</a></p>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
+      <a href="/paper/">Paper</a>
+      <a href="/proof/">Materials</a>
+      <a href="https://github.com/jonathangu/openclawbrain/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="mailto:jonathangu@gmail.com">Contact</a>
+    </nav>
+    <p>OpenClawBrain &mdash; memory and learning for OpenClaw agents.</p>
+    <p>Apache-2.0 &middot; Node 20+ &middot; <a href="mailto:jonathangu@gmail.com">jonathangu@gmail.com</a></p>
   </footer>
+
 </article>
 </body>
 </html>

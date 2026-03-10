@@ -52,20 +52,29 @@
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
+    <nav class="nav" style="display:flex; gap:1.4rem; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:.8rem;">
+      <a href="/">Product</a>
+      <a href="/docs/worked-example/">How It Works</a>
+      <a href="/proof/">Proof</a>
+      <a href="/docs/setup-guide/">Developers</a>
+    </nav>
     <h1>Setup Guide</h1>
     <p>OpenClawBrain is a second brain for your OpenClaw agent — a guide that learns which knowledge matters for each question, instead of keyword-searching every document. Think of it as hiring a librarian who gets smarter every day.</p>
 <p>This guide is the day-0 setup path. It covers what the repo delivers today and what's coming next — clearly separated. OpenClaw owns the live runtime (front of house); OpenClawBrain owns the knowledge, learning, and context compilation (the kitchen).</p>
 <p>> <strong>Current truth</strong>: promoted-pack lifecycle, PG-only <code>route_fn</code> evidence, operator observability, local tarball distribution.
 > <strong>Target end shape</strong>: npm-published API, scanner/labels/harvest on by default after attach, continuous live graph update (decay/co-firing/pruning/reorganizing), hard API enforcement of the OpenClaw/OpenClawBrain split.</p>
 <h2>What you need</h2>
-<ul><li>Node.js 20+ with <code>corepack</code> and <code>pnpm</code> 10+</li>
+<h2>Install</h2>
+<pre><code>npm install @openclawbrain/openclaw
+npm exec openclawbrain -- --help
+</code></pre>
+<p>The CLI surface is: <code>status</code> | <code>rollback</code>. Bootstrap attach is programmatic (TypeScript) — there is no CLI attach command.</p>
+<ul><li>Node.js 20+</li>
 <li>An OpenClaw runtime deployment (OpenClawBrain is a learning layer, not a standalone runtime)</li>
 <li>Workspace files (markdown, docs, memory files) for your agent to learn from</li>
 <li><strong>No provider API keys required for OpenClawBrain itself.</strong> The default stack uses local BGE-large embeddings and a local Ollama/Qwen teacher. The broader OpenClaw runtime may still need provider keys for its own agent and tool calls — see <a href="/docs/secrets-and-capabilities/">Secrets and Capabilities</a>.</li>
-<li><strong>Distribution</strong>: the current wave ships as local tarballs from <code>.release/</code> via <code>pnpm release:check</code>. Do not run bare <code>pnpm add @openclawbrain/*</code> yet — the npm-published lane is the target, not the current reality. Run <code>pnpm release:status</code> to see which distribution lane is currently honest.</li>
 </ul>
-<h2>1. Build the workspace</h2>
+<h2>1. Working with the source repository (maintainer)</h2>
 <p>``<code>bash
 corepack enable
 pnpm install --frozen-lockfile
@@ -105,7 +114,7 @@ pnpm fresh-env:smoke        # clean-room outside-consumer install proof
 </ul>
 <strong>Target end shape</strong> (not yet): scanner/labels/harvest on by default after attach without any config; continuous live graph update (decay, co-firing, pruning, reorganizing) on the active pack during serving.</p>
 <h2>2b. Public package surface</h2>
-<p>The supported packages (from local tarballs today, npm-published in the target wave):</p>
+<p>The supported packages (install via <code>npm install @openclawbrain/openclaw</code>):</p>
 <ul><li></code>@openclawbrain/contracts<code></li>
 <li></code>@openclawbrain/events<code></li>
 <li></code>@openclawbrain/event-export<code></li>
@@ -149,6 +158,13 @@ pnpm customer-value-proof:smoke # recorded-session replay showing learning chang
     <div class="source-link">
       <a href="/docs/setup-guide.md">View source (Markdown)</a>
     </div>
+    <footer style="font-family:var(--sans); font-size:.82rem; color:var(--muted); margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border); display:flex; gap:1.2rem; flex-wrap:wrap;">
+      <a href="https://github.com/jonathangu/openclawbrain" style="color:var(--muted);">GitHub</a>
+      <a href="/paper/" style="color:var(--muted);">Paper</a>
+      <a href="/materials/" style="color:var(--muted);">Materials</a>
+      <a href="https://github.com/jonathangu/openclawbrain/blob/main/CHANGELOG.md" style="color:var(--muted);">Changelog</a>
+      <a href="mailto:jonathangu@gmail.com" style="color:var(--muted);">Contact</a>
+    </footer>
   </main>
 </body>
 </html>

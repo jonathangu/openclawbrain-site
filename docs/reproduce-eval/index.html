@@ -52,20 +52,25 @@
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
+    <nav class="nav" style="display:flex; gap:1.4rem; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:.8rem;">
+      <a href="/">Product</a>
+      <a href="/docs/worked-example/">How It Works</a>
+      <a href="/proof/">Proof</a>
+      <a href="/docs/setup-guide/">Developers</a>
+    </nav>
     <h1>Reproduce Eval</h1>
     <p>Don't trust our numbers — run them yourself. This page walks you through regenerating every benchmark, figure, and proof artifact from scratch.</p>
 <p>Read <code>CLAIMS.md</code> alongside this page for exact boundaries on what each test proves.</p>
-<h2>1) Bootstrap the workspace</h2>
-<p>``<code>bash
-cd /path/to/openclawbrain
+<h2>1) Bootstrap the workspace (source repo)</h2>
+<p>The primary install path for end users is <code>npm install @openclawbrain/openclaw</code>. To reproduce evaluations, clone the source repository and use the maintainer toolchain:</p>
+<pre><code>cd /path/to/openclawbrain
 corepack enable
 pnpm install --frozen-lockfile
 pnpm check
 pnpm release:status
 pnpm release:pack
 pnpm release:proofs:status
-</code>`<code></p>
+</code></pre>
 <h2>2) Reproduce the mechanism proofs in this repo</h2>
 <p>These are the proofs implemented directly in the public package workspace today.</p>
 <h3>Lifecycle proof</h3>
@@ -178,6 +183,13 @@ npm run attach-smoke
     <div class="source-link">
       <a href="/docs/reproduce-eval.md">View source (Markdown)</a>
     </div>
+    <footer style="font-family:var(--sans); font-size:.82rem; color:var(--muted); margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border); display:flex; gap:1.2rem; flex-wrap:wrap;">
+      <a href="https://github.com/jonathangu/openclawbrain" style="color:var(--muted);">GitHub</a>
+      <a href="/paper/" style="color:var(--muted);">Paper</a>
+      <a href="/materials/" style="color:var(--muted);">Materials</a>
+      <a href="https://github.com/jonathangu/openclawbrain/blob/main/CHANGELOG.md" style="color:var(--muted);">Changelog</a>
+      <a href="mailto:jonathangu@gmail.com" style="color:var(--muted);">Contact</a>
+    </footer>
   </main>
 </body>
 </html>

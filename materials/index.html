@@ -21,7 +21,12 @@
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> &middot; <a href="/blog/">blog</a> &middot; <a href="/proof/">proof</a> &middot; <a href="/paper/">paper</a></div>
+    <nav class="nav" style="display:flex; gap:1.4rem; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:.8rem; margin-bottom:1.2rem;">
+      <a href="/">Product</a>
+      <a href="/docs/worked-example/">How It Works</a>
+      <a href="/proof/">Proof</a>
+      <a href="/docs/setup-guide/">Developers</a>
+    </nav>
     <h1>The Toolbox</h1>
     <p>Think of this page as the workbench drawer. Everything you need to dig into OpenClawBrain lives here &mdash; docs, benchmark bundles, evaluation charts, package descriptions, and reproduction recipes. Grab what you need: the <a href="/proof/">proof package</a> for benchmark evidence, or the <a href="/docs/worked-example/">worked example</a> to watch one question travel through the system end-to-end.</p>
 
@@ -45,7 +50,7 @@
 
     <h2 style="margin-top:1.4rem;">The Building Blocks (TypeScript Packages)</h2>
     <div class="card">
-      <p style="margin-top:0;">Each package is one layer of the stack, like floors in a building &mdash; raw events at ground level, the learning engine on top. Currently shipped as local tarballs; npm publishing is the next step.</p>
+      <p style="margin-top:0;">Each package is one layer of the stack, like floors in a building &mdash; raw events at ground level, the learning engine on top. Install via <code>npm install @openclawbrain/openclaw</code>.</p>
       <ul>
         <li><code>@openclawbrain/contracts</code> &mdash; shared type definitions (the common language all packages speak)</li>
         <li><code>@openclawbrain/events</code> &mdash; normalizes raw OpenClaw session events into a consistent shape</li>
@@ -89,6 +94,13 @@ pnpm release:pack
     </div>
 
     <p class="meta" style="margin-top:1rem;">If a file moves, update this page to the new canonical path.</p>
+    <footer style="font-family:var(--sans); font-size:.82rem; color:var(--muted); margin-top:1.4rem; padding-top:1rem; border-top:1px solid var(--border); display:flex; gap:1.2rem; flex-wrap:wrap;">
+      <a href="https://github.com/jonathangu/openclawbrain" style="color:var(--muted);">GitHub</a>
+      <a href="/paper/" style="color:var(--muted);">Paper</a>
+      <a href="/materials/" style="color:var(--muted);">Materials</a>
+      <a href="https://github.com/jonathangu/openclawbrain/blob/main/CHANGELOG.md" style="color:var(--muted);">Changelog</a>
+      <a href="mailto:jonathangu@gmail.com" style="color:var(--muted);">Contact</a>
+    </footer>
   </main>
 </body>
 </html>

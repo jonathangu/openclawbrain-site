@@ -52,20 +52,25 @@
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
+    <nav class="nav" style="display:flex; gap:1.4rem; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:.8rem;">
+      <a href="/">Product</a>
+      <a href="/docs/worked-example/">How It Works</a>
+      <a href="/proof/">Proof</a>
+      <a href="/docs/setup-guide/">Developers</a>
+    </nav>
     <h1>Ops Recipes</h1>
     <p>> Canonical docs live on GitHub; this page is a trimmed operator snapshot for the current public wave.</p>
 <h1>OpenClawBrain Ops Recipes</h1>
 <h2>Recipe 1: Day-0 attach bootstrap</h2>
 <p>Goal: attach quickly and get first value without waiting for a full replay.</p>
-<p>``<code>bash
-corepack enable
+<p>Install: <code>npm install @openclawbrain/openclaw</code>. For source-repo verification:</p>
+<pre><code>corepack enable
 pnpm install --frozen-lockfile
 pnpm check
 pnpm release:status
 pnpm lifecycle:smoke
 pnpm observability:smoke
-</code>`<code></p>
+</code></pre>
 <p>Expected result:</p>
 <ul><li>a fast-boot pack can be materialized and promoted quickly</li>
 <li>OpenClaw can compile useful context immediately after attach</li>
@@ -126,6 +131,13 @@ Avoid these phrases:
     <div class="source-link">
       <a href="/docs/ops-recipes.md">View source (Markdown)</a>
     </div>
+    <footer style="font-family:var(--sans); font-size:.82rem; color:var(--muted); margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border); display:flex; gap:1.2rem; flex-wrap:wrap;">
+      <a href="https://github.com/jonathangu/openclawbrain" style="color:var(--muted);">GitHub</a>
+      <a href="/paper/" style="color:var(--muted);">Paper</a>
+      <a href="/materials/" style="color:var(--muted);">Materials</a>
+      <a href="https://github.com/jonathangu/openclawbrain/blob/main/CHANGELOG.md" style="color:var(--muted);">Changelog</a>
+      <a href="mailto:jonathangu@gmail.com" style="color:var(--muted);">Contact</a>
+    </footer>
   </main>
 </body>
 </html>

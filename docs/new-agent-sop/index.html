@@ -52,7 +52,12 @@
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> / <a href="/docs/setup-guide/">docs</a></div>
+    <nav class="nav" style="display:flex; gap:1.4rem; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:.8rem;">
+      <a href="/">Product</a>
+      <a href="/docs/worked-example/">How It Works</a>
+      <a href="/proof/">Proof</a>
+      <a href="/docs/setup-guide/">Developers</a>
+    </nav>
     <h1>New Agent SOP</h1>
     <p>Canonical flow for a new profile-style setup:</p>
 <ul><li>one OpenClaw agent workspace</li>
@@ -84,14 +89,17 @@ mkdir -p "$workspaceDir/memory"
 : > "$workspaceDir/memory/$(date +%F).md"
 </code>`<code></p>
 <p>Populate policy/persona files before live traffic.</p>
-<h2>C) Build and verify OpenClawBrain package set</h2>
-<p>Run from the OpenClawBrain TypeScript workspace root:</p>
-</code>`<code>bash
-corepack enable
+<h2>C) Install OpenClawBrain</h2>
+<p>Install from npm (primary path):</p>
+<pre><code>npm install @openclawbrain/openclaw
+npm exec openclawbrain -- status
+</code></pre>
+<p>To work with the source repository (maintainer fallback):</p>
+<pre><code>corepack enable
 pnpm install
 pnpm check
 pnpm release:pack
-</code>`<code>
+</code></pre>
 <p>Promote one versioned pack set for this rollout.</p>
 <h2>D) Add agent brain profile in OpenClaw runtime</h2>
 <p>Add a dedicated profile for this </code>agentId<code> with defaults on:</p>
@@ -173,6 +181,13 @@ Proof checks:
     <div class="source-link">
       <a href="/docs/new-agent-sop.md">View source (Markdown)</a>
     </div>
+    <footer style="font-family:var(--sans); font-size:.82rem; color:var(--muted); margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border); display:flex; gap:1.2rem; flex-wrap:wrap;">
+      <a href="https://github.com/jonathangu/openclawbrain" style="color:var(--muted);">GitHub</a>
+      <a href="/paper/" style="color:var(--muted);">Paper</a>
+      <a href="/materials/" style="color:var(--muted);">Materials</a>
+      <a href="https://github.com/jonathangu/openclawbrain/blob/main/CHANGELOG.md" style="color:var(--muted);">Changelog</a>
+      <a href="mailto:jonathangu@gmail.com" style="color:var(--muted);">Contact</a>
+    </footer>
   </main>
 </body>
 </html>
