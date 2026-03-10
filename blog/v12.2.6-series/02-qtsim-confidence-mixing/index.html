@@ -45,7 +45,8 @@
 </head>
 <body>
   <main>
-    <div class="nav"><a href="/">openclawbrain.ai</a> | <a href="/blog/">blog</a> | <a href="/proof/">proof</a> | <a href="/paper/">paper</a> | <a href="/blog/v12.2.6-series/">series</a></div>
+    <div class="nav"><a href="/">Product</a> | <a href="/docs/worked-example/">How It Works</a> | <a href="/proof/">Proof</a> | <a href="/docs/setup-guide/">Developers</a></div>
+    <p class="nav" style="margin-top:.4rem; margin-bottom:1.5rem;"><a href="/blog/">← Back to Blog</a></p>
     <div class="eyebrow">Post 2</div>
     <h1>How the guide decides what your agent needs right now</h1>
     <p class="meta">March 2026 | v12.2.6+ series</p>
@@ -95,6 +96,10 @@
     <p>The teacher model exists to produce training labels, not to answer the current turn. Putting it in the live path would just add another inference dependency &mdash; slower, more expensive, with no learning benefit on the current query. The whole point is that the <em>learned</em> <code>route_fn</code> handles live queries cheaply and fast, while the teacher runs in the background to make the next version of that router better. This separation is also what makes the system safe to deploy: if background learning fails or is delayed, the live router keeps working with its current weights.</p>
 
     <p>Next: <a href="/blog/v12.2.6-series/03-evaluation-ablations/">Post 3 on the evidence boundary and proof path</a>.</p>
+
+    <footer style="margin-top:3rem; padding-top:1.5rem; border-top:1px solid rgba(255,255,255,0.08); font-family:var(--sans); font-size:.82rem; color:var(--muted);">
+      <a href="https://github.com/jonathangu/openclawbrain">GitHub</a> | <a href="/paper/">Paper</a> | <a href="/materials/">Materials</a> | <a href="https://github.com/jonathangu/openclawbrain/blob/main/CHANGELOG.md">Changelog</a> | <a href="mailto:jonathangu@gmail.com">Contact</a>
+    </footer>
   </main>
 </body>
 </html>
