@@ -5,9 +5,9 @@
   <title>OpenClawBrain Proof Package</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Jonathan Gu">
-  <meta name="description" content="OpenClawBrain shows benchmark wins across three families and a now-verified install/attach/restart path on real OpenClaw profiles. Live learning proof is still pending first export.">
+  <meta name="description" content="OpenClawBrain shows benchmark wins across three families and a now-verified install/attach/restart path on real OpenClaw profiles. The shipped install now provisions bge-large by default; live learning proof is still pending first export.">
   <meta property="og:title" content="OpenClawBrain Proof Package">
-  <meta property="og:description" content="Benchmark wins across three families, plus verified install/attach/restart on real OpenClaw profiles. Live learning is still pending first export.">
+  <meta property="og:description" content="Benchmark wins across three families, plus verified install/attach/restart on real OpenClaw profiles. The shipped install now provisions bge-large by default; live learning is still pending first export.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/proof/">
   <meta name="twitter:card" content="summary_large_image">
@@ -433,7 +433,7 @@
             <a class="btn btn-secondary" href="/docs/operator-guide/">Operator guide</a>
           </div>
           <p class="hero-note">
-            Benchmark evidence and operator proof are different kinds of evidence. Real-profile install/attach/restart is now verified; live learning is not yet, because both attached brains are still <code>awaiting_first_export</code>. See the <a href="/docs/setup-guide/">Setup Guide</a>, <a href="/docs/operator-guide/">Operator Guide</a>, and <a href="https://github.com/jonathangu/brain-ground-zero/blob/main/CLAIMS.md">CLAIMS.md</a> for the authoritative boundary.
+            Benchmark evidence and operator proof are different kinds of evidence. Real-profile install/attach/restart is now verified; the shipped install contract now expects an embedder and provisions <code>bge-large</code> unless you explicitly skip that step; live learning is not yet proven, because both attached brains are still <code>awaiting_first_export</code>. See the <a href="/docs/setup-guide/">Setup Guide</a>, <a href="/docs/operator-guide/">Operator Guide</a>, and <a href="https://github.com/jonathangu/brain-ground-zero/blob/main/CLAIMS.md">CLAIMS.md</a> for the authoritative boundary.
           </p>
         </div>
 
@@ -454,7 +454,7 @@
           <article class="status-card">
             <div class="kicker">Operationally verified</div>
             <h3>Install, attach, restart</h3>
-            <p><code>npm install -g @openclawbrain/openclaw@0.3.0</code> worked. The safest default is a dedicated activation root per profile. Attach succeeded on Tern and CormorantAI, and Tern came back alive on Telegram after restart.</p>
+            <p><code>npm install -g @openclawbrain/openclaw@0.3.0</code> worked. Normal install now expects an embedder and provisions <code>bge-large</code> before brain bootstrap unless the operator explicitly uses <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The Ollama teacher path is still optional; if you enable it, the default teacher model is <code>qwen3.5:9b</code>. The safest default remains a dedicated activation root per profile. Attach succeeded on Tern and CormorantAI, and Tern came back alive on Telegram after restart.</p>
             <p class="meta">This proves the public operator path, not live learning. Both attached brains are still <code>awaiting_first_export</code>.</p>
           </article>
         </div>
@@ -647,10 +647,13 @@
 
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
             <div class="kicker">2 &middot; Install / attach / restart proof</div>
-            <h3>Real OpenClaw profiles now attach cleanly</h3>
+            <h3>Real OpenClaw profiles now attach cleanly under the shipped install contract</h3>
             <ul>
               <li><code>npm install -g @openclawbrain/openclaw@0.3.0</code> worked on a real operator path.</li>
-              <li>The safest default is one dedicated activation root per profile.</li>
+              <li>Normal install now expects an embedder and provisions or pulls <code>bge-large</code> before brain bootstrap by default.</li>
+              <li>Operators can explicitly skip that step with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code> if they manage the embedder separately.</li>
+              <li>The local teacher LLM remains optional; if the Ollama teacher path is enabled, its default model is <code>qwen3.5:9b</code>.</li>
+              <li>The safest default remains one dedicated activation root per profile.</li>
               <li>Attach succeeded on both Tern and CormorantAI.</li>
               <li>Tern came back alive on Telegram after the verified restart path.</li>
             </ul>
@@ -669,7 +672,7 @@
         </div>
         <div class="callout" style="margin-top: 1rem;">
           <div class="kicker">Install surface</div>
-          <p>To reproduce the verified path, start with the <a href="/docs/setup-guide/">Setup Guide</a>. Use the <a href="/docs/operator-guide/">Operator Guide</a> for status, rollback, and attach triage. The public install surface is <code>npm install -g @openclawbrain/openclaw@0.3.0</code>.</p>
+          <p>To reproduce the verified path, start with the <a href="/docs/setup-guide/">Setup Guide</a>. Use the <a href="/docs/operator-guide/">Operator Guide</a> for status, rollback, and attach triage. The public install surface is <code>npm install -g @openclawbrain/openclaw@0.3.0</code>; normal install now provisions <code>bge-large</code> before brain bootstrap unless you explicitly skip embedder provision, and the teacher path stays optional.</p>
         </div>
       </section>
 
@@ -692,7 +695,7 @@ summary: deploy note for billing banner patch...
 - freeze window + rollback owner requirement
 - prior correction: no auto-approval language
 [/COMPILED_CONTEXT]
-correction: internal-only patch -> no support contact</code></pre>
+correction: internal-only patch -&gt; no support contact</code></pre>
             <p class="meta">
               Source: <a href="/docs/worked-example/">worked example</a>. The same <code>turn_id</code> ties what was compiled, what was corrected, and what the guide learned.
             </p>
@@ -788,7 +791,7 @@ correction: internal-only patch -> no support contact</code></pre>
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
             <div class="kicker">pnpm fresh-env:smoke</div>
             <h3>Clean install from zero</h3>
-            <p>Install from local packages into an isolated directory. Attach, promotion, and rollback proved end-to-end from a blank slate.</p>
+            <p>Install from local packages into an isolated directory, including the default embedder-first bootstrap path unless that step is explicitly skipped. Attach, promotion, and rollback proved end-to-end from a blank slate.</p>
           </article>
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
             <div class="kicker">pnpm continuous-product-loop:smoke</div>
