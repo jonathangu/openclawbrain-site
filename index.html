@@ -573,6 +573,19 @@ env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway
           <a class="btn btn-secondary" href="/docs/openclaw-integration/">Integration docs</a>
         </div>
       </article>
+      <article class="card accent-card" style="grid-column: 1 / -1;">
+        <span class="card-label">Shareable blurb</span>
+        <h3>What another profile should know</h3>
+        <p>You’ve now got <strong>OpenClawBrain</strong> attached. Think of it as a background learning/memory layer for OpenClaw: it installs cleanly, stays fail-open, and only changes live behavior after promotion.</p>
+        <ul class="install-list">
+          <li>Watch for the first export landing &mdash; <code>awaiting_first_export</code> is healthy at first</li>
+          <li>Check active pack / previous pack to confirm promotion + rollback health</li>
+          <li>Check teacher / watch artifacts if you are running the learning loop</li>
+          <li>Check gateway + channel health after restart</li>
+          <li>Look for actual later-turn improvement after promotion</li>
+        </ul>
+        <p>Short version: the brain is installed; now the interesting part is watching it go from <strong>attached</strong> to <strong>actually learning</strong>.</p>
+      </article>
     </div>
   </section>
 
