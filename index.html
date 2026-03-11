@@ -12,7 +12,7 @@
   <meta name="twitter:card" content="summary">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Crimson+Pro:ital,wght@0,400;0,600;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
   <link rel="canonical" href="https://openclawbrain.ai/">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -197,6 +197,31 @@
     .chip strong {
       color: var(--green);
       font-weight: 600;
+    }
+
+    /* ── INSTALL BLOCK ── */
+    .install-section {
+      border-color: var(--border-strong);
+      background: linear-gradient(165deg, rgba(121, 211, 255, 0.08), rgba(10, 15, 24, 0.92) 55%);
+    }
+
+    .install-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.72rem;
+    }
+
+    .install-list {
+      margin: 0.75rem 0 0;
+      padding-left: 1.15rem;
+      font-family: var(--sans);
+      font-size: 0.83rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .install-list li {
+      margin: 0.32rem 0;
     }
 
     /* ── SECTIONS ── */
@@ -450,7 +475,8 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 880px) {
-      .card-grid { grid-template-columns: 1fr; }
+      .card-grid,
+      .install-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
@@ -473,6 +499,7 @@
       <a class="brand" href="/">openclawbrain.ai</a>
       <nav class="utility-links" aria-label="Primary navigation">
         <a href="/">Product</a>
+        <a href="#install-now">Install</a>
         <a href="/docs/worked-example/">How It Works</a>
         <a href="/proof/">Proof</a>
         <a href="/docs/setup-guide/">Developers</a>
@@ -487,8 +514,8 @@
         OpenClawBrain is a memory layer for OpenClaw that learns from corrections, picks better context, and reduces prompt waste over time. Your agent starts every conversation with amnesia &mdash; OpenClawBrain fixes that.
       </p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="/docs/setup-guide/">Get started</a>
-        <a class="btn btn-secondary" href="/docs/worked-example/">See how it works</a>
+        <a class="btn btn-primary" href="#install-now">Verified install</a>
+        <a class="btn btn-secondary" href="/docs/setup-guide/">Read the docs</a>
         <a class="btn btn-secondary" href="/proof/">See the proof</a>
       </div>
     </div>
@@ -502,6 +529,52 @@
     <span class="chip"><strong>Fail-open</strong> behind OpenClaw</span>
     <span class="chip"><strong>Local-first</strong> &mdash; no cloud required</span>
   </div>
+
+  <!-- ── VERIFIED INSTALL ── -->
+  <section class="section install-section" id="install-now">
+    <h2>Verified install on real OpenClaw profiles</h2>
+    <p class="section-intro">
+      The published package path works today. A real install on Jonathan's Mac mini succeeded with <code>npm install -g @openclawbrain/openclaw@0.3.0</code>, then attached cleanly to separate OpenClaw profiles. Safest default: one dedicated brain per profile, with its own <code>--openclaw-home</code> and activation root.
+    </p>
+    <p class="callout-note">
+      Run install from a normal shell, not from inside a live agent session. The install, attach, and restart path is verified. Tern came back alive on Telegram after restart. Both verified brains are still <code>awaiting_first_export</code>, so install alone does not prove live learning yet.
+    </p>
+    <div class="install-grid">
+      <article class="card accent-card">
+        <span class="card-label">1. Install the package</span>
+        <h3>Use the published npm package</h3>
+        <p>This is the verified package install that worked on the real machine.</p>
+        <pre><code>npm install -g @openclawbrain/openclaw@0.3.0</code></pre>
+      </article>
+      <article class="card">
+        <span class="card-label">2. Attach one brain per profile</span>
+        <h3>Keep each profile isolated by default</h3>
+        <p>Use a dedicated profile home and a dedicated activation root for each profile you wire up.</p>
+        <pre><code>openclawbrain install --openclaw-home "$PROFILE_HOME" --activation-root "$ACTIVATION_ROOT" --workspace-id "$PROFILE_NAME"</code></pre>
+        <ul class="install-list">
+          <li><code>Tern</code> &rarr; <code>~/.openclaw-Tern</code> with <code>~/.openclawbrain/activation/Tern</code></li>
+          <li><code>CormorantAI</code> &rarr; <code>~/.openclaw-CormorantAI</code> with <code>~/.openclawbrain/activation/CormorantAI</code></li>
+        </ul>
+      </article>
+      <article class="card">
+        <span class="card-label">3. Restart cleanly</span>
+        <h3>Use the env-cleared OpenClaw restart shape</h3>
+        <p>Restart the gateway, then check status, with the same clean environment pattern.</p>
+        <pre><code>env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway restart
+env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway status</code></pre>
+      </article>
+      <article class="card">
+        <span class="card-label">Reversible by design</span>
+        <h3>Disable or detach without cross-profile spillover</h3>
+        <p>The safe default is one activation root per profile, so rollback, disable, and cleanup stay bounded to that profile. To back out, stop using that profile's dedicated brain paths and restart the gateway with the same env-cleared pattern above.</p>
+        <div class="dev-links">
+          <a class="btn btn-primary" href="https://github.com/jonathangu/openclawbrain">Package repo</a>
+          <a class="btn btn-secondary" href="/docs/setup-guide/">Setup guide</a>
+          <a class="btn btn-secondary" href="/docs/openclaw-integration/">Integration docs</a>
+        </div>
+      </article>
+    </div>
+  </section>
 
   <!-- ── WHAT CHANGES IN PRACTICE ── -->
   <section class="section" id="what-changes">
@@ -592,22 +665,21 @@
     <p class="section-intro" style="margin-bottom: 0;">
       OpenClawBrain is in early alpha. The benchmark results are real; the production surface is not yet hardened.
       The routing function, graph structure, and plasticity policy are all working and tested.
-      The CLI exposes <code>status</code> and <code>rollback</code>. Bootstrap attach is programmatic (TypeScript).
+      The published install, attach, and restart path is verified on real OpenClaw profiles, but live-learning proof remains separate and the verified brains are still <code>awaiting_first_export</code>.
       Expect breaking changes before a stable release. Apache-2.0 licensed. Requires Node 20+.
     </p>
   </section>
 
   <!-- ── DEVELOPER CTA ── -->
   <section class="section" id="developers">
-    <h2>For developers</h2>
+    <h2>Package repo and docs</h2>
     <p class="section-intro">
-      Install from the registry and connect to your OpenClaw agent. The CLI surface is <code>status</code> and <code>rollback</code>. Bootstrap attach is done programmatically in TypeScript.
+      The operator install path is the published <code>@openclawbrain/openclaw</code> package plus the verified <code>openclawbrain install</code> flow above. Use the docs for deeper runtime wiring, worked examples, and benchmark boundaries.
     </p>
-    <pre><code>npm install @openclawbrain/openclaw
-npm exec openclawbrain -- --help</code></pre>
     <div class="dev-links">
       <a class="btn btn-primary" href="/docs/setup-guide/">Setup guide</a>
-      <a class="btn btn-secondary" href="https://github.com/jonathangu/openclawbrain">GitHub</a>
+      <a class="btn btn-secondary" href="https://github.com/jonathangu/openclawbrain">Package repo</a>
+      <a class="btn btn-secondary" href="/docs/openclaw-integration/">Integration docs</a>
       <a class="btn btn-secondary" href="/docs/worked-example/">Integration walkthrough</a>
     </div>
   </section>
