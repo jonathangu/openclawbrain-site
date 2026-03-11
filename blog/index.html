@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain Blog</title>
   <meta name="author" content="Jonathan Gu" />
-  <meta name="description" content="OpenClawBrain blog: how a memory layer for your OpenClaw agent works, what the benchmarks show, and how to set it up — in plain language." />
+  <meta name="description" content="OpenClawBrain blog: where operators should start, how the install path works, what the architecture does, and what the current proof actually shows." />
   <link rel="canonical" href="https://openclawbrain.ai/blog/" />
   <style>
     :root {
@@ -87,10 +87,16 @@
   </nav>
   <main>
     <h1>Blog</h1>
-    <p>Your OpenClaw agent starts every conversation with amnesia. OpenClawBrain fixes that &mdash; a memory layer that learns which context matters, selects it per query, and gets sharper from corrections. These posts explain how it works, what the benchmarks prove, and how to wire it up.</p>
+    <p>Your OpenClaw agent starts every conversation with amnesia. OpenClawBrain fixes that &mdash; a memory layer that learns which context matters, selects it per query, and gets sharper from corrections. The front door is now operator-first: install, attach, verify first value, then decide how much architecture and proof detail you need.</p>
+    <p>The install and attach path is now real enough for live operator docs: Tern and CormorantAI have both attached successfully, dedicated activation roots per profile are the safest default, and Tern came back on Telegram after restart. The claim boundary stays explicit: live learning still needs first-export proof.</p>
 
     <h2>Start Here</h2>
     <div class="grid">
+      <a class="post featured" href="/docs/setup-guide/">
+        <div class="title">Safe install and operator quickstart</div>
+        <div class="meta">Start here &middot; install is now the front door, with an honest claim boundary</div>
+        <div>Start with the real operator path: install <code>@openclawbrain/openclaw</code>, give each profile its own activation root, attach safely, and verify status, doctor, and rollback before you lean on learning claims. This is the right entry point if you are bringing up a real OpenClaw profile.</div>
+      </a>
       <a class="post featured" href="/docs/worked-example/">
         <div class="title">Worked example: one conversation turn, end to end</div>
         <div class="meta">Start here &middot; see what actually happens before looking at scores</div>
@@ -105,6 +111,25 @@
         <div class="title">What OpenClawBrain is: the v12.2.6+ architecture series</div>
         <div class="meta">March 2026 &middot; 6 posts</div>
         <div>The full explanation: how learning happens off the live path, how the routing function blends structural knowledge with per-query relevance, and how operators plug the two systems together.</div>
+      </a>
+    </div>
+
+    <h2>Install &amp; Operate</h2>
+    <div class="grid">
+      <a class="post" href="/docs/setup-guide/">
+        <div class="title">Setup guide: install, activation roots, first checks</div>
+        <div class="meta">Operator front door</div>
+        <div>The day-0 path for real deployments: package install, runtime profile wiring, safest-default activation-root isolation, and the first checks that tell you whether attach actually landed.</div>
+      </a>
+      <a class="post" href="/docs/operator-guide/">
+        <div class="title">Operator guide: status, doctor, rollback, and claim boundary</div>
+        <div class="meta">Runbook</div>
+        <div>Use this when you need a one-screen answer to whether the active pack is healthy, whether rollback is ready, and which parts of the current operator story are proven versus still pending.</div>
+      </a>
+      <a class="post" href="/docs/openclaw-integration/">
+        <div class="title">OpenClaw integration: attach shape, fail-open behavior, ownership boundary</div>
+        <div class="meta">Runtime wiring</div>
+        <div>The runtime-facing explanation of how OpenClaw and OpenClawBrain connect, what stays off the hot path, how promotion works, and why the serve path remains fail-open if learning falls behind.</div>
       </a>
     </div>
 
