@@ -211,6 +211,10 @@
       gap: 0.72rem;
     }
 
+    .span-all {
+      grid-column: 1 / -1;
+    }
+
     .install-list {
       margin: 0.75rem 0 0;
       padding-left: 1.15rem;
@@ -248,6 +252,10 @@
       color: var(--text);
       line-height: 1.65;
       max-width: 78ch;
+    }
+
+    .section-intro-tight {
+      margin-bottom: 0;
     }
 
     /* ── CARDS GRID ── */
@@ -335,6 +343,10 @@
       color: var(--text);
       margin: 0;
       line-height: 1.55;
+    }
+
+    .worked-example-cta {
+      flex-shrink: 0;
     }
 
     /* ── PROOF HIGHLIGHT ── */
@@ -514,7 +526,7 @@
         OpenClawBrain is a memory layer for OpenClaw that learns from corrections, picks better context, and reduces prompt waste over time. Your agent starts every conversation with amnesia &mdash; OpenClawBrain fixes that.
       </p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#install-now">Verified install</a>
+        <a class="btn btn-primary" href="#install-now">Operator install</a>
         <a class="btn btn-secondary" href="/docs/setup-guide/">Read the docs</a>
         <a class="btn btn-secondary" href="/proof/">See the proof</a>
       </div>
@@ -522,36 +534,38 @@
   </header>
 
   <!-- ── PROOF CHIPS ── -->
-  <div class="proof-chips" aria-label="Key results">
+  <section class="proof-chips" aria-label="Key results">
     <span class="chip"><strong>+9.7 to +26.9 pp</strong> over best RAG</span>
     <span class="chip"><strong>5&times; less</strong> context per query</span>
     <span class="chip"><strong>29&ndash;1&ndash;0</strong> head-to-head vs. baselines</span>
     <span class="chip"><strong>Fail-open</strong> behind OpenClaw</span>
     <span class="chip"><strong>Local-first</strong> &mdash; no cloud required</span>
-  </div>
+  </section>
 
   <!-- ── VERIFIED INSTALL ── -->
   <section class="section install-section" id="install-now">
-    <h2>Verified install on real OpenClaw profiles</h2>
+    <h2>Operator-first install on real OpenClaw profiles</h2>
     <p class="section-intro">
-      The published package path works today. A real install on Jonathan's Mac mini succeeded with <code>npm install -g @openclawbrain/openclaw@0.3.0</code>, then attached cleanly to separate OpenClaw profiles. Safest default: one dedicated brain per profile, with its own <code>--openclaw-home</code> and activation root.
+      The published package path works today. Normal install expects an embedder, and the shipped default is <code>bge-large</code>. On Jonathan's Mac mini, <code>openclawbrain install</code> provisioned and pulled that embedder before brain bootstrap, then attached cleanly to separate OpenClaw profiles. Safest default: one dedicated brain per profile, with its own <code>--openclaw-home</code> and activation root.
     </p>
     <p class="callout-note">
-      Run install from a normal shell, not from inside a live agent session. The install, attach, and restart path is verified. Tern came back alive on Telegram after restart. Both verified brains are still <code>awaiting_first_export</code>, so install alone does not prove live learning yet.
+      Run install from a normal shell, not from inside a live agent session. Skipping embedder provision is an explicit override only: use <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code> if you really want to bypass the default <code>bge-large</code> pull. The local teacher LLM remains optional; if you enable the Ollama teacher path, its default model is <code>qwen3.5:9b</code>. The install, attach, and restart path is verified, but both verified brains are still <code>awaiting_first_export</code>, so install alone does not prove live learning yet.
     </p>
     <div class="install-grid">
       <article class="card accent-card">
         <span class="card-label">1. Install the package</span>
         <h3>Use the published npm package</h3>
-        <p>This is the verified package install that worked on the real machine.</p>
+        <p>This is the verified package install that worked on the real machine. The operator flow starts here, then runs <code>openclawbrain install</code> from a normal shell.</p>
         <pre><code>npm install -g @openclawbrain/openclaw@0.3.0</code></pre>
       </article>
       <article class="card">
         <span class="card-label">2. Attach one brain per profile</span>
         <h3>Keep each profile isolated by default</h3>
-        <p>Use a dedicated profile home and a dedicated activation root for each profile you wire up.</p>
+        <p>Use a dedicated profile home and a dedicated activation root for each profile you wire up. The default install flow provisions and pulls <code>bge-large</code> before brain bootstrap.</p>
         <pre><code>openclawbrain install --openclaw-home "$PROFILE_HOME" --activation-root "$ACTIVATION_ROOT" --workspace-id "$PROFILE_NAME"</code></pre>
         <ul class="install-list">
+          <li>Skip embedder provision only with <code>--skip-embedder-provision</code></li>
+          <li>Or set <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code> before install</li>
           <li><code>Tern</code> &rarr; <code>~/.openclaw-Tern</code> with <code>~/.openclawbrain/activation/Tern</code></li>
           <li><code>CormorantAI</code> &rarr; <code>~/.openclaw-CormorantAI</code> with <code>~/.openclawbrain/activation/CormorantAI</code></li>
         </ul>
@@ -573,18 +587,18 @@ env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway
           <a class="btn btn-secondary" href="/docs/openclaw-integration/">Integration docs</a>
         </div>
       </article>
-      <article class="card accent-card" style="grid-column: 1 / -1;">
+      <article class="card accent-card span-all">
         <span class="card-label">Shareable blurb</span>
         <h3>What another profile should know</h3>
-        <p>You’ve now got <strong>OpenClawBrain</strong> attached. Think of it as a background learning/memory layer for OpenClaw: it installs cleanly, stays fail-open, and only changes live behavior after promotion.</p>
+        <p>You’ve now got <strong>OpenClawBrain</strong> attached. Think of it as an operator-first memory layer for OpenClaw: normal install brings up the default embedder, the live path stays fail-open, and only promoted packs change behavior.</p>
         <ul class="install-list">
           <li>Watch for the first export landing &mdash; <code>awaiting_first_export</code> is healthy at first</li>
           <li>Check active pack / previous pack to confirm promotion + rollback health</li>
-          <li>Check teacher / watch artifacts if you are running the learning loop</li>
+          <li>Check teacher / watch artifacts only if you enabled the optional teacher path; its Ollama default is <code>qwen3.5:9b</code></li>
           <li>Check gateway + channel health after restart</li>
           <li>Look for actual later-turn improvement after promotion</li>
         </ul>
-        <p>Short version: the brain is installed; now the interesting part is watching it go from <strong>attached</strong> to <strong>actually learning</strong>.</p>
+        <p>Short version: the brain is installed; the embedder contract is active by default; and the interesting part is still watching it go from <strong>attached</strong> to <strong>actually learning</strong>.</p>
       </article>
     </div>
   </section>
@@ -645,7 +659,7 @@ env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway
       <h2>See it in action</h2>
       <p>A full worked example walks through a real agent session: a mistake is made, a correction is applied, and the brain learns. Before and after, with diffs.</p>
     </div>
-    <a class="btn btn-secondary" href="/docs/worked-example/" style="flex-shrink: 0;">Read the worked example &rarr;</a>
+    <a class="btn btn-secondary worked-example-cta" href="/docs/worked-example/">Read the worked example &rarr;</a>
   </div>
 
   <!-- ── PROOF AT A GLANCE ── -->
@@ -675,10 +689,10 @@ env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway
   <section class="section" id="status">
     <h2>Current status</h2>
     <div class="status-badge"><span class="status-dot"></span> Alpha &mdash; v0.1.11</div>
-    <p class="section-intro" style="margin-bottom: 0;">
+    <p class="section-intro section-intro-tight">
       OpenClawBrain is in early alpha. The benchmark results are real; the production surface is not yet hardened.
       The routing function, graph structure, and plasticity policy are all working and tested.
-      The published install, attach, and restart path is verified on real OpenClaw profiles, but live-learning proof remains separate and the verified brains are still <code>awaiting_first_export</code>.
+      The published install, attach, and restart path is verified on real OpenClaw profiles, including default <code>bge-large</code> embedder provision before brain bootstrap, but live-learning proof remains separate and the verified brains are still <code>awaiting_first_export</code>.
       Expect breaking changes before a stable release. Apache-2.0 licensed. Requires Node 20+.
     </p>
   </section>
@@ -687,7 +701,7 @@ env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway
   <section class="section" id="developers">
     <h2>Package repo and docs</h2>
     <p class="section-intro">
-      The operator install path is the published <code>@openclawbrain/openclaw</code> package plus the verified <code>openclawbrain install</code> flow above. Use the docs for deeper runtime wiring, worked examples, and benchmark boundaries.
+      The operator install path is the published <code>@openclawbrain/openclaw</code> package plus the verified <code>openclawbrain install</code> flow above: default <code>bge-large</code> embedder provision first, explicit skip only by flag or env var, optional local teacher after that. Use the docs for deeper runtime wiring, worked examples, and benchmark boundaries.
     </p>
     <div class="dev-links">
       <a class="btn btn-primary" href="/docs/setup-guide/">Setup guide</a>
