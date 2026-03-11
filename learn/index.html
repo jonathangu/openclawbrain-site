@@ -392,6 +392,86 @@
       line-height: 1.5;
     }
 
+    /* ── INSTALL BRIDGE ── */
+    .boundary-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .boundary-card {
+      padding: 1rem 1.1rem;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--bg-panel);
+    }
+
+    .boundary-card.highlight {
+      border-color: var(--border-strong);
+      background: linear-gradient(165deg, rgba(121, 211, 255, 0.1), rgba(12, 18, 28, 0.92) 60%);
+    }
+
+    .boundary-card h3 {
+      margin: 0 0 0.55rem;
+      font-family: var(--sans);
+      font-size: 0.98rem;
+      color: var(--text-bright);
+      line-height: 1.35;
+    }
+
+    .boundary-card p {
+      margin: 0 0 0.75rem;
+      font-family: var(--sans);
+      font-size: 0.83rem;
+      color: var(--text);
+      line-height: 1.58;
+    }
+
+    .boundary-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .boundary-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .boundary-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      color: var(--text);
+      line-height: 1.52;
+    }
+
+    .boundary-list li::before {
+      content: "→";
+      flex-shrink: 0;
+      color: var(--accent);
+      font-size: 0.8rem;
+    }
+
+    .bridge-note {
+      margin-top: 0.9rem;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid rgba(255, 190, 114, 0.28);
+      border-radius: 10px;
+      background: rgba(255, 190, 114, 0.06);
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .bridge-links {
+      margin-top: 1rem;
+    }
+
     /* ── CTA BLOCKS ── */
     .cta-block {
       margin-bottom: 1.55rem;
@@ -459,6 +539,7 @@
     @media (max-width: 700px) {
       .concept-grid { grid-template-columns: 1fr; }
       .compare-grid { grid-template-columns: 1fr; }
+      .boundary-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
@@ -498,6 +579,7 @@
         and exactly how OpenClawBrain fixes it &mdash; from first principles.
       </p>
       <div class="hero-actions">
+        <a class="btn btn-primary" href="/docs/setup-guide/">Install safely</a>
         <a class="btn btn-secondary" href="/docs/worked-example/">See it in action</a>
         <a class="btn btn-secondary" href="/proof/">See the evidence</a>
       </div>
@@ -543,6 +625,61 @@
         It falls back to baseline context rather than failing. The system is designed to help,
         never to block.
       </p>
+    </div>
+  </section>
+
+  <!-- ── INSTALL BOUNDARY ── -->
+  <section class="section accent-section" aria-labelledby="install-boundary-heading">
+    <h2 id="install-boundary-heading">Operator bridge: understand the mechanism, then install from the right boundary</h2>
+    <p class="section-intro">
+      The install path is real now, but it is still an operator path. After you understand how the
+      brain works, the next step is to attach it from a normal shell or deployment flow, not from a
+      live chat window.
+    </p>
+    <p class="section-intro">
+      Safe default today: one activation root per profile, then restart the runtime externally so the
+      profile comes back with the brain attached. Install and restart are real. Live learning proof
+      starts later, after exports and promotion.
+    </p>
+
+    <div class="boundary-grid">
+      <div class="boundary-card highlight">
+        <h3>How to install it safely</h3>
+        <ul class="boundary-list">
+          <li>Run install and attach from a normal shell, script, or deploy lane, not from the live chat itself.</li>
+          <li>Use one dedicated brain activation root per profile by default. It keeps state, rollback, and blame clear.</li>
+          <li>Restart OpenClaw externally after install so the profile reloads with the attached brain cleanly.</li>
+          <li>Use the site setup guide for the day-0 path, then the operator runbook for checks and rollback.</li>
+        </ul>
+      </div>
+
+      <div class="boundary-card">
+        <h3>What is proven today</h3>
+        <p>
+          Verified install onto real profiles now exists. Attach plus external restart succeeded for
+          Tern and CormorantAI, and Tern came back alive on Telegram after restart.
+        </p>
+        <p>
+          That is install proof, not full live-learning proof. Both verified brains are still waiting
+          on first export, so no one should read install success as proof that later turns are already
+          learning from fresh live data.
+        </p>
+      </div>
+    </div>
+
+    <p class="bridge-note">
+      <strong>Keep the claim boundary straight:</strong> a successful install proves the profile can
+      carry a brain safely. It does not by itself prove that the learner has exported, promoted a
+      fresher pack, and changed later behavior. That evidence belongs on the proof path, not in the
+      install claim.
+    </p>
+
+    <div class="hero-actions bridge-links">
+      <a class="btn btn-primary" href="/docs/setup-guide/">Real setup path</a>
+      <a class="btn btn-secondary" href="/docs/operator-guide/">Operator runbook</a>
+      <a class="btn btn-secondary" href="https://github.com/jonathangu/openclawbrain/blob/main/README.md">Repo docs</a>
+      <a class="btn btn-secondary" href="/proof/">Proof page</a>
+      <a class="btn btn-secondary" href="/">Homepage</a>
     </div>
   </section>
 
@@ -635,7 +772,9 @@
 
     <p class="compare-note">
       No cloud required. Both components run locally. The brain stores everything on disk in
-      your environment &mdash; nothing is sent to a third-party service.
+      your environment &mdash; nothing is sent to a third-party service. For live profiles today,
+      the safe default is one activation root per profile, with attach and restart handled outside
+      the conversation itself.
     </p>
   </section>
 
