@@ -5,9 +5,9 @@
   <title>OpenClawBrain Proof Package</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Jonathan Gu">
-  <meta name="description" content="OpenClawBrain beats the best RAG baseline by +9.7 to +26.9 pp across three benchmark families (30 seeds, 29-1-0 head-to-head) while using 5x less context per query.">
+  <meta name="description" content="OpenClawBrain shows benchmark wins across three families and a now-verified install/attach/restart path on real OpenClaw profiles. Live learning proof is still pending first export.">
   <meta property="og:title" content="OpenClawBrain Proof Package">
-  <meta property="og:description" content="+9.7 to +26.9 pp over the best RAG baseline across three families. 29-1-0 head-to-head. 5x less context. Charts, reproduction steps, and clear boundaries.">
+  <meta property="og:description" content="Benchmark wins across three families, plus verified install/attach/restart on real OpenClaw profiles. Live learning is still pending first export.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/proof/">
   <meta name="twitter:card" content="summary_large_image">
@@ -413,27 +413,27 @@
 
     <main>
       <p style="font-family:var(--sans); font-size:0.97rem; color:var(--muted); margin:0.5rem 0 1.2rem; max-width:52rem;">
-        This page is the full evidence package. If you want the summary, start at the <a href="/">homepage</a>.
+        This page is the full evidence package for benchmark results and current operator truth. If you want the summary, start at the <a href="/">homepage</a>.
         The full technical paper is available at <a href="/paper/">openclawbrain.ai/paper/</a>.
       </p>
 
       <!-- ───────────────────── HERO ───────────────────── -->
       <section class="hero">
         <div class="hero-copy">
-          <div class="eyebrow">Three-family benchmark evidence</div>
+          <div class="eyebrow">Benchmark + operator proof</div>
           <h1>Does it actually work?</h1>
           <p style="font-family:var(--sans); font-size:0.92rem; color:var(--muted); margin:0.5rem 0 0;">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
           <p class="lead">
-            We tested the full-brain mechanism &mdash; graph memory, learned routing, policy-gradient updates, and structural plasticity &mdash; against 8 baselines on three distinct long-lived memory tasks, each at 10-seed scale. The result: <strong>+9.7 to +26.9 pp</strong> over the best RAG baseline, a <strong>29-1-0</strong> head-to-head record across 30 seed-level comparisons, and <strong>5x less context</strong> per query. This page shows the charts, explains each family, and draws a clear line where the claims stop.
+            We tested the full-brain mechanism &mdash; graph memory, learned routing, policy-gradient updates, and structural plasticity &mdash; against 8 baselines on three distinct long-lived memory tasks, each at 10-seed scale. The result: <strong>+9.7 to +26.9 pp</strong> over the best RAG baseline, a <strong>29-1-0</strong> head-to-head record across 30 seed-level comparisons, and <strong>5x less context</strong> per query. Separately, the install/operator path is now verified on real OpenClaw profiles. This page keeps those proof layers separate and does not claim live learning before first export.
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href="#overview">The big picture</a>
-            <a class="btn btn-secondary" href="#relational-drift">Relational drift</a>
-            <a class="btn btn-secondary" href="#recurring-workflows">Recurring workflows</a>
-            <a class="btn btn-secondary" href="#sparse-feedback">Sparse feedback</a>
+            <a class="btn btn-secondary" href="#operator-proof">Operator proof</a>
+            <a class="btn btn-secondary" href="/docs/setup-guide/">Setup guide</a>
+            <a class="btn btn-secondary" href="/docs/operator-guide/">Operator guide</a>
           </div>
           <p class="hero-note">
-            These are benchmark results, not live-traffic claims. The harness uses simulated policy functions, not live LLM calls. See <a href="https://github.com/jonathangu/brain-ground-zero/blob/main/CLAIMS.md">CLAIMS.md</a> for the authoritative boundary.
+            Benchmark evidence and operator proof are different kinds of evidence. Real-profile install/attach/restart is now verified; live learning is not yet, because both attached brains are still <code>awaiting_first_export</code>. See the <a href="/docs/setup-guide/">Setup Guide</a>, <a href="/docs/operator-guide/">Operator Guide</a>, and <a href="https://github.com/jonathangu/brain-ground-zero/blob/main/CLAIMS.md">CLAIMS.md</a> for the authoritative boundary.
           </p>
         </div>
 
@@ -452,9 +452,10 @@
           </article>
 
           <article class="status-card">
-            <div class="kicker">Two evaluation modes</div>
-            <h3>Recorded H2H vs simulation</h3>
-            <p>Relational drift has <strong>recorded head-to-head</strong> results: deterministic fixture replay with SHA-256 verification. The other two families use <strong>simulation</strong> with the harness policy function. Both are deterministic given a seed, but they are different kinds of evidence and must not be conflated.</p>
+            <div class="kicker">Operationally verified</div>
+            <h3>Install, attach, restart</h3>
+            <p><code>npm install -g @openclawbrain/openclaw@0.3.0</code> worked. The safest default is a dedicated activation root per profile. Attach succeeded on Tern and CormorantAI, and Tern came back alive on Telegram after restart.</p>
+            <p class="meta">This proves the public operator path, not live learning. Both attached brains are still <code>awaiting_first_export</code>.</p>
           </article>
         </div>
       </section>
@@ -616,10 +617,59 @@
               <li>Behavior at larger world sizes (current: 50 entities / 80 workflows).</li>
               <li>End-to-end performance with live LLM routing (harness uses simulated policy functions).</li>
               <li>Production latency or cost.</li>
+              <li>First-export learning proof on attached real profiles; both current brains are still <code>awaiting_first_export</code>.</li>
               <li>Real-session head-to-head on product traces (spec defined, no scored results).</li>
               <li>"Always wins" across all families (sparse feedback is 9-1-0).</li>
             </ul>
           </article>
+        </div>
+      </section>
+
+
+      <!-- ───────────────────── OPERATOR PROOF ───────────────────── -->
+      <section class="section" id="operator-proof">
+        <div class="section-head">
+          <div>
+            <h2>Operator proof: what is real in the field</h2>
+            <p class="section-intro">The benchmark package proves the mechanism. Separate operator checks now prove the install/attach/restart path on real OpenClaw profiles. Live learning still has not crossed the line yet.</p>
+          </div>
+        </div>
+        <div class="three-col">
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">1 &middot; Benchmark proof</div>
+            <h3>Mechanism evidence is strong</h3>
+            <ul>
+              <li>Recorded H2H exists for relational drift: deterministic replay, SHA-256 verified, 10-0-0.</li>
+              <li>Recurring workflows and sparse feedback extend coverage to two more long-lived-memory families.</li>
+              <li>The benchmark claim is superiority over RAG-style baselines on these tasks, not live-runtime learning proof.</li>
+            </ul>
+          </article>
+
+          <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
+            <div class="kicker">2 &middot; Install / attach / restart proof</div>
+            <h3>Real OpenClaw profiles now attach cleanly</h3>
+            <ul>
+              <li><code>npm install -g @openclawbrain/openclaw@0.3.0</code> worked on a real operator path.</li>
+              <li>The safest default is one dedicated activation root per profile.</li>
+              <li>Attach succeeded on both Tern and CormorantAI.</li>
+              <li>Tern came back alive on Telegram after the verified restart path.</li>
+            </ul>
+            <pre class="trace-snippet"><code>env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway restart</code></pre>
+          </article>
+
+          <article class="status-card">
+            <div class="kicker">3 &middot; Live learning proof</div>
+            <h3>Still pending first export</h3>
+            <ul>
+              <li>Install and attach prove the operator surface, not that export, learning, and promotion have already happened live.</li>
+              <li>Both attached brains are still <code>awaiting_first_export</code>.</li>
+              <li>The next honest proof boundary is first export landing, then later served turns reflecting promoted knowledge.</li>
+            </ul>
+          </article>
+        </div>
+        <div class="callout" style="margin-top: 1rem;">
+          <div class="kicker">Install surface</div>
+          <p>To reproduce the verified path, start with the <a href="/docs/setup-guide/">Setup Guide</a>. Use the <a href="/docs/operator-guide/">Operator Guide</a> for status, rollback, and attach triage. The public install surface is <code>npm install -g @openclawbrain/openclaw@0.3.0</code>.</p>
         </div>
       </section>
 
@@ -721,7 +771,7 @@ correction: internal-only patch -> no support contact</code></pre>
         <div class="section-head">
           <div>
             <h2>Integration tests you can run yourself</h2>
-            <p class="section-intro">These tests run entirely inside the OpenClawBrain TypeScript workspace with no external dependencies. They verify the full lifecycle: building a knowledge snapshot, activating it, and confirming the guide picks the right context.</p>
+            <p class="section-intro">These tests run entirely inside the OpenClawBrain TypeScript workspace with no external dependencies. They verify the full lifecycle: building a knowledge snapshot, activating it, and confirming the guide picks the right context. They are still repo-local proof; the section above is the separate real-profile operator proof.</p>
           </div>
         </div>
         <div class="status-grid">
@@ -757,6 +807,16 @@ correction: internal-only patch -> no support contact</code></pre>
           </div>
         </div>
         <div class="kit-grid">
+          <a class="kit-card" href="/docs/setup-guide/">
+            <div class="kicker">Install surface</div>
+            <h3>Setup guide</h3>
+            <p>The public install path, package surface, and day-0 wiring for OpenClaw profiles.</p>
+          </a>
+          <a class="kit-card" href="/docs/operator-guide/">
+            <div class="kicker">Operator surface</div>
+            <h3>Operator guide</h3>
+            <p>Status, rollback, observability, and the current field-truth boundary for operators.</p>
+          </a>
           <a class="kit-card" href="/docs/worked-example/">
             <div class="kicker">Concrete trace</div>
             <h3>Worked example</h3>
@@ -772,20 +832,15 @@ correction: internal-only patch -> no support contact</code></pre>
             <h3>Paper + PDF</h3>
             <p>Full technical paper describing the architecture and evidence.</p>
           </a>
-          <a class="kit-card" href="../blog/v12.2.6-series/">
-            <div class="kicker">Blog series</div>
-            <h3>How the pieces fit</h3>
-            <p>Six posts walking through each layer of the system.</p>
-          </a>
           <a class="kit-card" href="/docs/reproduce-eval/">
             <div class="kicker">Reproduction</div>
             <h3>Reproduce everything</h3>
             <p>Step-by-step instructions to reproduce every benchmark and figure from scratch.</p>
           </a>
-          <a class="kit-card" href="../blog/v12.2.6-series/03-evaluation-ablations/">
-            <div class="kicker">Evaluation post</div>
-            <h3>What the benchmarks prove (and don't)</h3>
-            <p>The difference between proving the mechanism works and proving it helps in production.</p>
+          <a class="kit-card" href="../blog/v12.2.6-series/">
+            <div class="kicker">Blog series</div>
+            <h3>How the pieces fit</h3>
+            <p>Six posts walking through each layer of the system.</p>
           </a>
         </div>
       </section>
