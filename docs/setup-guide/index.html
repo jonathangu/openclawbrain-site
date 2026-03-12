@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Setup Guide — OpenClawBrain</title>
-  <meta name="description" content="Setup Guide documentation for OpenClawBrain." />
+  <meta name="description" content="Install OpenClawBrain, attach it to an OpenClaw profile, and verify it is working — step by step." />
   <link rel="canonical" href="https://openclawbrain.ai/docs/setup-guide/" />
   <style>
     :root {
@@ -15,6 +15,8 @@
       --bright:#f5f8ff;
       --border:#26344a;
       --accent:#79b7ff;
+      --green:#9ce0bc;
+      --orange:#ffbe72;
       --sans:Inter,system-ui,sans-serif;
       --serif:"Crimson Pro",Georgia,serif;
       --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -45,6 +47,53 @@
     .source-link a { color:var(--muted); }
     .source-link a:hover { color:var(--accent); }
     img { max-width:100%; height:auto; border-radius:10px; border:1px solid var(--border); }
+    .callout {
+      margin:1rem 0 1.4rem;
+      padding:.85rem 1rem;
+      border:1px solid var(--border);
+      border-radius:8px;
+      background:rgba(17,26,39,.7);
+      font-family:var(--sans);
+      font-size:.88rem;
+      line-height:1.6;
+      color:var(--text);
+    }
+    .callout p { margin:0; }
+    .callout.tip { border-color:rgba(156,224,188,.35); }
+    .callout.warn { border-color:rgba(255,190,114,.35); }
+    .callout .callout-label {
+      display:block;
+      font-weight:600;
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      margin-bottom:.3rem;
+    }
+    .callout.tip .callout-label { color:var(--green); }
+    .callout.warn .callout-label { color:var(--orange); }
+    .step-num {
+      display:inline-block;
+      width:1.6rem; height:1.6rem;
+      line-height:1.6rem;
+      text-align:center;
+      border-radius:50%;
+      background:rgba(121,183,255,.15);
+      color:var(--accent);
+      font-family:var(--sans);
+      font-size:.82rem;
+      font-weight:600;
+      margin-right:.45rem;
+      vertical-align:middle;
+    }
+    details { margin:0 0 1.4rem; }
+    summary {
+      cursor:pointer;
+      font-family:var(--sans);
+      font-size:.95rem;
+      color:var(--bright);
+      padding:.5rem 0;
+    }
+    summary:hover { color:var(--accent); }
     @media (max-width:600px) {
       main { padding:1.6rem .8rem 2.4rem; }
     }
@@ -58,103 +107,152 @@
       <a href="/proof/">Proof</a>
       <a href="/docs/setup-guide/">Developers</a>
     </nav>
+
     <h1>Setup Guide</h1>
-    <p>OpenClawBrain is a second brain for your OpenClaw agent — a guide that learns which knowledge matters for each question, instead of keyword-searching every document. Think of it as hiring a librarian who gets smarter every day.</p>
-<p>This guide is the day-0 setup path. It covers what the repo delivers today and what's coming next — clearly separated. OpenClaw owns the live runtime (front of house); OpenClawBrain owns the knowledge, learning, and context compilation (the kitchen).</p>
-<p>> <strong>Current truth</strong>: promoted-pack lifecycle, PG-only <code>route_fn</code> evidence, operator observability, local tarball distribution.
-> <strong>Target end shape</strong>: npm-published API, scanner/labels/harvest on by default after attach, continuous live graph update (decay/co-firing/pruning/reorganizing), hard API enforcement of the OpenClaw/OpenClawBrain split.</p>
-<h2>What you need</h2>
-<h2>Install</h2>
-<pre><code>npm install @openclawbrain/openclaw
-npm exec openclawbrain -- --help
-</code></pre>
-<p>The CLI surface is: <code>status</code> | <code>rollback</code>. Bootstrap attach is programmatic (TypeScript) — there is no CLI attach command.</p>
-<ul><li>Node.js 20+</li>
-<li>An OpenClaw runtime deployment (OpenClawBrain is a learning layer, not a standalone runtime)</li>
-<li>Workspace files (markdown, docs, memory files) for your agent to learn from</li>
-<li><strong>No provider API keys required for OpenClawBrain itself.</strong> The default stack uses local BGE-large embeddings and a local Ollama/Qwen teacher. The broader OpenClaw runtime may still need provider keys for its own agent and tool calls — see <a href="/docs/secrets-and-capabilities/">Secrets and Capabilities</a>.</li>
-</ul>
-<h2>1. Working with the source repository (maintainer)</h2>
-<p>``<code>bash
-corepack enable
-pnpm install --frozen-lockfile
-pnpm check                  # type-check, lint, test, and verify package integrity
-pnpm release:check          # full proof lane + local tarballs
-pnpm fresh-env:smoke        # clean-room outside-consumer install proof
-</code>`<code></p>
-<p>A <strong>brain pack</strong> is an immutable versioned artifact containing graph nodes, vector entries, provenance, and an optional learned </code>route_fn<code>. It is materialized off the hot path by the learner and made compile-visible only after promotion by </code>activation<code>. The compiler always serves from the currently active promoted pack.</p>
-</code>pnpm check<code> runs type-check, lint, test, lifecycle smoke, and observability smoke.
-</code>pnpm release:check<code> runs the full proof lane, rebuilds </code>.release/*.tgz<code> tarballs, and writes </code>.release/release-proof-manifest.json<code>.
-</code>pnpm fresh-env:smoke<code> is the clean-room outside-consumer lane: installs tarballs into an isolated plain-</code>npm<code> directory and proves the attach/promotion/rollback flow.
-<h2>2. Connect to OpenClaw</h2>
-<p>OpenClaw owns runtime orchestration. You tell it where to find the brain pack by setting a runtime profile:</p>
-</code>`<code>json
-{
+    <p>This guide walks you through installing OpenClawBrain, attaching it to an OpenClaw profile, and confirming it is working. Most operators can go from zero to a running brain in a few minutes.</p>
+    <p>OpenClaw owns the live runtime (agent orchestration, tool calls, responses). OpenClawBrain owns the knowledge layer (memory, learning, and context compilation). You install OpenClawBrain separately, point it at an OpenClaw profile, and it starts learning in the background without affecting response latency.</p>
+
+    <!-- ── PREREQUISITES ── -->
+    <h2>What you need</h2>
+    <ul>
+      <li><strong>Node.js 20+</strong></li>
+      <li><strong>A running OpenClaw deployment</strong> — OpenClawBrain is a learning layer, not a standalone runtime</li>
+      <li><strong>Workspace files</strong> (markdown, docs, memory files) for the agent to learn from</li>
+    </ul>
+    <div class="callout tip">
+      <span class="callout-label">No API keys needed</span>
+      <p>OpenClawBrain uses local BGE-large embeddings and a local Ollama/Qwen teacher by default. No cloud provider keys are required for the brain itself. Your OpenClaw runtime may still need its own provider keys for agent and tool calls — see <a href="/docs/secrets-and-capabilities/">Secrets and Capabilities</a>.</p>
+    </div>
+
+    <!-- ── STEP 1: INSTALL ── -->
+    <h2><span class="step-num">1</span> Install</h2>
+    <p>Install the published package globally, then confirm the CLI is available:</p>
+    <pre><code>npm install -g @openclawbrain/openclaw@0.3.0
+openclawbrain --help</code></pre>
+    <p>Start with <code>openclawbrain install</code>. After attach, use the status and rollback tooling to inspect health or back out a bad pack if needed.</p>
+
+    <!-- ── STEP 2: ATTACH ── -->
+    <h2><span class="step-num">2</span> Attach to an OpenClaw profile</h2>
+    <p>Run the installer, pointing it at a single OpenClaw profile. Use a dedicated profile home and activation root for each profile you wire up — this keeps rollback and cleanup scoped to one profile.</p>
+    <pre><code>openclawbrain install \
+  --openclaw-home "$PROFILE_HOME" \
+  --activation-root "$ACTIVATION_ROOT" \
+  --workspace-id "$PROFILE_NAME"</code></pre>
+    <div class="callout tip">
+      <span class="callout-label">One brain per profile</span>
+      <p>Keep each OpenClaw profile isolated. One activation root per profile means rollback, disable, and cleanup never spill into other profiles.</p>
+    </div>
+    <p>The installer provisions a local <code>bge-large</code> embedder by default. To skip embedder provisioning (if you already have one), pass <code>--skip-embedder-provision</code> or set <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>.</p>
+
+    <!-- ── STEP 3: RESTART AND VERIFY ── -->
+    <h2><span class="step-num">3</span> Restart and verify</h2>
+    <p>Restart the OpenClaw gateway for your profile, then check status:</p>
+    <pre><code>env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway restart
+env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway status</code></pre>
+    <p>After restarting, verify these behaviors:</p>
+    <ol>
+      <li><strong>Agent responds immediately.</strong> OpenClaw boots from the seed pack without waiting for background learning. A fresh brain with zero events stays in seed state until the first exported turn arrives — this is normal.</li>
+      <li><strong>Background learning starts.</strong> New events are exported first; historical backfill continues in the background. The learner builds candidate packs off the hot path; activation promotes them when ready.</li>
+      <li><strong>Fail-open works.</strong> If brain workers are delayed, OpenClaw still serves from the last active pack. Missing packs fail open so responses continue. However, a learned-required route artifact that drifts will hard-fail instead of silently serving stale data.</li>
+    </ol>
+
+    <!-- ── STEP 4: OBSERVABILITY ── -->
+    <h2><span class="step-num">4</span> Check health</h2>
+    <p>If you are working from the source repo, these helper scripts give you a quick read on whether things are working:</p>
+    <pre><code>pnpm operator:status     # one-screen summary: did attach land, what is active, is rollback ready?
+pnpm operator:doctor     # PASS / WARN / FAIL follow-up when status shows drift</code></pre>
+
+    <!-- ── ROLLBACK ── -->
+    <h2>Rollback and recovery</h2>
+    <p>If something goes wrong after a pack promotion:</p>
+    <ul>
+      <li><strong>Brain unavailable:</strong> OpenClaw automatically falls back to core runtime behavior. Responses continue without brain-enhanced context.</li>
+      <li><strong>Bad brain pack:</strong> Preview the rollback first, then apply it:</li>
+    </ul>
+    <pre><code># Preview the pointer move (no changes made)
+pnpm operator:rollback -- --activation-root &lt;path&gt; --dry-run
+
+# Apply the rollback
+pnpm operator:rollback -- --activation-root &lt;path&gt;</code></pre>
+    <p>Compilation from a given pack is deterministic, so rollback is safe and repeatable. Learning delays do not affect the hot path — scanner, harvest, and learner workers all run asynchronously.</p>
+
+    <!-- ── RUNTIME CONFIG ── -->
+    <h2>Runtime configuration</h2>
+    <p>The install step wires most of this automatically. If you need to inspect or customize the runtime profile, here is the shape OpenClaw expects:</p>
+    <pre><code>{
   "brain": {
     "enabled": true,
-    "packSet": "<versioned-pack-set>",       // which brain pack version to load
-    "fastBootFromExistingFiles": true,        // start serving immediately from existing files
+    "packSet": "&lt;versioned-pack-set&gt;",
+    "fastBootFromExistingFiles": true,
     "backgroundLearning": {
       "enabled": true,
-      "prioritizeNewEvents": true             // learn from new usage before backfilling history
+      "prioritizeNewEvents": true
     },
-    "labels": { "human": true, "self": true },// collect human and automated feedback signals
-    "scanner": { "enabled": true },           // watch for new workspace and event data
-    "harvest": { "enabled": true },           // extract learning signals from events
-    "teacher": { "onHotPath": false }         // keep learning off the response path
+    "labels": { "human": true, "self": true },
+    "scanner": { "enabled": true },
+    "harvest": { "enabled": true },
+    "teacher": { "onHotPath": false }
   }
-}
-</code>`<code>
-<p>Key points — <strong>current truth</strong>:
-<ul><li></code>fastBootFromExistingFiles<code> means OpenClaw starts serving immediately. Bootstrap attach self-boots even from zero live events; the zero-event seed state is operator-visible rather than failing at init.</li>
-<li></code>teacher.onHotPath: false<code> keeps learning off the hot path. Learning never adds latency to responses.</li>
-<li>Labels, scanner, and harvest are collected inputs to PG-only route training. They run on the learning side, not in the hot-path serve loop.</li>
-<li></code>backgroundLearning<code> today means: export turns → build/refresh a candidate pack off the hot path → stage and promote → compiler serves from the newly promoted pack. This is <strong>not</strong> live mutation of the active pack during serving.</li>
-<li>Graph-dynamics fields (decay, Hebbian, prune/merge counts) are recorded <strong>inside the immutable pack artifact</strong> as build-time metadata. Live continuous graph update on the active pack is the <strong>target end shape</strong>, not the current reality.</li>
-</ul>
-<strong>Target end shape</strong> (not yet): scanner/labels/harvest on by default after attach without any config; continuous live graph update (decay, co-firing, pruning, reorganizing) on the active pack during serving.</p>
-<h2>2b. Public package surface</h2>
-<p>The supported packages (install via <code>npm install @openclawbrain/openclaw</code>):</p>
-<ul><li></code>@openclawbrain/contracts<code></li>
-<li></code>@openclawbrain/events<code></li>
-<li></code>@openclawbrain/event-export<code></li>
-<li></code>@openclawbrain/workspace-metadata<code></li>
-<li></code>@openclawbrain/provenance<code></li>
-<li></code>@openclawbrain/pack-format<code></li>
-<li></code>@openclawbrain/activation<code></li>
-<li></code>@openclawbrain/compiler<code></li>
-<li></code>@openclawbrain/learner<code></li>
-<li></code>@openclawbrain/openclaw<code> — typed OpenClaw bridge: compile diagnostics, learned-route hard-fail enforcement, normalized event export handoff</li>
-</ul>
-Use </code>pnpm operator:status<code>, </code>pnpm operator:doctor<code>, and </code>pnpm operator:rollback -- --dry-run<code> for day-0 triage once you have a real activation root.
-<h2>3. Confirm it is working</h2>
-<p>After connecting, verify these behaviors:</p>
-<p>1. <strong>Agent responds immediately.</strong> OpenClaw boots from the seed pack without waiting for background learning. Zero-event bootstraps stay in seed-state only until the first exported turn arrives.
-2. <strong>Background learning is running.</strong> New events are exported first; historical backfill continues. The learner materializes candidate packs off the hot path; </code>activation<code> promotes them.
-3. <strong>Fail-open works.</strong> If brain workers are delayed, OpenClaw still serves from the active pack. Missing active packs fail open, but learned-required route-artifact drift hard-fails instead of silently bypassing the learned path.
-4. <strong>Observability.</strong> Run </code>pnpm operator:status<code> for a one-screen answer to: did attach land first value, what is active now, and is rollback ready? Run </code>pnpm operator:doctor<code> for explicit PASS/WARN/FAIL follow-up when </code>status<code> shows drift.</p>
-<h2>4. Rollback and fail-open</h2>
-<p>OpenClaw owns fail-open behavior. If something goes wrong:</p>
-<ul><li><strong>Brain becomes unavailable:</strong> OpenClaw automatically falls back to core runtime behavior. Responses continue without brain-enhanced context.</li>
-<li><strong>Bad brain pack:</strong> Roll back to the previous active pack set using </code>pnpm operator:rollback -- --activation-root <path> --dry-run<code> first to preview the exact pointer move, then apply. Compilation from a given pack is deterministic, so rollback is safe and repeatable.</li>
-<li><strong>Learning delays:</strong> Scanner, harvest, and learner workers run asynchronously. Delays do not affect the hot path.</li>
-</ul>
-Recovery happens through background loops and pack rollback &mdash; no manual intervention needed.
-<h2>Next steps</h2>
-<ul><li><a href="/docs/openclaw-integration/">Integration docs</a> — detailed runtime wiring, PG-only route constraint, and failure semantics</li>
-<li><a href="/docs/reproduce-eval/">Reproduce benchmarks</a> — run the evaluation harness yourself</li>
-<li><a href="/proof/">Proof package</a> — repo-local smoke-lane proof, worked examples, and benchmark evidence (BGZ)</li>
-<li><a href="https://github.com/jonathangu/openclawbrain/blob/main/Claims">Claims</a> — authoritative repo-local boundary between what OpenClawBrain proves today and what Brain Ground Zero proves separately</li>
-</ul>
-<h2>Proof lanes</h2>
-<p>Run these to verify the full promoted-pack lifecycle locally:</p>
-</code>`<code>bash
-pnpm lifecycle:smoke            # normalized events → promoted-pack compilation
-pnpm observability:smoke        # activation health, PG metadata, route artifact diffs
-pnpm continuous-product-loop:smoke  # live-style export → PG-only candidate refresh → promotion
-pnpm runtime-wrapper-path:smoke # OpenClaw wrapper path: compile → export → async learning → promotion
-pnpm customer-value-proof:smoke # recorded-session replay showing learning changes later served turns
-</code>``
+}</code></pre>
+    <p>Key points about the current behavior:</p>
+    <ul>
+      <li><code>fastBootFromExistingFiles</code> — OpenClaw starts serving immediately from existing files; bootstrap attach works even from zero events.</li>
+      <li><code>teacher.onHotPath: false</code> — learning never adds latency to responses.</li>
+      <li>Labels, scanner, and harvest feed into route training. They run on the learning side, not in the serve loop.</li>
+      <li>Background learning means: export turns, build a candidate pack off the hot path, then promote. The active pack is not mutated during serving.</li>
+    </ul>
+    <div class="callout warn">
+      <span class="callout-label">What is not here yet</span>
+      <p>Scanner, labels, and harvest are not yet on by default after attach — you still configure them explicitly. Continuous live graph update (decay, co-firing, pruning) on the active pack during serving is a target, not the current behavior. Graph-dynamics metadata is recorded inside the immutable pack artifact at build time.</p>
+    </div>
+
+    <!-- ── ADVANCED: PACKAGES ── -->
+    <details>
+      <summary>Published packages (advanced)</summary>
+      <p>The full package surface, all installed via <code>npm install @openclawbrain/openclaw</code>:</p>
+      <ul>
+        <li><code>@openclawbrain/contracts</code></li>
+        <li><code>@openclawbrain/events</code></li>
+        <li><code>@openclawbrain/event-export</code></li>
+        <li><code>@openclawbrain/workspace-metadata</code></li>
+        <li><code>@openclawbrain/provenance</code></li>
+        <li><code>@openclawbrain/pack-format</code></li>
+        <li><code>@openclawbrain/activation</code></li>
+        <li><code>@openclawbrain/compiler</code></li>
+        <li><code>@openclawbrain/learner</code></li>
+        <li><code>@openclawbrain/openclaw</code> — typed OpenClaw bridge: compile diagnostics, learned-route enforcement, event export handoff</li>
+      </ul>
+    </details>
+
+    <!-- ── ADVANCED: MAINTAINER ── -->
+    <details>
+      <summary>Working with the source repository (maintainers)</summary>
+      <p>If you are contributing to OpenClawBrain itself:</p>
+      <pre><code>corepack enable
+pnpm install --frozen-lockfile
+pnpm check                  # type-check, lint, test, verify package integrity
+pnpm release:check          # full proof lane + local tarballs
+pnpm fresh-env:smoke        # clean-room outside-consumer install proof</code></pre>
+      <p>A <strong>brain pack</strong> is an immutable versioned artifact containing graph nodes, vector entries, provenance, and an optional learned route function. It is built off the hot path by the learner and made visible only after promotion by activation. The compiler always serves from the currently active promoted pack.</p>
+      <h3>Proof lanes</h3>
+      <p>Run these to verify the full promoted-pack lifecycle locally:</p>
+      <pre><code>pnpm lifecycle:smoke                   # normalized events → promoted-pack compilation
+pnpm observability:smoke               # activation health, PG metadata, route artifact diffs
+pnpm continuous-product-loop:smoke     # live-style export → candidate refresh → promotion
+pnpm runtime-wrapper-path:smoke        # OpenClaw wrapper: compile → export → learn → promotion
+pnpm customer-value-proof:smoke        # recorded-session replay showing learning improves later turns</code></pre>
+    </details>
+
+    <!-- ── NEXT STEPS ── -->
+    <h2>Next steps</h2>
+    <ul>
+      <li><a href="/docs/worked-example/">Worked example</a> — step-by-step walkthrough of a correction becoming reusable memory</li>
+      <li><a href="/docs/openclaw-integration/">Integration docs</a> — detailed runtime wiring, route constraints, and failure semantics</li>
+      <li><a href="/docs/reproduce-eval/">Reproduce benchmarks</a> — run the evaluation harness yourself</li>
+      <li><a href="/proof/">Proof package</a> — smoke-lane proof, worked examples, and benchmark evidence</li>
+      <li><a href="https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md">Claims</a> — boundary between what OpenClawBrain proves today and what is separate</li>
+    </ul>
+
     <div class="source-link">
       <a href="/docs/setup-guide.md">View source (Markdown)</a>
     </div>
