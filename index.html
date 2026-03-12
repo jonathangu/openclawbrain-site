@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain: Stop Your Agent from Making the Same Mistake Twice</title>
+  <title>OpenClawBrain: Stop Your OpenClaw Agent from Repeating Mistakes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain is a memory layer for OpenClaw that learns from corrections, picks better context, and reduces prompt waste over time. No cloud required.">
-  <meta property="og:title" content="OpenClawBrain: Stop Your Agent from Making the Same Mistake Twice">
-  <meta property="og:description" content="OpenClawBrain helps your agent stop repeating mistakes by learning what context matters. Local-first, fail-open, no cloud required.">
+  <meta name="description" content="OpenClawBrain gives OpenClaw persistent memory that learns from corrections, retrieves better context, and improves recurring workflows over time. Local-first and fail-open.">
+  <meta property="og:title" content="OpenClawBrain: Stop Your OpenClaw Agent from Repeating Mistakes">
+  <meta property="og:description" content="OpenClawBrain gives OpenClaw persistent memory that learns from corrections, retrieves better context, and improves recurring workflows over time. Local-first and fail-open.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary">
@@ -211,23 +211,6 @@
       gap: 0.72rem;
     }
 
-    .span-all {
-      grid-column: 1 / -1;
-    }
-
-    .install-list {
-      margin: 0.75rem 0 0;
-      padding-left: 1.15rem;
-      font-family: var(--sans);
-      font-size: 0.83rem;
-      color: var(--text);
-      line-height: 1.6;
-    }
-
-    .install-list li {
-      margin: 0.32rem 0;
-    }
-
     /* ── SECTIONS ── */
     .section {
       margin-bottom: 1.55rem;
@@ -262,6 +245,12 @@
     .card-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.72rem;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0.72rem;
     }
 
@@ -309,44 +298,6 @@
       font-size: 0.82rem;
       font-weight: 600;
       margin-top: 0.1rem;
-    }
-
-    /* ── WORKED EXAMPLE CALLOUT ── */
-    .worked-example-block {
-      margin-bottom: 1.55rem;
-      padding: 1.25rem 1.4rem;
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius);
-      background: linear-gradient(165deg, rgba(121, 211, 255, 0.08), rgba(10, 15, 24, 0.92) 55%);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.2rem;
-      flex-wrap: wrap;
-    }
-
-    .worked-example-block .we-text {
-      flex: 1 1 auto;
-    }
-
-    .worked-example-block h2 {
-      font-family: var(--sans);
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-bright);
-      margin: 0 0 0.3rem;
-    }
-
-    .worked-example-block p {
-      font-family: var(--sans);
-      font-size: 0.86rem;
-      color: var(--text);
-      margin: 0;
-      line-height: 1.55;
-    }
-
-    .worked-example-cta {
-      flex-shrink: 0;
     }
 
     /* ── PROOF HIGHLIGHT ── */
@@ -488,6 +439,7 @@
     /* ── RESPONSIVE ── */
     @media (max-width: 880px) {
       .card-grid,
+      .comparison-grid,
       .install-grid { grid-template-columns: 1fr; }
     }
 
@@ -498,7 +450,6 @@
       .hero-card { padding: 1.2rem 1rem; }
       .section { padding: 1.1rem 1rem; }
       .hero-actions .btn { width: 100%; text-align: center; }
-      .worked-example-block { flex-direction: column; }
     }
   </style>
 </head>
@@ -511,118 +462,81 @@
       <a class="brand" href="/">openclawbrain.ai</a>
       <nav class="utility-links" aria-label="Primary navigation">
         <a href="/">Product</a>
-        <a href="#install-now">Install</a>
-        <a href="/docs/worked-example/">How It Works</a>
+        <a href="#practical-example">Example</a>
         <a href="/proof/">Proof</a>
-        <a href="/docs/setup-guide/">Developers</a>
+        <a href="#install-now">Install</a>
+        <a href="/docs/setup-guide/">Docs</a>
       </nav>
     </div>
 
     <!-- ── HERO ── -->
     <div class="hero-card">
-      <p class="eyebrow">Memory &amp; learning layer for OpenClaw</p>
-      <h1>Stop your agent from making the same mistake twice.</h1>
+      <p class="eyebrow">Persistent memory for OpenClaw</p>
+      <h1>Your OpenClaw agent forgets between sessions. OpenClawBrain makes corrections stick.</h1>
       <p class="lead">
-        OpenClawBrain is a memory layer for OpenClaw that learns from corrections, picks better context, and reduces prompt waste over time. Your agent starts every conversation with amnesia &mdash; OpenClawBrain fixes that.
+        OpenClawBrain gives OpenClaw persistent memory that learns from corrections, retrieves the right context for each task, and improves recurring workflows over time. It stays local, fails open behind OpenClaw, and gets more useful the more you use it.
       </p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#install-now">Operator install</a>
-        <a class="btn btn-secondary" href="/docs/setup-guide/">Read the docs</a>
-        <a class="btn btn-secondary" href="/proof/">See the proof</a>
+        <a class="btn btn-primary" href="#practical-example">See the before/after</a>
+        <a class="btn btn-secondary" href="/proof/">See benchmark results</a>
+        <a class="btn btn-secondary" href="#install-now">Install for OpenClaw</a>
       </div>
     </div>
   </header>
 
   <!-- ── PROOF CHIPS ── -->
   <section class="proof-chips" aria-label="Key results">
-    <span class="chip"><strong>+9.7 to +26.9 pp</strong> over best RAG</span>
+    <span class="chip"><strong>+9.7 to +26.9 pp</strong> vs. best RAG</span>
     <span class="chip"><strong>5&times; less</strong> context per query</span>
-    <span class="chip"><strong>29&ndash;1&ndash;0</strong> head-to-head vs. baselines</span>
-    <span class="chip"><strong>Fail-open</strong> behind OpenClaw</span>
+    <span class="chip"><strong>29&ndash;1&ndash;0</strong> vs. benchmark baselines</span>
+    <span class="chip"><strong>Safe to try</strong> &mdash; fail-open behind OpenClaw</span>
     <span class="chip"><strong>Local-first</strong> &mdash; no cloud required</span>
   </section>
 
-  <!-- ── VERIFIED INSTALL ── -->
-  <section class="section install-section" id="install-now">
-    <h2>Operator-first install on real OpenClaw profiles</h2>
+  <!-- ── PRACTICAL EXAMPLE ── -->
+  <section class="section" id="practical-example">
+    <h2>What this changes on a real task</h2>
     <p class="section-intro">
-      The published package path works today. Normal install expects an embedder, and the shipped default is <code>bge-large</code>. On Jonathan's Mac mini, <code>openclawbrain install</code> provisioned and pulled that embedder before brain bootstrap, then attached cleanly to separate OpenClaw profiles. Safest default: one dedicated brain per profile, with its own <code>--openclaw-home</code> and activation root.
+      A simple example: an agent keeps missing the exact rollback rule during a deploy incident. The difference is not abstract. It shows up on the next similar task.
     </p>
-    <p class="callout-note">
-      Run install from a normal shell, not from inside a live agent session. Skipping embedder provision is an explicit override only: use <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code> if you really want to bypass the default <code>bge-large</code> pull. The local teacher LLM remains optional; if you enable the Ollama teacher path, its default model is <code>qwen3.5:9b</code>. The install, attach, and restart path is verified, but both verified brains are still <code>awaiting_first_export</code>, so install alone does not prove live learning yet.
-    </p>
-    <div class="install-grid">
+    <div class="comparison-grid">
       <article class="card accent-card">
-        <span class="card-label">1. Install the package</span>
-        <h3>Use the published npm package</h3>
-        <p>This is the verified package install that worked on the real machine. The operator flow starts here, then runs <code>openclawbrain install</code> from a normal shell.</p>
-        <pre><code>npm install -g @openclawbrain/openclaw@0.3.0</code></pre>
+        <span class="card-label">Before OpenClawBrain</span>
+        <h3>The agent repeats the same retrieval mistake</h3>
+        <p>You correct the bad answer once, but the next incident still pulls a broad runbook, misses the precise rollback policy, and spends tokens on context that does not help.</p>
       </article>
       <article class="card">
-        <span class="card-label">2. Attach one brain per profile</span>
-        <h3>Keep each profile isolated by default</h3>
-        <p>Use a dedicated profile home and a dedicated activation root for each profile you wire up. The default install flow provisions and pulls <code>bge-large</code> before brain bootstrap.</p>
-        <pre><code>openclawbrain install --openclaw-home "$PROFILE_HOME" --activation-root "$ACTIVATION_ROOT" --workspace-id "$PROFILE_NAME"</code></pre>
-        <ul class="install-list">
-          <li>Skip embedder provision only with <code>--skip-embedder-provision</code></li>
-          <li>Or set <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code> before install</li>
-          <li><code>Tern</code> &rarr; <code>~/.openclaw-Tern</code> with <code>~/.openclawbrain/activation/Tern</code></li>
-          <li><code>CormorantAI</code> &rarr; <code>~/.openclaw-CormorantAI</code> with <code>~/.openclawbrain/activation/CormorantAI</code></li>
-        </ul>
-      </article>
-      <article class="card">
-        <span class="card-label">3. Restart cleanly</span>
-        <h3>Use the env-cleared OpenClaw restart shape</h3>
-        <p>Restart the gateway, then check status, with the same clean environment pattern.</p>
-        <pre><code>env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway restart
-env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway status</code></pre>
-      </article>
-      <article class="card">
-        <span class="card-label">Reversible by design</span>
-        <h3>Disable or detach without cross-profile spillover</h3>
-        <p>The safe default is one activation root per profile, so rollback, disable, and cleanup stay bounded to that profile. To back out, stop using that profile's dedicated brain paths and restart the gateway with the same env-cleared pattern above.</p>
-        <div class="dev-links">
-          <a class="btn btn-primary" href="https://github.com/jonathangu/openclawbrain">Package repo</a>
-          <a class="btn btn-secondary" href="/docs/setup-guide/">Setup guide</a>
-          <a class="btn btn-secondary" href="/docs/openclaw-integration/">Integration docs</a>
-        </div>
-      </article>
-      <article class="card accent-card span-all">
-        <span class="card-label">Shareable blurb</span>
-        <h3>What another profile should know</h3>
-        <p>You’ve now got <strong>OpenClawBrain</strong> attached. Think of it as an operator-first memory layer for OpenClaw: normal install brings up the default embedder, the live path stays fail-open, and only promoted packs change behavior.</p>
-        <ul class="install-list">
-          <li>Watch for the first export landing &mdash; <code>awaiting_first_export</code> is healthy at first</li>
-          <li>Check active pack / previous pack to confirm promotion + rollback health</li>
-          <li>Check teacher / watch artifacts only if you enabled the optional teacher path; its Ollama default is <code>qwen3.5:9b</code></li>
-          <li>Check gateway + channel health after restart</li>
-          <li>Look for actual later-turn improvement after promotion</li>
-        </ul>
-        <p>Short version: the brain is installed; the embedder contract is active by default; and the interesting part is still watching it go from <strong>attached</strong> to <strong>actually learning</strong>.</p>
+        <span class="card-label">After OpenClawBrain</span>
+        <h3>The correction shows up when the task comes back</h3>
+        <p>The correction is stored as reusable memory, linked to the relevant policy, and retrieved with a smaller prompt. On the next similar incident, the agent starts closer to the right rollback path instead of relearning it from scratch.</p>
       </article>
     </div>
+    <p class="callout-note">
+      The full worked example walks through the mistake, correction, and later retrieval step by step, with diffs instead of hand-waving.
+      <a href="/docs/worked-example/">Read the worked example &rarr;</a>
+    </p>
   </section>
 
   <!-- ── WHAT CHANGES IN PRACTICE ── -->
   <section class="section" id="what-changes">
     <h2>What changes in practice</h2>
     <p class="section-intro">
-      OpenClaw runs the agent. OpenClawBrain improves its memory and context selection over time. The difference shows up in three ways.
+      OpenClaw still runs the agent. OpenClawBrain changes what the agent remembers and what context it sees next time. In day-to-day use, that shows up in three ways.
     </p>
     <div class="card-grid">
       <article class="card accent-card">
         <span class="card-label">Fewer repeated mistakes</span>
-        <h3>Corrections stick</h3>
-        <p>When you fix a mistake, OpenClawBrain records what went wrong and why. The next time a similar situation comes up, the agent retrieves the correction instead of repeating the error.</p>
+        <h3>Corrections become reusable memory</h3>
+        <p>When you fix a mistake, OpenClawBrain records what went wrong and why. The next time a similar situation comes up, the agent can retrieve that correction instead of repeating the error.</p>
       </article>
       <article class="card">
         <span class="card-label">Cleaner prompts</span>
-        <h3>Less noise, more signal</h3>
-        <p>A trained routing function picks only the context that matters for each question &mdash; not everything that matches a keyword. Smaller, more precise prompts with better results.</p>
+        <h3>Retrieval gets narrower</h3>
+        <p>A trained routing function picks the context that matters for each question instead of dumping in every vaguely related chunk. Prompts get smaller, and the signal-to-noise ratio improves.</p>
       </article>
       <article class="card">
         <span class="card-label">Better recurring workflows</span>
-        <h3>Improves with use</h3>
+        <h3>Repeated workflows improve</h3>
         <p>Outcomes and feedback feed back into training. Workflows your agent runs repeatedly get better over time as the routing function learns what context actually helps.</p>
       </article>
     </div>
@@ -632,41 +546,32 @@ env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway
   <section class="section" id="how-it-works">
     <h2>How it works</h2>
     <p class="section-intro">
-      Three ideas, in plain English.
+      Three product ideas, in plain English.
     </p>
     <div class="card-grid">
       <article class="card">
         <span class="card-label">Knowledge graph</span>
-        <h3>Facts stored as connections, not documents</h3>
-        <p>Instead of a pile of text chunks, knowledge lives in a graph. "This deploy policy depends on that rollback rule" is a real edge, not two documents that share a word. Relationships are first-class.</p>
+        <h3>Facts live as connections, not loose documents</h3>
+        <p>Instead of a pile of text chunks, knowledge lives in a graph. "This deploy policy depends on that rollback rule" becomes a real edge, not two documents that just happen to share a word.</p>
       </article>
       <article class="card">
         <span class="card-label">Learned routing</span>
-        <h3>A trained function picks what to retrieve</h3>
-        <p>When a question arrives, the router walks the graph and selects the most useful nodes. It learns from corrections and outcomes, so it gets better at picking the right context every time.</p>
+        <h3>A trained router decides what to retrieve</h3>
+        <p>When a question arrives, the router walks the graph and selects the most useful nodes. It learns from corrections and outcomes, so it gets better at picking the right context over time.</p>
       </article>
       <article class="card">
         <span class="card-label">Structural plasticity</span>
-        <h3>The graph reshapes as things change</h3>
-        <p>Nodes connect, split, merge, and prune under policy control. Stale knowledge fades; active connections strengthen. Ablations show this is the largest single accuracy contributor across every benchmark.</p>
+        <h3>The memory graph reshapes as reality changes</h3>
+        <p>Nodes connect, split, merge, and prune under policy control. Stale knowledge fades, active connections strengthen, and ablations show this is the largest single accuracy contributor across every benchmark family.</p>
       </article>
     </div>
   </section>
-
-  <!-- ── WORKED EXAMPLE ── -->
-  <div class="worked-example-block" id="worked-example">
-    <div class="we-text">
-      <h2>See it in action</h2>
-      <p>A full worked example walks through a real agent session: a mistake is made, a correction is applied, and the brain learns. Before and after, with diffs.</p>
-    </div>
-    <a class="btn btn-secondary worked-example-cta" href="/docs/worked-example/">Read the worked example &rarr;</a>
-  </div>
 
   <!-- ── PROOF AT A GLANCE ── -->
   <section class="section proof-highlight" id="proof-at-a-glance">
     <h2>Proof at a glance</h2>
     <p class="section-intro">
-      Three benchmark families, 10 seeds each, 8 baselines. The chart below shows accuracy margin and context cost per query. <a href="/proof/">Full methodology, ablation ladder, and honest gaps &rarr;</a>
+      In controlled benchmarks, OpenClawBrain beat the best RAG baseline by <strong>+9.7 to +26.9 percentage points</strong> while using about <strong>5&times; less context per query</strong>. These results span three benchmark families, 10 seeds each, and 8 baselines. <a href="/proof/">Full methodology, ablation ladder, and benchmark boundaries &rarr;</a>
     </p>
     <a href="/proof/" class="proof-chart-link" aria-label="View full proof details">
       <figure class="fig">
@@ -679,8 +584,8 @@ env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway
       <a href="/proof/">Full evidence &rarr;</a>
     </p>
     <p class="callout-note">
-      Controlled-benchmark results using simulated policy functions, not live production claims.
-      Weakest family (sparse feedback): &plusmn;18.3% seed variance, 9&ndash;1&ndash;0 record.
+      <strong>Read this as benchmark evidence, not a production SLA.</strong>
+      These are controlled evaluations using simulated policy functions, not live deployment win rates. The weakest family still had high seed variance (&plusmn;18.3%) and a 9&ndash;1&ndash;0 record rather than a sweep.
       <a href="/proof/">Methodology and honest gaps &rarr;</a>
     </p>
   </section>
@@ -690,24 +595,65 @@ env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway
     <h2>Current status</h2>
     <div class="status-badge"><span class="status-dot"></span> Alpha &mdash; v0.1.11</div>
     <p class="section-intro section-intro-tight">
-      OpenClawBrain is in early alpha. The benchmark results are real; the production surface is not yet hardened.
-      The routing function, graph structure, and plasticity policy are all working and tested.
-      The published install, attach, and restart path is verified on real OpenClaw profiles, including default <code>bge-large</code> embedder provision before brain bootstrap, but live-learning proof remains separate and the verified brains are still <code>awaiting_first_export</code>.
+      OpenClawBrain is in early alpha. The benchmark story is ahead of the production-hardening story.
+      The routing function, graph structure, and plasticity policy are working; the published install, attach, and restart path is verified on real OpenClaw profiles; and live-learning proof on attached installs remains separate, with fresh brains sometimes still sitting at <code>awaiting_first_export</code> before the first export lands.
       Expect breaking changes before a stable release. Apache-2.0 licensed. Requires Node 20+.
     </p>
   </section>
 
+  <!-- ── INSTALL ── -->
+  <section class="section install-section" id="install-now">
+    <h2>Install for OpenClaw operators</h2>
+    <p class="section-intro">
+      If you want to try it now, use the published package and run <code>openclawbrain install</code> from a normal shell. The default flow provisions <code>bge-large</code>, then attaches one dedicated brain to one OpenClaw profile.
+    </p>
+    <p class="callout-note">
+      The install, attach, and restart path is verified on real OpenClaw profiles. Keep one brain per profile. Skip embedder provision only with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The local teacher path is optional; if you enable it through Ollama, the default model is <code>qwen3.5:9b</code>.
+    </p>
+    <div class="install-grid">
+      <article class="card accent-card">
+        <span class="card-label">1. Install the package</span>
+        <h3>Start with the published npm package</h3>
+        <p>The operator flow starts here, then runs <code>openclawbrain install</code> from a normal shell.</p>
+        <pre><code>npm install -g @openclawbrain/openclaw@0.3.0</code></pre>
+      </article>
+      <article class="card">
+        <span class="card-label">2. Attach one brain to one profile</span>
+        <h3>Keep each OpenClaw profile isolated</h3>
+        <p>Use a dedicated profile home and activation root for each profile you wire up.</p>
+        <pre><code>openclawbrain install --openclaw-home "$PROFILE_HOME" --activation-root "$ACTIVATION_ROOT" --workspace-id "$PROFILE_NAME"</code></pre>
+      </article>
+      <article class="card">
+        <span class="card-label">3. Restart and verify</span>
+        <h3>Use the clean OpenClaw restart shape</h3>
+        <p>Restart the gateway, then check status with the same env-cleared pattern.</p>
+        <pre><code>env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway restart
+env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway status</code></pre>
+      </article>
+      <article class="card">
+        <span class="card-label">Rollback stays bounded</span>
+        <h3>Detach without cross-profile spillover</h3>
+        <p>One activation root per profile keeps rollback, disable, and cleanup limited to that profile.</p>
+        <div class="dev-links">
+          <a class="btn btn-primary" href="/docs/setup-guide/">Setup guide</a>
+          <a class="btn btn-secondary" href="/docs/openclaw-integration/">Integration docs</a>
+          <a class="btn btn-secondary" href="https://github.com/jonathangu/openclawbrain">Package repo</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
   <!-- ── DEVELOPER CTA ── -->
   <section class="section" id="developers">
-    <h2>Package repo and docs</h2>
+    <h2>Docs and repo</h2>
     <p class="section-intro">
-      The operator install path is the published <code>@openclawbrain/openclaw</code> package plus the verified <code>openclawbrain install</code> flow above: default <code>bge-large</code> embedder provision first, explicit skip only by flag or env var, optional local teacher after that. Use the docs for deeper runtime wiring, worked examples, and benchmark boundaries.
+      Use the docs when you want deeper runtime wiring, the full learning walkthrough, or the benchmark methodology behind the summary numbers above.
     </p>
     <div class="dev-links">
       <a class="btn btn-primary" href="/docs/setup-guide/">Setup guide</a>
-      <a class="btn btn-secondary" href="https://github.com/jonathangu/openclawbrain">Package repo</a>
+      <a class="btn btn-secondary" href="/docs/worked-example/">Worked example</a>
       <a class="btn btn-secondary" href="/docs/openclaw-integration/">Integration docs</a>
-      <a class="btn btn-secondary" href="/docs/worked-example/">Integration walkthrough</a>
+      <a class="btn btn-secondary" href="https://github.com/jonathangu/openclawbrain">Package repo</a>
     </div>
   </section>
 
