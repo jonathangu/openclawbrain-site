@@ -199,11 +199,11 @@ pnpm operator:rollback -- --activation-root &lt;path&gt;</code></pre>
       <li><code>fastBootFromExistingFiles</code> — OpenClaw starts serving immediately from existing files; bootstrap attach works even from zero events.</li>
       <li><code>teacher.onHotPath: false</code> — learning never adds latency to responses.</li>
       <li>Labels, scanner, and harvest feed into route training. They run on the learning side, not in the serve loop.</li>
-      <li>Background learning means: export turns, build a candidate pack off the hot path, then promote. The active pack is not mutated during serving.</li>
+      <li>Background learning means: export turns, build a candidate pack off the hot path, then promote. Eagle and Tern now prove that passive-learning loop on attached installs. The active pack is still not mutated in-place during the same served turn.</li>
     </ul>
     <div class="callout warn">
       <span class="callout-label">What is not here yet</span>
-      <p>Scanner, labels, and harvest are not yet on by default after attach — you still configure them explicitly. Continuous live graph update (decay, co-firing, pruning) on the active pack during serving is a target, not the current behavior. Graph-dynamics metadata is recorded inside the immutable pack artifact at build time.</p>
+      <p>Scanner, labels, and harvest are not yet on by default after attach — you still configure them explicitly. Eagle/Tern do prove graph evolution through export, learning, and promoted-pack change on attached installs. What is still not claimed is same-turn in-place mutation of the currently active pack during serving, or broader rollout hardening.</p>
     </div>
 
     <!-- ── ADVANCED: PACKAGES ── -->

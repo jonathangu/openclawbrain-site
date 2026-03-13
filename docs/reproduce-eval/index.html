@@ -102,7 +102,7 @@ pnpm observability:report
 <li>explicit fallback usage</li>
 </ul>
 </code>pnpm observability:report<code> prints the local JSON report for those proofs. It only claims what is materialized inside the repo fixture lane; it does not claim live production telemetry coverage.
-<p>Those proofs keep learned </code>route_fn<code> evidence central, but they do not yet prove full live runtime plasticity on the active pack or per-query learned </code>route_fn<code> mutation. Current structural ops are verified as pack-build metadata plus promoted-artifact freshness.</p>
+<p>Those repo-local proofs keep learned </code>route_fn<code> evidence central, but by themselves they stop at promoted-artifact freshness and later served-turn verification inside the fixture lane. The separate Eagle/Tern dogfood proof is what extends the public story to passive learning on attached installs. Neither proves same-turn in-place mutation of the active pack or live production telemetry coverage.</p>
 <h3>Recorded-session replay proof</h3>
 </code>`<code>bash
 pnpm recorded-session-replay:smoke
@@ -168,7 +168,7 @@ npm run attach-smoke
 <p>When real BGZ proof bundle ids and digests are available, link them into </code>proofs/release-proof-input.json<code> and regenerate </code>.release/release-proof-manifest.json<code> with </code>pnpm release:proofs:manifest<code>.</p>
 <h3>Not claimed here</h3>
 <ul><li>full comparative benchmark coverage inside this repo</li>
-<li>full runtime graph plasticity on the live active pack</li>
+<li>same-turn in-place graph mutation on the live active pack</li>
 <li>per-query learned </code>route_fn` updates on the active pack</li>
 <li>live production answer-quality proof on served OpenClaw traffic</li>
 <li>shadow-mode or online rollout proof</li>

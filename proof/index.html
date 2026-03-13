@@ -5,9 +5,9 @@
   <title>OpenClawBrain Proof Package</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Jonathan Gu">
-  <meta name="description" content="Plain-language proof page: benchmark wins across three long-lived-memory families, a 29-1-0 seed record with 5x lower context, and separate install/attach/restart proof on real OpenClaw profiles.">
+  <meta name="description" content="Plain-language proof page: benchmark wins across three long-lived-memory families, a 29-1-0 seed record with 5x lower context, and separate Eagle/Tern dogfood proof for attached install, export, promotion, and learned-route refresh on real OpenClaw profiles.">
   <meta property="og:title" content="OpenClawBrain Proof Package">
-  <meta property="og:description" content="Benchmark wins across three long-lived-memory families, a 29-1-0 seed record with 5x lower context, and separate install/attach/restart proof on real OpenClaw profiles.">
+  <meta property="og:description" content="Benchmark wins across three long-lived-memory families, a 29-1-0 seed record with 5x lower context, and separate Eagle/Tern dogfood proof for attached install, export, promotion, and learned-route refresh on real OpenClaw profiles.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/proof/">
   <meta name="twitter:card" content="summary_large_image">
@@ -431,7 +431,7 @@
           <h1>Proof, with the boundary stated plainly</h1>
           <p style="font-family:var(--sans); font-size:0.92rem; color:var(--muted); margin:0.5rem 0 0;">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
           <p class="lead">
-            Short version: on three long-lived-memory benchmark families, OpenClawBrain beat the strongest RAG-style baseline by <strong>+9.7 to +26.9 percentage points</strong>, won <strong>29 of 30</strong> seed-level matchups, and used <strong>5x less context</strong> per query. One family is recorded replay on fixed fixtures; two are deterministic seeded simulations. Separately, install, attach, and restart are now verified on real OpenClaw profiles. That is strong benchmark evidence and real operator proof, but it is <strong>not yet a claim of live learning on real profiles</strong>.
+            Short version: on three long-lived-memory benchmark families, OpenClawBrain beat the strongest RAG-style baseline by <strong>+9.7 to +26.9 percentage points</strong>, won <strong>29 of 30</strong> seed-level matchups, and used <strong>5x less context</strong> per query. One family is recorded replay on fixed fixtures; two are deterministic seeded simulations. Separately, Eagle and Tern dogfood now verify install, attach, restart, export, passive learning, pack promotion, and later served learned-route / graph updates on real OpenClaw profiles. That is strong benchmark evidence and narrow live operator proof, but it is <strong>not yet a claim of broad production win rates or rollout hardening</strong>.
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href="#overview">The big picture</a>
@@ -440,7 +440,7 @@
             <a class="btn btn-secondary" href="/docs/operator-guide/">Operator guide</a>
           </div>
           <p class="hero-note">
-            In the artifact bundle, the full system is labeled <code>full_brain</code>. The main comparison target is the strongest RAG-style baseline in each family, not a weak strawman. Real-profile install/attach/restart is verified; live learning is not, because both attached brains are still <code>awaiting_first_export</code>. See the <a href="/docs/setup-guide/">Setup Guide</a>, <a href="/docs/operator-guide/">Operator Guide</a>, and <a href="https://github.com/jonathangu/brain-ground-zero/blob/main/CLAIMS.md">CLAIMS.md</a> for the exact boundary.
+            In the artifact bundle, the full system is labeled <code>full_brain</code>. The main comparison target is the strongest RAG-style baseline in each family, not a weak strawman. Real-profile dogfood now goes past install-only: Eagle and Tern both reached exported turns, promoted packs, learned <code>route_fn</code> refresh, default <code>bge-large</code>, optional <code>qwen3.5:9b</code> teacher enablement, and graph evolution reflected on later served turns. See the <a href="/docs/setup-guide/">Setup Guide</a>, <a href="/docs/operator-guide/">Operator Guide</a>, and <a href="https://github.com/jonathangu/brain-ground-zero/blob/main/CLAIMS.md">CLAIMS.md</a> for the exact boundary.
           </p>
         </div>
 
@@ -460,9 +460,9 @@
 
           <article class="status-card">
             <div class="kicker">Operationally verified</div>
-            <h3>Install, attach, restart</h3>
-            <p><code>npm install -g @openclawbrain/openclaw@0.3.0</code> worked on real OpenClaw profiles. The default install now expects an embedder and provisions <code>bge-large</code> before brain bootstrap unless the operator explicitly uses <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The Ollama teacher path is still optional; if you enable it, the default teacher model is <code>qwen3.5:9b</code>. Attach succeeded on two real profiles, and a Telegram-connected profile came back cleanly after restart.</p>
-            <p class="meta">This is proof of the public install and restart surface. It is not yet proof of live learning. Both attached brains are still <code>awaiting_first_export</code>.</p>
+            <h3>Install, attach, restart, passive learning</h3>
+            <p><code>npm install -g @openclawbrain/openclaw@0.3.0</code> worked on real OpenClaw profiles. The default install now expects an embedder and provisions <code>bge-large</code> before brain bootstrap unless the operator explicitly uses <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The Ollama teacher path is still optional; if you enable it, the default teacher model is <code>qwen3.5:9b</code>. Eagle and Tern both attached cleanly; Tern came back on Telegram after restart; and the attached dogfood path now includes exported turns, promoted packs, learned <code>route_fn</code> refresh, and graph evolution showing up on later served turns.</p>
+            <p class="meta">This is proof of the public install surface plus a narrow live-learning loop on attached installs. It is not yet proof of broad fleet reliability, shadow-mode outcomes, or online answer-quality lift.</p>
           </article>
 
           <article class="status-card">
@@ -500,7 +500,7 @@
           <article class="status-card">
             <div class="kicker">3 &middot; Boundary</div>
             <h3>What you should not infer</h3>
-            <p>No claim yet on live LLM routing, production latency, production cost, larger world sizes, or live learning after export on attached profiles. Those remain separate future proofs.</p>
+            <p>No claim yet on live LLM routing inside the benchmark harness, production latency, production cost, broad fleet reliability, larger world sizes, shadow-mode head-to-head on product traces, or online outcome lift. Those remain separate future proofs.</p>
           </article>
         </div>
       </section>
@@ -696,6 +696,7 @@
               <li>Each family runs at 10-seed scale with 8 baselines. Results are deterministic given a seed.</li>
               <li>Memory structure updates are the single largest contributor in every family; the ablation ladder does not reverse.</li>
               <li>Context efficiency: <strong>5x lower</strong> across all three families.</li>
+              <li>Eagle and Tern attached installs now prove passive learning off the hot path: exports land, candidate packs promote, learned <code>route_fn</code> refreshes, and graph evolution appears on later served turns.</li>
             </ul>
           </article>
 
@@ -707,7 +708,8 @@
               <li>Behavior at larger world sizes (current: 50 entities / 80 workflows).</li>
               <li>End-to-end performance with live LLM routing (harness uses simulated policy functions).</li>
               <li>Production latency or cost.</li>
-              <li>First-export learning proof on attached real profiles; both current brains are still <code>awaiting_first_export</code>.</li>
+              <li>Broad operator hardening across many profiles or environments.</li>
+              <li>Same-turn or in-place mutation of the currently active pack during serving.</li>
               <li>Real-session head-to-head on product traces (spec defined, no scored results).</li>
               <li>"Always wins" across all families (sparse feedback is 9-1-0).</li>
             </ul>
@@ -721,7 +723,7 @@
         <div class="section-head">
           <div>
             <h2>Operator proof: what is real in the field</h2>
-            <p class="section-intro">This section is intentionally separate from the benchmarks. It answers a different question: does the shipped install and restart path work on real OpenClaw profiles? Yes. Has live learning on those profiles been proven yet? No.</p>
+            <p class="section-intro">This section is intentionally separate from the benchmarks. It answers a different question: does the shipped install and passive-learning path work on real OpenClaw profiles? On Eagle and Tern dogfood, yes. Does that prove broad production answer-quality gains? No.</p>
           </div>
         </div>
         <div class="three-col">
@@ -736,27 +738,30 @@
           </article>
 
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
-            <div class="kicker">2 &middot; Install / attach / restart proof</div>
-            <h3>Real OpenClaw profiles now attach cleanly under the shipped install contract</h3>
+            <div class="kicker">2 &middot; Install / attach / passive-learning proof</div>
+            <h3>Real OpenClaw profiles now run the shipped install contract and later promoted learning loop</h3>
             <ul>
               <li><code>npm install -g @openclawbrain/openclaw@0.3.0</code> worked on a real operator path.</li>
               <li>Normal install now expects an embedder and provisions or pulls <code>bge-large</code> before brain bootstrap by default.</li>
               <li>Operators can explicitly skip that step with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code> if they manage the embedder separately.</li>
               <li>The local teacher LLM remains optional; if the Ollama teacher path is enabled, its default model is <code>qwen3.5:9b</code>.</li>
               <li>The safest default remains one dedicated activation root per profile.</li>
-              <li>Attach succeeded on two real OpenClaw profiles.</li>
-              <li>A Telegram-connected profile came back cleanly after the verified restart path.</li>
+              <li>Attach succeeded on the Eagle and Tern real OpenClaw profiles.</li>
+              <li>Tern came back cleanly on Telegram after the verified restart path.</li>
+              <li>Exported turns landed on attached installs and triggered off-hot-path learning.</li>
+              <li>Candidate packs were promoted, later served turns reflected the learned <code>route_fn</code>, and graph evolution showed up through promoted-pack changes.</li>
+              <li>The default <code>bge-large</code> path and optional local <code>qwen3.5:9b</code> teacher enablement were both exercised on attached installs.</li>
             </ul>
             <pre class="trace-snippet"><code>env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway restart</code></pre>
           </article>
 
           <article class="status-card">
-            <div class="kicker">3 &middot; Live learning proof</div>
-            <h3>Still pending first export</h3>
+            <div class="kicker">3 &middot; Boundary after the dogfood proof</div>
+            <h3>What the Eagle/Tern proof does not buy you for free</h3>
             <ul>
-              <li>Install and attach prove the operator surface, not that export, learning, and promotion have already happened live.</li>
-              <li>Both attached brains are still <code>awaiting_first_export</code>.</li>
-              <li>The next honest proof boundary is first export landing, then later served turns reflecting promoted knowledge.</li>
+              <li>The live operator proof is still narrow: two attached dogfood installs, not a broad customer fleet.</li>
+              <li>Learning is still passive and off the hot path: export, candidate refresh, promotion, then later served turns. This is not same-turn mutation of the currently active pack.</li>
+              <li>We still do not have shadow-mode comparisons, narrow online rollout data, or head-to-head answer-quality wins on real product traces.</li>
             </ul>
           </article>
         </div>
@@ -837,11 +842,11 @@ correction: internal-only patch -&gt; no support contact</code></pre>
             <p>+9.7 to +26.9 pp across relational drift, recurring workflows, and sparse feedback. 29-1-0 cross-family.</p>
             <div class="meta">Reached. <a href="#overview">See charts</a>.</div>
           </article>
-          <article class="ladder-card">
-            <div class="step">4</div>
-            <h3>Live knowledge updates</h3>
-            <p>The knowledge map updating itself during live serving, not just between background build cycles.</p>
-            <div class="meta">Not yet proved.</div>
+          <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
+            <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">4</div>
+            <h3>Attached-install passive learning</h3>
+            <p>Eagle and Tern exports land, candidate packs evolve, promotions happen, and later served turns reflect learned route and graph changes.</p>
+            <div class="meta">Reached, but still narrow dogfood operator proof.</div>
           </article>
           <article class="ladder-card">
             <div class="step">5</div>
