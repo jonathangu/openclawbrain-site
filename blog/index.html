@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OpenClawBrain Blog</title>
   <meta name="author" content="Jonathan Gu">
-  <meta name="description" content="OpenClawBrain blog: operator-first install, default bge-large embedder provision, optional teacher path, and what the current proof actually shows.">
+  <meta name="description" content="OpenClawBrain blog: one brain per machine, per-ask retrieval, passive-learning proof, and the current bge-large plus qwen operator story.">
   <link rel="canonical" href="https://openclawbrain.ai/blog/">
   <style>
     :root {
@@ -87,15 +87,15 @@
   </nav>
   <main>
     <h1>Blog</h1>
-    <p>Your OpenClaw agent starts every conversation with amnesia. OpenClawBrain fixes that &mdash; a memory layer that learns which context matters, selects it per query, and gets sharper from corrections. The front door is now operator-first: install provisions the default <code>bge-large</code> embedder before brain init, attach, verify first value, then decide how much architecture and proof detail you need.</p>
-    <p>The install and attach path is now real enough for live operator docs: Tern and CormorantAI have both attached successfully, dedicated activation roots per profile are the safest default, and Tern came back on Telegram after restart. Skipping embedder provision is an explicit override via <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The local teacher remains optional; <code>qwen3.5:9b</code> is only the default if that Ollama teacher path is enabled. The claim boundary stays explicit: live learning still needs first-export proof.</p>
+    <p>OpenClawBrain is headed toward a simple default: one local brain per machine, retrieval chosen per ask, and learning that happens off the hot path. The front door is operator-first today: install provisions the default <code>bge-large</code> embedder before brain init, can light up passive learning immediately, and lets you prove the runtime step separately.</p>
+    <p>The public operator proof is now stronger. Eagle proved install -&gt; learner start -&gt; first export -&gt; promoted-pack serving, with live <code>bge-large</code> embeddings and an enabled local <code>qwen3.5:9b</code> teacher on that machine. Tern proved attach and clean restart on a Telegram-connected profile. Dedicated activation roots still buy the clearest isolation boundary, but one-brain-per-profile is no longer the only honest story; a shared machine brain is acceptable when you want one memory surface, while broader same-gateway multi-profile guarantees are still separate proof.</p>
 
     <h2>Start Here</h2>
     <div class="grid">
       <a class="post featured" href="/docs/setup-guide/">
         <div class="title">Safe install and operator quickstart</div>
-        <div class="meta">Start here &middot; install is now the front door, with an honest claim boundary</div>
-        <div>Start with the real operator path: install <code>@openclawbrain/openclaw</code>, let <code>openclawbrain install</code> provision and pull the default <code>bge-large</code> embedder unless you explicitly skip it, give each profile its own activation root, and verify status, doctor, and rollback before you lean on learning claims.</div>
+        <div class="meta">Start here &middot; install is the front door, with stronger machine truth</div>
+        <div>Start with the real operator path: install <code>@openclawbrain/openclaw</code>, let <code>openclawbrain install</code> provision the default <code>bge-large</code> embedder unless you explicitly skip it, choose a shared machine root or a dedicated root on purpose, and verify status, daemon, and rollback before you widen the claim.</div>
       </a>
       <a class="post featured" href="/docs/worked-example/">
         <div class="title">Worked example: one conversation turn, end to end</div>
@@ -117,9 +117,9 @@
     <h2>Install &amp; Operate</h2>
     <div class="grid">
       <a class="post" href="/docs/setup-guide/">
-        <div class="title">Setup guide: install, activation roots, first checks</div>
+        <div class="title">Setup guide: shared or dedicated roots, first checks</div>
         <div class="meta">Operator front door</div>
-        <div>The day-0 path for real deployments: package install, default embedder provision, runtime profile wiring, safest-default activation-root isolation, and the first checks that tell you whether attach actually landed.</div>
+        <div>The day-0 path for real deployments: package install, default embedder provision, runtime profile wiring, machine-shared versus dedicated activation-root choice, and the first checks that tell you whether attach, export, and serving actually landed.</div>
       </a>
       <a class="post" href="/docs/operator-guide/">
         <div class="title">Operator guide: status, doctor, rollback, and claim boundary</div>
