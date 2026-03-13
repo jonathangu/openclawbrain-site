@@ -7,6 +7,14 @@ This guide is the day-0 setup path. It covers what the repo delivers today and w
 > **Current truth**: promoted-pack lifecycle, learned `route_fn` evidence, operator observability, local tarball distribution, and Eagle/Tern dogfood proof for passive learning through promoted packs on attached installs.
 > **Target end shape**: npm-published API, scanner/labels/harvest on by default after attach, broader operator hardening, and harder API enforcement of the OpenClaw/OpenClawBrain split.
 
+## Operator model
+
+The day-0 operator story is not "one brain per profile or bust." A single shared brain per machine is an acceptable default: attach each OpenClaw profile to the same activation root unless you have a reason to isolate one.
+
+Shared brain does not mean identical context on every request. OpenClawBrain still compiles context per ask, so different prompts and profiles can retrieve different slices from the same machine-level brain.
+
+Use a dedicated activation root when you want rollback, disable, cleanup, or blame scoped to one profile instead of the whole machine.
+
 ## What you need
 
 - Node.js 20+ with `corepack` and `pnpm` 10+
@@ -78,6 +86,7 @@ The supported packages (from local tarballs today, npm-published in the target w
 - `@openclawbrain/openclaw` — typed OpenClaw bridge: compile diagnostics, learned-route hard-fail enforcement, normalized event export handoff
 
 Use `pnpm operator:status`, `pnpm operator:doctor`, and `pnpm operator:rollback -- --dry-run` for day-0 triage once you have a real activation root.
+Those commands operate on the activation root you chose: machine-wide if profiles share a root, profile-scoped if you gave one profile its own root.
 
 ## 3. Confirm it is working
 
@@ -93,7 +102,7 @@ After connecting, verify these behaviors:
 OpenClaw owns fail-open behavior. If something goes wrong:
 
 - **Brain becomes unavailable:** OpenClaw automatically falls back to core runtime behavior. Responses continue without brain-enhanced context.
-- **Bad brain pack:** Roll back to the previous active pack set using `pnpm operator:rollback -- --activation-root <path> --dry-run` first to preview the exact pointer move, then apply. Compilation from a given pack is deterministic, so rollback is safe and repeatable.
+- **Bad brain pack:** Roll back to the previous active pack set using `pnpm operator:rollback -- --activation-root <path> --dry-run` first to preview the exact pointer move, then apply. If profiles share that activation root, the rollback applies to the shared machine brain; if the root is dedicated, the rollback stays with that profile. Compilation from a given pack is deterministic, so rollback is safe and repeatable.
 - **Learning delays:** Scanner, harvest, and learner workers run asynchronously. Delays do not affect the hot path.
 
 Recovery happens through background loops and pack rollback &mdash; no manual intervention needed.

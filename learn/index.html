@@ -633,13 +633,15 @@
     <h2 id="install-boundary-heading">Operator bridge: understand the mechanism, then install from the right boundary</h2>
     <p class="section-intro">
       The install path is real now, but it is still an operator path. After you understand how the
-      brain works, the next step is to attach it from a normal shell or deployment flow, not from a
+      brain works, the next step is to attach one or more profiles from a normal shell or deployment flow, not from a
       live chat window.
     </p>
     <p class="section-intro">
       Safe default today: normal install expects an embedder and provisions or pulls <code>bge-large</code>
       before brain bootstrap unless you explicitly skip that step, then you restart the runtime
-      externally so the profile comes back with the brain attached. The local teacher LLM is still
+      externally so the profile comes back with the brain attached. A shared activation root per
+      machine is acceptable, and per-ask retrieval still differs because context is compiled at
+      request time. The local teacher LLM is still
       optional; if you enable the Ollama teacher path, its default model is <code>qwen3.5:9b</code>.
       Install and restart are real. Eagle and Tern now also prove the later passive-learning loop on
       attached installs: exports land, packs promote, the learned <code>route_fn</code> refreshes, and
@@ -654,7 +656,8 @@
           <li>Normal install now expects an embedder and provisions or pulls <code>bge-large</code> before brain bootstrap by default.</li>
           <li>If you manage the embedder yourself, explicitly opt out with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>.</li>
           <li>The local teacher LLM is optional. If the Ollama teacher path is enabled, its default model is <code>qwen3.5:9b</code>.</li>
-          <li>Use one dedicated brain activation root per profile by default. It keeps state, rollback, and blame clear.</li>
+          <li>Reuse one activation root per machine by default. It is a valid operator model even when different profiles ask different questions.</li>
+          <li>Choose a dedicated activation root only when you want rollback, cleanup, or blame isolated to one profile.</li>
           <li>Restart OpenClaw externally after install so the profile reloads with the attached brain cleanly.</li>
           <li>Use the site setup guide for the day-0 path, then the operator runbook for checks and rollback.</li>
         </ul>
@@ -782,8 +785,9 @@
     <p class="compare-note">
       No cloud required. Both components run locally. The brain stores everything on disk in
       your environment &mdash; nothing is sent to a third-party service. For live profiles today,
-      the safe default is one activation root per profile, with attach and restart handled outside
-      the conversation itself.
+      a shared activation root per machine is an acceptable default, with attach and restart handled
+      outside the conversation itself. Use a dedicated root when you want profile-level isolation
+      for rollback, cleanup, or operator blame.
     </p>
   </section>
 

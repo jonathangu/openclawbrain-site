@@ -609,10 +609,11 @@
   <section class="section install-section" id="install-now">
     <h2>Install for OpenClaw operators</h2>
     <p class="section-intro">
-      If you want to try it now, use the published package and run <code>openclawbrain install</code> from a normal shell. The current front door provisions <code>bge-large</code> by default, can enable a compatible local <code>qwen3.5:9b</code> teacher, and can start passive learning before the next gateway restart.
+      If you want to try it now, use the published package and run <code>openclawbrain install</code> from a normal shell. The current front door provisions <code>bge-large</code> by default, can enable a compatible local <code>qwen3.5:9b</code> teacher, and by default attaches your profile to a shared machine-level brain unless you deliberately choose a dedicated root.
     </p>
     <p class="callout-note">
-      Current honest read: Eagle proved install can auto-start the exact-root passive learner, reach first export, and serve from a promoted pack with live <code>bge-large</code> embeddings and an enabled local <code>qwen3.5:9b</code> teacher. Tern proved the attach-and-restart path on a live Telegram-connected profile. One shared brain per machine is acceptable when you want one memory surface; dedicated roots still buy clearer isolation, rollback, and blame. Skip embedder provision only with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>.
+      Current honest read: Eagle proved install can auto-start the exact-root passive learner, reach first export, and serve from a promoted pack with live <code>bge-large</code> embeddings and an enabled local <code>qwen3.5:9b</code> teacher. Tern proved the attach-and-restart path on a live Telegram-connected profile. A shared activation root per machine is acceptable, and different asks can still retrieve different context from that same brain. Use a dedicated root when you want rollback, cleanup, or blame scoped to one profile. Skip embedder provision only with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>.
+    </p>
     </p>
     <div class="install-grid">
       <article class="card accent-card">
@@ -622,9 +623,9 @@
         <pre><code>npm install -g @openclawbrain/openclaw@0.3.0</code></pre>
       </article>
       <article class="card">
-        <span class="card-label">2. Pick the attachment policy</span>
-        <h3>Shared by machine, dedicated when you need isolation</h3>
-        <p>A machine-level shared brain is acceptable if you want one memory surface. Use a dedicated activation root when you want stricter rollback, blame, or experimental separation. If multiple profiles point at the same root, add <code>--shared</code>.</p>
+        <span class="card-label">2. Attach a profile to the machine brain</span>
+        <h3>Share by default, isolate on purpose</h3>
+        <p>Reuse one activation root for the machine unless you want a profile to have its own rollback, blame, or cleanup boundary. If multiple profiles point at the same root, add <code>--shared</code>.</p>
         <pre><code>openclawbrain install --openclaw-home "$OPENCLAW_HOME" --activation-root "$ACTIVATION_ROOT" --workspace-id "$PROFILE_NAME"</code></pre>
       </article>
       <article class="card">
@@ -636,9 +637,9 @@ openclawbrain status --activation-root "$ACTIVATION_ROOT"
 openclawbrain daemon status --activation-root "$ACTIVATION_ROOT"</code></pre>
       </article>
       <article class="card">
-        <span class="card-label">4. Operator truth is stronger</span>
-        <h3>Status, daemon, and rollback give a better machine read</h3>
-        <p>The operator surface can now distinguish hook install from load proof, seed state from promoted serving, and live passive-learning visibility from old snapshots.</p>
+        <span class="card-label">4. Operator truth and rollback</span>
+        <h3>Scope operator actions deliberately</h3>
+        <p>Status and daemon distinguish hook install from load proof, seed state from promoted serving, and live passive-learning visibility from old snapshots. Rollback, disable, and cleanup follow the root you chose: dedicated roots scope those actions to one profile, while shared roots make them machine-wide.</p>
         <div class="dev-links">
           <a class="btn btn-primary" href="/docs/setup-guide/">Setup guide</a>
           <a class="btn btn-secondary" href="/docs/operator-guide/">Operator guide</a>
