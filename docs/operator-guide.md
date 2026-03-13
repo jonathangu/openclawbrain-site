@@ -1,29 +1,31 @@
-> Canonical observability details live on GitHub; this page mirrors the operator truth for the current launch wave.
+> Canonical observability detail still lives on GitHub; this page mirrors the operator truth for the current launch wave in plain language.
 
 # OpenClawBrain Operator Guide
 
+Use this page when you need fast answers to the questions operators actually ask under pressure: did attach land cleanly, what is healthy right now, and where does the proof line stop?
+
 ## Current operating truth
 
-Treat the current public wave as an external technical alpha.
+Treat the current public wave as a technical alpha, not finished enterprise packaging.
 
-- the implementation reality is the current public repo tip on `openclawbrain` `origin/main`, not a private unpublished branch
-- the truthful shipping surface is repo tip plus optional `.release/` tarballs
-- release-proof gates are still pending until `pnpm release:status` says otherwise
-- docs should not imply a finished registry wave or broad-customer polish
+- The implementation truth is the public `openclawbrain` repo tip on `origin/main`, not a private unpublished branch.
+- The honest shipping surface is repo tip plus optional `.release/` tarballs.
+- Release-proof gates are still pending until `pnpm release:status` says otherwise.
+- The docs should read like field notes from a real system, not like a polished registry wave that already shipped everywhere.
 
-## What healthy operation means today
+## What healthy looks like today
 
 A healthy attached runtime looks like this:
 
-- first value appears from a fast-boot promoted pack before any full replay finishes
-- live events keep landing while older history backfills behind the hot path
-- learned-routing proof stays explicit whenever the promoted pack requires it
-- freshness, promotion, rollback lineage, and no-op reasons are inspectable
-- OpenClaw stays fail-open if learning refresh is delayed
+- First value shows up from a fast-boot promoted pack before any full replay finishes.
+- New live events keep landing while older history backfills behind the hot path.
+- Learned-routing proof stays explicit whenever the promoted pack requires it.
+- Freshness, promotion history, rollback lineage, and no-op reasons are visible instead of hidden.
+- OpenClaw stays fail-open if learning refresh is delayed.
 
-## Required commands
+## First commands to run
 
-From the repo root, use these checks first:
+If you are triaging from the source repo, start here:
 
 ```bash
 corepack enable
@@ -34,7 +36,7 @@ pnpm observability:smoke
 pnpm observability:report
 ```
 
-Use these when you want attach-specific confidence:
+When you want attach-specific confidence, run these next:
 
 ```bash
 pnpm lifecycle:smoke
@@ -50,23 +52,32 @@ Read the proof surfaces in this order:
 2. `pnpm observability:report` for activation slots, freshness targets, rollback lineage, route artifact diffs, init handoff, and duplicate no-op reporting.
 3. compile diagnostics for `usedLearnedRouteFn`, `routerIdentity`, router checksum, PG objective metadata, and explicit fallback notes.
 
-If `handoff_state=seed_state_authoritative`, the runtime is still on the fast-boot seed-state pack.
-If `handoff_state=pg_promoted_pack_authoritative`, a later PG-promoted pack has become authoritative.
+Those are the check-in surfaces. Keep install, load, export, and later served learning separate instead of flattening them into one green check.
 
-## Claim boundary for operators
+If `handoff_state=seed_state_authoritative`, the runtime is still serving from the fast-boot seed-state pack. If `handoff_state=pg_promoted_pack_authoritative`, a later PG-promoted pack has taken over.
 
-The local operator proof today is narrow but real:
+## How to read the current proof line
+
+The public operator proof today is narrow, but it is real:
 
 - promoted-pack compilation is real
-- PG-only learned `route_fn` evidence is real
-- later served-turn route changes after candidate refresh and promotion are real
+- learned `route_fn` evidence is real
+- Eagle/Tern dogfood proves passive learning on attached installs: exports land, candidate packs promote, and later served turns reflect learned route and graph changes
+- the default `bge-large` embedder path is real on attached installs
+- optional local `qwen3.5:9b` teacher enablement is real on attached installs
+- attach plus EXTERNAL RESTART is real on live profiles
 - explicit fallback visibility is real
 
-Do not treat these as proof of:
+Do not stretch that into claims we have not earned yet:
 
-- per-query learned `route_fn` mutation on the active pack
-- full live active-pack plasticity during serving
+- per-query or same-turn learned `route_fn` mutation on the active pack
+- full live active-pack plasticity while traffic is flowing
+- broad operator hardening across many profiles or environments, including shared-root concurrency safety
 - finished shadow or online answer-quality proof
 - full local reproduction of the broader traversal-learning and `QTsim` benchmark story
 
-That broader route-function story remains important; it is simply claimed through Brain Ground Zero, not through this repo alone.
+That broader route-function story still matters. It is simply claimed through Brain Ground Zero, not through this repo alone.
+
+## Rollback mindset
+
+If something smells wrong, treat rollback, disable, or uninstall as normal operator tools, not an admission of failure. The system is designed so you can inspect the active state, preview the pointer move, and back out cleanly without taking OpenClaw down with it.

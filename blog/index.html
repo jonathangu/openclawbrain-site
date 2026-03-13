@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OpenClawBrain Blog</title>
   <meta name="author" content="Jonathan Gu">
-  <meta name="description" content="OpenClawBrain blog: operator-first install, default bge-large embedder provision, optional teacher path, and what the current proof actually shows.">
+  <meta name="description" content="OpenClawBrain blog: operator-first install, one brain per machine, per-ask retrieval, and proof that says exactly what it proves.">
   <link rel="canonical" href="https://openclawbrain.ai/blog/">
   <style>
     :root {
@@ -87,15 +87,15 @@
   </nav>
   <main>
     <h1>Blog</h1>
-    <p>Your OpenClaw agent starts every conversation with amnesia. OpenClawBrain fixes that &mdash; a memory layer that learns which context matters, selects it per query, and gets sharper from corrections. The front door is now operator-first: install provisions the default <code>bge-large</code> embedder before brain init, attach, verify first value, then decide how much architecture and proof detail you need.</p>
-    <p>The install and attach path is now real enough for live operator docs: Tern and CormorantAI have both attached successfully, dedicated activation roots per profile are the safest default, and Tern came back on Telegram after restart. Skipping embedder provision is an explicit override via <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The local teacher remains optional; <code>qwen3.5:9b</code> is only the default if that Ollama teacher path is enabled. The claim boundary stays explicit: live learning still needs first-export proof.</p>
+    <p>OpenClawBrain is the memory layer for OpenClaw: it keeps corrections, picks cleaner context for each job, and gets sharper on work that comes back around. The default direction is simple: one local brain per machine, retrieval chosen per ask, and learning off the hot path. This blog is the map. Start with install and proof, then go deeper into the architecture once you want to know how the guide actually thinks.</p>
+    <p>The operator path is now real enough to document plainly. Install provisions the default <code>bge-large</code> embedder before brain init unless you explicitly skip it. Eagle and Tern both attached on real profiles; Tern proved <strong>EXTERNAL RESTART</strong> on a Telegram-connected profile; Eagle proved learner start, first export, promoted-pack serving, learned <code>route_fn</code>, and graph truth updates on later served turns, with live <code>bge-large</code> embeddings and an enabled local <code>qwen3.5:9b</code> teacher on that machine. A shared machine brain is acceptable when you want one memory surface, while dedicated roots still buy the clearest rollback, disable, cleanup, or uninstall boundary.</p>
 
     <h2>Start Here</h2>
     <div class="grid">
       <a class="post featured" href="/docs/setup-guide/">
         <div class="title">Safe install and operator quickstart</div>
-        <div class="meta">Start here &middot; install is now the front door, with an honest claim boundary</div>
-        <div>Start with the real operator path: install <code>@openclawbrain/openclaw</code>, let <code>openclawbrain install</code> provision and pull the default <code>bge-large</code> embedder unless you explicitly skip it, give each profile its own activation root, and verify status, doctor, and rollback before you lean on learning claims.</div>
+        <div class="meta">Start here &middot; install is the front door, with an honest claim boundary</div>
+        <div>Start with the real operator path: install <code>@openclawbrain/openclaw</code>, let <code>openclawbrain install</code> provision the default <code>bge-large</code> embedder unless you explicitly skip it, choose a shared machine root or a dedicated root on purpose, and verify status, daemon, doctor, rollback, and uninstall boundaries before you widen the claim.</div>
       </a>
       <a class="post featured" href="/docs/worked-example/">
         <div class="title">Worked example: one conversation turn, end to end</div>
@@ -105,31 +105,31 @@
       <a class="post featured" href="/proof/">
         <div class="title">Proof package: 3 families, 29-1-0 head-to-head, 5x less context</div>
         <div class="meta">March 2026 &middot; 10-seed proof-scale benchmarks across 3 task families</div>
-        <div>Three benchmark families, 10 seeds each, 8 baselines. Charts, ablation ladder, reproduction steps, and an honest line where the claims stop.</div>
+        <div>Three benchmark families, 10 seeds each, 8 baselines. Charts, ablation ladder, reproduction steps, and a clear line between what is proved today and what is still ahead.</div>
       </a>
       <a class="post featured" href="/blog/v12.2.6-series/">
         <div class="title">What OpenClawBrain is: the v12.2.6+ architecture series</div>
         <div class="meta">March 2026 &middot; 6 posts</div>
-        <div>The full explanation: how learning happens off the live path, how the routing function blends structural knowledge with per-query relevance, and how operators plug the two systems together.</div>
+        <div>The full explanation: how learning happens off the live path, how the routing function blends structural knowledge with per-query relevance, and how operators plug the two systems together without slowing the agent down.</div>
       </a>
     </div>
 
     <h2>Install &amp; Operate</h2>
     <div class="grid">
       <a class="post" href="/docs/setup-guide/">
-        <div class="title">Setup guide: install, activation roots, first checks</div>
+        <div class="title">Setup guide: shared or dedicated roots, first checks</div>
         <div class="meta">Operator front door</div>
-        <div>The day-0 path for real deployments: package install, default embedder provision, runtime profile wiring, safest-default activation-root isolation, and the first checks that tell you whether attach actually landed.</div>
+        <div>The day-zero path for real deployments: package install, default embedder provision, runtime profile wiring, machine-shared versus dedicated activation-root choice, and the first checks that tell you whether attach, export, and serving actually landed.</div>
       </a>
       <a class="post" href="/docs/operator-guide/">
         <div class="title">Operator guide: status, doctor, rollback, and claim boundary</div>
         <div class="meta">Runbook</div>
-        <div>Use this when you need a one-screen answer to whether the active pack is healthy, whether rollback is ready, and which parts of the current operator story are proven versus still pending.</div>
+        <div>Use this when you need a one-screen answer to whether the active pack is healthy, whether rollback is ready, and which parts of the operator story are proven versus still pending.</div>
       </a>
       <a class="post" href="/docs/openclaw-integration/">
         <div class="title">OpenClaw integration: attach shape, fail-open behavior, ownership boundary</div>
         <div class="meta">Runtime wiring</div>
-        <div>The runtime-facing explanation of how OpenClaw and OpenClawBrain connect, what stays off the hot path, how promotion works, and why the serve path remains fail-open if learning falls behind.</div>
+        <div>The runtime-facing explanation of how OpenClaw and OpenClawBrain connect, what stays off the hot path, how promotion works, and why the serve path stays fail-open if learning falls behind.</div>
       </a>
     </div>
 
@@ -143,17 +143,17 @@
       <a class="post" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
         <div class="title">Context selection vs. keyword search</div>
         <div class="meta">Concept</div>
-        <div>RAG finds text that looks similar. OpenClawBrain blends two signals — what the knowledge map knows about how facts connect, and what fits this specific question — so the right context surfaces even when the words don't match.</div>
+        <div>RAG finds text that looks similar. OpenClawBrain blends two signals &mdash; what the knowledge map knows about how facts connect, and what fits this specific question &mdash; so the right context can surface even when the wording does not match.</div>
       </a>
       <a class="post" href="/blog/v12.2.6-series/01-shadow-routing-upg/">
         <div class="title">Learning from corrections</div>
         <div class="meta">Concept</div>
-        <div>When your agent makes a mistake and you correct it, OpenClawBrain records what went wrong and updates its routing weights off the live path. The agent keeps running; the guide gets better.</div>
+        <div>When your agent makes a mistake and you correct it, OpenClawBrain records what went wrong and updates its routing weights off the live path. The agent keeps running; the guide gets better for the next round.</div>
       </a>
       <a class="post" href="/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/">
         <div class="title">OpenClaw vs. OpenClawBrain</div>
         <div class="meta">Concept</div>
-        <div>OpenClaw is the runtime and orchestration layer. OpenClawBrain is the memory and context-selection layer that runs behind it. The agent keeps working if OpenClawBrain is unavailable — it's fail-open by design.</div>
+        <div>OpenClaw is the runtime and orchestration layer. OpenClawBrain is the memory and context-selection layer behind it. If the brain is unavailable, the agent keeps working; fail-open is part of the design, not a footnote.</div>
       </a>
     </div>
 
@@ -167,22 +167,22 @@
       <a class="post" href="/blog/v12.2.6-series/02-qtsim-confidence-mixing/">
         <div class="title">QTsim confidence mixing: how the guide decides what your agent needs right now</div>
         <div class="meta">Architecture &middot; March 2026</div>
-        <div>Two instincts, one decision: the guide blends the knowledge map's structural signal with per-query relevance — like a librarian checking both the catalog and your actual request.</div>
+        <div>Two instincts, one decision: the guide blends the knowledge map's structural signal with per-query relevance &mdash; like a librarian checking both the catalog and the question in front of them.</div>
       </a>
       <a class="post" href="/blog/v12.2.6-series/03-evaluation-ablations/">
         <div class="title">Ablations: what the benchmarks prove (and what they don't)</div>
         <div class="meta">Evaluation &middot; March 2026</div>
-        <div>Benchmark results, ablation ladder, and an honest line between what's proven so far and what still needs live-traffic evidence.</div>
+        <div>Benchmark results, the ablation ladder, and a clean line between what is proved so far and what still needs live-traffic evidence.</div>
       </a>
       <a class="post" href="/blog/v12.2.6-series/04-operator-local-embeddings/">
         <div class="title">Local embeddings: no cloud required</div>
         <div class="meta">Architecture &middot; March 2026</div>
-        <div>No API keys, no external services — four commands and the guide is serving context. Works entirely on your infrastructure.</div>
+        <div>No API keys, no external services: four commands and the guide is serving context on your own infrastructure.</div>
       </a>
       <a class="post" href="/blog/v12.2.6-series/05-industry-baselines-ablations/">
         <div class="title">Industry baselines: how it compares to established alternatives</div>
         <div class="meta">Evaluation &middot; March 2026</div>
-        <div>Side-by-side comparison against credible baselines: where the trained guide wins and where the evidence stops.</div>
+        <div>Side-by-side comparison against credible baselines: where the trained guide wins, and where the evidence still stops.</div>
       </a>
       <a class="post" href="/blog/v12.2.6-series/06-openclaw-runtime-boundary-integration/">
         <div class="title">Runtime boundary: plugging the two systems together</div>
