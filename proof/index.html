@@ -428,10 +428,10 @@
       <section class="hero">
         <div class="hero-copy">
           <div class="eyebrow">Benchmark + operator proof</div>
-          <h1>Proof, with the boundary stated plainly</h1>
+          <h1>Proof, with the line drawn clearly</h1>
           <p style="font-family:var(--sans); font-size:0.92rem; color:var(--muted); margin:0.5rem 0 0;">by <a href="https://www.jonathangu.com/">Jonathan Gu</a></p>
           <p class="lead">
-            Short version: on three long-lived-memory benchmark families, OpenClawBrain beat the strongest RAG-style baseline by <strong>+9.7 to +26.9 percentage points</strong>, won <strong>29 of 30</strong> seed-level matchups, and used <strong>5x less context</strong> per query. One family is recorded replay on fixed fixtures; two are deterministic seeded simulations. Separately, install, attach, and restart are now verified on real OpenClaw profiles. That is strong benchmark evidence and real operator proof, but it is <strong>not yet a claim of live learning on real profiles</strong>.
+            Here is the clean version: across three long-lived-memory benchmark families, OpenClawBrain beat the strongest RAG-style baseline by <strong>+9.7 to +26.9 percentage points</strong>, won <strong>29 of 30</strong> seed-level matchups, and used <strong>5x less context</strong> per query. One family is recorded replay on fixed fixtures; two are deterministic seeded simulations. Separately, install, attach, and restart are verified on real OpenClaw profiles. That is strong benchmark evidence and real operator proof, but it is <strong>not yet a claim of live learning on real profiles</strong>.
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href="#overview">The big picture</a>
@@ -440,7 +440,7 @@
             <a class="btn btn-secondary" href="/docs/operator-guide/">Operator guide</a>
           </div>
           <p class="hero-note">
-            In the artifact bundle, the full system is labeled <code>full_brain</code>. The main comparison target is the strongest RAG-style baseline in each family, not a weak strawman. Real-profile install/attach/restart is verified; live learning is not, because both attached brains are still <code>awaiting_first_export</code>. See the <a href="/docs/setup-guide/">Setup Guide</a>, <a href="/docs/operator-guide/">Operator Guide</a>, and <a href="https://github.com/jonathangu/brain-ground-zero/blob/main/CLAIMS.md">CLAIMS.md</a> for the exact boundary.
+            In the artifact bundle, the full system is labeled <code>full_brain</code>. The comparison target is the strongest RAG-style baseline in each family, not a paper tiger. Real-profile install, attach, and restart are verified; live learning is not, because both attached brains are still <code>awaiting_first_export</code>. See the <a href="/docs/setup-guide/">Setup Guide</a>, <a href="/docs/operator-guide/">Operator Guide</a>, and <a href="https://github.com/jonathangu/brain-ground-zero/blob/main/CLAIMS.md">CLAIMS.md</a> for the exact boundary.
           </p>
         </div>
 
@@ -454,15 +454,15 @@
               <li><strong>Sparse feedback</strong>: seeded simulation, 92.0% vs 67.0%, <strong>+24.9 pp</strong>, 9-1-0</li>
             </ul>
             <p class="meta">
-              10 seeds per family. 8 baselines in each family. 5x less context throughout. Full artifacts live in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a>.
+              10 seeds per family. 8 baselines in each family. 5x less context throughout. The full artifact trail lives in <a href="https://github.com/jonathangu/brain-ground-zero">brain-ground-zero</a>.
             </p>
           </article>
 
           <article class="status-card">
             <div class="kicker">Operationally verified</div>
             <h3>Install, attach, restart</h3>
-            <p><code>npm install -g @openclawbrain/openclaw@0.3.0</code> worked on real OpenClaw profiles. The default install now expects an embedder and provisions <code>bge-large</code> before brain bootstrap unless the operator explicitly uses <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The Ollama teacher path is still optional; if you enable it, the default teacher model is <code>qwen3.5:9b</code>. Attach succeeded on two real profiles, and a Telegram-connected profile came back cleanly after restart.</p>
-            <p class="meta">This is proof of the public install and restart surface. It is not yet proof of live learning. Both attached brains are still <code>awaiting_first_export</code>.</p>
+            <p><code>npm install -g @openclawbrain/openclaw@0.3.0</code> worked on real OpenClaw profiles. The default install now expects an embedder and provisions <code>bge-large</code> before brain bootstrap unless the operator explicitly uses <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The Ollama teacher path is optional; if you enable it, the default teacher model is <code>qwen3.5:9b</code>. Attach succeeded on two real profiles, and a Telegram-connected profile came back cleanly after restart.</p>
+            <p class="meta">This proves the public install and restart path is real. It does not yet prove live learning. Both attached brains are still <code>awaiting_first_export</code>.</p>
           </article>
 
           <article class="status-card">
@@ -470,8 +470,8 @@
             <h3>What to keep in mind while reading</h3>
             <ul>
               <li>The benchmark claim is narrow: better long-lived memory on these three task families.</li>
-              <li>Relational drift is the strongest evidence because it is recorded replay, not simulation.</li>
-              <li>The sparse-feedback family keeps its one seed loss visible; we do not round that into a perfect sweep.</li>
+              <li>Relational drift is the hardest evidence here because it is recorded replay, not simulation.</li>
+              <li>The sparse-feedback family keeps its one seed loss in plain view; we do not polish that into a perfect sweep.</li>
             </ul>
           </article>
         </div>
@@ -483,24 +483,24 @@
         <div class="section-head">
           <div>
             <h2>Read this like a skeptical technical reviewer</h2>
-            <p class="section-intro">Start with the claim, the measurement setup, and the places where the evidence is weaker. This page keeps those separate on purpose.</p>
+            <p class="section-intro">Start with the claim, the measurement setup, and the soft spots in the evidence. This page keeps those apart on purpose so you can tell what is rock-solid and what still needs more field proof.</p>
           </div>
         </div>
         <div class="three-col">
           <article class="status-card">
             <div class="kicker">1 &middot; Claim</div>
             <h3>What is actually being claimed</h3>
-            <p>OpenClawBrain's memory stack beats the strongest RAG-style baseline on three long-lived-memory benchmark families. This is not a general "better assistant" claim.</p>
+            <p>OpenClawBrain's memory stack beats the strongest RAG-style baseline on three long-lived-memory benchmark families. It is not a blanket claim that the whole assistant is better at everything.</p>
           </article>
           <article class="status-card">
             <div class="kicker">2 &middot; Measurement</div>
             <h3>How the evidence is split</h3>
-            <p>One family is recorded replay with deterministic fixture verification. Two families are deterministic seeded simulations. All three run at 10-seed scale and report seed-level outcomes.</p>
+            <p>One family is recorded replay with deterministic fixture verification. Two families are deterministic seeded simulations. All three run at 10-seed scale and report seed-level outcomes instead of hiding behind a single averaged number.</p>
           </article>
           <article class="status-card">
             <div class="kicker">3 &middot; Boundary</div>
             <h3>What you should not infer</h3>
-            <p>No claim yet on live LLM routing, production latency, production cost, larger world sizes, or live learning after export on attached profiles. Those remain separate future proofs.</p>
+            <p>No claim yet on live LLM routing, production latency, production cost, larger world sizes, or live learning after export on attached profiles. Those are separate proofs still to be earned.</p>
           </article>
         </div>
       </section>
@@ -511,7 +511,7 @@
         <div class="section-head">
           <div>
             <h2>Benchmark summary at a glance</h2>
-            <p class="section-intro">These numbers compare OpenClawBrain (<code>full_brain</code> in the artifacts) against the strongest RAG-style baseline in each family. Read the cards first, then the two charts below for margin, context use, and component contribution.</p>
+            <p class="section-intro">These numbers compare OpenClawBrain (<code>full_brain</code> in the artifacts) against the strongest RAG-style baseline in each family. Read the cards first, then the charts below for margin, context use, and which mechanism is doing the real work.</p>
           </div>
         </div>
 
@@ -519,7 +519,7 @@
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
             <div class="kicker">Recorded replay</div>
             <h3>Relational drift</h3>
-            <p>Organizations change over time: reporting lines move, service ownership changes, and old facts go stale.</p>
+            <p>Organizations drift. Reporting lines move, service ownership changes hands, and yesterday's correct answer can quietly rot.</p>
             <ul>
               <li><strong>99.15% vs 89.44%</strong></li>
               <li><strong>+9.71 pp</strong> margin, <strong>10-0-0</strong> by seed</li>
@@ -529,7 +529,7 @@
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
             <div class="kicker">Seeded simulation</div>
             <h3>Recurring workflows</h3>
-            <p>Repeated tasks like deploy checklists, review steps, and onboarding flows should get easier with accumulated memory.</p>
+            <p>Repeated tasks like deploy checklists, review steps, and onboarding flows should get easier when the system remembers the shape of the work.</p>
             <ul>
               <li><strong>97.6% vs 70.6%</strong></li>
               <li><strong>+26.9 pp</strong> margin, <strong>10-0-0</strong> by seed</li>
@@ -539,7 +539,7 @@
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
             <div class="kicker">Seeded simulation</div>
             <h3>Sparse feedback</h3>
-            <p>Most teams do not correct every answer. This family measures whether the system still improves when feedback is rare.</p>
+            <p>Most teams do not correct every answer. This family asks whether the system still gets better when feedback comes in as drips instead of a steady stream.</p>
             <ul>
               <li><strong>92.0% vs 67.0%</strong></li>
               <li><strong>+24.9 pp</strong> margin, <strong>9-1-0</strong> by seed</li>
@@ -566,11 +566,11 @@
           </figure>
         </div>
         <div class="callout" style="margin-top: 1rem;">
-          <div class="kicker">Keep these caveats in view</div>
+          <div class="kicker">Keep these caveats on the table</div>
           <ul>
             <li>Only one of the three families is recorded replay. The other two are deterministic simulations, not live production traces.</li>
-            <li>The sparse-feedback family has high variance because only about 19% of turns receive explicit corrections.</li>
-            <li>Current benchmark world sizes are moderate: 50 entities or 80 workflows, depending on family.</li>
+            <li>The sparse-feedback family swings more because only about 19% of turns receive explicit corrections.</li>
+            <li>Current benchmark world sizes are still moderate: 50 entities or 80 workflows, depending on family.</li>
           </ul>
         </div>
       </section>
@@ -581,7 +581,7 @@
         <div class="section-head">
           <div>
             <h2>Family 1: Relational drift</h2>
-            <p class="section-intro">Facts about organizations change over time. The system has to track who reports to whom, which team owns which service, and when old answers become wrong. This is the strongest evidence in the package because it is recorded replay with deterministic verification.</p>
+            <p class="section-intro">Facts about organizations move underneath you. The system has to track who reports to whom, which team owns which service, and when old answers turn stale. This is the strongest evidence in the package because it is recorded replay with deterministic verification.</p>
           </div>
         </div>
         <div class="two-col">
@@ -600,7 +600,7 @@
               <li>Main result: <strong>+9.71 pp</strong> margin and a <strong>10-0-0</strong> seed record.</li>
               <li>Context use: <strong>5x lower</strong> (800 vs 4,000 tokens per query).</li>
               <li>Comparison target: the strongest RAG baseline in this family, <code>vector_rag_rerank</code>.</li>
-              <li>Why this matters: deterministic fixture replay with SHA-256 verification means the run is fully reproducible and not dependent on simulator behavior.</li>
+              <li>Why this matters: deterministic fixture replay with SHA-256 verification means the run is fully reproducible and not leaning on simulator behavior.</li>
               <li>Coverage: 8 baselines total, including oracle, RAG variants, and partial versions of the full system.</li>
             </ul>
             <p class="meta">
@@ -616,7 +616,7 @@
         <div class="section-head">
           <div>
             <h2>Family 2: Recurring workflows</h2>
-            <p class="section-intro">Repeated tasks like deploy checklists, review protocols, and onboarding flows should get easier as the system builds memory. This family shows the largest benchmark advantage: <strong>+26.9 percentage points</strong>.</p>
+            <p class="section-intro">Repeated tasks like deploy checklists, review protocols, and onboarding flows should get smoother as the system builds memory. This family shows the biggest benchmark edge: <strong>+26.9 percentage points</strong>.</p>
           </div>
         </div>
         <div class="two-col">
@@ -650,7 +650,7 @@
         <div class="section-head">
           <div>
             <h2>Family 3: Sparse feedback</h2>
-            <p class="section-intro">Real teams do not correct every answer. This family asks whether the system still improves when only about <strong>19%</strong> of queries receive explicit feedback. The result is strong, but the caveat matters.</p>
+            <p class="section-intro">Real teams do not correct every answer. This family asks whether the system still improves when only about <strong>19%</strong> of queries receive explicit feedback. The result is strong, but the asterisk matters.</p>
           </div>
         </div>
         <div class="two-col">
@@ -669,7 +669,7 @@
               <li>Main result: <strong>+24.9 pp</strong> margin and a <strong>9-1-0</strong> seed record.</li>
               <li>Context use: <strong>5x lower</strong>.</li>
               <li>Evaluation type: deterministic seeded simulation with sparse correction events.</li>
-              <li><strong>Important caveat:</strong> the &plusmn;18.3% standard deviation on <code>full_brain</code> means seed outcomes vary a lot when feedback is rare. Which turns get corrected matters. One seed loss means we do not claim a universal sweep.</li>
+              <li><strong>Important caveat:</strong> the &plusmn;18.3% standard deviation on <code>full_brain</code> means seed outcomes swing when feedback is rare. Which turns get corrected matters. One seed loss means we do not claim a universal sweep.</li>
             </ul>
             <p class="meta">
               Public bundle: <a href="https://github.com/jonathangu/brain-ground-zero/tree/main/proof-results/sparse_feedback_10seed"><code>proof-results/sparse_feedback_10seed</code></a>.
@@ -694,7 +694,7 @@
             <ul>
               <li>The full system beats the best RAG-style baseline and all measured partial-system ablations on three distinct long-lived-memory benchmark families.</li>
               <li>Each family runs at 10-seed scale with 8 baselines. Results are deterministic given a seed.</li>
-              <li>Memory structure updates are the single largest contributor in every family; the ablation ladder does not reverse.</li>
+              <li>Memory structure updates are the single largest contributor in every family; the ablation ladder never flips the story.</li>
               <li>Context efficiency: <strong>5x lower</strong> across all three families.</li>
             </ul>
           </article>
@@ -743,7 +743,7 @@
               <li>Normal install now expects an embedder and provisions or pulls <code>bge-large</code> before brain bootstrap by default.</li>
               <li>Operators can explicitly skip that step with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code> if they manage the embedder separately.</li>
               <li>The local teacher LLM remains optional; if the Ollama teacher path is enabled, its default model is <code>qwen3.5:9b</code>.</li>
-              <li>The safest default remains one dedicated activation root per profile.</li>
+              <li>The safest default is still one dedicated activation root per profile.</li>
               <li>Attach succeeded on two real OpenClaw profiles.</li>
               <li>A Telegram-connected profile came back cleanly after the verified restart path.</li>
             </ul>
@@ -762,7 +762,7 @@
         </div>
         <div class="callout" style="margin-top: 1rem;">
           <div class="kicker">Install surface</div>
-          <p>To reproduce the verified path, start with the <a href="/docs/setup-guide/">Setup Guide</a>. Use the <a href="/docs/operator-guide/">Operator Guide</a> for status, rollback, and attach triage. The public install surface is <code>npm install -g @openclawbrain/openclaw@0.3.0</code>; normal install now provisions <code>bge-large</code> before brain bootstrap unless you explicitly skip embedder provision, and the teacher path stays optional.</p>
+          <p>To reproduce the verified path, start with the <a href="/docs/setup-guide/">Setup Guide</a>. Use the <a href="/docs/operator-guide/">Operator Guide</a> for status, rollback, and attach triage. The public install surface is <code>npm install -g @openclawbrain/openclaw@0.3.0</code>; normal install provisions <code>bge-large</code> before brain bootstrap unless you explicitly skip embedder provision, and the teacher path stays optional.</p>
         </div>
       </section>
 
@@ -772,7 +772,7 @@
         <div class="section-head">
           <div>
             <h2>Look at one turn before trusting the scores</h2>
-            <p class="section-intro">Aggregate numbers only matter if the per-turn contract is inspectable. Here is one concrete turn: what OpenClaw asked for, what context the guide selected, and how a correction was captured.</p>
+            <p class="section-intro">Aggregate numbers only mean something if the per-turn contract is inspectable. Here is one concrete turn: what OpenClaw asked for, what context the guide selected, and how a correction was captured.</p>
           </div>
         </div>
         <div class="two-col">
@@ -793,10 +793,10 @@ correction: internal-only patch -&gt; no support contact</code></pre>
 
           <article class="status-card">
             <div class="kicker">Why this matters</div>
-            <h2>Trust the single turn, then trust the aggregate</h2>
+            <h2>Trust the single turn, then trust the scoreboard</h2>
             <ul>
               <li>You can inspect one turn end-to-end: what context was sent, what answer came back, what correction was captured.</li>
-              <li>The benchmark scores are meaningful because every row traces back to the same per-turn contract.</li>
+              <li>The benchmark scores mean something because every row traces back to the same per-turn contract.</li>
               <li>Corrections do not update the guide immediately. New knowledge takes effect on the next background cycle, not in the same served turn.</li>
             </ul>
           </article>
@@ -822,7 +822,7 @@ correction: internal-only patch -&gt; no support contact</code></pre>
           <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
             <div class="step" style="background: rgba(156, 224, 188, 0.15); border-color: rgba(156, 224, 188, 0.38); color: var(--green);">1</div>
             <h3>Mechanism test</h3>
-            <p>Controlled tests verifying that the retrieval and learning machinery behave as designed.</p>
+            <p>Controlled tests showing the retrieval and learning machinery behaves the way the design says it should.</p>
             <div class="meta">Reached. Integration tests pass.</div>
           </article>
           <article class="ladder-card" style="border-color: rgba(156, 224, 188, 0.38); background: rgba(156, 224, 188, 0.06);">
@@ -864,29 +864,29 @@ correction: internal-only patch -&gt; no support contact</code></pre>
         <div class="section-head">
           <div>
             <h2>Integration tests you can run yourself</h2>
-            <p class="section-intro">These tests run entirely inside the OpenClawBrain TypeScript workspace with no external dependencies. They verify the full lifecycle: building a knowledge snapshot, activating it, and confirming the guide picks the right context. They are still repo-local proof; the section above is the separate real-profile operator proof.</p>
+            <p class="section-intro">These tests run entirely inside the OpenClawBrain TypeScript workspace with no external dependencies. They verify the full lifecycle: build a knowledge snapshot, activate it, and confirm the guide picks the right context. They are still repo-local proof; the section above is the separate real-profile operator proof.</p>
           </div>
         </div>
         <div class="status-grid">
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
             <div class="kicker">pnpm lifecycle:smoke</div>
             <h3>Full lifecycle end-to-end</h3>
-            <p>Events flow in, a candidate snapshot is built, activated, promoted &mdash; and the guide serves from the promoted snapshot with verified checksums.</p>
+            <p>Events flow in, a candidate snapshot is built, activated, promoted, and the guide serves from the promoted snapshot with verified checksums.</p>
           </article>
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
             <div class="kicker">pnpm observability:smoke</div>
             <h3>Operator visibility</h3>
-            <p>Health checks, freshness, rollback history, label counts, route diffs, and fallback usage &mdash; everything an operator needs to see what the guide is doing.</p>
+            <p>Health checks, freshness, rollback history, label counts, route diffs, and fallback usage: the operator dashboard for what the guide is actually doing.</p>
           </article>
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
             <div class="kicker">pnpm fresh-env:smoke</div>
             <h3>Clean install from zero</h3>
-            <p>Install from local packages into an isolated directory, including the default embedder-first bootstrap path unless that step is explicitly skipped. Attach, promotion, and rollback proved end-to-end from a blank slate.</p>
+            <p>Install from local packages into an isolated directory, including the default embedder-first bootstrap path unless that step is explicitly skipped. Attach, promotion, and rollback are proved end-to-end from a blank slate.</p>
           </article>
           <article class="status-card" style="border-color: rgba(156, 224, 188, 0.28);">
             <div class="kicker">pnpm continuous-product-loop:smoke</div>
             <h3>The ongoing learning loop</h3>
-            <p>Events export, supervision, first serve, candidate refresh, promotion, and later served-turn verification &mdash; the whole cycle the guide runs through continuously.</p>
+            <p>Events export, supervision, first serve, candidate refresh, promotion, and later served-turn verification: the full loop the guide runs through continuously.</p>
           </article>
         </div>
       </section>
@@ -903,7 +903,7 @@ correction: internal-only patch -&gt; no support contact</code></pre>
           <a class="kit-card" href="/docs/setup-guide/">
             <div class="kicker">Install surface</div>
             <h3>Setup guide</h3>
-            <p>The public install path, package surface, and day-0 wiring for OpenClaw profiles.</p>
+            <p>The public install path, package surface, and day-zero wiring for OpenClaw profiles.</p>
           </a>
           <a class="kit-card" href="/docs/operator-guide/">
             <div class="kicker">Operator surface</div>
@@ -933,7 +933,7 @@ correction: internal-only patch -&gt; no support contact</code></pre>
           <a class="kit-card" href="../blog/v12.2.6-series/">
             <div class="kicker">Blog series</div>
             <h3>How the pieces fit</h3>
-            <p>Six posts walking through each layer of the system.</p>
+            <p>Six posts that walk through each layer of the system without skipping the hard parts.</p>
           </a>
         </div>
       </section>

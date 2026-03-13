@@ -59,60 +59,69 @@
       <a href="/docs/setup-guide/">Developers</a>
     </nav>
     <h1>Operator Guide</h1>
-    <p>> Canonical observability details live on GitHub; this page mirrors the operator truth for the current launch wave.</p>
-<h1>OpenClawBrain Operator Guide</h1>
-<h2>Current operating truth</h2>
-<p>Treat the current public wave as an external technical alpha.</p>
-<ul><li>the implementation reality is the current public repo tip on <code>openclawbrain</code> <code>origin/main</code>, not a private unpublished branch</li>
-<li>the truthful shipping surface is repo tip plus optional <code>.release/</code> tarballs</li>
-<li>release-proof gates are still pending until <code>pnpm release:status</code> says otherwise</li>
-<li>docs should not imply a finished registry wave or broad-customer polish</li>
-</ul>
-<h2>What healthy operation means today</h2>
-<p>A healthy attached runtime looks like this:</p>
-<ul><li>first value appears from a fast-boot promoted pack before any full replay finishes</li>
-<li>live events keep landing while older history backfills behind the hot path</li>
-<li>learned-routing proof stays explicit whenever the promoted pack requires it</li>
-<li>freshness, promotion, rollback lineage, and no-op reasons are inspectable</li>
-<li>OpenClaw stays fail-open if learning refresh is delayed</li>
-</ul>
-<h2>Required commands</h2>
-<p>From the repo root, use these checks first:</p>
-<p>To install: <code>npm install @openclawbrain/openclaw</code>. For source-repo triage:</p>
-<pre><code>corepack enable
+    <p>Use this page when you need fast answers to the questions operators actually ask under pressure: did attach land cleanly, what is healthy right now, and where does the proof line stop?</p>
+    <p>Canonical observability detail still lives on GitHub. This page mirrors the operator truth for the current launch wave in plain language.</p>
+
+    <h2>Current operating truth</h2>
+    <p>Treat the current public wave as a technical alpha, not finished enterprise packaging.</p>
+    <ul>
+      <li>The implementation truth is the public <code>openclawbrain</code> repo tip on <code>origin/main</code>, not a private unpublished branch.</li>
+      <li>The honest shipping surface is repo tip plus optional <code>.release/</code> tarballs.</li>
+      <li>Release-proof gates are still pending until <code>pnpm release:status</code> says otherwise.</li>
+      <li>The docs should read like field notes from a real system, not like a polished registry wave that already shipped everywhere.</li>
+    </ul>
+
+    <h2>What healthy looks like today</h2>
+    <p>A healthy attached runtime looks like this:</p>
+    <ul>
+      <li>First value shows up from a fast-boot promoted pack before any full replay finishes.</li>
+      <li>New live events keep landing while older history backfills behind the hot path.</li>
+      <li>Learned-routing proof stays explicit whenever the promoted pack requires it.</li>
+      <li>Freshness, promotion history, rollback lineage, and no-op reasons are visible instead of hidden.</li>
+      <li>OpenClaw stays fail-open if learning refresh is delayed.</li>
+    </ul>
+
+    <h2>First commands to run</h2>
+    <p>If you are triaging from the source repo, start here:</p>
+    <pre><code>corepack enable
 pnpm install --frozen-lockfile
 pnpm check
 pnpm release:status
 pnpm observability:smoke
-pnpm observability:report
-</code></pre>
-<p>Use these when you want attach-specific confidence:</p>
-</code>`<code>bash
-pnpm lifecycle:smoke
+pnpm observability:report</code></pre>
+    <p>When you want attach-specific confidence, run these next:</p>
+    <pre><code>pnpm lifecycle:smoke
 pnpm continuous-product-loop:smoke
-pnpm runtime-wrapper-path:smoke
-</code>`<code>
-<h2>What to inspect</h2>
-<p>Read the proof surfaces in this order:</p>
-<p>1. </code>pnpm release:status<code> for ship surface, tag state, proof-gate status, and blocking reasons.
-2. </code>pnpm observability:report<code> for activation slots, freshness targets, rollback lineage, route artifact diffs, init handoff, and duplicate no-op reporting.
-3. compile diagnostics for </code>usedLearnedRouteFn<code>, </code>routerIdentity<code>, router checksum, PG objective metadata, and explicit fallback notes.</p>
-<p>If </code>handoff_state=seed_state_authoritative<code>, the runtime is still on the fast-boot seed-state pack.
-If </code>handoff_state=pg_promoted_pack_authoritative<code>, a later PG-promoted pack has become authoritative.</p>
-<h2>Claim boundary for operators</h2>
-<p>The local operator proof today is narrow but real:</p>
-<ul><li>promoted-pack compilation is real</li>
-<li>PG-only learned </code>route_fn<code> evidence is real</li>
-<li>later served-turn route changes after candidate refresh and promotion are real</li>
-<li>explicit fallback visibility is real</li>
-</ul>
-Do not treat these as proof of:
-<ul><li>per-query learned </code>route_fn<code> mutation on the active pack</li>
-<li>full live active-pack plasticity during serving</li>
-<li>finished shadow or online answer-quality proof</li>
-<li>full local reproduction of the broader traversal-learning and </code>QTsim` benchmark story</li>
-</ul>
-That broader route-function story remains important; it is simply claimed through Brain Ground Zero, not through this repo alone.
+pnpm runtime-wrapper-path:smoke</code></pre>
+
+    <h2>What to inspect first</h2>
+    <p>Read the proof surfaces in this order:</p>
+    <ol>
+      <li><code>pnpm release:status</code> for the real ship surface, tag state, proof-gate status, and blocking reasons.</li>
+      <li><code>pnpm observability:report</code> for activation slots, freshness targets, rollback lineage, route artifact diffs, init handoff, and duplicate no-op reporting.</li>
+      <li>Compile diagnostics for <code>usedLearnedRouteFn</code>, <code>routerIdentity</code>, router checksum, PG objective metadata, and explicit fallback notes.</li>
+    </ol>
+    <p>If <code>handoff_state=seed_state_authoritative</code>, the runtime is still serving from the fast-boot seed-state pack. If <code>handoff_state=pg_promoted_pack_authoritative</code>, a later PG-promoted pack has taken over.</p>
+
+    <h2>How to read the current proof line</h2>
+    <p>The local operator proof today is narrow, but it is real:</p>
+    <ul>
+      <li>Promoted-pack compilation is real.</li>
+      <li>PG-only learned <code>route_fn</code> evidence is real.</li>
+      <li>Later served-turn route changes after candidate refresh and promotion are real.</li>
+      <li>Explicit fallback visibility is real.</li>
+    </ul>
+    <p>Do not stretch that into claims we have not earned yet:</p>
+    <ul>
+      <li>Per-query learned <code>route_fn</code> mutation on the active pack during serving.</li>
+      <li>Full live active-pack plasticity while traffic is flowing.</li>
+      <li>Finished shadow-mode or online answer-quality proof.</li>
+      <li>Full local reproduction of the broader traversal-learning and <code>QTsim</code> benchmark story.</li>
+    </ul>
+    <p>That broader route-function story still matters. It is simply claimed through Brain Ground Zero, not through this repo alone.</p>
+
+    <h2>Rollback mindset</h2>
+    <p>If something smells wrong, treat rollback as a normal operator tool, not an admission of failure. The system is designed so you can inspect the active state, preview the pointer move, and back out cleanly without taking OpenClaw down with it.</p>
     <div class="source-link">
       <a href="/docs/operator-guide.md">View source (Markdown)</a>
     </div>
