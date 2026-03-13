@@ -605,10 +605,10 @@
   <section class="section install-section" id="install-now">
     <h2>Install for OpenClaw operators</h2>
     <p class="section-intro">
-      If you want to try it now, use the published package and run <code>openclawbrain install</code> from a normal shell. The default flow provisions <code>bge-large</code>, then attaches one dedicated brain to one OpenClaw profile.
+      If you want to try it now, use the published package and run <code>openclawbrain install</code> from a normal shell. The default flow provisions <code>bge-large</code>, then attaches your profile to a shared machine-level brain unless you deliberately choose a dedicated root.
     </p>
     <p class="callout-note">
-      The install, attach, and restart path is verified on real OpenClaw profiles. Keep one brain per profile. Skip embedder provision only with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The local teacher path is optional; if you enable it through Ollama, the default model is <code>qwen3.5:9b</code>.
+      The install, attach, and restart path is verified on real OpenClaw profiles. A shared activation root per machine is acceptable, and different asks can still retrieve different context from that same brain. Use a dedicated root when you want rollback, cleanup, or blame scoped to one profile. Skip embedder provision only with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The local teacher path is optional; if you enable it through Ollama, the default model is <code>qwen3.5:9b</code>.
     </p>
     <div class="install-grid">
       <article class="card accent-card">
@@ -618,9 +618,9 @@
         <pre><code>npm install -g @openclawbrain/openclaw@0.3.0</code></pre>
       </article>
       <article class="card">
-        <span class="card-label">2. Attach one brain to one profile</span>
-        <h3>Keep each OpenClaw profile isolated</h3>
-        <p>Use a dedicated profile home and activation root for each profile you wire up.</p>
+        <span class="card-label">2. Attach a profile to the machine brain</span>
+        <h3>Share by default, isolate on purpose</h3>
+        <p>Reuse one activation root for the machine unless you want a profile to have its own rollback and cleanup boundary.</p>
         <pre><code>openclawbrain install --openclaw-home "$PROFILE_HOME" --activation-root "$ACTIVATION_ROOT" --workspace-id "$PROFILE_NAME"</code></pre>
       </article>
       <article class="card">
@@ -631,9 +631,9 @@
 env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway status</code></pre>
       </article>
       <article class="card">
-        <span class="card-label">Rollback stays bounded</span>
-        <h3>Detach without cross-profile spillover</h3>
-        <p>One activation root per profile keeps rollback, disable, and cleanup limited to that profile.</p>
+        <span class="card-label">Rollback follows the root you chose</span>
+        <h3>Scope operator actions deliberately</h3>
+        <p>A dedicated root keeps rollback, disable, and cleanup limited to one profile. A shared root makes those actions machine-wide for the profiles attached to it.</p>
         <div class="dev-links">
           <a class="btn btn-primary" href="/docs/setup-guide/">Setup guide</a>
           <a class="btn btn-secondary" href="/docs/openclaw-integration/">Integration docs</a>

@@ -110,7 +110,7 @@
 
     <h1>Setup Guide</h1>
     <p>This guide walks you through installing OpenClawBrain, attaching it to an OpenClaw profile, and confirming it is working. Most operators can go from zero to a running brain in a few minutes.</p>
-    <p>OpenClaw owns the live runtime (agent orchestration, tool calls, responses). OpenClawBrain owns the knowledge layer (memory, learning, and context compilation). You install OpenClawBrain separately, point it at an OpenClaw profile, and it starts learning in the background without affecting response latency.</p>
+    <p>OpenClaw owns the live runtime (agent orchestration, tool calls, responses). OpenClawBrain owns the knowledge layer (memory, learning, and context compilation). You install OpenClawBrain separately, then attach one or more OpenClaw profiles to the brain without adding response-path latency.</p>
 
     <!-- ── PREREQUISITES ── -->
     <h2>What you need</h2>
@@ -132,15 +132,15 @@ openclawbrain --help</code></pre>
     <p>Start with <code>openclawbrain install</code>. After attach, use the status and rollback tooling to inspect health or back out a bad pack if needed.</p>
 
     <!-- ── STEP 2: ATTACH ── -->
-    <h2><span class="step-num">2</span> Attach to an OpenClaw profile</h2>
-    <p>Run the installer, pointing it at a single OpenClaw profile. Use a dedicated profile home and activation root for each profile you wire up — this keeps rollback and cleanup scoped to one profile.</p>
+    <h2><span class="step-num">2</span> Attach an OpenClaw profile</h2>
+    <p>Run the installer for the profile you want to wire up. A shared activation root per machine is a valid default: multiple OpenClaw profiles can point at the same brain, and retrieval can still differ per ask because context compilation happens at request time. Choose a dedicated activation root only when you want stricter isolation for rollback, cleanup, or blame.</p>
     <pre><code>openclawbrain install \
   --openclaw-home "$PROFILE_HOME" \
   --activation-root "$ACTIVATION_ROOT" \
   --workspace-id "$PROFILE_NAME"</code></pre>
     <div class="callout tip">
-      <span class="callout-label">One brain per profile</span>
-      <p>Keep each OpenClaw profile isolated. One activation root per profile means rollback, disable, and cleanup never spill into other profiles.</p>
+      <span class="callout-label">Shared by default, isolated on purpose</span>
+      <p>Reusing one activation root for the machine is acceptable. Give a profile its own root when you want operator actions such as rollback, disable, or cleanup to stay scoped to that profile alone.</p>
     </div>
     <p>The installer provisions a local <code>bge-large</code> embedder by default. To skip embedder provisioning (if you already have one), pass <code>--skip-embedder-provision</code> or set <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>.</p>
 
@@ -158,7 +158,7 @@ env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway
 
     <!-- ── STEP 4: OBSERVABILITY ── -->
     <h2><span class="step-num">4</span> Check health</h2>
-    <p>If you are working from the source repo, these helper scripts give you a quick read on whether things are working:</p>
+    <p>If you are working from the source repo, these helper scripts give you a quick read on the activation root you installed against. With a shared root they report machine-level brain state; with a dedicated root they report just that profile's brain state.</p>
     <pre><code>pnpm operator:status     # one-screen summary: did attach land, what is active, is rollback ready?
 pnpm operator:doctor     # PASS / WARN / FAIL follow-up when status shows drift</code></pre>
 
@@ -174,7 +174,7 @@ pnpm operator:rollback -- --activation-root &lt;path&gt; --dry-run
 
 # Apply the rollback
 pnpm operator:rollback -- --activation-root &lt;path&gt;</code></pre>
-    <p>Compilation from a given pack is deterministic, so rollback is safe and repeatable. Learning delays do not affect the hot path — scanner, harvest, and learner workers all run asynchronously.</p>
+    <p>Use the same <code>--activation-root</code> you installed against. With a shared root, rollback moves the shared machine brain back for every attached profile using that root; with a dedicated root, rollback stays isolated to that profile. Compilation from a given pack is deterministic, so rollback is safe and repeatable. Learning delays do not affect the hot path — scanner, harvest, and learner workers all run asynchronously.</p>
 
     <!-- ── RUNTIME CONFIG ── -->
     <h2>Runtime configuration</h2>
