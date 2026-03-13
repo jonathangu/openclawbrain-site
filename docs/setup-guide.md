@@ -20,8 +20,8 @@ Use a dedicated activation root when you want rollback, disable, cleanup, or bla
 - Node.js 20+ with `corepack` and `pnpm` 10+
 - An OpenClaw runtime deployment (OpenClawBrain is a learning layer, not a standalone runtime)
 - Workspace files (markdown, docs, memory files) for your agent to learn from
-- **No provider API keys required for OpenClawBrain itself.** The default stack uses local BGE-large embeddings and a local Ollama/Qwen teacher. The broader OpenClaw runtime may still need provider keys for its own agent and tool calls — see [Secrets and Capabilities](secrets-and-capabilities.md).
-- **Distribution**: the current wave ships as local tarballs from `.release/` via `pnpm release:check`. Do not run bare `pnpm add @openclawbrain/*` yet — the npm-published lane is the target, not the current reality. Run `pnpm release:status` to see which distribution lane is currently honest.
+- **No provider API keys required for OpenClawBrain itself.** The default stack uses local BGE-large embeddings and an optional local Ollama teacher. The broader OpenClaw runtime may still need provider keys for its own agent and tool calls — see [Secrets and Capabilities](secrets-and-capabilities.md).
+- **Distribution**: the public install surface is `npm install -g @openclawbrain/openclaw@0.3.0`. Maintainers still use `pnpm release:check` to verify the proof lane and rebuild release artifacts.
 
 ## 1. Build the workspace
 
@@ -29,14 +29,14 @@ Use a dedicated activation root when you want rollback, disable, cleanup, or bla
 corepack enable
 pnpm install --frozen-lockfile
 pnpm check                  # type-check, lint, test, and verify package integrity
-pnpm release:check          # full proof lane + local tarballs
+pnpm release:check          # full proof lane + release artifacts
 pnpm fresh-env:smoke        # clean-room outside-consumer install proof
 ```
 
 A **brain pack** is an immutable versioned artifact containing graph nodes, vector entries, provenance, and an optional learned `route_fn`. It is materialized off the hot path by the learner and made compile-visible only after promotion by `activation`. The compiler always serves from the currently active promoted pack.
 
 `pnpm check` runs type-check, lint, test, lifecycle smoke, and observability smoke.
-`pnpm release:check` runs the full proof lane, rebuilds `.release/*.tgz` tarballs, and writes `.release/release-proof-manifest.json`.
+`pnpm release:check` runs the full proof lane, rebuilds release artifacts, and writes `.release/release-proof-manifest.json`.
 `pnpm fresh-env:smoke` is the clean-room outside-consumer lane: installs tarballs into an isolated plain-`npm` directory and proves the attach/promotion/rollback flow.
 
 ## 2. Connect to OpenClaw
@@ -72,7 +72,7 @@ Key points — **current truth**:
 
 ## 2b. Public package surface
 
-The supported packages (from local tarballs today, npm-published in the target wave):
+The supported packages behind the published install surface:
 
 - `@openclawbrain/contracts`
 - `@openclawbrain/events`

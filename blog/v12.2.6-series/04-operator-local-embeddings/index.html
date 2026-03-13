@@ -56,7 +56,7 @@ pnpm release:pack</pre>
 
     <h2>What "local-first" means in practice</h2>
     <ul>
-      <li><strong>No API keys for the brain itself.</strong> The default stack uses local BGE-large embeddings and a local Ollama/Qwen teacher. Your broader OpenClaw agent may still need its own provider keys, but the brain doesn't.</li>
+      <li><strong>No API keys for the brain itself.</strong> The default stack uses local BGE-large embeddings and an optional local Ollama teacher. Your broader OpenClaw agent may still need its own provider keys, but the brain doesn't.</li>
       <li><strong>Fast startup from existing files.</strong> Boot starts from what's already on disk &mdash; no cold-start wait. The guide is useful before any background learning finishes.</li>
       <li><strong>Learning happens in the background.</strong> Corrections, automated signals, and teacher labels continuously improve the guide &mdash; but never block a live response.</li>
     </ul>
