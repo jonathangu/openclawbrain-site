@@ -593,10 +593,10 @@
   <!-- ── CURRENT STATUS ── -->
   <section class="section" id="status">
     <h2>Current status</h2>
-    <div class="status-badge"><span class="status-dot"></span> Alpha &mdash; v0.1.11</div>
+    <div class="status-badge"><span class="status-dot"></span> Alpha</div>
     <p class="section-intro section-intro-tight">
       OpenClawBrain is in early alpha. The benchmark story is ahead of the production-hardening story.
-      The routing function, graph structure, and plasticity policy are working; the published install, attach, and restart path is verified on real OpenClaw profiles; and live-learning proof on attached installs remains separate, with fresh brains sometimes still sitting at <code>awaiting_first_export</code> before the first export lands.
+      The routing function, graph structure, and plasticity policy are working; the published install, attach, and restart path is verified on real OpenClaw profiles; and live-learning proof on attached installs remains separate until exported turns land and later served turns reflect promoted knowledge.
       Expect breaking changes before a stable release. Apache-2.0 licensed. Requires Node 20+.
     </p>
   </section>
@@ -605,10 +605,10 @@
   <section class="section install-section" id="install-now">
     <h2>Install for OpenClaw operators</h2>
     <p class="section-intro">
-      If you want to try it now, use the published package and run <code>openclawbrain install</code> from a normal shell. The default flow provisions <code>bge-large</code>, then attaches one dedicated brain to one OpenClaw profile.
+      If you want to try it now, use the published package and run <code>openclawbrain install</code> from a normal shell. The default flow provisions <code>bge-large</code>, then attaches the brain under a dedicated activation root for that OpenClaw profile.
     </p>
     <p class="callout-note">
-      The install, attach, and restart path is verified on real OpenClaw profiles. Keep one brain per profile. Skip embedder provision only with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The local teacher path is optional; if you enable it through Ollama, the default model is <code>qwen3.5:9b</code>.
+      The install, attach, and restart path is verified on real OpenClaw profiles. Use a dedicated activation root per profile by default. Skip embedder provision only with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The local Ollama teacher path remains optional.
     </p>
     <div class="install-grid">
       <article class="card accent-card">

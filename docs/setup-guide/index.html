@@ -121,7 +121,7 @@
     </ul>
     <div class="callout tip">
       <span class="callout-label">No API keys needed</span>
-      <p>OpenClawBrain uses local BGE-large embeddings and a local Ollama/Qwen teacher by default. No cloud provider keys are required for the brain itself. Your OpenClaw runtime may still need its own provider keys for agent and tool calls — see <a href="/docs/secrets-and-capabilities/">Secrets and Capabilities</a>.</p>
+      <p>OpenClawBrain uses local BGE-large embeddings and an optional local Ollama teacher. No cloud provider keys are required for the brain itself. Your OpenClaw runtime may still need its own provider keys for agent and tool calls — see <a href="/docs/secrets-and-capabilities/">Secrets and Capabilities</a>.</p>
     </div>
 
     <!-- ── STEP 1: INSTALL ── -->
@@ -139,7 +139,7 @@ openclawbrain --help</code></pre>
   --activation-root "$ACTIVATION_ROOT" \
   --workspace-id "$PROFILE_NAME"</code></pre>
     <div class="callout tip">
-      <span class="callout-label">One brain per profile</span>
+      <span class="callout-label">Profile isolation</span>
       <p>Keep each OpenClaw profile isolated. One activation root per profile means rollback, disable, and cleanup never spill into other profiles.</p>
     </div>
     <p>The installer provisions a local <code>bge-large</code> embedder by default. To skip embedder provisioning (if you already have one), pass <code>--skip-embedder-provision</code> or set <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>.</p>

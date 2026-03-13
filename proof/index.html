@@ -440,7 +440,7 @@
             <a class="btn btn-secondary" href="/docs/operator-guide/">Operator guide</a>
           </div>
           <p class="hero-note">
-            In the artifact bundle, the full system is labeled <code>full_brain</code>. The main comparison target is the strongest RAG-style baseline in each family, not a weak strawman. Real-profile install/attach/restart is verified; live learning is not, because both attached brains are still <code>awaiting_first_export</code>. See the <a href="/docs/setup-guide/">Setup Guide</a>, <a href="/docs/operator-guide/">Operator Guide</a>, and <a href="https://github.com/jonathangu/brain-ground-zero/blob/main/CLAIMS.md">CLAIMS.md</a> for the exact boundary.
+            In the artifact bundle, the full system is labeled <code>full_brain</code>. The main comparison target is the strongest RAG-style baseline in each family, not a weak strawman. Real-profile install/attach/restart is verified; live learning on attached profiles remains a separate proof boundary. See the <a href="/docs/setup-guide/">Setup Guide</a>, <a href="/docs/operator-guide/">Operator Guide</a>, and <a href="https://github.com/jonathangu/brain-ground-zero/blob/main/CLAIMS.md">CLAIMS.md</a> for the exact boundary.
           </p>
         </div>
 
@@ -461,8 +461,8 @@
           <article class="status-card">
             <div class="kicker">Operationally verified</div>
             <h3>Install, attach, restart</h3>
-            <p><code>npm install -g @openclawbrain/openclaw@0.3.0</code> worked on real OpenClaw profiles. The default install now expects an embedder and provisions <code>bge-large</code> before brain bootstrap unless the operator explicitly uses <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The Ollama teacher path is still optional; if you enable it, the default teacher model is <code>qwen3.5:9b</code>. Attach succeeded on two real profiles, and a Telegram-connected profile came back cleanly after restart.</p>
-            <p class="meta">This is proof of the public install and restart surface. It is not yet proof of live learning. Both attached brains are still <code>awaiting_first_export</code>.</p>
+            <p><code>npm install -g @openclawbrain/openclaw@0.3.0</code> worked on real OpenClaw profiles. The default install now expects an embedder and provisions <code>bge-large</code> before brain bootstrap unless the operator explicitly uses <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The local Ollama teacher path is still optional. Attach succeeded on two real profiles, and a Telegram-connected profile came back cleanly after restart.</p>
+            <p class="meta">This is proof of the public install and restart surface. It is not yet proof of live learning after export and promotion.</p>
           </article>
 
           <article class="status-card">
@@ -707,7 +707,7 @@
               <li>Behavior at larger world sizes (current: 50 entities / 80 workflows).</li>
               <li>End-to-end performance with live LLM routing (harness uses simulated policy functions).</li>
               <li>Production latency or cost.</li>
-              <li>First-export learning proof on attached real profiles; both current brains are still <code>awaiting_first_export</code>.</li>
+              <li>Live learning proof on attached real profiles after export, promotion, and later served turns.</li>
               <li>Real-session head-to-head on product traces (spec defined, no scored results).</li>
               <li>"Always wins" across all families (sparse feedback is 9-1-0).</li>
             </ul>
@@ -742,7 +742,7 @@
               <li><code>npm install -g @openclawbrain/openclaw@0.3.0</code> worked on a real operator path.</li>
               <li>Normal install now expects an embedder and provisions or pulls <code>bge-large</code> before brain bootstrap by default.</li>
               <li>Operators can explicitly skip that step with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code> if they manage the embedder separately.</li>
-              <li>The local teacher LLM remains optional; if the Ollama teacher path is enabled, its default model is <code>qwen3.5:9b</code>.</li>
+              <li>The local Ollama teacher path remains optional.</li>
               <li>The safest default remains one dedicated activation root per profile.</li>
               <li>Attach succeeded on two real OpenClaw profiles.</li>
               <li>A Telegram-connected profile came back cleanly after the verified restart path.</li>
@@ -752,11 +752,11 @@
 
           <article class="status-card">
             <div class="kicker">3 &middot; Live learning proof</div>
-            <h3>Still pending first export</h3>
+            <h3>Live learning proof remains separate</h3>
             <ul>
               <li>Install and attach prove the operator surface, not that export, learning, and promotion have already happened live.</li>
-              <li>Both attached brains are still <code>awaiting_first_export</code>.</li>
-              <li>The next honest proof boundary is first export landing, then later served turns reflecting promoted knowledge.</li>
+              <li>Install and attach do not by themselves prove that exported turns have refreshed the live profile.</li>
+              <li>The next honest proof boundary is exported turns landing, then later served turns reflecting promoted knowledge.</li>
             </ul>
           </article>
         </div>

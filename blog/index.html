@@ -88,7 +88,7 @@
   <main>
     <h1>Blog</h1>
     <p>Your OpenClaw agent starts every conversation with amnesia. OpenClawBrain fixes that &mdash; a memory layer that learns which context matters, selects it per query, and gets sharper from corrections. The front door is now operator-first: install provisions the default <code>bge-large</code> embedder before brain init, attach, verify first value, then decide how much architecture and proof detail you need.</p>
-    <p>The install and attach path is now real enough for live operator docs: Tern and CormorantAI have both attached successfully, dedicated activation roots per profile are the safest default, and Tern came back on Telegram after restart. Skipping embedder provision is an explicit override via <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The local teacher remains optional; <code>qwen3.5:9b</code> is only the default if that Ollama teacher path is enabled. The claim boundary stays explicit: live learning still needs first-export proof.</p>
+    <p>The install and attach path is now real enough for live operator docs: Tern and CormorantAI have both attached successfully, dedicated activation roots per profile are the safest default, and Tern came back on Telegram after restart. Skipping embedder provision is an explicit override via <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>. The local Ollama teacher path remains optional. The claim boundary stays explicit: install proof is real, while live learning still needs export-and-promotion proof.</p>
 
     <h2>Start Here</h2>
     <div class="grid">

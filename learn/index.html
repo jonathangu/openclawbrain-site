@@ -639,8 +639,8 @@
     <p class="section-intro">
       Safe default today: normal install expects an embedder and provisions or pulls <code>bge-large</code>
       before brain bootstrap unless you explicitly skip that step, then you restart the runtime
-      externally so the profile comes back with the brain attached. The local teacher LLM is still
-      optional; if you enable the Ollama teacher path, its default model is <code>qwen3.5:9b</code>.
+      externally so the profile comes back with the brain attached. The local Ollama teacher path
+      remains optional.
       Install and restart are real. Live learning proof starts later, after exports and promotion.
     </p>
 
@@ -651,8 +651,8 @@
           <li>Run install and attach from a normal shell, script, or deploy lane, not from the live chat itself.</li>
           <li>Normal install now expects an embedder and provisions or pulls <code>bge-large</code> before brain bootstrap by default.</li>
           <li>If you manage the embedder yourself, explicitly opt out with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>.</li>
-          <li>The local teacher LLM is optional. If the Ollama teacher path is enabled, its default model is <code>qwen3.5:9b</code>.</li>
-          <li>Use one dedicated brain activation root per profile by default. It keeps state, rollback, and blame clear.</li>
+          <li>The local Ollama teacher path remains optional.</li>
+          <li>Use a dedicated activation root per profile by default. It keeps state, rollback, and blame clear.</li>
           <li>Restart OpenClaw externally after install so the profile reloads with the attached brain cleanly.</li>
           <li>Use the site setup guide for the day-0 path, then the operator runbook for checks and rollback.</li>
         </ul>
@@ -667,8 +667,9 @@
         <p>
           That is install proof under the shipped operator surface, not full live-learning proof.
           The install contract now assumes an embedder by default, while the teacher path remains
-          optional. Both verified brains are still waiting on first export, so no one should read
-          install success as proof that later turns are already learning from fresh live data.
+          optional. No one should read install success as proof that later turns are already
+          learning from fresh live data; that evidence starts after exported turns land and
+          promoted knowledge changes later served turns.
         </p>
       </div>
     </div>
