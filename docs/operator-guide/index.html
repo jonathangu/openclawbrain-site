@@ -100,19 +100,21 @@ pnpm runtime-wrapper-path:smoke
 <p>If </code>handoff_state=seed_state_authoritative<code>, the runtime is still on the fast-boot seed-state pack.
 If </code>handoff_state=pg_promoted_pack_authoritative<code>, a later PG-promoted pack has become authoritative.</p>
 <h2>Claim boundary for operators</h2>
-<p>The local operator proof today is narrow but real:</p>
+<p>The public operator proof today is narrow but real:</p>
 <ul><li>promoted-pack compilation is real</li>
-<li>PG-only learned </code>route_fn<code> evidence is real</li>
-<li>later served-turn route changes after candidate refresh and promotion are real</li>
+<li>learned </code>route_fn<code> evidence is real</li>
+<li>Eagle/Tern dogfood proves passive learning on attached installs: exports land, candidate packs promote, and later served turns reflect learned route and graph changes</li>
+<li>the default </code>bge-large<code> embedder path is real on attached installs</li>
+<li>optional local </code>qwen3.5:9b<code> teacher enablement is real on attached installs</li>
 <li>explicit fallback visibility is real</li>
 </ul>
 Do not treat these as proof of:
-<ul><li>per-query learned </code>route_fn<code> mutation on the active pack</li>
-<li>full live active-pack plasticity during serving</li>
+<ul><li>per-query or same-turn learned </code>route_fn<code> mutation on the active pack</li>
+<li>broad operator hardening across many profiles or environments</li>
 <li>finished shadow or online answer-quality proof</li>
 <li>full local reproduction of the broader traversal-learning and </code>QTsim` benchmark story</li>
 </ul>
-That broader route-function story remains important; it is simply claimed through Brain Ground Zero, not through this repo alone.
+That broader route-function story remains important; benchmark superiority is still claimed through Brain Ground Zero, not through this repo alone.
     <div class="source-link">
       <a href="/docs/operator-guide.md">View source (Markdown)</a>
     </div>

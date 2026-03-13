@@ -2,8 +2,8 @@
 
 OpenClawBrain is your agent's second brain — it builds a knowledge map, trains a guide that picks the right context for each question, and learns from corrections. OpenClaw is front of house (live conversations); OpenClawBrain is the kitchen (knowledge, learning, compilation). This page describes how the two systems connect.
 
-> **Current truth**: the learner builds candidate packs off the hot path; activation stages and promotes them; compiler serves only from the active promoted pack; route updates are PG-only from explicit labels.
-> **Target end shape**: continuous live graph update (decay, co-firing, pruning, reorganizing) on the active pack during serving; scanner/labels/harvest on by default after attach; hard API enforcement of the OpenClaw/OpenClawBrain split.
+> **Current truth**: the learner builds candidate packs off the hot path; activation stages and promotes them; compiler serves only from the active promoted pack; and Eagle/Tern dogfood now proves that exported turns can drive promoted-pack refresh, learned-route updates, and graph evolution on attached installs.
+> **Target end shape**: scanner/labels/harvest on by default after attach, broader operator hardening, and hard API enforcement of the OpenClaw/OpenClawBrain split.
 
 New here? Start with the [setup guide](setup-guide.md).
 
@@ -70,13 +70,13 @@ These run asynchronously and never add latency to responses:
 
 - Events (corrections, feedback, usage signals) are collected and normalized
 - Scanner watches for new workspace files and event streams
-- Human, self, scanner, and teacher labels are collected inputs to PG-only route training
+- Human, self, scanner, and teacher labels are collected inputs to route training
 - The learner materializes fresher candidate packs off the hot path; `activation` stages and promotes them; the compiler then serves from the newly promoted pack
 - Teacher logic stays off the hot path
 
-**Graph-dynamics today**: decay settings, Hebbian co-firing settings, and split/merge/prune/connect counts are recorded inside the immutable pack artifact as **build-time metadata**. This is not the same as live runtime mutation of the active pack during serving.
+**Graph evolution today**: on Eagle and Tern attached installs, exported turns now drive candidate refresh, promotion, learned `route_fn` updates, and graph changes that show up on later served turns. This is live operator proof through promoted packs, not same-turn in-place mutation of the current active pack during serving.
 
-**Graph-dynamics target**: continuous live update (decay, Hebbian co-firing, pruning, reorganizing) on the active pack during serving. This is the target end shape; it is not proved in this repo today. See [CLAIMS.md](https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md) for the authoritative boundary.
+**Still not claimed**: per-query in-place mutation on the active pack during serving, shadow-mode outcome proof, or online rollout proof. See [CLAIMS.md](https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md) for the authoritative boundary.
 
 ## Fast boot
 
@@ -94,9 +94,10 @@ The integration is designed to be fail-open:
 
 ## Proof boundary
 
-Three levels, kept separate:
+Four levels, kept separate:
 
-- **Repo-local smoke-lane proof** (this repo): contracts compile, events normalize, pack lifecycle works, PG-only `route_fn` evidence verified, operator observability passes. Run `pnpm lifecycle:smoke`, `pnpm observability:smoke`, `pnpm continuous-product-loop:smoke`, `pnpm fresh-env:smoke`.
+- **Repo-local smoke-lane proof** (this repo): contracts compile, events normalize, pack lifecycle works, learned `route_fn` evidence is verified, operator observability passes. Run `pnpm lifecycle:smoke`, `pnpm observability:smoke`, `pnpm continuous-product-loop:smoke`, `pnpm fresh-env:smoke`.
+- **Attached-install dogfood proof** (Eagle/Tern): real OpenClaw profiles now cover install, attach, restart, export, promotion, learned-route refresh, default `bge-large`, optional `qwen3.5:9b` teacher enablement, and graph evolution through promoted packs.
 - **Comparative benchmark proof** (Brain Ground Zero): recorded-session H2H (0.975 vs 0.896, +7.9 pp) and sparse-feedback 10-seed (91.96% vs 67.05%, +24.91 pp) are published in the separate [brain-ground-zero](https://github.com/jonathangu/brain-ground-zero) repo. These are frozen-workload benchmark claims, not live production claims.
 - **Live product proof** (not yet): shadow-mode and narrow online rollout artifacts will be published here when those tests are complete.
 
@@ -104,6 +105,6 @@ See [CLAIMS.md](https://github.com/jonathangu/openclawbrain/blob/main/CLAIMS.md)
 
 ## What to avoid
 
-- Treating `continuousGraphLearning` config flags as proof of live runtime graph plasticity. Today, graph-dynamics fields are pack artifact metadata, not live serving-path operations.
+- Treating passive-learning proof through promoted packs as proof of same-turn active-pack mutation. We have the former on attached installs, not the latter.
 - Claiming the `@openclawbrain/*` packages are npm-published. The current wave ships from local `.release/*.tgz` tarballs. Use `pnpm release:status` to check the honest distribution lane.
 - Assuming a heuristic learned-label fallback exists in the serve path. Route updates are PG-only; there is no heuristic overlay.

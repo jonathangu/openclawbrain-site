@@ -56,7 +56,7 @@ This proves the operator-facing diagnostics surface for:
 
 `pnpm observability:report` prints the local JSON report for those proofs. It only claims what is materialized inside the repo fixture lane; it does not claim live production telemetry coverage.
 
-Those proofs keep learned `route_fn` evidence central, but they do not yet prove full live runtime plasticity on the active pack or per-query learned `route_fn` mutation. Current structural ops are verified as pack-build metadata plus promoted-artifact freshness.
+Those repo-local proofs keep learned `route_fn` evidence central, but by themselves they stop at promoted-artifact freshness and later served-turn verification inside the fixture lane. The separate Eagle/Tern dogfood proof is what extends the public story to passive learning on attached installs. Neither proves same-turn in-place mutation of the active pack or live production telemetry coverage.
 
 ### Recorded-session replay proof
 
@@ -147,7 +147,7 @@ When real BGZ proof bundle ids and digests are available, link them into `proofs
 ### Not claimed here
 
 - full comparative benchmark coverage inside this repo
-- full runtime graph plasticity on the live active pack
+- same-turn in-place graph mutation on the live active pack
 - per-query learned `route_fn` updates on the active pack
 - live production answer-quality proof on served OpenClaw traffic
 - shadow-mode or online rollout proof

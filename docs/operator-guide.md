@@ -55,18 +55,20 @@ If `handoff_state=pg_promoted_pack_authoritative`, a later PG-promoted pack has 
 
 ## Claim boundary for operators
 
-The local operator proof today is narrow but real:
+The public operator proof today is narrow but real:
 
 - promoted-pack compilation is real
-- PG-only learned `route_fn` evidence is real
-- later served-turn route changes after candidate refresh and promotion are real
+- learned `route_fn` evidence is real
+- Eagle/Tern dogfood proves passive learning on attached installs: exports land, candidate packs promote, and later served turns reflect learned route and graph changes
+- the default `bge-large` embedder path is real on attached installs
+- optional local `qwen3.5:9b` teacher enablement is real on attached installs
 - explicit fallback visibility is real
 
 Do not treat these as proof of:
 
-- per-query learned `route_fn` mutation on the active pack
-- full live active-pack plasticity during serving
+- per-query or same-turn learned `route_fn` mutation on the active pack
+- broad operator hardening across many profiles or environments
 - finished shadow or online answer-quality proof
 - full local reproduction of the broader traversal-learning and `QTsim` benchmark story
 
-That broader route-function story remains important; it is simply claimed through Brain Ground Zero, not through this repo alone.
+That broader route-function story remains important; benchmark superiority is still claimed through Brain Ground Zero, not through this repo alone.

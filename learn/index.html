@@ -641,7 +641,9 @@
       before brain bootstrap unless you explicitly skip that step, then you restart the runtime
       externally so the profile comes back with the brain attached. The local teacher LLM is still
       optional; if you enable the Ollama teacher path, its default model is <code>qwen3.5:9b</code>.
-      Install and restart are real. Live learning proof starts later, after exports and promotion.
+      Install and restart are real. Eagle and Tern now also prove the later passive-learning loop on
+      attached installs: exports land, packs promote, the learned <code>route_fn</code> refreshes, and
+      graph evolution shows up on later served turns.
     </p>
 
     <div class="boundary-grid">
@@ -662,13 +664,14 @@
         <h3>What is proven today</h3>
         <p>
           Verified install onto real profiles now exists. Attach plus external restart succeeded for
-          Tern and CormorantAI, and Tern came back alive on Telegram after restart.
+          Eagle and Tern, and Tern came back alive on Telegram after restart.
         </p>
         <p>
-          That is install proof under the shipped operator surface, not full live-learning proof.
-          The install contract now assumes an embedder by default, while the teacher path remains
-          optional. Both verified brains are still waiting on first export, so no one should read
-          install success as proof that later turns are already learning from fresh live data.
+          The proof boundary moved past install-only. Eagle and Tern now cover passive learning on
+          attached installs: exports, promotion, learned <code>route_fn</code> refresh, optional teacher
+          enablement, and graph evolution through promoted packs. That still is not the same as
+          broad production hardening, shadow-mode evidence, or same-turn mutation of the current
+          active pack during serving.
         </p>
       </div>
     </div>
