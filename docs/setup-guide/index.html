@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Setup Guide — OpenClawBrain</title>
-  <meta name="description" content="Install OpenClawBrain, attach it to an OpenClaw profile, and verify it is working — step by step." />
+  <meta name="description" content="Install OpenClawBrain, attach it to an OpenClaw profile, and confirm the brain is actually alive — step by step." />
   <link rel="canonical" href="https://openclawbrain.ai/docs/setup-guide/" />
   <style>
     :root {
@@ -109,8 +109,8 @@
     </nav>
 
     <h1>Setup Guide</h1>
-    <p>This guide walks you through installing OpenClawBrain, attaching it to an OpenClaw profile, and confirming it is working. Most operators can go from zero to a running brain in a few minutes.</p>
-    <p>OpenClaw owns the live runtime (agent orchestration, tool calls, responses). OpenClawBrain owns the knowledge layer (memory, learning, and context compilation). You install OpenClawBrain separately, then attach one or more OpenClaw profiles to the brain without adding response-path latency.</p>
+    <p>This is the day-zero path: install OpenClawBrain, attach it to an OpenClaw profile, and make sure the brain is actually breathing. Most operators can get from zero to a live attach in a few minutes.</p>
+    <p>OpenClaw runs the live agent loop: orchestration, tool calls, and responses. OpenClawBrain handles memory, learning, and context compilation behind it. You install the brain separately, then attach one or more OpenClaw profiles without adding response-path latency.</p>
 
     <!-- ── PREREQUISITES ── -->
     <h2>What you need</h2>
@@ -121,44 +121,44 @@
     </ul>
     <div class="callout tip">
       <span class="callout-label">No API keys needed</span>
-      <p>OpenClawBrain uses local BGE-large embeddings and an optional local Ollama teacher. No cloud provider keys are required for the brain itself. Your OpenClaw runtime may still need its own provider keys for agent and tool calls — see <a href="/docs/secrets-and-capabilities/">Secrets and Capabilities</a>.</p>
+      <p>OpenClawBrain keeps its own work local: BGE-large embeddings plus an optional Ollama/Qwen teacher path. No cloud-provider keys are required for the brain itself. Your OpenClaw runtime may still need provider keys for agent and tool calls — see <a href="/docs/secrets-and-capabilities/">Secrets and Capabilities</a>.</p>
     </div>
 
     <!-- ── STEP 1: INSTALL ── -->
     <h2><span class="step-num">1</span> Install</h2>
-    <p>Install the published package globally, then confirm the CLI is available:</p>
+    <p>Install the published package globally, then make sure the CLI answers back:</p>
     <pre><code>npm install -g @openclawbrain/openclaw@0.3.0
 openclawbrain --help</code></pre>
-    <p>Start with <code>openclawbrain install</code>. After attach, use the status and rollback tooling to inspect health or back out a bad pack if needed.</p>
+    <p>Start with <code>openclawbrain install</code>. After attach, use the status and rollback tools to check whether the brain landed cleanly and to back out a bad pack if needed.</p>
 
     <!-- ── STEP 2: ATTACH ── -->
     <h2><span class="step-num">2</span> Attach an OpenClaw profile</h2>
-    <p>Run the installer for the profile you want to wire up. A shared activation root per machine is a valid default: multiple OpenClaw profiles can point at the same brain, and retrieval can still differ per ask because context compilation happens at request time. Choose a dedicated activation root only when you want stricter isolation for rollback, cleanup, or blame.</p>
+    <p>Run the installer for the profile you want to wire up. A shared activation root per machine is an acceptable default: multiple OpenClaw profiles can point at the same brain, and retrieval can still differ per ask because context compilation happens at request time. Choose a dedicated activation root when you want rollback, disable, cleanup, or uninstall scoped to one profile.</p>
     <pre><code>openclawbrain install \
   --openclaw-home "$PROFILE_HOME" \
   --activation-root "$ACTIVATION_ROOT" \
   --workspace-id "$PROFILE_NAME"</code></pre>
     <div class="callout tip">
       <span class="callout-label">Shared by default, isolated on purpose</span>
-      <p>Reusing one activation root for the machine is acceptable. Give a profile its own root when you want operator actions such as rollback, disable, or cleanup to stay scoped to that profile alone.</p>
+      <p>Reusing one activation root for the machine is acceptable. Give a profile its own root when you want operator actions such as rollback, disable, cleanup, or uninstall to stay scoped to that profile alone.</p>
     </div>
-    <p>The installer provisions a local <code>bge-large</code> embedder by default. To skip embedder provisioning (if you already have one), pass <code>--skip-embedder-provision</code> or set <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>.</p>
+    <p>The installer provisions a local <code>bge-large</code> embedder by default. If you already manage your own embedder, skip that step with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>.</p>
 
     <!-- ── STEP 3: RESTART AND VERIFY ── -->
-    <h2><span class="step-num">3</span> Restart and verify</h2>
-    <p>Restart the OpenClaw gateway for your profile, then check status:</p>
+    <h2><span class="step-num">3</span> EXTERNAL RESTART and verify</h2>
+    <p>Restart the OpenClaw gateway externally for that profile, then ask it for status:</p>
     <pre><code>env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway restart
 env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway status</code></pre>
     <p>After restarting, verify these behaviors:</p>
     <ol>
-      <li><strong>Agent responds immediately.</strong> OpenClaw boots from the seed pack without waiting for background learning. A fresh brain with zero events stays in seed state until the first exported turn arrives — this is normal.</li>
-      <li><strong>Background learning starts.</strong> New events are exported first; historical backfill continues in the background. The learner builds candidate packs off the hot path; activation promotes them when ready.</li>
-      <li><strong>Fail-open works.</strong> If brain workers are delayed, OpenClaw still serves from the last active pack. Missing packs fail open so responses continue. However, a learned-required route artifact that drifts will hard-fail instead of silently serving stale data.</li>
+      <li><strong>Agent responds immediately.</strong> OpenClaw boots from the seed pack without waiting for background learning. A fresh brain with zero events stays in seed state until the first exported turn arrives. That is normal.</li>
+      <li><strong>Background learning starts.</strong> New events are exported first; older history can backfill in the background. The learner builds candidate packs off the hot path, and activation promotes them when they are ready.</li>
+      <li><strong>Fail-open works.</strong> If brain workers are delayed, OpenClaw still serves from the last active pack. Missing packs fail open so responses continue. A learned-required route artifact that drifts will hard-fail instead of quietly serving stale data.</li>
     </ol>
 
     <!-- ── STEP 4: OBSERVABILITY ── -->
     <h2><span class="step-num">4</span> Check health</h2>
-    <p>If you are working from the source repo, these helper scripts give you a quick read on the activation root you installed against. With a shared root they report machine-level brain state; with a dedicated root they report just that profile's brain state.</p>
+    <p>If you are working from the source repo, these helper scripts give you the first operator check-in surfaces on the activation root you installed against. With a shared root they report machine-level brain state; with a dedicated root they report just that profile's brain state.</p>
     <pre><code>pnpm operator:status     # one-screen summary: did attach land, what is active, is rollback ready?
 pnpm operator:doctor     # PASS / WARN / FAIL follow-up when status shows drift</code></pre>
 
@@ -166,7 +166,7 @@ pnpm operator:doctor     # PASS / WARN / FAIL follow-up when status shows drift<
     <h2>Rollback and recovery</h2>
     <p>If something goes wrong after a pack promotion:</p>
     <ul>
-      <li><strong>Brain unavailable:</strong> OpenClaw automatically falls back to core runtime behavior. Responses continue without brain-enhanced context.</li>
+      <li><strong>Brain unavailable:</strong> OpenClaw falls back to core runtime behavior. Responses keep flowing, just without brain-enhanced context.</li>
       <li><strong>Bad brain pack:</strong> Preview the rollback first, then apply it:</li>
     </ul>
     <pre><code># Preview the pointer move (no changes made)
@@ -174,11 +174,11 @@ pnpm operator:rollback -- --activation-root &lt;path&gt; --dry-run
 
 # Apply the rollback
 pnpm operator:rollback -- --activation-root &lt;path&gt;</code></pre>
-    <p>Use the same <code>--activation-root</code> you installed against. With a shared root, rollback moves the shared machine brain back for every attached profile using that root; with a dedicated root, rollback stays isolated to that profile. Compilation from a given pack is deterministic, so rollback is safe and repeatable. Learning delays do not affect the hot path — scanner, harvest, and learner workers all run asynchronously.</p>
+    <p>Use the same <code>--activation-root</code> you installed against. With a shared root, rollback moves the shared machine brain back for every attached profile using that root; with a dedicated root, rollback, disable, cleanup, or uninstall stay isolated to that profile. Compilation from a given pack is deterministic, so rollback is safe and repeatable. Learning delays do not touch the hot path; scanner, harvest, and learner workers all run asynchronously.</p>
 
     <!-- ── RUNTIME CONFIG ── -->
     <h2>Runtime configuration</h2>
-    <p>The install step wires most of this automatically. If you need to inspect or customize the runtime profile, here is the shape OpenClaw expects:</p>
+    <p>The install step wires most of this automatically. If you want to inspect or customize the runtime profile, this is the shape OpenClaw expects:</p>
     <pre><code>{
   "brain": {
     "enabled": true,
@@ -199,17 +199,17 @@ pnpm operator:rollback -- --activation-root &lt;path&gt;</code></pre>
       <li><code>fastBootFromExistingFiles</code> — OpenClaw starts serving immediately from existing files; bootstrap attach works even from zero events.</li>
       <li><code>teacher.onHotPath: false</code> — learning never adds latency to responses.</li>
       <li>Labels, scanner, and harvest feed into route training. They run on the learning side, not in the serve loop.</li>
-      <li>Background learning means: export turns, build a candidate pack off the hot path, then promote. Eagle and Tern now prove that passive-learning loop on attached installs. The active pack is still not mutated in-place during the same served turn.</li>
+      <li>Background learning means: export turns, build a candidate pack off the hot path, then promote. Eagle and Tern now prove that passive-learning loop on attached installs, including learned <code>route_fn</code> refresh and graph truth updates on later served turns. The active pack is still not mutated in-place during the same served turn.</li>
     </ul>
     <div class="callout warn">
       <span class="callout-label">What is not here yet</span>
-      <p>Scanner, labels, and harvest are not yet on by default after attach — you still configure them explicitly. Eagle/Tern do prove graph evolution through export, learning, and promoted-pack change on attached installs. What is still not claimed is same-turn in-place mutation of the currently active pack during serving, or broader rollout hardening.</p>
+      <p>Scanner, labels, and harvest are not yet on by default after attach, so you still configure them explicitly. Eagle/Tern do prove graph evolution through export, learning, and promoted-pack change on attached installs. What is still not claimed is same-turn mutation of the currently active pack during serving, or broader rollout hardening.</p>
     </div>
 
     <!-- ── ADVANCED: PACKAGES ── -->
     <details>
       <summary>Published packages (advanced)</summary>
-      <p>The full package surface, all installed via <code>npm install @openclawbrain/openclaw</code>:</p>
+      <p>The full package surface, installed via <code>npm install @openclawbrain/openclaw</code>:</p>
       <ul>
         <li><code>@openclawbrain/contracts</code></li>
         <li><code>@openclawbrain/events</code></li>
@@ -233,7 +233,7 @@ pnpm install --frozen-lockfile
 pnpm check                  # type-check, lint, test, verify package integrity
 pnpm release:check          # full proof lane + local tarballs
 pnpm fresh-env:smoke        # clean-room outside-consumer install proof</code></pre>
-      <p>A <strong>brain pack</strong> is an immutable versioned artifact containing graph nodes, vector entries, provenance, and an optional learned route function. It is built off the hot path by the learner and made visible only after promotion by activation. The compiler always serves from the currently active promoted pack.</p>
+      <p>A <strong>brain pack</strong> is an immutable versioned artifact containing graph nodes, vector entries, provenance, and an optional learned route function. The learner builds it off the hot path, activation promotes it, and the compiler serves only from the currently active promoted pack.</p>
       <h3>Proof lanes</h3>
       <p>Run these to verify the full promoted-pack lifecycle locally:</p>
       <pre><code>pnpm lifecycle:smoke                   # normalized events → promoted-pack compilation
