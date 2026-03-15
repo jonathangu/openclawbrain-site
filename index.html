@@ -1,682 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>OpenClawBrain: Your OpenClaw Agent Should Not Relearn the Same Lesson Twice</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain gives OpenClaw a persistent local brain that keeps corrections, picks context per ask, and sharpens repeated workflows over time. Fail-open, with bge-large by default and optional qwen teacher.">
-  <meta property="og:title" content="OpenClawBrain: Your OpenClaw Agent Should Not Relearn the Same Lesson Twice">
-  <meta property="og:description" content="OpenClawBrain gives OpenClaw a persistent local brain that keeps corrections, picks context per ask, and sharpens repeated workflows over time. Fail-open, with bge-large by default and optional qwen teacher.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://openclawbrain.ai/">
-  <meta name="twitter:card" content="summary">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Crimson+Pro:ital,wght@0,400;0,600;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
-  <link rel="canonical" href="https://openclawbrain.ai/">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpenClawBrain</title>
+  <meta name="description" content="Forking lossless-claw and adding learning." />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #07090f;
-      --bg-panel: #0f141f;
-      --bg-panel-soft: #111824;
-      --bg-code: #161d2c;
-      --text: #ced7e5;
-      --text-bright: #f2f6fb;
-      --text-muted: #8b97ad;
-      --accent: #79d3ff;
-      --accent-strong: #4ea8db;
-      --accent-soft: rgba(121, 211, 255, 0.12);
-      --green: #9ce0bc;
-      --orange: #ffbe72;
-      --border: rgba(125, 157, 198, 0.25);
-      --border-strong: rgba(121, 211, 255, 0.36);
-      --serif: "Crimson Pro", Georgia, serif;
-      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --mono: "JetBrains Mono", Menlo, monospace;
-      --radius: 14px;
+      color-scheme: dark;
+      --bg: #0a0a0a;
+      --panel: #111111;
+      --text: #f5f5f5;
+      --muted: #b3b3b3;
+      --line: #262626;
+      --accent: #7dd3fc;
     }
-
-    html { scroll-behavior: smooth; }
-
+    * { box-sizing: border-box; }
     body {
-      font-family: var(--serif);
+      margin: 0;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
       color: var(--text);
-      font-size: 18px;
-      line-height: 1.75;
-      background:
-        radial-gradient(circle at 20% -10%, rgba(121, 211, 255, 0.2), transparent 45%),
-        radial-gradient(circle at 82% 0%, rgba(255, 190, 114, 0.12), transparent 38%),
-        var(--bg);
-      -webkit-font-smoothing: antialiased;
+      line-height: 1.55;
     }
-
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    .page {
-      max-width: 980px;
+    main {
+      max-width: 760px;
       margin: 0 auto;
-      padding: 2.5rem 1.4rem 5rem;
+      padding: 72px 24px 96px;
     }
-
-    /* ── NAV ── */
-    .site-header {
-      margin-bottom: 2.4rem;
-    }
-
-    .utility-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.1rem;
-    }
-
-    .brand {
-      font-family: var(--sans);
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-
-    .utility-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-    }
-
-    .utility-links a {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.34rem 0.65rem;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      font-family: var(--sans);
-      font-size: 0.78rem;
-      color: var(--text);
-      background: rgba(10, 16, 26, 0.8);
-      text-decoration: none;
-      transition: border-color 140ms ease, background 140ms ease;
-    }
-
-    .utility-links a:hover {
-      border-color: var(--border-strong);
-      background: rgba(121, 211, 255, 0.1);
-      text-decoration: none;
-    }
-
-    /* ── HERO ── */
-    .hero-card {
-      padding: 2rem 1.75rem 1.6rem;
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius);
-      background: linear-gradient(165deg, rgba(121, 211, 255, 0.15), rgba(10, 15, 24, 0.88) 55%);
-      margin-bottom: 1rem;
-    }
-
-    .eyebrow {
-      margin: 0 0 0.5rem;
-      font-family: var(--sans);
-      font-size: 0.74rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    h1 {
-      margin: 0 0 0.7rem;
-      font-family: var(--sans);
-      font-size: clamp(1.55rem, 3.5vw, 2.2rem);
-      line-height: 1.22;
-      color: var(--text-bright);
-    }
-
-    .lead {
-      margin: 0 0 1.1rem;
-      font-family: var(--sans);
-      font-size: 0.97rem;
-      line-height: 1.68;
-      color: var(--text);
-      max-width: 68ch;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.52rem 0.95rem;
-      border-radius: 9px;
-      font-family: var(--sans);
-      font-size: 0.86rem;
-      font-weight: 600;
-      text-decoration: none;
-      border: 1px solid transparent;
-      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
-    }
-
-    .btn:hover { text-decoration: none; transform: translateY(-1px); }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent), #95e4ff);
-      color: #061018;
-    }
-
-    .btn-secondary {
-      border-color: var(--border-strong);
-      background: rgba(121, 211, 255, 0.09);
-      color: var(--accent);
-    }
-
-    /* ── PROOF CHIPS ── */
-    .proof-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1.6rem;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.3rem 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      font-family: var(--sans);
-      font-size: 0.76rem;
-      color: var(--text-muted);
-      background: rgba(10, 14, 22, 0.82);
-    }
-
-    .chip strong {
-      color: var(--green);
-      font-weight: 600;
-    }
-
-    /* ── INSTALL BLOCK ── */
-    .install-section {
-      border-color: var(--border-strong);
-      background: linear-gradient(165deg, rgba(121, 211, 255, 0.08), rgba(10, 15, 24, 0.92) 55%);
-    }
-
-    .install-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.72rem;
-    }
-
-    /* ── SECTIONS ── */
-    .section {
-      margin-bottom: 1.55rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.4rem 1.4rem;
-      background: rgba(10, 14, 22, 0.84);
-    }
-
-    .section h2 {
-      margin: 0 0 0.5rem;
-      font-family: var(--sans);
-      font-size: 1.2rem;
-      color: var(--text-bright);
-      line-height: 1.3;
-    }
-
-    .section-intro {
-      margin: 0 0 1rem;
-      font-family: var(--sans);
-      font-size: 0.9rem;
-      color: var(--text);
-      line-height: 1.65;
-      max-width: 78ch;
-    }
-
-    .section-intro-tight {
-      margin-bottom: 0;
-    }
-
-    /* ── CARDS GRID ── */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.72rem;
-    }
-
-    .comparison-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.72rem;
-    }
-
     .card {
-      padding: 0.95rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      background: var(--bg-panel);
-      display: flex;
-      flex-direction: column;
-      gap: 0.42rem;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 28px;
     }
-
-    .card.accent-card {
-      border-color: var(--border-strong);
-      background: linear-gradient(165deg, rgba(121, 211, 255, 0.1), rgba(12, 18, 28, 0.92) 60%);
+    h1 {
+      font-size: clamp(2.25rem, 7vw, 4.5rem);
+      line-height: 0.95;
+      margin: 0 0 18px;
+      letter-spacing: -0.04em;
     }
-
-    .card-label {
-      font-family: var(--sans);
-      font-size: 0.71rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
+    p {
+      margin: 0 0 16px;
+      font-size: 1.05rem;
     }
-
-    .card h3 {
-      margin: 0;
-      font-family: var(--sans);
-      font-size: 0.95rem;
-      line-height: 1.35;
-      color: var(--text-bright);
+    .muted {
+      color: var(--muted);
     }
-
-    .card p {
-      margin: 0;
-      font-family: var(--sans);
-      font-size: 0.83rem;
-      line-height: 1.57;
-      color: var(--text);
+    ul {
+      margin: 22px 0;
+      padding-left: 1.2rem;
     }
-
-    .card a {
-      font-family: var(--sans);
-      font-size: 0.82rem;
-      font-weight: 600;
-      margin-top: 0.1rem;
-    }
-
-    /* ── PROOF HIGHLIGHT ── */
-    .proof-highlight {
-      border-color: var(--border-strong);
-      background: linear-gradient(165deg, rgba(121, 211, 255, 0.08), rgba(10, 15, 24, 0.92) 55%);
-    }
-
-    .proof-chart-link {
-      display: block;
-      margin: 0.8rem 0 0.55rem;
-      border-radius: 10px;
-      overflow: hidden;
-      transition: box-shadow 180ms ease;
-    }
-
-    .proof-chart-link:hover {
-      box-shadow: 0 0 0 2px var(--accent-strong);
+    li { margin: 0 0 10px; }
+    a {
+      color: var(--accent);
       text-decoration: none;
     }
-
-    .fig {
-      margin: 0;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      background: var(--bg-panel);
-    }
-
-    .fig img { width: 100%; display: block; }
-
-    .proof-chart-caption {
-      margin: 0.4rem 0 0;
-      font-family: var(--sans);
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    /* ── CALLOUT NOTE ── */
-    .callout-note {
-      margin-top: 0.82rem;
-      padding: 0.72rem 0.88rem;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: rgba(10, 14, 22, 0.84);
-      font-family: var(--sans);
-      font-size: 0.83rem;
-      color: var(--text-muted);
-      line-height: 1.52;
-    }
-
-    /* ── STATUS ── */
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.28rem 0.7rem;
-      border: 1px solid var(--orange);
-      border-radius: 999px;
-      font-family: var(--sans);
-      font-size: 0.74rem;
-      color: var(--orange);
-      background: rgba(255, 190, 114, 0.08);
-      margin-bottom: 0.75rem;
-    }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--orange);
-    }
-
-    /* ── DEV CTA ── */
-    code {
-      font-family: var(--mono);
-      font-size: 0.84em;
-      background: var(--bg-code);
-      border: 1px solid rgba(121, 211, 255, 0.15);
-      color: var(--orange);
-      border-radius: 5px;
-      padding: 0.13em 0.36em;
-    }
-
-    pre {
-      margin: 0.9rem 0 0;
-      padding: 0.95rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--bg-code);
-      overflow-x: auto;
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      line-height: 1.6;
-    }
-
-    .dev-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    /* ── FOOTER ── */
-    .footer {
-      margin-top: 2.5rem;
-      border-top: 1px solid var(--border);
-      padding-top: 1.1rem;
-      text-align: center;
-      font-family: var(--sans);
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0.3rem 1.1rem;
-      margin-bottom: 0.65rem;
-    }
-
-    .footer-links a {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .footer-links a:hover {
-      color: var(--text-bright);
-    }
-
-    .footer p {
-      margin: 0.15rem 0;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 880px) {
-      .card-grid,
-      .comparison-grid,
-      .install-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 640px) {
-      body { font-size: 16px; }
-      .page { padding: 1.7rem 0.92rem 3.5rem; }
-      .utility-row { flex-direction: column; align-items: flex-start; }
-      .hero-card { padding: 1.2rem 1rem; }
-      .section { padding: 1.1rem 1rem; }
-      .hero-actions .btn { width: 100%; text-align: center; }
-    }
+    a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-<article class="page">
-
-  <!-- ── TOP NAV ── -->
-  <header class="site-header">
-    <div class="utility-row">
-      <a class="brand" href="/">openclawbrain.ai</a>
-      <nav class="utility-links" aria-label="Primary navigation">
-        <a href="/">Product</a>
-        <a href="#practical-example">Example</a>
-        <a href="/proof/">Proof</a>
-        <a href="#install-now">Install</a>
-        <a href="/docs/setup-guide/">Docs</a>
-      </nav>
+  <main>
+    <div class="card">
+      <p class="muted">Total reset.</p>
+      <h1>OpenClawBrain</h1>
+      <p>I'm forking lossless-claw and adding learning.</p>
+      <p>Keep lossless context engineering, but add a graph that actually learns what context to route to the model over time.</p>
+      <ul>
+        <li>policy-learning over edges</li>
+        <li>async teacher + human labels</li>
+        <li>structural graph mutations</li>
+      </ul>
+      <p>Make context engineering adaptive instead of static.</p>
+      <p><a href="./jonathan-gu-2016-reinforcement-learning-paper.pdf">Jonathan Gu — Reinforcement Learning (Econometrics Field, July 2016)</a></p>
     </div>
-
-    <!-- ── HERO ── -->
-    <div class="hero-card">
-      <p class="eyebrow">Persistent brain for OpenClaw</p>
-      <h1>Your OpenClaw agent should not have to relearn the same lesson twice.</h1>
-      <p class="lead">
-        OpenClaw starts each new session with a clean slate. OpenClawBrain gives it a persistent local brain that keeps corrections, pulls the right context for each ask, and gets sharper on work it sees again and again. The intended default is simple: one shared brain per machine is acceptable, dedicated roots stay available when you want tighter isolation, and OpenClaw stays fail-open if the learning side falls behind.
-      </p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="#practical-example">See the before/after</a>
-        <a class="btn btn-secondary" href="/proof/">See benchmark results</a>
-        <a class="btn btn-secondary" href="#install-now">Install for OpenClaw</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- ── PROOF CHIPS ── -->
-  <section class="proof-chips" aria-label="Key results">
-    <span class="chip"><strong>+9.7 to +26.9 pp</strong> vs. best RAG</span>
-    <span class="chip"><strong>5&times; less</strong> context per query</span>
-    <span class="chip"><strong>29&ndash;1&ndash;0</strong> vs. benchmark baselines</span>
-    <span class="chip"><strong>Passive learning</strong> proven on live installs</span>
-    <span class="chip"><strong>bge-large + qwen</strong> real local stack</span>
-    <span class="chip"><strong>Fail-open</strong> behind OpenClaw</span>
-  </section>
-
-  <!-- ── PRACTICAL EXAMPLE ── -->
-  <section class="section" id="practical-example">
-    <h2>What this changes on a real task</h2>
-    <p class="section-intro">
-      Picture a deploy incident where the agent keeps missing the exact rollback rule. The difference is not theoretical. You feel it the next time the same fire alarm goes off.
-    </p>
-    <div class="comparison-grid">
-      <article class="card accent-card">
-        <span class="card-label">Before OpenClawBrain</span>
-        <h3>The agent grabs the whole playbook and still misses the right page</h3>
-        <p>You correct the answer once, but the next incident still drags in a broad runbook, misses the exact rollback policy, and burns tokens on context that does not help.</p>
-      </article>
-      <article class="card">
-        <span class="card-label">After OpenClawBrain</span>
-        <h3>The correction is waiting there when the task comes back</h3>
-        <p>The fix is stored as reusable memory, tied to the relevant policy, and retrieved with a smaller prompt. On the next similar incident, the agent starts near the right rollback path instead of wandering back through the same mistake.</p>
-      </article>
-    </div>
-    <p class="callout-note">
-      The full worked example shows the miss, the correction, and the later retrieval step by step, with real diffs instead of vague promises.
-      <a href="/docs/worked-example/">Read the worked example &rarr;</a>
-    </p>
-  </section>
-
-  <!-- ── WHAT CHANGES IN PRACTICE ── -->
-  <section class="section" id="what-changes">
-    <h2>What changes in practice</h2>
-    <p class="section-intro">
-      OpenClaw still runs the agent. OpenClawBrain changes what the agent carries into the next job. In practice, that shows up in three places.
-    </p>
-    <div class="card-grid">
-      <article class="card accent-card">
-        <span class="card-label">Fewer repeated mistakes</span>
-        <h3>Corrections become reusable memory</h3>
-        <p>When you fix a mistake, OpenClawBrain records what went wrong and why. When a similar situation shows up again, the agent can reach for that correction instead of stepping into the same hole.</p>
-      </article>
-      <article class="card">
-        <span class="card-label">Per-ask retrieval</span>
-        <h3>The brain does not show the same memory every time</h3>
-        <p>A trained routing function picks the context that matters for this ask instead of shoveling in every vaguely related chunk. Prompts get smaller, and two similar questions can still retrieve different memory when the task actually differs.</p>
-      </article>
-      <article class="card">
-        <span class="card-label">Better recurring workflows</span>
-        <h3>Repeated workflows improve</h3>
-        <p>Outcomes and feedback feed back into training. The workflows your agent runs every week start to tighten up because the router learns which context actually earns its keep.</p>
-      </article>
-    </div>
-  </section>
-
-  <!-- ── HOW IT WORKS ── -->
-  <section class="section" id="how-it-works">
-    <h2>How it works</h2>
-    <p class="section-intro">
-      Three product ideas, minus the jargon.
-    </p>
-    <div class="card-grid">
-      <article class="card">
-        <span class="card-label">Knowledge graph</span>
-        <h3>Facts live as connections, not loose documents</h3>
-        <p>Instead of a pile of disconnected text chunks, knowledge lives in a graph. "This deploy policy depends on that rollback rule" becomes a real connection, not two files that merely happen to share a word.</p>
-      </article>
-      <article class="card">
-        <span class="card-label">Learned routing</span>
-        <h3>A trained router decides what this ask needs</h3>
-        <p>When a question arrives, the router walks the graph and chooses the nodes most likely to help this ask. It learns from corrections and outcomes, so over time it gets better at putting the right context on the table.</p>
-      </article>
-      <article class="card">
-        <span class="card-label">Structural plasticity</span>
-        <h3>The memory graph reshapes as reality changes</h3>
-        <p>Nodes connect, split, merge, and prune under policy control. Stale knowledge fades, live connections strengthen, and the ablations show this is the biggest single accuracy lift across every benchmark family.</p>
-      </article>
-    </div>
-  </section>
-
-  <!-- ── PROOF AT A GLANCE ── -->
-  <section class="section proof-highlight" id="proof-at-a-glance">
-    <h2>Proof at a glance</h2>
-    <p class="section-intro">
-      In controlled benchmarks, OpenClawBrain beat the best RAG baseline by <strong>+9.7 to +26.9 percentage points</strong> while using about <strong>5&times; less context per query</strong>. That result holds across three benchmark families, 10 seeds each, against 8 baselines. <a href="/proof/">Methodology, ablation ladder, and claim boundary &rarr;</a>
-    </p>
-    <a href="/proof/" class="proof-chart-link" aria-label="View full proof details">
-      <figure class="fig">
-        <img src="figures/bgz/f1_margin_context.png"
-             alt="Two-panel chart: accuracy margin of full_brain over best RAG baseline (left, +9.7 to +26.9 pp) and context cost ratio (right, 5x less context) across three benchmark families">
-      </figure>
-    </a>
-    <p class="proof-chart-caption">
-      Accuracy margin over best RAG (left) and context cost per query (right) across three families.
-      <a href="/proof/">Full evidence &rarr;</a>
-    </p>
-    <p class="callout-note">
-      <strong>Read this as lab evidence, not a production SLA.</strong>
-      These are controlled evaluations using simulated policy functions, not live deployment win rates. The weakest family still showed high seed variance (&plusmn;18.3%) and a 9&ndash;1&ndash;0 record instead of a clean sweep.
-      <a href="/proof/">Methodology and honest gaps &rarr;</a>
-    </p>
-  </section>
-
-  <!-- ── CURRENT STATUS ── -->
-  <section class="section" id="status">
-    <h2>Current status</h2>
-    <div class="status-badge"><span class="status-dot"></span> Public technical alpha &mdash; stronger operator truth, same ambitious target</div>
-    <p class="section-intro section-intro-tight">
-      OpenClawBrain is still early alpha. The benchmark story is further along than the field-hardening story. The product direction is one shared brain per machine, with retrieval decided per ask and learning happening in the background, while dedicated roots remain available when you want tighter isolation. The public operator proof is now real: Eagle verified install, passive learner start, first export, promotion, learned <code>route_fn</code>, default <code>bge-large</code>, optional <code>qwen3.5:9b</code> teacher enablement, and later served route / graph truth updates, while Tern verified attach plus <strong>EXTERNAL RESTART</strong> on a Telegram-connected profile. That is narrow live operator proof, not broad production hardening or live answer-quality proof.
-      Expect breaking changes before a stable release. Apache-2.0 licensed. Requires Node 20+.
-    </p>
-    <p class="callout-note">
-      <strong>Read the split literally.</strong>
-      Benchmark proof says the memory architecture beats strong RAG baselines. Operator proof now says the install, passive-learning, and served-pack story is real on live machines. Broad same-gateway many-profile safety and shared-root concurrency guarantees are still separate proof work.
-    </p>
-  </section>
-
-  <!-- ── INSTALL ── -->
-  <section class="section install-section" id="install-now">
-    <h2>Install for OpenClaw operators</h2>
-    <p class="section-intro">
-      If you want to try it now, use the published package and run <code>openclawbrain install</code> from a normal shell. The current front door provisions <code>bge-large</code> by default, can enable a compatible local <code>qwen3.5:9b</code> teacher, and by default attaches your profile to a shared machine-level brain unless you deliberately choose a dedicated root.
-    </p>
-    <p class="callout-note">
-      Current honest read: Eagle proved install can auto-start the exact-root passive learner, reach first export, and serve from a promoted pack with live <code>bge-large</code> embeddings plus an enabled local <code>qwen3.5:9b</code> teacher. Tern proved attach plus <strong>EXTERNAL RESTART</strong> on a live Telegram-connected profile. A shared activation root per machine is acceptable when you want one memory surface, and different asks can still retrieve different context from that same brain. Use a dedicated root when you want rollback, disable, cleanup, or uninstall scoped to one profile. Skip embedder provision only with <code>--skip-embedder-provision</code> or <code>OPENCLAWBRAIN_INSTALL_SKIP_EMBEDDER_PROVISION=1</code>.
-    </p>
-    <div class="install-grid">
-      <article class="card accent-card">
-        <span class="card-label">1. Install the package</span>
-        <h3>Start with the published npm package</h3>
-        <p>This is the front door for operators: install the package, then run <code>openclawbrain install</code> from a normal shell.</p>
-        <pre><code>npm install -g @openclawbrain/openclaw@0.3.0</code></pre>
-      </article>
-      <article class="card">
-        <span class="card-label">2. Attach a profile to the machine brain</span>
-        <h3>Share by default, isolate on purpose</h3>
-        <p>Reuse one activation root for the machine unless you want a profile to have its own rollback, disable, cleanup, or uninstall boundary. If multiple profiles point at the same root, add <code>--shared</code>.</p>
-        <pre><code>openclawbrain install --openclaw-home "$OPENCLAW_HOME" --activation-root "$ACTIVATION_ROOT" --workspace-id "$PROFILE_NAME"</code></pre>
-      </article>
-      <article class="card">
-        <span class="card-label">3. EXTERNAL RESTART and check-ins</span>
-        <h3>Check install, load, export, and serving separately</h3>
-        <p>Restart OpenClaw externally when you want immediate runtime proof, then use the same activation root for the operator check-in surfaces.</p>
-        <pre><code>env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway restart
-env -i HOME="$HOME" PATH="$PATH" openclaw --profile &lt;PROFILE_NAME&gt; gateway status
-openclawbrain status --activation-root "$ACTIVATION_ROOT"
-openclawbrain daemon status --activation-root "$ACTIVATION_ROOT"</code></pre>
-      </article>
-      <article class="card">
-        <span class="card-label">4. Operator truth and rollback</span>
-        <h3>Scope operator actions deliberately</h3>
-        <p>Status and daemon distinguish hook install from load proof, seed state from promoted serving, and live passive-learning visibility from old snapshots. Rollback, disable, cleanup, and uninstall follow the root you chose: dedicated roots scope those actions to one profile, while shared roots make them machine-wide.</p>
-        <div class="dev-links">
-          <a class="btn btn-primary" href="/docs/setup-guide/">Setup guide</a>
-          <a class="btn btn-secondary" href="/docs/operator-guide/">Operator guide</a>
-          <a class="btn btn-secondary" href="/docs/openclaw-integration/">Integration docs</a>
-          <a class="btn btn-secondary" href="https://github.com/jonathangu/openclawbrain">Package repo</a>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <!-- ── DEVELOPER CTA ── -->
-  <section class="section" id="developers">
-    <h2>Docs and repo</h2>
-    <p class="section-intro">
-      Use the docs when you want the wiring details, the full learning walkthrough, or the benchmark methodology behind the headline numbers above.
-    </p>
-    <div class="dev-links">
-      <a class="btn btn-primary" href="/docs/setup-guide/">Setup guide</a>
-      <a class="btn btn-secondary" href="/docs/worked-example/">Worked example</a>
-      <a class="btn btn-secondary" href="/docs/openclaw-integration/">Integration docs</a>
-      <a class="btn btn-secondary" href="https://github.com/jonathangu/openclawbrain">Package repo</a>
-    </div>
-  </section>
-
-  <!-- ── FOOTER ── -->
-  <footer class="footer">
-    <nav class="footer-links" aria-label="Footer navigation">
-      <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
-      <a href="/paper/">Paper</a>
-      <a href="/materials/">Materials</a>
-      <a href="https://github.com/jonathangu/openclawbrain/blob/main/CHANGELOG.md">Changelog</a>
-      <a href="mailto:jonathangu@gmail.com">Contact</a>
-    </nav>
-    <p>OpenClawBrain &mdash; memory and learning for OpenClaw agents.</p>
-    <p>Apache-2.0 &middot; Node 20+ &middot; <a href="mailto:jonathangu@gmail.com">jonathangu@gmail.com</a></p>
-  </footer>
-
-</article>
+  </main>
 </body>
 </html>
