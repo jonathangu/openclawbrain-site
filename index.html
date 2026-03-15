@@ -98,6 +98,26 @@
       font-size: 1rem;
       color: var(--green);
     }
+    .hero-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 16px 0 10px;
+    }
+    .hero-link {
+      display: inline-block;
+      padding: 11px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #0d0d0d;
+      color: var(--text);
+      font-weight: 600;
+    }
+    .hero-link--paper {
+      border-color: #3b2f06;
+      background: #171306;
+      color: var(--yellow);
+    }
     .trace-block {
       font-family: ui-monospace, "SF Mono", monospace;
       font-size: 0.85rem;
@@ -186,7 +206,12 @@
       <p class="tagline">Your OpenClaw agent should not relearn the same lesson twice.</p>
       <p>OpenClawBrain is a learned retrieval brain for <a href="https://github.com/openclaw/openclaw">OpenClaw</a>. It's a fork of <a href="https://github.com/Martian-Engineering/lossless-claw">lossless-claw</a> that adds a paper-faithful reinforcement learning layer for context routing.</p>
       <p>It combines <strong>lossless transcript memory</strong> (never forget the conversation) with a <strong>knowledge graph whose routing policy learns from outcomes</strong> (get better at what context to surface).</p>
+      <p><strong>Featured paper:</strong> <a href="https://openclawbrain.ai/jonathan-gu-2016-reinforcement-learning-paper.pdf">Jonathan Gu's 2016 reinforcement-learning paper</a>. It lays out the corrected policy-gradient update that informs the project's learning direction.</p>
       <p><strong>Start with the <a href="https://github.com/jonathangu/openclawbrain">GitHub repo</a></strong> &mdash; it is a good front page for the project and has the README, SPEC, and architecture notes.</p>
+      <div class="hero-links">
+        <a class="hero-link hero-link--paper" href="https://openclawbrain.ai/jonathan-gu-2016-reinforcement-learning-paper.pdf">Read the 2016 paper</a>
+        <a class="hero-link" href="https://github.com/jonathangu/openclawbrain">Open the GitHub repo</a>
+      </div>
       <div class="install-block">openclaw plugins install @jonathangu/openclawbrain</div>
       <p class="dim">One command. Standard OpenClaw plugin. No separate daemon to manage.</p>
     </section>
