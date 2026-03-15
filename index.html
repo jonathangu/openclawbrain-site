@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain &mdash; A learned retrieval brain for OpenClaw</title>
-  <meta name="description" content="Your OpenClaw agent should not relearn the same lesson twice. OpenClawBrain adds paper-faithful reinforcement learning for context routing on top of lossless-claw." />
+  <meta name="description" content="Your OpenClaw agent should not relearn the same lesson twice. OpenClawBrain combines lossless transcript memory with a learned routing graph, seed-head policy, replay-gated packs, and operator traces." />
   <meta property="og:title" content="OpenClawBrain" />
-  <meta property="og:description" content="A learned retrieval brain for OpenClaw. Fork of lossless-claw with reinforcement learning for context routing." />
+  <meta property="og:description" content="A learned retrieval brain for OpenClaw with lossless transcript memory, learned seed routing, replay-gated packs, and decision traces." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
   <style>
@@ -204,8 +204,8 @@
     <section>
       <h1>OpenClawBrain</h1>
       <p class="tagline">Your OpenClaw agent should not relearn the same lesson twice.</p>
-      <p>OpenClawBrain is a learned retrieval brain for <a href="https://github.com/openclaw/openclaw">OpenClaw</a>. It's a fork of <a href="https://github.com/Martian-Engineering/lossless-claw">lossless-claw</a> that adds a paper-faithful reinforcement learning layer for context routing.</p>
-      <p>It combines <strong>lossless transcript memory</strong> (never forget the conversation) with a <strong>knowledge graph whose routing policy learns from outcomes</strong> (get better at what context to surface).</p>
+      <p>OpenClawBrain is a learned retrieval brain for <a href="https://github.com/openclaw/openclaw">OpenClaw</a>. It's the active v2 fork of <a href="https://github.com/Martian-Engineering/lossless-claw">lossless-claw</a> with a paper-faithful reinforcement-learning layer for context routing.</p>
+      <p>It combines <strong>lossless transcript memory</strong>, a <strong>learned routing graph</strong>, a <strong>seed-head policy over graph regions</strong>, and <strong>immutable promoted packs</strong> that are replay-gated before serving.</p>
       <p><strong>Featured paper:</strong> <a href="https://openclawbrain.ai/jonathan-gu-2016-reinforcement-learning-paper.pdf">Jonathan Gu's 2016 reinforcement-learning paper</a>. It lays out the corrected policy-gradient update that informs the project's learning direction.</p>
       <p><strong>Start with the <a href="https://github.com/jonathangu/openclawbrain">GitHub repo</a></strong> &mdash; it is a good front page for the project and has the README, SPEC, and architecture notes.</p>
       <div class="hero-links">
@@ -213,7 +213,7 @@
         <a class="hero-link" href="https://github.com/jonathangu/openclawbrain">Open the GitHub repo</a>
       </div>
       <div class="install-block">openclaw plugins install @jonathangu/openclawbrain</div>
-      <p class="dim">One command. Standard OpenClaw plugin. No separate daemon to manage.</p>
+      <p class="dim">One plugin, explicit init, immutable packs, and decision traces on routed turns.</p>
     </section>
 
     <!-- ═══ THE PROBLEM ═══ -->
@@ -269,7 +269,7 @@ Hop 2: auth/middleware.ts → STOP (p=0.61)
 Fired: auth/login.ts, auth/middleware.ts, correction:"check JWT expiry first"
 Vetoed: auth/old-handler.ts (inhibitory edge, weight=-2.3)
 
-<span style="color:var(--dim)">Brain v7 · 3 seeds · 2 hops · 3 fired · 1 veto · 1847 chars · trace bt_9kQ3</span></div>
+<span style="color:var(--dim)">Brain · 3 seeds · start auth/login.ts · 2 hops · 3 fired · 1 veto · 1847 chars</span></div>
     </section>
 
     <!-- ═══ TWO LAYERS ═══ -->
@@ -283,8 +283,8 @@ Vetoed: auth/old-handler.ts (inhibitory edge, weight=-2.3)
         </div>
         <div class="col-card">
           <h3>Layer 2: Learned retrieval brain</h3>
-          <p>A knowledge graph with corrections, toolcards, workflows, and episode anchors. Routing policy learns from real outcomes via reinforcement learning.</p>
-          <p style="margin-top:8px"><em>New. Paper-faithful. Tested (302 tests).</em></p>
+          <p>A knowledge graph with corrections, toolcards, workflows, episode anchors, and summary bridges. Routing policy learns from real outcomes via reinforcement learning, including learned seed choice.</p>
+          <p style="margin-top:8px"><em>New. Paper-faithful. Replay-gated. Actively tested.</em></p>
         </div>
       </div>
       <p class="dim">Sacred rule: the summary DAG is not the brain graph. They are complementary systems connected by bridge nodes.</p>
@@ -293,9 +293,9 @@ Vetoed: auth/old-handler.ts (inhibitory edge, weight=-2.3)
     <!-- ═══ HOW IT WORKS ═══ -->
     <section>
       <h2>How it works</h2>
-      <p>Every turn, the brain traverses a knowledge graph to find the best context for this specific query:</p>
+      <p>On qualifying turns, the brain traverses a knowledge graph to find the best context for this specific query:</p>
       <ol>
-        <li><strong>Seed</strong> &mdash; find start nodes by embedding similarity to the query</li>
+        <li><strong>Seed</strong> &mdash; find candidate start nodes by embedding similarity, then learn a stochastic choice from a virtual <code>__START__</code> head</li>
         <li><strong>Expand</strong> &mdash; follow outgoing edges to candidate nodes</li>
         <li><strong>Route</strong> &mdash; compute softmax policy over candidates + STOP</li>
         <li><strong>Fire</strong> &mdash; add chosen nodes to context (respecting budget)</li>
@@ -308,8 +308,8 @@ Vetoed: auth/old-handler.ts (inhibitory edge, weight=-2.3)
         <li><strong>Toolcards and playbooks</strong> &mdash; when/how to use specific tools</li>
         <li><strong>Transcript support</strong> &mdash; fresh tail + archival recall from the summary DAG</li>
       </ol>
-      <div class="trace-block">Brain v3 &middot; 4 seeds &middot; 3 hops &middot; 5 fired &middot; 1 veto &middot; 2048 chars &middot; trace bt_8QF2</div>
-      <p class="dim">This footer appears on every brain context injection, so you always know what happened.</p>
+      <div class="trace-block">Brain &middot; 4 seeds &middot; start deploy/ci-playbook.md &middot; 3 hops &middot; 5 fired &middot; 1 veto &middot; 2048 chars</div>
+      <p class="dim">Qualifying turns either use the brain or emit an explicit skip reason such as short static lookup, no embeddings, uninitialized, or budget too small.</p>
     </section>
 
     <!-- ═══ HOW IT LEARNS ═══ -->
@@ -323,19 +323,17 @@ Vetoed: auth/old-handler.ts (inhibitory edge, weight=-2.3)
         <tr><td>Scanner</td><td>Medium</td><td>Repeated patterns, workflow structure, co-firing nodes</td></tr>
         <tr><td>Teacher</td><td>Low</td><td>Off-path LLM evaluation (sees only what the router saw)</td></tr>
       </table>
-      <p>These signals update edge weights via the paper's REINFORCE algorithm. Positive outcomes strengthen the routing path that led to them. Negative outcomes weaken it. Over time, the brain converges on routing policies that surface the right context.</p>
+      <p>These signals update the route via the paper's REINFORCE algorithm. Positive outcomes strengthen the full path that led to the result, including learned seed choice. Negative outcomes weaken it. Labels attach to exact episodes when possible instead of only to the latest conversation turn.</p>
 
       <h3>Structural graph mutations</h3>
       <p>The brain doesn't just learn weights &mdash; it restructures itself:</p>
       <table>
         <tr><th>Mutation</th><th>When</th></tr>
-        <tr><td><strong>Split</strong></td><td>A node has mixed content and only part fires</td></tr>
-        <tr><td><strong>Merge</strong></td><td>Near-duplicate nodes always co-fire</td></tr>
         <tr><td><strong>Connect</strong></td><td>Successful episodes repeatedly bridge two regions</td></tr>
         <tr><td><strong>Prune</strong></td><td>Edge weight decayed near zero, no recent traversal</td></tr>
         <tr><td><strong>Inject</strong></td><td>Human correction or novel successful pattern</td></tr>
       </table>
-      <p class="dim">All mutations go through a replay gate before promotion. The live serving graph is never mutated during queries.</p>
+      <p class="dim">Connect, prune, and inject are evaluated on a candidate graph first. Human-positive regressions block promotion. The live serving graph is never mutated during queries.</p>
     </section>
 
     <!-- ═══ THE PAPER ═══ -->
@@ -363,9 +361,11 @@ Vetoed: auth/old-handler.ts (inhibitory edge, weight=-2.3)
       <div class="install-block">openclaw plugins install @jonathangu/openclawbrain</div>
       <p class="dim">Or link a local checkout: <code>openclaw plugins install --link /path/to/openclawbrain</code></p>
 
-      <h3>That's it</h3>
-      <p>The brain initializes automatically on first load. It discovers your workspace sources (markdown, code, configs, OpenClaw memory files), chunks them structure-aware, computes embeddings, and builds a seed graph.</p>
-      <div class="mono-block"><span style="color:var(--dim)">[brain]</span> Discovering sources...
+      <h3>Initialize once</h3>
+      <p>Learned retrieval needs an explicit init pass. The plugin then serves the last promoted pack and keeps learning off-path.</p>
+      <div class="mono-block">openclawbrain init /path/to/workspace
+
+<span style="color:var(--dim)">[brain]</span> Discovering sources...
 <span style="color:var(--dim)">[brain]</span> Found 47 sources
 <span style="color:var(--dim)">[brain]</span> Created 142 chunks
 <span style="color:var(--dim)">[brain]</span> Computing embeddings...
@@ -373,18 +373,19 @@ Vetoed: auth/old-handler.ts (inhibitory edge, weight=-2.3)
 <span style="color:var(--dim)">[brain]</span> Created 489 edges (134 sibling, 355 semantic)
 <span style="color:var(--green)">[brain]</span> <span style="color:var(--green)">Brain initialized: 142 nodes, 489 edges. Pack v1 promoted.</span></div>
 
-      <h3>Teach it</h3>
-      <p>Use <code>brain_teach</code> in any conversation to add corrections, toolcards, or workflows. Use <code>brain_status</code> to check health. Use <code>brain_trace</code> to see exactly why specific context was selected.</p>
+      <h3>Teach and inspect</h3>
+      <p>Use <code>brain_teach</code> in any conversation to add corrections, toolcards, or workflows. Use <code>openclawbrain status</code>, <code>trace</code>, <code>replay</code>, and <code>doctor</code> to inspect health, seed choice, replay gates, and mutation backlog.</p>
 
       <h3>Configuration</h3>
       <table>
         <tr><th>Variable</th><th>Default</th><th>What it does</th></tr>
-        <tr><td><code>BRAIN_ENABLED</code></td><td>true</td><td>Enable/disable the brain</td></tr>
-        <tr><td><code>BRAIN_MAX_HOPS</code></td><td>8</td><td>Max traversal depth per query</td></tr>
-        <tr><td><code>BRAIN_LEARNING_RATE</code></td><td>0.01</td><td>REINFORCE learning rate</td></tr>
-        <tr><td><code>BRAIN_TEACHER_ENABLED</code></td><td>true</td><td>Off-path teacher evaluation</td></tr>
-        <tr><td><code>BRAIN_MUTATIONS_ENABLED</code></td><td>true</td><td>Structural graph mutations</td></tr>
-        <tr><td><code>BRAIN_BUDGET_FRACTION</code></td><td>0.3</td><td>Context window fraction for brain</td></tr>
+        <tr><td><code>OPENCLAWBRAIN_ENABLED</code></td><td>true</td><td>Enable/disable the brain</td></tr>
+        <tr><td><code>OPENCLAWBRAIN_MAX_HOPS</code></td><td>8</td><td>Max traversal depth per query</td></tr>
+        <tr><td><code>OPENCLAWBRAIN_LEARNING_RATE</code></td><td>0.01</td><td>REINFORCE learning rate</td></tr>
+        <tr><td><code>OPENCLAWBRAIN_TEACHER_ENABLED</code></td><td>true</td><td>Off-path teacher evaluation</td></tr>
+        <tr><td><code>OPENCLAWBRAIN_MUTATIONS_ENABLED</code></td><td>true</td><td>Structural graph mutations</td></tr>
+        <tr><td><code>OPENCLAWBRAIN_SHADOW_MODE</code></td><td>false</td><td>Record routes without injecting learned context</td></tr>
+        <tr><td><code>OPENCLAWBRAIN_BUDGET_FRACTION</code></td><td>0.3</td><td>Context window fraction for brain</td></tr>
       </table>
       <p class="dim">All lossless-claw settings (<code>LCM_*</code>) continue to work unchanged.</p>
     </section>
@@ -398,7 +399,7 @@ Vetoed: auth/old-handler.ts (inhibitory edge, weight=-2.3)
         <li><a href="https://github.com/Martian-Engineering/lossless-claw">Upstream: lossless-claw</a> &mdash; the fork base</li>
         <li><a href="https://jonathangu.com">jonathangu.com</a></li>
       </ul>
-      <p class="dim">MIT License. TypeScript. 302 tests. Node 22+.</p>
+      <p class="dim">MIT License. TypeScript. Seed-learning, replay-gated packs, and operator traces. Node 22+.</p>
     </section>
 
   </main>
