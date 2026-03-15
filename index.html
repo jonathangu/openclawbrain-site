@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>OpenClawBrain</title>
-  <meta name="description" content="Forking lossless-claw and adding learning." />
+  <meta name="description" content="A learned retrieval brain for OpenClaw. Fork of lossless-claw with paper-faithful reinforcement learning for context routing." />
   <style>
     :root {
       color-scheme: dark;
@@ -14,6 +14,8 @@
       --muted: #b3b3b3;
       --line: #262626;
       --accent: #7dd3fc;
+      --green: #86efac;
+      --dim: #737373;
     }
     * { box-sizing: border-box; }
     body {
@@ -33,6 +35,7 @@
       border: 1px solid var(--line);
       border-radius: 18px;
       padding: 28px;
+      margin-bottom: 20px;
     }
     h1 {
       font-size: clamp(2.25rem, 7vw, 4.5rem);
@@ -40,39 +43,143 @@
       margin: 0 0 18px;
       letter-spacing: -0.04em;
     }
+    h2 {
+      font-size: 1.15rem;
+      margin: 28px 0 12px;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
     p {
       margin: 0 0 16px;
       font-size: 1.05rem;
     }
-    .muted {
-      color: var(--muted);
+    .tagline {
+      font-size: 1.2rem;
+      margin-bottom: 24px;
     }
+    .muted { color: var(--muted); }
+    .dim { color: var(--dim); font-size: 0.9rem; }
     ul {
-      margin: 22px 0;
+      margin: 12px 0 20px;
       padding-left: 1.2rem;
     }
-    li { margin: 0 0 10px; }
+    li { margin: 0 0 8px; }
     a {
       color: var(--accent);
       text-decoration: none;
     }
     a:hover { text-decoration: underline; }
+    code {
+      font-family: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+      font-size: 0.92em;
+      background: #1a1a1a;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .install-block {
+      background: #0d0d0d;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-family: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+      font-size: 0.95rem;
+      color: var(--green);
+    }
+    .footer-trace {
+      font-family: ui-monospace, "SF Mono", monospace;
+      font-size: 0.85rem;
+      color: var(--dim);
+      margin-top: 20px;
+      padding: 10px 14px;
+      background: #0d0d0d;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    @media (max-width: 600px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+    .col-card {
+      background: #0d0d0d;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .col-card h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+    .col-card p {
+      font-size: 0.92rem;
+      margin: 0;
+      color: var(--muted);
+    }
   </style>
 </head>
 <body>
   <main>
     <div class="card">
-      <p class="muted">Total reset.</p>
       <h1>OpenClawBrain</h1>
-      <p>I'm forking lossless-claw and adding learning.</p>
-      <p>Keep lossless context engineering, but add a graph that actually learns what context to route to the model over time.</p>
+      <p class="tagline">A learned retrieval brain for <a href="https://github.com/openclaw/openclaw">OpenClaw</a>.</p>
+      <p>Your OpenClaw agent should not relearn the same lesson twice.</p>
+      <p>OpenClawBrain is a fork of <a href="https://github.com/Martian-Engineering/lossless-claw">lossless-claw</a> that adds a paper-faithful reinforcement learning layer for context routing. It combines lossless transcript memory with a knowledge graph whose routing policy learns from outcomes.</p>
+
+      <div class="install-block">openclaw plugins install @jonathangu/openclawbrain</div>
+
+      <h2>Two layers, one plugin</h2>
+      <div class="two-col">
+        <div class="col-card">
+          <h3>Lossless transcript memory</h3>
+          <p>Every message persisted. Older chunks summarized into a DAG. Nothing lost. Inherited from lossless-claw.</p>
+        </div>
+        <div class="col-card">
+          <h3>Learned retrieval brain</h3>
+          <p>A knowledge graph whose routing policy learns what context matters, from real usage signals.</p>
+        </div>
+      </div>
+
+      <h2>How it learns</h2>
       <ul>
-        <li>policy-learning over edges</li>
-        <li>async teacher + human labels</li>
-        <li>structural graph mutations</li>
+        <li><strong>Policy-learning over edges</strong> &mdash; softmax routing with full-trajectory REINFORCE (not one-step)</li>
+        <li><strong>Four label sources</strong> &mdash; human corrections &gt; task outcomes &gt; structural patterns &gt; async teacher</li>
+        <li><strong>Structural graph mutations</strong> &mdash; split, merge, prune, connect, inject &mdash; validated by replay gates</li>
+        <li><strong>Immutable serving packs</strong> &mdash; learning never corrupts live serving</li>
       </ul>
-      <p>Make context engineering adaptive instead of static.</p>
-      <p><a href="./jonathan-gu-2016-reinforcement-learning-paper.pdf">Jonathan Gu — Reinforcement Learning (Econometrics Field, July 2016)</a></p>
+
+      <h2>What the agent gets</h2>
+      <p>Every turn, the brain assembles context in four sections:</p>
+      <ol style="margin:8px 0 16px; padding-left:1.3rem;">
+        <li>Correction cards (human-taught fixes, highest priority)</li>
+        <li>Route-selected evidence (nodes the learned policy picked)</li>
+        <li>Toolcards and playbooks (when/how to use specific tools)</li>
+        <li>Transcript support (fresh tail + archival recall from the summary DAG)</li>
+      </ol>
+      <div class="footer-trace">Brain v3 &middot; 4 seeds &middot; 3 hops &middot; 5 fired &middot; 1 veto &middot; 2048 chars &middot; trace bt_8QF2</div>
+
+      <h2>Three tools</h2>
+      <ul>
+        <li><code>brain_teach</code> &mdash; teach the brain a correction or pattern</li>
+        <li><code>brain_status</code> &mdash; health card, pack version, learning stats</li>
+        <li><code>brain_trace</code> &mdash; full decision trace for any query</li>
+      </ul>
+
+      <h2>The paper</h2>
+      <p>The learning algorithm implements Lemma 6.1 from:</p>
+      <p><a href="./jonathan-gu-2016-reinforcement-learning-paper.pdf">Jonathan Gu &mdash; Reinforcement Learning (Econometrics Field, July 2016)</a></p>
+      <p class="dim">Corrects Williams (1992) one-step REINFORCE to a full-trajectory update that assigns credit to every routing decision in the episode.</p>
+
+      <h2>Links</h2>
+      <ul>
+        <li><a href="https://github.com/jonathangu/openclawbrain">GitHub</a> &mdash; source code, SPEC.md, ARCHITECTURE.md</li>
+        <li><a href="https://github.com/Martian-Engineering/lossless-claw">Upstream: lossless-claw</a> &mdash; the fork base</li>
+        <li><a href="https://jonathangu.com">jonathangu.com</a></li>
+      </ul>
     </div>
   </main>
 </body>
