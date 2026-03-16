@@ -3,405 +3,102 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OpenClawBrain &mdash; A learned retrieval brain for OpenClaw</title>
-  <meta name="description" content="Your OpenClaw agent should not relearn the same lesson twice. OpenClawBrain combines lossless transcript memory with a learned routing graph, seed-head policy, replay-gated packs, and operator traces." />
-  <meta property="og:title" content="OpenClawBrain" />
-  <meta property="og:description" content="A learned retrieval brain for OpenClaw with lossless transcript memory, learned seed routing, replay-gated packs, and decision traces." />
+  <title>OpenClawBrain — Your Agent's Second Brain</title>
+  <meta name="description" content="Your OpenClaw agent should not relearn the same lesson twice. Install in 30 seconds." />
+  <meta property="og:title" content="OpenClawBrain — Your Agent's Second Brain" />
+  <meta property="og:description" content="Install in 30 seconds. Your agent remembers corrections forever." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
   <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0a0a0a;
-      --panel: #111111;
-      --text: #f5f5f5;
-      --muted: #b3b3b3;
-      --line: #262626;
-      --accent: #7dd3fc;
-      --green: #86efac;
-      --dim: #737373;
-      --red: #fca5a5;
-      --yellow: #fde68a;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.55;
-    }
-    main {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 60px 24px 96px;
-    }
-    section {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 28px;
-      margin-bottom: 20px;
-    }
-    h1 {
-      font-size: clamp(2.5rem, 7vw, 4.5rem);
-      line-height: 0.95;
-      margin: 0 0 18px;
-      letter-spacing: -0.04em;
-    }
-    h2 {
-      font-size: 1.3rem;
-      margin: 0 0 14px;
-      color: var(--accent);
-      letter-spacing: 0.01em;
-    }
-    h3 {
-      font-size: 1.05rem;
-      margin: 20px 0 8px;
-    }
-    p { margin: 0 0 14px; font-size: 1.05rem; }
-    .tagline { font-size: 1.25rem; margin-bottom: 20px; }
+    :root { --bg: #0a0a0a; --panel: #111111; --text: #f5f5f5; --muted: #a3a3a3; --line: #262626; --accent: #38bdf8; --green: #4ade80; --dim: #737373; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    main { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+    section { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+    h1 { font-size: clamp(2.5rem, 8vw, 4rem); line-height: 1.05; margin: 0 0 16px; }
+    h2 { font-size: 1.4rem; margin: 0 0 12px; color: var(--accent); }
+    h3 { font-size: 1.1rem; margin: 20px 0 8px; }
+    p { margin: 0 0 14px; }
+    .tagline { font-size: 1.4rem; color: var(--green); margin-bottom: 24px; font-weight: 500; }
+    .hero-sub { font-size: 1.05rem; color: var(--muted); margin: 20px 0; }
     .muted { color: var(--muted); }
     .dim { color: var(--dim); font-size: 0.9rem; }
     .green { color: var(--green); }
-    .red { color: var(--red); }
-    ul, ol { margin: 10px 0 16px; padding-left: 1.2rem; }
-    li { margin: 0 0 7px; }
+    ul, ol { margin: 12px 0 16px; padding-left: 1.4rem; }
+    li { margin: 0 0 8px; }
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    code {
-      font-family: ui-monospace, "SF Mono", "Cascadia Code", monospace;
-      font-size: 0.92em;
-      background: #1a1a1a;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    .mono-block {
-      background: #0d0d0d;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 14px 18px;
-      margin: 14px 0;
-      font-family: ui-monospace, "SF Mono", "Cascadia Code", monospace;
-      font-size: 0.92rem;
-      line-height: 1.5;
-      overflow-x: auto;
-      white-space: pre;
-    }
-    .install-block {
-      background: #0d0d0d;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 14px 18px;
-      margin: 14px 0;
-      font-family: ui-monospace, "SF Mono", "Cascadia Code", monospace;
-      font-size: 1rem;
-      color: var(--green);
-    }
-    .hero-links {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin: 16px 0 10px;
-    }
-    .hero-link {
-      display: inline-block;
-      padding: 11px 14px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: #0d0d0d;
-      color: var(--text);
-      font-weight: 600;
-    }
-    .hero-link--paper {
-      border-color: #3b2f06;
-      background: #171306;
-      color: var(--yellow);
-    }
-    .trace-block {
-      font-family: ui-monospace, "SF Mono", monospace;
-      font-size: 0.85rem;
-      color: var(--dim);
-      margin: 14px 0;
-      padding: 10px 14px;
-      background: #0d0d0d;
-      border-radius: 8px;
-      border: 1px solid var(--line);
-    }
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin: 16px 0;
-    }
-    @media (max-width: 640px) {
-      .two-col { grid-template-columns: 1fr; }
-    }
-    .col-card {
-      background: #0d0d0d;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 16px;
-    }
-    .col-card h3 { margin: 0 0 8px; font-size: 1rem; }
-    .col-card p { font-size: 0.92rem; margin: 0; color: var(--muted); }
-    .example-label {
-      display: inline-block;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--dim);
-      margin-bottom: 6px;
-    }
-    .example-user, .example-brain {
-      padding: 12px 16px;
-      border-radius: 10px;
-      margin: 8px 0;
-      font-size: 0.95rem;
-    }
-    .example-user {
-      background: #1a1a2e;
-      border-left: 3px solid var(--accent);
-    }
-    .example-brain {
-      background: #0d1a0d;
-      border-left: 3px solid var(--green);
-    }
-    .math-block {
-      background: #0d0d0d;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 18px 20px;
-      margin: 14px 0;
-      font-family: ui-monospace, "SF Mono", monospace;
-      font-size: 0.95rem;
-      text-align: center;
-      color: var(--yellow);
-    }
-    hr {
-      border: none;
-      border-top: 1px solid var(--line);
-      margin: 24px 0;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 12px 0 16px;
-      font-size: 0.95rem;
-    }
-    th, td {
-      text-align: left;
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--line);
-    }
-    th { color: var(--muted); font-weight: 500; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    code { font-family: "SF Mono", monospace; font-size: 0.9em; background: #1a1a1a; padding: 2px 6px; border-radius: 4px; }
+    .cta-box { background: linear-gradient(135deg, #0c1a0c 0%, #0a1510 100%); border: 2px solid var(--green); border-radius: 14px; padding: 24px; margin: 20px 0; text-align: center; }
+    .install-cmd { font-family: "SF Mono", monospace; font-size: 1.1rem; color: var(--green); background: #0d0d0d; padding: 14px 20px; border-radius: 8px; display: inline-block; margin: 8px 0; }
+    .init-cmd { font-family: "SF Mono", monospace; font-size: 1rem; color: var(--accent); background: #0d0d0d; padding: 12px 18px; border-radius: 8px; display: inline-block; margin: 8px 0; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+    .benefit-card { background: #0d0d0d; border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+    .benefit-card h3 { margin: 0 0 8px; color: var(--green); }
+    .benefit-card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+    .hero-links { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }
+    .hero-link { display: inline-block; padding: 12px 20px; border-radius: 999px; background: #1a1a1a; color: var(--text); font-weight: 600; border: 1px solid var(--line); }
+    .hero-link--green { background: #14532d; border-color: #166534; color: var(--green); }
+    .hero-link--paper { background: #451a03; border-color: #78350f; color: #facc15; }
   </style>
 </head>
 <body>
   <main>
-
-    <!-- ═══ HERO ═══ -->
-    <section>
+    <section style="text-align:center;padding:40px 28px">
       <h1>OpenClawBrain</h1>
-      <p class="tagline">Your OpenClaw agent should not relearn the same lesson twice.</p>
-      <p>OpenClawBrain is a learned retrieval brain for <a href="https://github.com/openclaw/openclaw">OpenClaw</a>. It's the active v2 fork of <a href="https://github.com/Martian-Engineering/lossless-claw">lossless-claw</a> with a paper-faithful reinforcement-learning layer for context routing.</p>
-      <p>It combines <strong>lossless transcript memory</strong>, a <strong>learned routing graph</strong>, a <strong>seed-head policy over graph regions</strong>, and <strong>immutable promoted packs</strong> that are replay-gated before serving.</p>
-      <p><strong>Featured paper:</strong> <a href="https://openclawbrain.ai/jonathan-gu-2016-reinforcement-learning-paper.pdf">Jonathan Gu's 2016 reinforcement-learning paper</a>. It lays out the corrected policy-gradient update that informs the project's learning direction.</p>
-      <p><strong>Start with the <a href="https://github.com/jonathangu/openclawbrain">GitHub repo</a></strong> &mdash; it is a good front page for the project and has the README, SPEC, and architecture notes.</p>
+      <p class="tagline">Your agent shouldn't relearn the same lesson twice.</p>
+      <p class="hero-sub">Give your OpenClaw agent a second brain that remembers corrections, learns from outcomes, and surfaces the right context every time.</p>
+      <div class="cta-box">
+        <h3 style="color:var(--green);margin-bottom:12px">Get Started in 30 Seconds</h3>
+        <div class="install-cmd">openclaw plugins install @jonathangu/openclawbrain</div>
+        <div class="init-cmd">openclawbrain init /path/to/your/project</div>
+        <p class="dim" style="margin-top:12px">That's it. The brain initializes and starts learning.</p>
+      </div>
       <div class="hero-links">
-        <a class="hero-link hero-link--paper" href="https://openclawbrain.ai/jonathan-gu-2016-reinforcement-learning-paper.pdf">Read the 2016 paper</a>
-        <a class="hero-link" href="https://github.com/jonathangu/openclawbrain">Open the GitHub repo</a>
+        <a class="hero-link hero-link--green" href="https://github.com/jonathangu/openclawbrain">GitHub</a>
+        <a class="hero-link" href="#how">How it works</a>
+        <a class="hero-link hero-link--paper" href="jonathan-gu-2016-reinforcement-learning-paper.pdf">The Paper</a>
       </div>
-      <div class="install-block">openclaw plugins install @jonathangu/openclawbrain</div>
-      <p class="dim">One plugin, explicit init, immutable packs, and decision traces on routed turns.</p>
+      <p class="dim" style="margin-top:16px">MIT License - TypeScript - 335 tests passing</p>
     </section>
 
-    <!-- ═══ THE PROBLEM ═══ -->
     <section>
-      <h2>The problem</h2>
-      <p>AI coding agents repeat the same mistakes. You correct them, they forget. You teach them a pattern, it's gone next session. You figure out that <code>gh pr create</code> works better than <code>hub</code>, but the agent keeps suggesting <code>hub</code>.</p>
-      <p>Context management tools like lossless-claw solve the <em>memory</em> problem &mdash; they never lose what happened. But they don't solve the <em>learning</em> problem &mdash; knowing what context to surface for a given task.</p>
-      <p>OpenClawBrain solves both.</p>
-    </section>
-
-    <!-- ═══ REAL EXAMPLES ═══ -->
-    <section>
-      <h2>Real examples</h2>
-
-      <h3>Teaching a correction</h3>
-      <div class="example-user">
-        <span class="example-label">You</span><br>
-        "Don't use hub for PRs, use <code>gh pr create</code>"
-      </div>
-      <div class="example-brain">
-        <span class="example-label">Brain</span><br>
-        Creates a high-trust correction node. Next time the agent considers PR tools, the brain surfaces: <em>"Use gh pr create, not hub"</em> as priority context.
-      </div>
-
-      <h3>Learning from outcomes</h3>
-      <div class="example-user">
-        <span class="example-label">Session 1</span><br>
-        Agent deploys using approach A. Deploy fails. <span class="red">z = -0.5</span>
-      </div>
-      <div class="example-user">
-        <span class="example-label">Session 2</span><br>
-        Agent deploys using approach B. Deploy succeeds. <span class="green">z = +0.5</span>
-      </div>
-      <div class="example-brain">
-        <span class="example-label">Session 3+</span><br>
-        The brain's routing policy has learned: edges leading to approach B's context are strengthened. Approach A's edges are weakened. The agent surfaces B's context first.
-      </div>
-
-      <h3>Using brain_teach</h3>
-      <div class="mono-block"><span style="color:var(--accent)">brain_teach</span> instruction="For deployment errors, always check CI logs first"
-               kind="correction" tags=["deploy", "ci"]
-
-<span style="color:var(--green)">Brain will remember: "For deployment errors, always check CI logs first"</span>
-<span style="color:var(--dim)">Created node bn_a8f3c2d1 (correction, trust=human)</span></div>
-
-      <h3>Inspecting a decision</h3>
-      <div class="mono-block"><span style="color:var(--accent)">brain_trace</span>
-
-Query: "fix the failing test in auth module"
-Seeds: auth/login.ts (0.91), auth/README.md (0.87), test/auth.test.ts (0.85)
-Hop 1: auth/login.ts → auth/middleware.ts (p=0.72, STOP=0.08)
-Hop 2: auth/middleware.ts → STOP (p=0.61)
-Fired: auth/login.ts, auth/middleware.ts, correction:"check JWT expiry first"
-Vetoed: auth/old-handler.ts (inhibitory edge, weight=-2.3)
-
-<span style="color:var(--dim)">Brain · 3 seeds · start auth/login.ts · 2 hops · 3 fired · 1 veto · 1847 chars</span></div>
-    </section>
-
-    <!-- ═══ TWO LAYERS ═══ -->
-    <section>
-      <h2>Two layers, one plugin</h2>
+      <h2>Why do you need this?</h2>
+      <p>Your AI coding agent keeps making the same mistakes. You correct it, it forgets. You teach it a pattern, it's gone tomorrow. That's not intelligence - that's expensive forgetfulness.</p>
       <div class="two-col">
-        <div class="col-card">
-          <h3>Layer 1: Lossless transcript memory</h3>
-          <p>Every message persisted in SQLite. Older chunks summarized into a DAG. Nothing ever lost. Agents can grep, describe, and expand any past conversation.</p>
-          <p style="margin-top:8px"><em>Inherited from lossless-claw. Battle-tested.</em></p>
-        </div>
-        <div class="col-card">
-          <h3>Layer 2: Learned retrieval brain</h3>
-          <p>A knowledge graph with corrections, toolcards, workflows, episode anchors, and summary bridges. Routing policy learns from real outcomes via reinforcement learning, including learned seed choice.</p>
-          <p style="margin-top:8px"><em>New. Paper-faithful. Replay-gated. Actively tested.</em></p>
-        </div>
+        <div class="benefit-card"><h3>Corrections stick forever</h3><p>Use <code>brain_teach</code> once, and the brain surfaces that correction as priority context every time.</p></div>
+        <div class="benefit-card"><h3>Learns from outcomes</h3><p>Deploy fails? Test passes? The brain strengthens edges that led to good outcomes, weakens bad ones.</p></div>
+        <div class="benefit-card"><h3>Smart context selection</h3><p>Instead of dumping everything, the brain retrieves exactly what's relevant for this specific query.</p></div>
+        <div class="benefit-card"><h3>Full transparency</h3><p>Every decision traced. <code>brain_trace</code> shows seed choice, hops, fired nodes, and vetos.</p></div>
       </div>
-      <p class="dim">Sacred rule: the summary DAG is not the brain graph. They are complementary systems connected by bridge nodes.</p>
     </section>
 
-    <!-- ═══ HOW IT WORKS ═══ -->
-    <section>
+    <section id="how">
       <h2>How it works</h2>
-      <p>On qualifying turns, the brain traverses a knowledge graph to find the best context for this specific query:</p>
-      <ol>
-        <li><strong>Seed</strong> &mdash; find candidate start nodes by embedding similarity, then learn a stochastic choice from a virtual <code>__START__</code> head</li>
-        <li><strong>Expand</strong> &mdash; follow outgoing edges to candidate nodes</li>
-        <li><strong>Route</strong> &mdash; compute softmax policy over candidates + STOP</li>
-        <li><strong>Fire</strong> &mdash; add chosen nodes to context (respecting budget)</li>
-        <li><strong>Repeat</strong> until STOP chosen, budget exhausted, or max hops reached</li>
-      </ol>
-      <p>The assembled context has four sections, by priority:</p>
-      <ol>
-        <li><strong>Correction cards</strong> &mdash; human-taught fixes, always surface first</li>
-        <li><strong>Route-selected evidence</strong> &mdash; nodes the learned policy picked</li>
-        <li><strong>Toolcards and playbooks</strong> &mdash; when/how to use specific tools</li>
-        <li><strong>Transcript support</strong> &mdash; fresh tail + archival recall from the summary DAG</li>
-      </ol>
-      <div class="trace-block">Brain &middot; 4 seeds &middot; start deploy/ci-playbook.md &middot; 3 hops &middot; 5 fired &middot; 1 veto &middot; 2048 chars</div>
-      <p class="dim">Qualifying turns either use the brain or emit an explicit skip reason such as short static lookup, no embeddings, uninitialized, or budget too small.</p>
+      <div class="benefit-card" style="margin-bottom:12px"><h3>1. Install</h3><p><code>openclaw plugins install @jonathangu/openclawbrain</code></p></div>
+      <div class="benefit-card" style="margin-bottom:12px"><h3>2. Initialize</h3><p><code>openclawbrain init /path/to/workspace</code></p><p class="dim">Discovers your files, computes embeddings, builds graph, promotes first pack.</p></div>
+      <div class="benefit-card"><h3>3. Teach</h3><p><code>brain_teach instruction="Use gh not hub for PRs"</code></p><p class="dim">That's it. The brain remembers forever.</p></div>
     </section>
 
-    <!-- ═══ HOW IT LEARNS ═══ -->
     <section>
-      <h2>How it learns</h2>
-      <p>After each interaction, the brain harvests reward signals from four sources:</p>
-      <table>
-        <tr><th>Source</th><th>Trust</th><th>Examples</th></tr>
-        <tr><td>Human</td><td>Highest</td><td>"No, that's wrong", "Perfect!", <code>brain_teach</code> corrections</td></tr>
-        <tr><td>Self</td><td>High</td><td>Tool success/failure, test pass/fail, deploy result</td></tr>
-        <tr><td>Scanner</td><td>Medium</td><td>Repeated patterns, workflow structure, co-firing nodes</td></tr>
-        <tr><td>Teacher</td><td>Low</td><td>Off-path LLM evaluation (sees only what the router saw)</td></tr>
-      </table>
-      <p>These signals update the route via the paper's REINFORCE algorithm. Positive outcomes strengthen the full path that led to the result, including learned seed choice. Negative outcomes weaken it. Labels attach to exact episodes when possible instead of only to the latest conversation turn.</p>
-
-      <h3>Structural graph mutations</h3>
-      <p>The brain doesn't just learn weights &mdash; it restructures itself:</p>
-      <table>
-        <tr><th>Mutation</th><th>When</th></tr>
-        <tr><td><strong>Connect</strong></td><td>Successful episodes repeatedly bridge two regions</td></tr>
-        <tr><td><strong>Prune</strong></td><td>Edge weight decayed near zero, no recent traversal</td></tr>
-        <tr><td><strong>Inject</strong></td><td>Human correction or novel successful pattern</td></tr>
-      </table>
-      <p class="dim">Connect, prune, and inject are evaluated on a candidate graph first. Human-positive regressions block promotion. The live serving graph is never mutated during queries.</p>
-    </section>
-
-    <!-- ═══ THE PAPER ═══ -->
-    <section>
-      <h2>The paper</h2>
-      <p>The routing policy update implements <strong>Lemma 6.1</strong> from:</p>
-      <p style="font-size:1.1rem"><a href="./jonathan-gu-2016-reinforcement-learning-paper.pdf">Jonathan Gu &mdash; <em>Reinforcement Learning</em> (Econometrics Field, July 2016)</a></p>
-      <div class="math-block">&part;/&part;&rho; v<sub>&rho;</sub>(s<sub>t</sub>) = E[ z &middot; &Sigma;<sub>l=t</sub><sup>T</sup> &part;log P<sub>&rho;</sub>(a<sub>l</sub>|s<sub>l</sub>) / &part;&rho; ]</div>
-      <p>The key insight: Williams (1992) REINFORCE only looks one step ahead &mdash; "what is the best single move?" The corrected update sums over the <strong>entire trajectory</strong> from step t to terminal state T &mdash; "given everything that follows, what should I have done?"</p>
-      <p>This assigns credit to <em>every routing decision</em> in the episode, not just the last one. A good deployment outcome strengthens the entire path that led to the right context being surfaced.</p>
-
-      <h3>Paper assumptions honored in the implementation</h3>
+      <h2>What you get</h2>
       <ul>
-        <li><strong>Assumption 1:</strong> Finite-time game &mdash; traversal bounded by <code>maxHops</code> (default: 8)</li>
-        <li><strong>Assumption 2:</strong> Reward only at terminal state &mdash; no intermediate rewards during traversal</li>
-        <li><strong>Stochastic policy:</strong> Softmax over edges + STOP &mdash; <em>never</em> argmax, even at low temperature</li>
-        <li><strong>Monte Carlo rollouts:</strong> Each traversal is a complete episode from seed to STOP</li>
+        <li><strong>Lossless transcript memory</strong> - every conversation persisted</li>
+        <li><strong>Learned routing graph</strong> - knows which context to surface</li>
+        <li><strong>Immediate corrections</strong> - brain_teach works instantly</li>
+        <li><strong>Paper-faithful RL</strong> - REINFORCE over full trajectories (Gu 2016)</li>
+        <li><strong>Replay-gated packs</strong> - no regressions, mutations tested first</li>
+        <li><strong>Fail-open design</strong> - serving continues if worker dies</li>
       </ul>
     </section>
 
-    <!-- ═══ INSTALL ═══ -->
     <section>
-      <h2>Get started</h2>
-      <h3>Install</h3>
-      <div class="install-block">openclaw plugins install @jonathangu/openclawbrain</div>
-      <p class="dim">Or link a local checkout: <code>openclaw plugins install --link /path/to/openclawbrain</code></p>
-
-      <h3>Initialize once</h3>
-      <p>Learned retrieval needs an explicit init pass. The plugin then serves the last promoted pack and keeps learning off-path.</p>
-      <div class="mono-block">openclawbrain init /path/to/workspace
-
-<span style="color:var(--dim)">[brain]</span> Discovering sources...
-<span style="color:var(--dim)">[brain]</span> Found 47 sources
-<span style="color:var(--dim)">[brain]</span> Created 142 chunks
-<span style="color:var(--dim)">[brain]</span> Computing embeddings...
-<span style="color:var(--dim)">[brain]</span> Embedded 142/142 nodes
-<span style="color:var(--dim)">[brain]</span> Created 489 edges (134 sibling, 355 semantic)
-<span style="color:var(--green)">[brain]</span> <span style="color:var(--green)">Brain initialized: 142 nodes, 489 edges. Pack v1 promoted.</span></div>
-
-      <h3>Teach and inspect</h3>
-      <p>Use <code>brain_teach</code> in any conversation to add corrections, toolcards, or workflows. Use <code>openclawbrain status</code>, <code>trace</code>, <code>replay</code>, and <code>doctor</code> to inspect health, seed choice, replay gates, and mutation backlog.</p>
-
-      <h3>Configuration</h3>
-      <table>
-        <tr><th>Variable</th><th>Default</th><th>What it does</th></tr>
-        <tr><td><code>OPENCLAWBRAIN_ENABLED</code></td><td>true</td><td>Enable/disable the brain</td></tr>
-        <tr><td><code>OPENCLAWBRAIN_MAX_HOPS</code></td><td>8</td><td>Max traversal depth per query</td></tr>
-        <tr><td><code>OPENCLAWBRAIN_LEARNING_RATE</code></td><td>0.01</td><td>REINFORCE learning rate</td></tr>
-        <tr><td><code>OPENCLAWBRAIN_TEACHER_ENABLED</code></td><td>true</td><td>Off-path teacher evaluation</td></tr>
-        <tr><td><code>OPENCLAWBRAIN_MUTATIONS_ENABLED</code></td><td>true</td><td>Structural graph mutations</td></tr>
-        <tr><td><code>OPENCLAWBRAIN_SHADOW_MODE</code></td><td>false</td><td>Record routes without injecting learned context</td></tr>
-        <tr><td><code>OPENCLAWBRAIN_BUDGET_FRACTION</code></td><td>0.3</td><td>Context window fraction for brain</td></tr>
-      </table>
-      <p class="dim">All lossless-claw settings (<code>LCM_*</code>) continue to work unchanged.</p>
+      <h2>Get started now</h2>
+      <p>One plugin. One init. Then your agent learns.</p>
+      <div class="install-cmd" style="font-size:1rem">openclaw plugins install @jonathangu/openclawbrain</div>
+      <p class="dim" style="margin-top:16px">Questions? <a href="https://github.com/jonathangu/openclawbrain">Read the full README</a></p>
     </section>
-
-    <!-- ═══ LINKS ═══ -->
-    <section>
-      <h2>Links</h2>
-      <ul>
-        <li><a href="https://github.com/jonathangu/openclawbrain">GitHub</a> &mdash; source code, README, SPEC.md, ARCHITECTURE.md</li>
-        <li><a href="./jonathan-gu-2016-reinforcement-learning-paper.pdf">The paper</a> &mdash; Gu (2016), Reinforcement Learning</li>
-        <li><a href="https://github.com/Martian-Engineering/lossless-claw">Upstream: lossless-claw</a> &mdash; the fork base</li>
-        <li><a href="https://jonathangu.com">jonathangu.com</a></li>
-      </ul>
-      <p class="dim">MIT License. TypeScript. Seed-learning, replay-gated packs, and operator traces. Node 22+.</p>
-    </section>
-
   </main>
 </body>
 </html>
