@@ -41,6 +41,14 @@
     .hero-link { display: inline-block; padding: 12px 20px; border-radius: 999px; background: #1a1a1a; color: var(--text); font-weight: 600; border: 1px solid var(--line); }
     .hero-link--green { background: #14532d; border-color: #166534; color: var(--green); }
     .hero-link--paper { background: #451a03; border-color: #78350f; color: #facc15; }
+    .demo-chat { display: grid; gap: 12px; margin-top: 16px; }
+    .chat-line { border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; background: #121212; }
+    .chat-line--user { border-color: #1d4ed8; background: #0b1220; }
+    .chat-line--agent { border-color: #166534; background: #0b1a12; }
+    .chat-speaker { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+    .chat-line--user .chat-speaker { color: #93c5fd; }
+    .chat-line--agent .chat-speaker { color: #86efac; }
+    .chat-text { color: var(--text); margin: 0; }
   </style>
 </head>
 <body>
@@ -87,10 +95,34 @@
     <section>
       <h2>What a real correction looks like</h2>
       <div class="benefit-card">
-        <p><strong>Ask:</strong> "How should you answer me?"</p>
-        <p><strong>Correct:</strong> "Wrong - keep it concise, use bullets, and end with the next action."</p>
-        <p><strong>Ask again:</strong> the agent can follow the corrected preference on the next turn.</p>
-        <p class="dim"><code>brain_trace</code> lets you inspect why that correction won.</p>
+        <p>A real interaction is simple: the user says something, the agent gets it wrong, the user corrects it, and the next answer gets better.</p>
+        <div class="demo-chat">
+          <div class="chat-line chat-line--user">
+            <span class="chat-speaker">User says</span>
+            <p class="chat-text">How should you answer me?</p>
+          </div>
+          <div class="chat-line chat-line--agent">
+            <span class="chat-speaker">Agent says</span>
+            <p class="chat-text">I’ll answer in long freeform paragraphs.</p>
+          </div>
+          <div class="chat-line chat-line--user">
+            <span class="chat-speaker">User says</span>
+            <p class="chat-text">Wrong — keep it concise, use bullets, and end with the next action.</p>
+          </div>
+          <div class="chat-line chat-line--agent">
+            <span class="chat-speaker">Agent says</span>
+            <p class="chat-text">Got it. I’ll keep answers concise, use bullets, and end with the next action.</p>
+          </div>
+          <div class="chat-line chat-line--user">
+            <span class="chat-speaker">User says</span>
+            <p class="chat-text">How should you answer me?</p>
+          </div>
+          <div class="chat-line chat-line--agent">
+            <span class="chat-speaker">Agent says</span>
+            <p class="chat-text">Concisely, with bullets, and ending with the next action.</p>
+          </div>
+        </div>
+        <p class="dim" style="margin-top:14px"><code>brain_trace</code> lets you inspect why that correction won.</p>
       </div>
     </section>
 
