@@ -65,9 +65,9 @@
 
     <section>
       <h2>Why do you need this?</h2>
-      <p>You teach the agent something once. It forgets. You explain the right rollback rule, the preferred PR command, or the house style for a recurring workflow, and you pay to teach the same lesson again next week. That is not intelligence. That is expensive forgetfulness.</p>
+      <p>You teach the agent something once. It forgets. You tell it to keep answers concise, use bullets, and end with the next action, and before long you are teaching the same lesson again. That is not intelligence. That is expensive forgetfulness.</p>
       <div class="two-col">
-        <div class="benefit-card"><h3>Corrections stop disappearing</h3><p>When you correct the agent in normal work, that lesson can become durable memory instead of a one-session comment that evaporates.</p></div>
+        <div class="benefit-card"><h3>Corrections can win immediately</h3><p>Just correct the agent in plain language, and that lesson can become durable memory instead of a one-session comment that evaporates.</p></div>
         <div class="benefit-card"><h3>Context becomes task-specific</h3><p>The goal is not to dump every vaguely related note into the prompt. The goal is to bring back the few pieces most likely to help this task right now.</p></div>
         <div class="benefit-card"><h3>Repeated workflows get sharper</h3><p>When one path leads to a good outcome and another leads to a bad one, the routing policy learns from that difference over time.</p></div>
         <div class="benefit-card"><h3>It shows its work</h3><p>Commands like <code>openclawbrain trace</code> and <code>openclawbrain doctor</code> let you inspect what surfaced and why.</p></div>
@@ -82,6 +82,16 @@
       <div class="benefit-card" style="margin-bottom:12px"><h3>3. Surface only the best pieces at prompt time</h3><p>The goal is not maximum recall at any cost. The goal is to hand the agent the few pieces of context most likely to help right now.</p></div>
       <div class="benefit-card" style="margin-bottom:12px"><h3>4. Learn from outcomes over time</h3><p>If one retrieval path helps produce a good outcome, it grows stronger. If another path wastes time or leads to failure, it loses weight.</p></div>
       <div class="benefit-card"><h3>5. Trace why the system chose what it chose</h3><p>This is not supposed to be magical. You can inspect the route, the surfaced memory, and the decision trail behind an answer.</p></div>
+    </section>
+
+    <section>
+      <h2>What a real correction looks like</h2>
+      <div class="benefit-card">
+        <p><strong>Ask:</strong> "How should you answer me?"</p>
+        <p><strong>Correct:</strong> "Wrong - keep it concise, use bullets, and end with the next action."</p>
+        <p><strong>Ask again:</strong> the agent can follow the corrected preference on the next turn.</p>
+        <p class="dim"><code>brain_trace</code> lets you inspect why that correction won.</p>
+      </div>
     </section>
 
     <section>
