@@ -122,7 +122,15 @@
             <p class="chat-text">Concisely, with bullets, and ending with the next action.</p>
           </div>
         </div>
-        <p class="dim" style="margin-top:14px"><code>brain_trace</code> lets you inspect why that correction won.</p>
+        <div class="benefit-card" style="margin-top:16px">
+          <h3>What got retrieved behind the scenes</h3>
+          <ul>
+            <li>the user's correction is committed as durable memory</li>
+            <li>on the next similar question, that correction is retrieved as priority context before the agent answers</li>
+            <li>the stale default answer loses because the retrieved correction outranks it</li>
+            <li><code>brain_trace</code> shows the retrieved context, the fired correction, and the losing path</li>
+          </ul>
+        </div>
       </div>
     </section>
 
