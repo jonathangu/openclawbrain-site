@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OpenClawBrain — Your Agent's Second Brain</title>
-  <meta name="description" content="Your OpenClaw agent should not relearn the same lesson twice. Install in 30 seconds." />
-  <meta property="og:title" content="OpenClawBrain — Your Agent's Second Brain" />
-  <meta property="og:description" content="Install in 30 seconds. Your agent remembers corrections forever." />
+  <title>OpenClawBrain — Your Agent's Second Brain for OpenClaw</title>
+  <meta name="description" content="OpenClawBrain gives your OpenClaw agent a second brain: it remembers corrections, retrieves the right context for each task, learns from outcomes, and shows its work." />
+  <meta property="og:title" content="OpenClawBrain — Your Agent's Second Brain for OpenClaw" />
+  <meta property="og:description" content="OpenClawBrain gives your OpenClaw agent a second brain: it remembers corrections, retrieves the right context for each task, learns from outcomes, and shows its work." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
   <style>
@@ -47,57 +47,61 @@
   <main>
     <section style="text-align:center;padding:40px 28px">
       <h1>OpenClawBrain</h1>
-      <p class="tagline">Your agent shouldn't relearn the same lesson twice.</p>
-      <p class="hero-sub">Give your OpenClaw agent a second brain that remembers corrections, learns from outcomes, and surfaces the right context every time.</p>
+      <p class="tagline">Your agent should not relearn the same lesson twice.</p>
+      <p class="hero-sub">OpenClaw gives your agent a runtime. OpenClawBrain gives it memory. It keeps corrections, brings back the right context for this task, learns from whether the last attempt worked, and lets you inspect why a choice was made.</p>
       <div class="cta-box">
         <h3 style="color:var(--green);margin-bottom:12px">Get Started in 30 Seconds</h3>
         <div class="install-cmd">openclaw plugins install @jonathangu/openclawbrain</div>
-        <div class="init-cmd">openclawbrain init /path/to/your/project</div>
-        <p class="dim" style="margin-top:12px">That's it. The brain initializes and starts learning.</p>
+        <div class="init-cmd">openclawbrain init /path/to/your/workspace</div>
+        <p class="dim" style="margin-top:12px">Install the plugin, initialize once, and let the brain improve the next time a similar task comes back.</p>
       </div>
       <div class="hero-links">
         <a class="hero-link hero-link--green" href="https://github.com/jonathangu/openclawbrain">GitHub</a>
         <a class="hero-link" href="#how">How it works</a>
         <a class="hero-link hero-link--paper" href="jonathan-gu-2016-reinforcement-learning-paper.pdf">The Paper</a>
       </div>
-      <p class="dim" style="margin-top:16px">MIT License - TypeScript - 335 tests passing</p>
+      <p class="dim" style="margin-top:16px">v0.3.3 · MIT License · 340 tests passing</p>
     </section>
 
     <section>
       <h2>Why do you need this?</h2>
-      <p>Your AI coding agent keeps making the same mistakes. You correct it, it forgets. You teach it a pattern, it's gone tomorrow. That's not intelligence - that's expensive forgetfulness.</p>
+      <p>You teach the agent something once. It forgets. You explain the right rollback rule, the preferred PR command, or the house style for a recurring workflow, and you pay to teach the same lesson again next week. That is not intelligence. That is expensive forgetfulness.</p>
       <div class="two-col">
-        <div class="benefit-card"><h3>Corrections stick forever</h3><p>Use <code>brain_teach</code> once, and the brain surfaces that correction as priority context every time.</p></div>
-        <div class="benefit-card"><h3>Learns from outcomes</h3><p>Deploy fails? Test passes? The brain strengthens edges that led to good outcomes, weakens bad ones.</p></div>
-        <div class="benefit-card"><h3>Smart context selection</h3><p>Instead of dumping everything, the brain retrieves exactly what's relevant for this specific query.</p></div>
-        <div class="benefit-card"><h3>Full transparency</h3><p>Every decision traced. <code>brain_trace</code> shows seed choice, hops, fired nodes, and vetos.</p></div>
+        <div class="benefit-card"><h3>Corrections stop disappearing</h3><p>When you correct the agent in normal work, that lesson can become durable memory instead of a one-session comment that evaporates.</p></div>
+        <div class="benefit-card"><h3>Context becomes task-specific</h3><p>The goal is not to dump every vaguely related note into the prompt. The goal is to bring back the few pieces most likely to help this task right now.</p></div>
+        <div class="benefit-card"><h3>Repeated workflows get sharper</h3><p>When one path leads to a good outcome and another leads to a bad one, the routing policy learns from that difference over time.</p></div>
+        <div class="benefit-card"><h3>It shows its work</h3><p>Commands like <code>openclawbrain trace</code> and <code>openclawbrain doctor</code> let you inspect what surfaced and why.</p></div>
       </div>
     </section>
 
     <section id="how">
       <h2>How it works</h2>
-      <div class="benefit-card" style="margin-bottom:12px"><h3>1. Install</h3><p><code>openclaw plugins install @jonathangu/openclawbrain</code></p></div>
-      <div class="benefit-card" style="margin-bottom:12px"><h3>2. Initialize</h3><p><code>openclawbrain init /path/to/workspace</code></p><p class="dim">Discovers your files, computes embeddings, builds graph, promotes first pack.</p></div>
-      <div class="benefit-card"><h3>3. Teach</h3><p><code>brain_teach instruction="Use gh not hub for PRs"</code></p><p class="dim">That's it. The brain remembers forever.</p></div>
+      <p>Think of OpenClawBrain as a five-step teaching loop.</p>
+      <div class="benefit-card" style="margin-bottom:12px"><h3>1. Remember prior conversations and corrections</h3><p>Past sessions are not treated like disposable chat logs. Useful corrections and recurring workflows can become durable memory.</p></div>
+      <div class="benefit-card" style="margin-bottom:12px"><h3>2. Find the part of memory that fits this task</h3><p>When a new ask arrives, the system searches for the neighborhood of past knowledge that is actually relevant, instead of treating every memory as equally important.</p></div>
+      <div class="benefit-card" style="margin-bottom:12px"><h3>3. Surface only the best pieces at prompt time</h3><p>The goal is not maximum recall at any cost. The goal is to hand the agent the few pieces of context most likely to help right now.</p></div>
+      <div class="benefit-card" style="margin-bottom:12px"><h3>4. Learn from outcomes over time</h3><p>If one retrieval path helps produce a good outcome, it grows stronger. If another path wastes time or leads to failure, it loses weight.</p></div>
+      <div class="benefit-card"><h3>5. Trace why the system chose what it chose</h3><p>This is not supposed to be magical. You can inspect the route, the surfaced memory, and the decision trail behind an answer.</p></div>
     </section>
 
     <section>
-      <h2>What you get</h2>
+      <h2>Current public status</h2>
+      <p>The public repo and npm package are aligned on a simple front door. Install the plugin, initialize a workspace, and inspect the brain with a few operator commands when you want more visibility.</p>
       <ul>
-        <li><strong>Lossless transcript memory</strong> - every conversation persisted</li>
-        <li><strong>Learned routing graph</strong> - knows which context to surface</li>
-        <li><strong>Immediate corrections</strong> - brain_teach works instantly</li>
-        <li><strong>Paper-faithful RL</strong> - REINFORCE over full trajectories (Gu 2016)</li>
-        <li><strong>Replay-gated packs</strong> - no regressions, mutations tested first</li>
-        <li><strong>Fail-open design</strong> - serving continues if worker dies</li>
+        <li><strong>Package:</strong> <code>@jonathangu/openclawbrain</code> on npm at <strong>v0.3.3</strong></li>
+        <li><strong>License:</strong> MIT</li>
+        <li><strong>Public README:</strong> 340 tests passing</li>
+        <li><strong>Install:</strong> <code>openclaw plugins install @jonathangu/openclawbrain</code></li>
+        <li><strong>Inspect:</strong> <code>openclawbrain status</code>, <code>openclawbrain trace</code>, <code>openclawbrain doctor</code></li>
+        <li><strong>Prerequisites:</strong> OpenClaw, Node.js 22+, and an embeddings provider such as Ollama or an OpenAI-compatible endpoint</li>
       </ul>
     </section>
 
     <section>
       <h2>Get started now</h2>
-      <p>One plugin. One init. Then your agent learns.</p>
+      <p>Start here for the polished overview. Then go to the repo when you want the full command surface, release notes, architecture details, and the paper behind the routing story.</p>
       <div class="install-cmd" style="font-size:1rem">openclaw plugins install @jonathangu/openclawbrain</div>
-      <p class="dim" style="margin-top:16px">Questions? <a href="https://github.com/jonathangu/openclawbrain">Read the full README</a></p>
+      <p class="dim" style="margin-top:16px"><a href="https://github.com/jonathangu/openclawbrain">GitHub README</a> · <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/architecture.md">Architecture</a> · <a href="https://github.com/jonathangu/openclawbrain/blob/main/CHANGELOG.md">Changelog</a> · <a href="jonathan-gu-2016-reinforcement-learning-paper.pdf">2016 RL paper</a></p>
     </section>
   </main>
 </body>
