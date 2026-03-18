@@ -3,155 +3,526 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OpenClawBrain — Your Agent's Second Brain for OpenClaw</title>
-  <meta name="description" content="OpenClawBrain gives your OpenClaw agent a second brain: it remembers corrections, retrieves the right context for each task, learns from outcomes, and shows its work." />
-  <meta property="og:title" content="OpenClawBrain — Your Agent's Second Brain for OpenClaw" />
-  <meta property="og:description" content="OpenClawBrain gives your OpenClaw agent a second brain: it remembers corrections, retrieves the right context for each task, learns from outcomes, and shows its work." />
+  <title>OpenClawBrain - Durable Memory for OpenClaw</title>
+  <meta
+    name="description"
+    content="OpenClawBrain adds durable memory, learned retrieval, and inspectable traces to OpenClaw through one canonical lifecycle: install, verify, upgrade, and remove safely."
+  />
+  <meta property="og:title" content="OpenClawBrain - Durable Memory for OpenClaw" />
+  <meta
+    property="og:description"
+    content="Install or upgrade OpenClawBrain through one canonical operator lane, verify with a single status command, and understand exactly how the memory loop works."
+  />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
   <style>
-    :root { --bg: #0a0a0a; --panel: #111111; --text: #f5f5f5; --muted: #a3a3a3; --line: #262626; --accent: #38bdf8; --green: #4ade80; --dim: #737373; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    main { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
-    section { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
-    h1 { font-size: clamp(2.5rem, 8vw, 4rem); line-height: 1.05; margin: 0 0 16px; }
-    h2 { font-size: 1.4rem; margin: 0 0 12px; color: var(--accent); }
-    h3 { font-size: 1.1rem; margin: 20px 0 8px; }
-    p { margin: 0 0 14px; }
-    .tagline { font-size: 1.4rem; color: var(--green); margin-bottom: 24px; font-weight: 500; }
-    .hero-sub { font-size: 1.05rem; color: var(--muted); margin: 20px 0; }
-    .muted { color: var(--muted); }
-    .dim { color: var(--dim); font-size: 0.9rem; }
-    .green { color: var(--green); }
-    ul, ol { margin: 12px 0 16px; padding-left: 1.4rem; }
-    li { margin: 0 0 8px; }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    code { font-family: "SF Mono", monospace; font-size: 0.9em; background: #1a1a1a; padding: 2px 6px; border-radius: 4px; }
-    .cta-box { background: linear-gradient(135deg, #0c1a0c 0%, #0a1510 100%); border: 2px solid var(--green); border-radius: 14px; padding: 24px; margin: 20px 0; text-align: center; }
-    .install-cmd { font-family: "SF Mono", monospace; font-size: 1.1rem; color: var(--green); background: #0d0d0d; padding: 14px 20px; border-radius: 8px; display: inline-block; margin: 8px 0; }
-    .init-cmd { font-family: "SF Mono", monospace; font-size: 1rem; color: var(--accent); background: #0d0d0d; padding: 12px 18px; border-radius: 8px; display: inline-block; margin: 8px 0; }
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
-    @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
-    .benefit-card { background: #0d0d0d; border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
-    .benefit-card h3 { margin: 0 0 8px; color: var(--green); }
-    .benefit-card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
-    .hero-links { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }
-    .hero-link { display: inline-block; padding: 12px 20px; border-radius: 999px; background: #1a1a1a; color: var(--text); font-weight: 600; border: 1px solid var(--line); }
-    .hero-link--green { background: #14532d; border-color: #166534; color: var(--green); }
-    .hero-link--paper { background: #451a03; border-color: #78350f; color: #facc15; }
-    .demo-chat { display: grid; gap: 12px; margin-top: 16px; }
-    .chat-line { border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; background: #121212; }
-    .chat-line--user { border-color: #1d4ed8; background: #0b1220; }
-    .chat-line--agent { border-color: #166534; background: #0b1a12; }
-    .chat-speaker { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
-    .chat-line--user .chat-speaker { color: #93c5fd; }
-    .chat-line--agent .chat-speaker { color: #86efac; }
-    .chat-text { color: var(--text); margin: 0; }
+    :root {
+      --bg: #05080d;
+      --bg-glow: rgba(70, 161, 223, 0.22);
+      --panel: rgba(10, 18, 29, 0.94);
+      --panel-soft: rgba(15, 27, 42, 0.94);
+      --text: #f3f7fb;
+      --muted: #aeb9c6;
+      --line: rgba(174, 185, 198, 0.18);
+      --accent: #7dd3fc;
+      --green: #86efac;
+      --gold: #fbbf24;
+      --code: #08111b;
+      --shadow: 0 18px 60px rgba(0, 0, 0, 0.24);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, var(--bg-glow), transparent 34%),
+        linear-gradient(180deg, #08111a 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 32px 20px 72px;
+    }
+
+    section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.7rem, 8vw, 4.7rem);
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    h2 {
+      font-size: 1.45rem;
+      line-height: 1.15;
+      color: var(--accent);
+      margin: 0 0 12px;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      line-height: 1.25;
+      margin: 0 0 8px;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code,
+    pre code {
+      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.95rem;
+    }
+
+    code {
+      background: rgba(8, 17, 27, 0.82);
+      border: 1px solid rgba(174, 185, 198, 0.1);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    pre {
+      background: var(--code);
+      border: 1px solid rgba(174, 185, 198, 0.12);
+      border-radius: 14px;
+      padding: 18px;
+      overflow-x: auto;
+      margin: 14px 0;
+    }
+
+    pre code {
+      background: transparent;
+      border: 0;
+      padding: 0;
+      display: block;
+      line-height: 1.7;
+    }
+
+    .hero {
+      padding: 42px 30px 34px;
+      background:
+        linear-gradient(160deg, rgba(16, 29, 46, 0.98) 0%, rgba(9, 16, 26, 0.98) 100%);
+    }
+
+    .eyebrow {
+      color: var(--green);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.76rem;
+      margin-bottom: 12px;
+    }
+
+    .lede {
+      max-width: 720px;
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 20px 0 24px;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .stat-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin-bottom: 4px;
+    }
+
+    .stat strong {
+      font-size: 1.05rem;
+    }
+
+    .hero-links,
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-weight: 700;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .button:hover {
+      text-decoration: none;
+    }
+
+    .button-primary {
+      color: #03210f;
+      background: linear-gradient(135deg, var(--green) 0%, #bbf7d0 100%);
+      border-color: rgba(134, 239, 172, 0.6);
+    }
+
+    .button-secondary {
+      border-color: rgba(125, 211, 252, 0.35);
+    }
+
+    .button-paper {
+      color: #fef3c7;
+      background: rgba(251, 191, 36, 0.12);
+      border-color: rgba(251, 191, 36, 0.3);
+    }
+
+    .callout {
+      background: linear-gradient(135deg, rgba(10, 27, 20, 0.95), rgba(8, 19, 30, 0.95));
+      border: 1px solid rgba(134, 239, 172, 0.28);
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin: 18px 0 0;
+      color: var(--muted);
+    }
+
+    .callout strong {
+      color: var(--green);
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .grid-two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-five {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .card {
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(125, 211, 252, 0.3);
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .compat {
+      border-color: rgba(251, 191, 36, 0.25);
+      background:
+        linear-gradient(180deg, rgba(28, 20, 6, 0.94), rgba(12, 14, 21, 0.94));
+    }
+
+    .compat h2 {
+      color: var(--gold);
+    }
+
+    .demo-chat {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .chat-line {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .chat-line--user {
+      border-color: rgba(96, 165, 250, 0.35);
+      background: rgba(11, 18, 32, 0.9);
+    }
+
+    .chat-line--agent {
+      border-color: rgba(34, 197, 94, 0.35);
+      background: rgba(11, 26, 18, 0.92);
+    }
+
+    .chat-speaker {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .chat-line--user .chat-speaker {
+      color: #93c5fd;
+    }
+
+    .chat-line--agent .chat-speaker {
+      color: #86efac;
+    }
+
+    .chat-text {
+      color: var(--text);
+      margin: 0;
+    }
+
+    @media (max-width: 900px) {
+      .grid-five {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .stats,
+      .grid-two,
+      .grid-five {
+        grid-template-columns: 1fr;
+      }
+
+      section,
+      .hero {
+        padding: 24px 20px;
+      }
+    }
   </style>
 </head>
 <body>
   <main>
-    <section style="text-align:center;padding:40px 28px">
-      <h1>OpenClawBrain</h1>
-      <p class="tagline">Your agent should not relearn the same lesson twice.</p>
-      <p class="hero-sub">OpenClaw gives your agent a runtime. OpenClawBrain gives it memory. It keeps corrections, brings back the right context for this task, learns from whether the last attempt worked, and lets you inspect why a choice was made.</p>
-      <div class="cta-box">
-        <h3 style="color:var(--green);margin-bottom:12px">Get Started in 30 Seconds</h3>
-        <div class="install-cmd">openclaw plugins install @jonathangu/openclawbrain</div>
-        <div class="init-cmd">openclawbrain init /path/to/your/workspace</div>
-        <p class="dim" style="margin-top:12px">Install the plugin, initialize once, and let the brain improve the next time a similar task comes back.</p>
+    <section class="hero">
+      <p class="eyebrow">OpenClawBrain for OpenClaw</p>
+      <h1>Durable memory for an agent that should not relearn the same lesson twice.</h1>
+      <p class="lede">
+        OpenClaw gives your agent a runtime. OpenClawBrain gives it durable memory, learned retrieval,
+        and decision traces you can inspect when you need to understand why a context choice won.
+      </p>
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-label">Release</span>
+          <strong>v0.3.5</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">License</span>
+          <strong>MIT</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Test Suite</span>
+          <strong>387 passing</strong>
+        </div>
       </div>
       <div class="hero-links">
-        <a class="hero-link hero-link--green" href="https://github.com/jonathangu/openclawbrain">GitHub</a>
-        <a class="hero-link" href="#how">How it works</a>
-        <a class="hero-link hero-link--paper" href="jonathan-gu-2016-reinforcement-learning-paper.pdf">The Paper</a>
+        <a class="button button-primary" href="#install">Install / Upgrade</a>
+        <a class="button button-secondary" href="https://github.com/jonathangu/openclawbrain">GitHub</a>
+        <a class="button button-paper" href="jonathan-gu-2016-reinforcement-learning-paper.pdf">2016 RL paper</a>
       </div>
-      <p class="dim" style="margin-top:16px">v0.3.3 · MIT License · 340 tests passing</p>
+    </section>
+
+    <section id="install">
+      <h2>One canonical operator lane</h2>
+      <p>
+        New installs and upgrades use the same path. Install the published front-door package, attach it to one
+        OpenClaw home, restart the gateway, then verify with one status read.
+      </p>
+      <div class="callout">
+        <strong>Front door package:</strong> <code>@openclawbrain/openclaw@0.3.5</code>
+      </div>
+      <pre><code>npm install -g @openclawbrain/openclaw@0.3.5
+openclawbrain install --openclaw-home ~/.openclaw
+openclaw gateway restart
+openclawbrain status --openclaw-home ~/.openclaw --detailed</code></pre>
+      <p class="small">
+        Verification command: <code>openclawbrain status --openclaw-home ~/.openclaw --detailed</code>
+      </p>
+      <p class="small">
+        When the next release ships, stay in the same lane: change the version in the first command and rerun this sequence.
+      </p>
     </section>
 
     <section>
-      <h2>Why do you need this?</h2>
-      <p>You teach the agent something once. It forgets. You tell it to keep answers concise, use bullets, and end with the next action, and before long you are teaching the same lesson again. That is not intelligence. That is expensive forgetfulness.</p>
-      <div class="two-col">
-        <div class="benefit-card"><h3>Corrections can win immediately</h3><p>Just correct the agent in plain language, and that lesson can become durable memory instead of a one-session comment that evaporates.</p></div>
-        <div class="benefit-card"><h3>Context becomes task-specific</h3><p>The goal is not to dump every vaguely related note into the prompt. The goal is to bring back the few pieces most likely to help this task right now.</p></div>
-        <div class="benefit-card"><h3>Repeated workflows get sharper</h3><p>When one path leads to a good outcome and another leads to a bad one, the routing policy learns from that difference over time.</p></div>
-        <div class="benefit-card"><h3>It shows its work</h3><p>Commands like <code>openclawbrain trace</code> and <code>openclawbrain doctor</code> let you inspect what surfaced and why.</p></div>
+      <h2>Remove safely</h2>
+      <p>
+        There are two remove stories. Use <code>detach</code> when you want the hook removed but the OpenClawBrain
+        data kept. Use <code>uninstall --purge-data</code> when you want the hook and that install's data removed.
+      </p>
+      <div class="grid grid-two">
+        <article class="card">
+          <h3>Detach and keep data</h3>
+          <p class="small">
+            Safe default if you are backing out the integration and may reattach later.
+          </p>
+          <pre><code>openclawbrain detach --openclaw-home ~/.openclaw
+openclaw gateway restart</code></pre>
+        </article>
+        <article class="card">
+          <h3>Uninstall and purge</h3>
+          <p class="small">
+            Full removal for that install, including the data tied to its activation root.
+          </p>
+          <pre><code>openclawbrain uninstall --openclaw-home ~/.openclaw --purge-data
+openclaw gateway restart
+npm uninstall -g @openclawbrain/openclaw</code></pre>
+        </article>
       </div>
+      <p class="small">
+        If you only want the hook gone and the data preserved, <code>detach</code> is the simpler keep-data path.
+      </p>
     </section>
 
     <section id="how">
       <h2>How it works</h2>
-      <p>Think of OpenClawBrain as a five-step teaching loop.</p>
-      <div class="benefit-card" style="margin-bottom:12px"><h3>1. Remember prior conversations and corrections</h3><p>Past sessions are not treated like disposable chat logs. Useful corrections and recurring workflows can become durable memory.</p></div>
-      <div class="benefit-card" style="margin-bottom:12px"><h3>2. Find the part of memory that fits this task</h3><p>When a new ask arrives, the system searches for the neighborhood of past knowledge that is actually relevant, instead of treating every memory as equally important.</p></div>
-      <div class="benefit-card" style="margin-bottom:12px"><h3>3. Surface only the best pieces at prompt time</h3><p>The goal is not maximum recall at any cost. The goal is to hand the agent the few pieces of context most likely to help right now.</p></div>
-      <div class="benefit-card" style="margin-bottom:12px"><h3>4. Learn from outcomes over time</h3><p>If one retrieval path helps produce a good outcome, it grows stronger. If another path wastes time or leads to failure, it loses weight.</p></div>
-      <div class="benefit-card"><h3>5. Trace why the system chose what it chose</h3><p>This is not supposed to be magical. You can inspect the route, the surfaced memory, and the decision trail behind an answer.</p></div>
-    </section>
-
-    <section>
-      <h2>What a real correction looks like</h2>
-      <div class="benefit-card">
-        <p>A real interaction is simple: the user says something, the agent gets it wrong, the user corrects it, and the next answer gets better.</p>
-        <div class="demo-chat">
-          <div class="chat-line chat-line--user">
-            <span class="chat-speaker">User says</span>
-            <p class="chat-text">How should you answer me?</p>
-          </div>
-          <div class="chat-line chat-line--agent">
-            <span class="chat-speaker">Agent says</span>
-            <p class="chat-text">I’ll answer in long freeform paragraphs.</p>
-          </div>
-          <div class="chat-line chat-line--user">
-            <span class="chat-speaker">User says</span>
-            <p class="chat-text">Wrong — keep it concise, use bullets, and end with the next action.</p>
-          </div>
-          <div class="chat-line chat-line--agent">
-            <span class="chat-speaker">Agent says</span>
-            <p class="chat-text">Got it. I’ll keep answers concise, use bullets, and end with the next action.</p>
-          </div>
-          <div class="chat-line chat-line--user">
-            <span class="chat-speaker">User says</span>
-            <p class="chat-text">How should you answer me?</p>
-          </div>
-          <div class="chat-line chat-line--agent">
-            <span class="chat-speaker">Agent says</span>
-            <p class="chat-text">Concisely, with bullets, and ending with the next action.</p>
-          </div>
-        </div>
-        <div class="benefit-card" style="margin-top:16px">
-          <h3>What got retrieved behind the scenes</h3>
-          <ul>
-            <li>the user's correction is committed as durable memory</li>
-            <li>on the next similar question, that correction is retrieved as priority context before the agent answers</li>
-            <li>the stale default answer loses because the retrieved correction outranks it</li>
-            <li><code>brain_trace</code> shows the retrieved context, the fired correction, and the losing path</li>
-          </ul>
-        </div>
+      <p>
+        The public story stays simple because the runtime loop is simple to explain: remember what happened,
+        retrieve the few pieces of memory that fit this task, and learn from whether they helped.
+      </p>
+      <div class="grid grid-five">
+        <article class="card">
+          <span class="step-number">1</span>
+          <h3>Record durable memory</h3>
+          <p>Sessions and explicit corrections stop being disposable chat and become searchable memory.</p>
+        </article>
+        <article class="card">
+          <span class="step-number">2</span>
+          <h3>Find the right neighborhood</h3>
+          <p>The system searches for the part of memory that actually fits the new task.</p>
+        </article>
+        <article class="card">
+          <span class="step-number">3</span>
+          <h3>Surface only the best context</h3>
+          <p>It injects the highest-value context instead of dumping every vaguely related note into the prompt.</p>
+        </article>
+        <article class="card">
+          <span class="step-number">4</span>
+          <h3>Learn from outcomes</h3>
+          <p>Helpful routes get stronger. Wasteful routes lose weight over time.</p>
+        </article>
+        <article class="card">
+          <span class="step-number">5</span>
+          <h3>Show its work</h3>
+          <p>Decision traces make the winning path explainable instead of magical.</p>
+        </article>
       </div>
     </section>
 
     <section>
-      <h2>Current public status</h2>
-      <p>The public repo and npm package are aligned on a simple front door. Install the plugin, initialize a workspace, and inspect the brain with a few operator commands when you want more visibility.</p>
-      <ul>
-        <li><strong>Package:</strong> <code>@jonathangu/openclawbrain</code> on npm at <strong>v0.3.3</strong></li>
-        <li><strong>License:</strong> MIT</li>
-        <li><strong>Public README:</strong> 340 tests passing</li>
-        <li><strong>Install:</strong> <code>openclaw plugins install @jonathangu/openclawbrain</code></li>
-        <li><strong>Inspect:</strong> <code>openclawbrain status</code>, <code>openclawbrain trace</code>, <code>openclawbrain doctor</code></li>
-        <li><strong>Prerequisites:</strong> OpenClaw, Node.js 22+, and an embeddings provider such as Ollama or an OpenAI-compatible endpoint</li>
-      </ul>
+      <h2>What a real correction looks like</h2>
+      <p>
+        The loop is not abstract. A user corrects the agent in plain language, the correction becomes durable memory,
+        and the next similar answer improves because the right context got retrieved in time.
+      </p>
+      <div class="demo-chat">
+        <div class="chat-line chat-line--user">
+          <span class="chat-speaker">User says</span>
+          <p class="chat-text">How should you answer me?</p>
+        </div>
+        <div class="chat-line chat-line--agent">
+          <span class="chat-speaker">Agent says</span>
+          <p class="chat-text">I'll answer in long freeform paragraphs.</p>
+        </div>
+        <div class="chat-line chat-line--user">
+          <span class="chat-speaker">User says</span>
+          <p class="chat-text">Wrong — keep it concise, use bullets, and end with the next action.</p>
+        </div>
+        <div class="chat-line chat-line--agent">
+          <span class="chat-speaker">Agent says</span>
+          <p class="chat-text">Got it. I'll keep answers concise, use bullets, and end with the next action.</p>
+        </div>
+        <div class="chat-line chat-line--user">
+          <span class="chat-speaker">User says</span>
+          <p class="chat-text">How should you answer me?</p>
+        </div>
+        <div class="chat-line chat-line--agent">
+          <span class="chat-speaker">Agent says</span>
+          <p class="chat-text">Concisely, with bullets, and ending with the next action.</p>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <h3>What got retrieved behind the scenes</h3>
+        <p class="small">
+          The correction is stored as durable memory, retrieved before the next similar answer, and made visible in the trace so you can inspect why the new answer won.
+        </p>
+        <ul style="margin:12px 0 0; padding-left:1.4rem; color:var(--muted)">
+          <li>the user's correction is committed as durable memory</li>
+          <li>on the next similar question, that correction is retrieved as priority context before the agent answers</li>
+          <li>the stale default answer loses because the retrieved correction outranks it</li>
+          <li><code>brain_trace</code> shows the retrieved context, the fired correction, and the losing path</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="compat">
+      <h2>Compatibility path</h2>
+      <p>
+        The older wrapper package still exists for legacy installs, but it is secondary now. Keep new installs on the
+        canonical lane above.
+      </p>
+      <pre><code>openclaw plugins install @jonathangu/openclawbrain@0.3.5</code></pre>
     </section>
 
     <section>
-      <h2>Get started now</h2>
-      <p>Start here for the polished overview. Then go to the repo when you want the full command surface, release notes, architecture details, and the paper behind the routing story.</p>
-      <div class="install-cmd" style="font-size:1rem">openclaw plugins install @jonathangu/openclawbrain</div>
-      <p class="dim" style="margin-top:16px"><a href="https://github.com/jonathangu/openclawbrain">GitHub README</a> · <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/architecture.md">Architecture</a> · <a href="https://github.com/jonathangu/openclawbrain/blob/main/CHANGELOG.md">Changelog</a> · <a href="jonathan-gu-2016-reinforcement-learning-paper.pdf">2016 RL paper</a></p>
+      <h2>Go deeper when you need it</h2>
+      <p>
+        This landing page keeps the operator lifecycle concise. The repo has the full architecture, configuration,
+        and release notes when you want the details behind the memory and routing model.
+      </p>
+      <div class="footer-links">
+        <a href="https://github.com/jonathangu/openclawbrain">GitHub README</a>
+        <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/architecture.md">Architecture</a>
+        <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/configuration.md">Configuration</a>
+        <a href="https://github.com/jonathangu/openclawbrain/blob/main/docs/release-notes-0.3.5.md">Release notes</a>
+      </div>
     </section>
   </main>
 </body>
