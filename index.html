@@ -6,12 +6,12 @@
   <title>OpenClawBrain - Durable Memory for OpenClaw</title>
   <meta
     name="description"
-    content="OpenClawBrain adds durable memory, learned retrieval, and inspectable traces to OpenClaw through the proven 0.4.0 split-package lane: install the plugin, run the CLI, restart the gateway, and verify."
+    content="OpenClawBrain adds durable memory, learned retrieval, and inspectable traces to OpenClaw. Install the plugin, run the CLI, restart the gateway, and verify."
   />
   <meta property="og:title" content="OpenClawBrain - Durable Memory for OpenClaw" />
   <meta
     property="og:description"
-    content="Install OpenClawBrain through the proven 0.4.0 split-package lane, verify with one detailed status command, and understand exactly how the memory loop works."
+    content="Install OpenClawBrain, verify with one status command, and understand exactly how the memory loop works."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
@@ -348,7 +348,7 @@
       <p class="lede">
         OpenClaw gives your agent a runtime. OpenClawBrain gives it durable memory, learned retrieval,
         and decision traces you can inspect when you need to understand why a context choice won.
-        The 0.4.0 public lane is simple: plugin first, CLI second, restart, then verify.
+        Install the plugin, run the CLI, restart the gateway, verify.
       </p>
       <div class="stats">
         <div class="stat">
@@ -372,35 +372,35 @@
     </section>
 
     <section id="install">
-      <h2>One proven public lane</h2>
+      <h2>Install and verify</h2>
       <p>
-        Version 0.4.0 splits the public surface into a plugin package and a CLI package. Install the
-        OpenClaw plugin first, run the OpenClawBrain CLI against one OpenClaw home, restart the
-        gateway, then verify with one detailed status read.
+        Version 0.4.0 ships two packages: the OpenClaw plugin and the operator CLI.
+        Install the plugin, run the CLI against your OpenClaw home, restart the gateway,
+        then verify with one status command.
       </p>
       <div class="callout">
-        <strong>Published packages:</strong> <code>@openclawbrain/openclaw@0.4.0</code> and <code>@openclawbrain/cli@0.4.0</code>
+        <strong>Published packages:</strong> <code>@openclawbrain/openclaw@0.4.0</code> and <code>@openclawbrain/cli@0.4.1</code>
       </div>
       <pre><code>openclaw plugins install @openclawbrain/openclaw@0.4.0
-npx @openclawbrain/cli@0.4.0 openclawbrain install --openclaw-home ~/.openclaw
+npx @openclawbrain/cli@0.4.1 openclawbrain install --openclaw-home ~/.openclaw
 openclaw gateway restart
-npx @openclawbrain/cli@0.4.0 openclawbrain status --openclaw-home ~/.openclaw --detailed</code></pre>
+npx @openclawbrain/cli@0.4.1 openclawbrain status --openclaw-home ~/.openclaw --detailed</code></pre>
       <p class="small">
-        Verification command: <code>npx @openclawbrain/cli@0.4.0 openclawbrain status --openclaw-home ~/.openclaw --detailed</code>
+        Verification command: <code>npx @openclawbrain/cli@0.4.1 openclawbrain status --openclaw-home ~/.openclaw --detailed</code>
       </p>
       <p class="small">
-        Operator note: the plugin install can still warn that the manifest id is <code>openclawbrain</code>
-        while the package or entry hint says <code>openclaw</code>. That warning is expected today; the flow above
-        is the verified public install lane.
+        Operator note: the plugin install may warn that the manifest id is <code>openclawbrain</code>
+        while the package or entry hint says <code>openclaw</code>. That warning is expected; the flow above
+        is the verified install path.
       </p>
     </section>
 
     <section>
       <h2>Remove cleanly</h2>
       <p>
-        Removal is split too. Use the CLI package to uninstall from one OpenClaw home, uninstall the
-        plugin by its manifest id, then restart the gateway. If you followed the <code>npx</code> lane above,
-        there is usually no persistent CLI package left behind to remove.
+        Removal mirrors installation. Use the CLI to uninstall from your OpenClaw home, remove the
+        plugin by its manifest id, then restart the gateway. If you used <code>npx</code> above,
+        there is no persistent CLI package to remove.
       </p>
       <div class="grid grid-two">
         <article class="card">
@@ -409,16 +409,15 @@ npx @openclawbrain/cli@0.4.0 openclawbrain status --openclaw-home ~/.openclaw --
             Remove the installed brain data for <code>~/.openclaw</code>, then remove the plugin record and files
             from OpenClaw.
           </p>
-          <pre><code>npx @openclawbrain/cli@0.4.0 openclawbrain uninstall --openclaw-home ~/.openclaw --purge-data
+          <pre><code>npx @openclawbrain/cli@0.4.1 openclawbrain uninstall --openclaw-home ~/.openclaw --purge-data
 openclaw plugins uninstall openclawbrain
 openclaw gateway restart</code></pre>
         </article>
         <article class="card">
           <h3>CLI package note</h3>
           <p class="small">
-            The verified public lane invokes <code>@openclawbrain/cli</code> with <code>npx</code>, so there is no
-            required global CLI cleanup afterward. Only remove the CLI package separately if you installed it
-            globally on purpose.
+            The recommended install path uses <code>npx</code>, so there is no global CLI to clean up afterward.
+            Only remove the CLI package separately if you installed it globally on purpose.
           </p>
           <pre><code>npm uninstall -g @openclawbrain/cli</code></pre>
         </article>
@@ -432,8 +431,8 @@ openclaw gateway restart</code></pre>
     <section id="how">
       <h2>How it works</h2>
       <p>
-        The public story stays simple because the runtime loop is simple to explain: remember what happened,
-        retrieve the few pieces of memory that fit this task, and learn from whether they helped.
+        Remember what happened, retrieve the few pieces of memory that fit the next task,
+        and learn from whether they helped.
       </p>
       <div class="grid grid-five">
         <article class="card">
@@ -511,19 +510,18 @@ openclaw gateway restart</code></pre>
     </section>
 
     <section class="compat">
-      <h2>Two packages, clear roles</h2>
+      <h2>Package reference</h2>
       <p>
-        <code>@openclawbrain/openclaw@0.4.0</code> is the OpenClaw plugin package.
-        <code>@openclawbrain/cli@0.4.0</code> is the operator CLI package for install, status, and uninstall.
-        The public 0.4.0 lane is intentionally split so each role stays explicit.
+        <code>@openclawbrain/openclaw</code> — the OpenClaw plugin (memory engine, retrieval, traces).<br />
+        <code>@openclawbrain/cli</code> — the operator CLI (install, status, uninstall).
       </p>
     </section>
 
     <section>
-      <h2>Go deeper when you need it</h2>
+      <h2>Go deeper</h2>
       <p>
-        This landing page keeps the operator lifecycle concise. The repo and published packages are the next stop
-        when you want implementation detail, package metadata, or release context behind the memory and routing model.
+        The repo and published packages have implementation detail, package metadata,
+        and release context for the memory and routing model.
       </p>
       <div class="footer-links">
         <a href="https://github.com/jonathangu/openclawbrain">GitHub repo</a>

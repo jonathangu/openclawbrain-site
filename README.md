@@ -2,10 +2,14 @@
 
 Static site for [openclawbrain.ai](https://openclawbrain.ai/).
 
+The site is the public front door for the OpenClawBrain project: durable memory,
+learned retrieval, and inspectable decision traces for OpenClaw.
+
+Published packages:
+- **`@openclawbrain/openclaw`** — the OpenClaw plugin
+- **`@openclawbrain/cli`** — operator CLI (install, status, uninstall)
+
 The site should stay aligned with the shipped product:
-- native OpenClaw context-engine plugin
-- explicit `openclawbrain init`
-- lossless transcript memory plus a learned routing graph
-- learned seed choice and full-trajectory REINFORCE
-- replay-gated immutable packs
-- operator commands and decision traces
+- clear install → verify → remove lifecycle
+- honest description of what the memory loop does today
+- no claims about unproven behavior
