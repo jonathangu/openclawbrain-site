@@ -52,6 +52,25 @@
       padding: 32px 20px 72px;
     }
 
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 12px;
+      margin: 0 0 14px;
+      padding: 0 4px;
+    }
+
+    .site-nav a {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .site-nav a[aria-current="page"] {
+      color: var(--text);
+      font-weight: 700;
+    }
+
     section {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -342,6 +361,13 @@
 </head>
 <body>
   <main>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#install">Install</a>
+      <a href="proof/">Proof</a>
+      <a href="#how">How it works</a>
+      <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
+      <a href="jonathan-gu-2016-reinforcement-learning-paper.pdf">Paper</a>
+    </nav>
     <section class="hero">
       <p class="eyebrow">OpenClawBrain for OpenClaw</p>
       <h1>Durable memory for an agent that should not relearn the same lesson twice.</h1>
@@ -367,6 +393,7 @@
       </div>
       <div class="hero-links">
         <a class="button button-primary" href="#install">Install / Upgrade</a>
+        <a class="button button-secondary" href="proof/">Read proof page</a>
         <a class="button button-secondary" href="https://github.com/jonathangu/openclawbrain">GitHub</a>
         <a class="button button-paper" href="jonathan-gu-2016-reinforcement-learning-paper.pdf">2016 RL paper</a>
       </div>
@@ -424,6 +451,12 @@ traced.updates     = 68</code></pre>
         <code>policy_gradient_v2</code> targeting trajectory reconstruction — not a V1 label
         carried forward for compatibility, but the real method the router learned with.
       </p>
+      <div class="footer-links">
+        <a href="proof/">Full proof page</a>
+        <a href="#install">Install and verify</a>
+        <a href="https://github.com/jonathangu/openclawbrain">GitHub repo</a>
+        <a href="jonathan-gu-2016-reinforcement-learning-paper.pdf">2016 RL paper</a>
+      </div>
     </section>
 
     <section>
@@ -556,6 +589,8 @@ openclaw gateway restart</code></pre>
         and release context for the memory and routing model.
       </p>
       <div class="footer-links">
+        <a href="#install">Install section</a>
+        <a href="proof/">Proof page</a>
         <a href="https://github.com/jonathangu/openclawbrain">GitHub repo</a>
         <a href="https://www.npmjs.com/package/@openclawbrain/openclaw">Plugin package</a>
         <a href="https://www.npmjs.com/package/@openclawbrain/cli">CLI package</a>
