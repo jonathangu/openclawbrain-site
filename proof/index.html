@@ -6,12 +6,12 @@
   <title>Proof - OpenClawBrain Native V2 Metadata</title>
   <meta
     name="description"
-    content="OpenClawBrain proof page: native V2 policy-gradient routing, truthful operator metadata, and the public install lane used to verify it."
+    content="OpenClawBrain proof: native V2 policy-gradient routing, truthful operator metadata, and the install lane to verify it."
   />
   <meta property="og:title" content="Proof - OpenClawBrain Native V2 Metadata" />
   <meta
     property="og:description"
-    content="See the exact native V2 metadata proof, the public verification command, and links back to install, GitHub, and the paper."
+    content="Native V2 metadata proof, verification command, and links to install, GitHub, and the paper."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/proof/" />
@@ -276,9 +276,8 @@
       <p class="eyebrow">OpenClawBrain proof</p>
       <h1>Native V2 metadata, end to end.</h1>
       <p class="lede">
-        This is the deployed proof route for the same claim on the homepage. The learned router now
-        reports exactly what it runs: native V2 policy-gradient routing, truthful operator metadata,
-        and no lingering V1-compatible label seam at the package layer.
+        The router reports exactly what it runs: native V2 policy-gradient routing
+        and truthful operator metadata. The old V1 label seam is closed.
       </p>
       <div class="stats">
         <div class="stat">
@@ -303,14 +302,12 @@
     </section>
 
     <section>
-      <h2>What the operator should see</h2>
+      <h2>What the operator sees</h2>
       <p>
-        The learned router now reports exactly what it runs. The old seam — where native V2
-        routing still surfaced <code>policy_gradient_v1</code>-compatible labels at the package
-        layer — is closed. Every metadata field the operator sees is truthful V2.
+        Run the status command below. Every field reports its real V2 value.
       </p>
       <div class="callout">
-        <strong>Learn proof:</strong> the published-path learn proof materialized and promoted
+        <strong>Learn proof:</strong> the published learn path produced and promoted
         <code>pack-d099f991</code>.
       </div>
       <pre><code>STATUS ok
@@ -322,22 +319,20 @@ traced.routes      = 344
 traced.supervision = 32
 traced.updates     = 68</code></pre>
       <p class="small">
-        344 traced routes, 32 supervision signals, 68 updates. The routing method is
-        <code>policy_gradient_v2</code> targeting trajectory reconstruction — not a V1 label
-        carried forward for compatibility, but the real method the router learned with.
+        344 traced routes, 32 supervision signals, 68 updates.
+        Routing method: <code>policy_gradient_v2</code> targeting trajectory reconstruction.
+        This is the actual method the router learned with, not a carried-forward V1 label.
       </p>
       <p class="small">
-        If you are starting from scratch, use the <a href="../index.html#install">homepage install lane</a>,
-        then compare your status output against the fields above.
+        Starting fresh? Use the <a href="../index.html#install">install lane</a>,
+        then compare your status output against these fields.
       </p>
     </section>
 
     <section>
-      <h2>Reproduce it from the public install lane</h2>
+      <h2>Reproduce from the public install lane</h2>
       <p>
-        The public install lane is still plugin first, then CLI. Install the OpenClaw plugin,
-        run the operator CLI against your OpenClaw home, restart the gateway, then verify with one
-        status command.
+        Install the plugin, run the CLI against your OpenClaw home, restart the gateway, and verify with one command.
       </p>
       <div class="callout">
         <strong>Verified install lane:</strong> <code>@openclawbrain/openclaw@0.4.0</code> plus <code>@openclawbrain/cli@0.4.10</code>
@@ -350,30 +345,29 @@ npx @openclawbrain/cli@0.4.10 status --openclaw-home ~/.openclaw --detailed</cod
         Verification command: <code>npx @openclawbrain/cli@0.4.10 status --openclaw-home ~/.openclaw --detailed</code>
       </p>
       <p class="small">
-        Metadata note: the truthful native V2 metadata milestone was published through <code>@openclawbrain/contracts@0.3.5</code>
-        and consumed by <code>@openclawbrain/cli@0.4.10</code>, but the operator-facing install path remains plugin + CLI.
+        Metadata note: native V2 metadata ships through <code>@openclawbrain/contracts@0.3.5</code>
+        and is consumed by <code>@openclawbrain/cli@0.4.10</code>. The install path stays plugin + CLI.
       </p>
       <p class="small">
         Operator note: the plugin install may warn that the manifest id is <code>openclawbrain</code>
-        while the package or entry hint says <code>openclaw</code>. That warning is currently cosmetic; the flow above
-        is the verified install path.
+        while the package says <code>openclaw</code>. This warning is cosmetic. The flow above is verified.
       </p>
     </section>
 
     <section class="compat">
       <h2>Package reference</h2>
       <p>
-        <code>@openclawbrain/openclaw@0.4.0</code> — the OpenClaw plugin/runtime payload.<br />
-        <code>@openclawbrain/cli@0.4.10</code> — the operator CLI (install, status, uninstall).<br />
-        <code>@openclawbrain/contracts@0.3.5</code> — shared contracts and validator surfaces used by the published V2 metadata upgrade.
+        <code>@openclawbrain/openclaw@0.4.0</code> — plugin and runtime payload.<br />
+        <code>@openclawbrain/cli@0.4.10</code> — operator CLI (install, status, uninstall).<br />
+        <code>@openclawbrain/contracts@0.3.5</code> — shared contracts for the V2 metadata upgrade.
       </p>
     </section>
 
     <section>
       <h2>Go deeper</h2>
       <p>
-        Use the homepage for the broader install, removal, and memory-loop story. Use this page for
-        the exact V2 proof slice, the repo for implementation detail, and the paper for background.
+        Homepage for install, removal, and the memory loop. This page for the V2 proof.
+        Repo for source. Paper for background.
       </p>
       <div class="footer-links">
         <a href="../">Homepage</a>
