@@ -353,8 +353,8 @@
       </p>
       <div class="stats">
         <div class="stat">
-          <span class="stat-label">Contracts</span>
-          <strong>v0.3.5</strong>
+          <span class="stat-label">Plugin</span>
+          <strong>v0.4.0</strong>
         </div>
         <div class="stat">
           <span class="stat-label">CLI</span>
@@ -375,14 +375,14 @@
     <section id="install">
       <h2>Install and verify</h2>
       <p>
-        Two published packages: the contracts package and the operator CLI.
-        Install the contracts, run the CLI against your OpenClaw home, restart the gateway,
+        The public install lane is still plugin first, then CLI.
+        Install the OpenClaw plugin, run the operator CLI against your OpenClaw home, restart the gateway,
         then verify with one status command.
       </p>
       <div class="callout">
-        <strong>Published packages:</strong> <code>@openclawbrain/contracts@0.3.5</code> and <code>@openclawbrain/cli@0.4.10</code>
+        <strong>Verified install lane:</strong> <code>@openclawbrain/openclaw@0.4.0</code> plus <code>@openclawbrain/cli@0.4.10</code>
       </div>
-      <pre><code>openclaw plugins install @openclawbrain/contracts@0.3.5
+      <pre><code>openclaw plugins install @openclawbrain/openclaw@0.4.0
 npx @openclawbrain/cli@0.4.10 install --openclaw-home ~/.openclaw
 openclaw gateway restart
 npx @openclawbrain/cli@0.4.10 status --openclaw-home ~/.openclaw --detailed</code></pre>
@@ -390,8 +390,12 @@ npx @openclawbrain/cli@0.4.10 status --openclaw-home ~/.openclaw --detailed</cod
         Verification command: <code>npx @openclawbrain/cli@0.4.10 status --openclaw-home ~/.openclaw --detailed</code>
       </p>
       <p class="small">
+        Metadata note: the truthful native V2 metadata milestone was published through <code>@openclawbrain/contracts@0.3.5</code>
+        and consumed by <code>@openclawbrain/cli@0.4.10</code>, but the operator-facing install path remains plugin + CLI.
+      </p>
+      <p class="small">
         Operator note: the plugin install may warn that the manifest id is <code>openclawbrain</code>
-        while the package name says <code>contracts</code>. That warning is expected; the flow above
+        while the package or entry hint says <code>openclaw</code>. That warning is currently cosmetic; the flow above
         is the verified install path.
       </p>
     </section>
@@ -539,8 +543,9 @@ openclaw gateway restart</code></pre>
     <section class="compat">
       <h2>Package reference</h2>
       <p>
-        <code>@openclawbrain/contracts@0.3.5</code> — the contracts package (memory engine, retrieval, traces).<br />
-        <code>@openclawbrain/cli@0.4.10</code> — the operator CLI (install, status, uninstall).
+        <code>@openclawbrain/openclaw@0.4.0</code> — the OpenClaw plugin/runtime payload.<br />
+        <code>@openclawbrain/cli@0.4.10</code> — the operator CLI (install, status, uninstall).<br />
+        <code>@openclawbrain/contracts@0.3.5</code> — shared contracts and validator surfaces used by the published V2 metadata upgrade.
       </p>
     </section>
 
@@ -552,8 +557,9 @@ openclaw gateway restart</code></pre>
       </p>
       <div class="footer-links">
         <a href="https://github.com/jonathangu/openclawbrain">GitHub repo</a>
-        <a href="https://www.npmjs.com/package/@openclawbrain/contracts">Contracts package</a>
+        <a href="https://www.npmjs.com/package/@openclawbrain/openclaw">Plugin package</a>
         <a href="https://www.npmjs.com/package/@openclawbrain/cli">CLI package</a>
+        <a href="https://www.npmjs.com/package/@openclawbrain/contracts">Contracts package</a>
         <a href="jonathan-gu-2016-reinforcement-learning-paper.pdf">2016 RL paper</a>
       </div>
     </section>
