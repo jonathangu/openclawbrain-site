@@ -6,12 +6,12 @@
   <title>OpenClawBrain - Durable Memory for OpenClaw</title>
   <meta
     name="description"
-    content="OpenClawBrain adds durable memory, learned retrieval, and inspectable traces to OpenClaw. Install the plugin, run the CLI, restart the gateway, and verify."
+    content="OpenClawBrain adds durable memory, learned retrieval, and inspectable traces to OpenClaw. Native V2 policy-gradient routing, end to end."
   />
   <meta property="og:title" content="OpenClawBrain - Durable Memory for OpenClaw" />
   <meta
     property="og:description"
-    content="Install OpenClawBrain, verify with one status command, and understand exactly how the memory loop works."
+    content="Install OpenClawBrain, verify native V2 metadata with one status command, and understand how the memory loop works."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
@@ -348,20 +348,21 @@
       <p class="lede">
         OpenClaw gives your agent a runtime. OpenClawBrain gives it durable memory, learned retrieval,
         and decision traces you can inspect when you need to understand why a context choice won.
-        Install the plugin, run the CLI, restart the gateway, verify.
+        The learned router now runs native V2 policy-gradient routing end to end —
+        no legacy labels, no validator seam.
       </p>
       <div class="stats">
         <div class="stat">
-          <span class="stat-label">Release</span>
-          <strong>v0.4.0</strong>
+          <span class="stat-label">Contracts</span>
+          <strong>v0.3.5</strong>
         </div>
         <div class="stat">
-          <span class="stat-label">Published packages</span>
-          <strong>2</strong>
+          <span class="stat-label">CLI</span>
+          <strong>v0.4.10</strong>
         </div>
         <div class="stat">
-          <span class="stat-label">Verified flow</span>
-          <strong>real Mac host</strong>
+          <span class="stat-label">Active pack</span>
+          <strong>pack-d099f991</strong>
         </div>
       </div>
       <div class="hero-links">
@@ -374,24 +375,50 @@
     <section id="install">
       <h2>Install and verify</h2>
       <p>
-        Version 0.4.0 ships two packages: the OpenClaw plugin and the operator CLI.
-        Install the plugin, run the CLI against your OpenClaw home, restart the gateway,
+        Two published packages: the contracts package and the operator CLI.
+        Install the contracts, run the CLI against your OpenClaw home, restart the gateway,
         then verify with one status command.
       </p>
       <div class="callout">
-        <strong>Published packages:</strong> <code>@openclawbrain/openclaw@0.4.0</code> and <code>@openclawbrain/cli@0.4.2</code>
+        <strong>Published packages:</strong> <code>@openclawbrain/contracts@0.3.5</code> and <code>@openclawbrain/cli@0.4.10</code>
       </div>
-      <pre><code>openclaw plugins install @openclawbrain/openclaw@0.4.0
-npx @openclawbrain/cli@0.4.2 install --openclaw-home ~/.openclaw
+      <pre><code>openclaw plugins install @openclawbrain/contracts@0.3.5
+npx @openclawbrain/cli@0.4.10 install --openclaw-home ~/.openclaw
 openclaw gateway restart
-npx @openclawbrain/cli@0.4.2 status --openclaw-home ~/.openclaw --detailed</code></pre>
+npx @openclawbrain/cli@0.4.10 status --openclaw-home ~/.openclaw --detailed</code></pre>
       <p class="small">
-        Verification command: <code>npx @openclawbrain/cli@0.4.2 status --openclaw-home ~/.openclaw --detailed</code>
+        Verification command: <code>npx @openclawbrain/cli@0.4.10 status --openclaw-home ~/.openclaw --detailed</code>
       </p>
       <p class="small">
         Operator note: the plugin install may warn that the manifest id is <code>openclawbrain</code>
-        while the package or entry hint says <code>openclaw</code>. That warning is expected; the flow above
+        while the package name says <code>contracts</code>. That warning is expected; the flow above
         is the verified install path.
+      </p>
+    </section>
+
+    <section id="proof">
+      <h2>Proof: native V2 metadata, end to end</h2>
+      <p>
+        The learned router now reports exactly what it runs. The old seam — where native V2
+        routing still surfaced <code>policy_gradient_v1</code>-compatible labels at the package
+        layer — is closed. Every metadata field the operator sees is truthful V2.
+      </p>
+      <div class="callout">
+        <strong>Learn proof:</strong> the published-path learn proof materialized and promoted
+        <code>pack-d099f991</code>.
+      </div>
+      <pre><code>STATUS ok
+path.pg            = v2
+path.method        = policy_gradient_v2
+path.target        = trajectory_reconstruction
+path.trajectories  = 344
+traced.routes      = 344
+traced.supervision = 32
+traced.updates     = 68</code></pre>
+      <p class="small">
+        344 traced routes, 32 supervision signals, 68 updates. The routing method is
+        <code>policy_gradient_v2</code> targeting trajectory reconstruction — not a V1 label
+        carried forward for compatibility, but the real method the router learned with.
       </p>
     </section>
 
@@ -409,7 +436,7 @@ npx @openclawbrain/cli@0.4.2 status --openclaw-home ~/.openclaw --detailed</code
             Remove the installed brain data for <code>~/.openclaw</code>, then remove the plugin record and files
             from OpenClaw.
           </p>
-          <pre><code>npx @openclawbrain/cli@0.4.2 uninstall --openclaw-home ~/.openclaw --purge-data
+          <pre><code>npx @openclawbrain/cli@0.4.10 uninstall --openclaw-home ~/.openclaw --purge-data
 openclaw plugins uninstall openclawbrain
 openclaw gateway restart</code></pre>
         </article>
@@ -512,8 +539,8 @@ openclaw gateway restart</code></pre>
     <section class="compat">
       <h2>Package reference</h2>
       <p>
-        <code>@openclawbrain/openclaw</code> — the OpenClaw plugin (memory engine, retrieval, traces).<br />
-        <code>@openclawbrain/cli</code> — the operator CLI (install, status, uninstall).
+        <code>@openclawbrain/contracts@0.3.5</code> — the contracts package (memory engine, retrieval, traces).<br />
+        <code>@openclawbrain/cli@0.4.10</code> — the operator CLI (install, status, uninstall).
       </p>
     </section>
 
@@ -525,17 +552,11 @@ openclaw gateway restart</code></pre>
       </p>
       <div class="footer-links">
         <a href="https://github.com/jonathangu/openclawbrain">GitHub repo</a>
-        <a href="https://www.npmjs.com/package/@openclawbrain/openclaw">Plugin package</a>
+        <a href="https://www.npmjs.com/package/@openclawbrain/contracts">Contracts package</a>
         <a href="https://www.npmjs.com/package/@openclawbrain/cli">CLI package</a>
         <a href="jonathan-gu-2016-reinforcement-learning-paper.pdf">2016 RL paper</a>
       </div>
     </section>
   </main>
 </body>
-</html>
->
-  </main>
-</body>
-</html>
-body>
 </html>
