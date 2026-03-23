@@ -3,32 +3,31 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Proof - OpenClawBrain Native V2 Metadata</title>
+  <title>Proof - OpenClawBrain</title>
   <meta
     name="description"
-    content="OpenClawBrain proof: native V2 policy-gradient routing, truthful operator metadata, and the install lane to verify it."
+    content="Proof for OpenClawBrain. Run the public install commands, compare the status output, and verify that the router reports its real V2 method."
   />
-  <meta property="og:title" content="Proof - OpenClawBrain Native V2 Metadata" />
+  <meta property="og:title" content="Proof - OpenClawBrain" />
   <meta
     property="og:description"
-    content="Native V2 metadata proof, verification command, and links to install, GitHub, and the paper."
+    content="Operator proof for OpenClawBrain: concrete status output, field-by-field guidance, and the public install lane."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/proof/" />
   <style>
     :root {
-      --bg: #05080d;
-      --bg-glow: rgba(70, 161, 223, 0.22);
-      --panel: rgba(10, 18, 29, 0.94);
-      --panel-soft: rgba(15, 27, 42, 0.94);
-      --text: #f3f7fb;
-      --muted: #aeb9c6;
-      --line: rgba(174, 185, 198, 0.18);
-      --accent: #7dd3fc;
-      --green: #86efac;
-      --gold: #fbbf24;
-      --code: #08111b;
-      --shadow: 0 18px 60px rgba(0, 0, 0, 0.24);
+      --bg: #071019;
+      --bg-glow: rgba(90, 166, 214, 0.16);
+      --panel: rgba(10, 19, 30, 0.94);
+      --panel-soft: rgba(14, 26, 39, 0.94);
+      --text: #eef4f9;
+      --muted: #a8b7c6;
+      --line: rgba(168, 183, 198, 0.16);
+      --accent: #8bd3ff;
+      --green: #95f0c1;
+      --code: #08111a;
+      --shadow: 0 20px 70px rgba(0, 0, 0, 0.25);
     }
 
     * {
@@ -40,16 +39,16 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top, var(--bg-glow), transparent 34%),
-        linear-gradient(180deg, #08111a 0%, var(--bg) 100%);
+        radial-gradient(circle at top, var(--bg-glow), transparent 32%),
+        linear-gradient(180deg, #09121c 0%, var(--bg) 100%);
       color: var(--text);
-      line-height: 1.6;
+      line-height: 1.55;
     }
 
     main {
-      max-width: 920px;
+      max-width: 980px;
       margin: 0 auto;
-      padding: 32px 20px 72px;
+      padding: 32px 20px 56px;
     }
 
     .site-nav {
@@ -63,36 +62,59 @@
 
     .site-nav a {
       color: var(--muted);
-      font-size: 0.94rem;
+      font-size: 0.95rem;
+      text-decoration: none;
     }
 
+    .site-nav a:hover,
     .site-nav a[aria-current="page"] {
       color: var(--text);
-      font-weight: 700;
     }
 
-    section {
+    .panel {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 30px;
-      margin-bottom: 18px;
+      border-radius: 22px;
       box-shadow: var(--shadow);
+      margin-bottom: 18px;
+      padding: 30px;
+    }
+
+    .hero {
+      background:
+        linear-gradient(160deg, rgba(17, 31, 47, 0.98) 0%, rgba(8, 15, 24, 0.98) 100%);
+      padding: 38px 30px 30px;
+    }
+
+    .eyebrow {
+      color: var(--green);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      margin-bottom: 12px;
+      text-transform: uppercase;
     }
 
     h1 {
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(2.7rem, 8vw, 4.7rem);
-      line-height: 0.98;
-      letter-spacing: -0.03em;
+      font-size: clamp(2.6rem, 8vw, 4.5rem);
+      letter-spacing: -0.04em;
+      line-height: 0.96;
       margin: 0 0 16px;
+      max-width: 760px;
     }
 
     h2 {
-      font-size: 1.45rem;
-      line-height: 1.15;
       color: var(--accent);
+      font-size: 1.42rem;
+      line-height: 1.15;
       margin: 0 0 12px;
+    }
+
+    h3 {
+      font-size: 1.04rem;
+      line-height: 1.25;
+      margin: 0 0 8px;
     }
 
     p {
@@ -101,7 +123,6 @@
 
     a {
       color: var(--accent);
-      text-decoration: none;
     }
 
     a:hover {
@@ -116,90 +137,56 @@
 
     code {
       background: rgba(8, 17, 27, 0.82);
-      border: 1px solid rgba(174, 185, 198, 0.1);
-      padding: 2px 6px;
+      border: 1px solid rgba(168, 183, 198, 0.12);
       border-radius: 6px;
+      padding: 2px 6px;
     }
 
     pre {
       background: var(--code);
-      border: 1px solid rgba(174, 185, 198, 0.12);
-      border-radius: 14px;
-      padding: 18px;
+      border: 1px solid rgba(168, 183, 198, 0.14);
+      border-radius: 16px;
+      margin: 16px 0;
       overflow-x: auto;
-      margin: 14px 0;
+      padding: 18px;
     }
 
     pre code {
       background: transparent;
       border: 0;
-      padding: 0;
       display: block;
       line-height: 1.7;
+      padding: 0;
     }
 
-    .hero {
-      padding: 42px 30px 34px;
-      background:
-        linear-gradient(160deg, rgba(16, 29, 46, 0.98) 0%, rgba(9, 16, 26, 0.98) 100%);
-    }
-
-    .eyebrow {
-      color: var(--green);
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-size: 0.76rem;
-      margin-bottom: 12px;
-    }
-
-    .lede {
-      max-width: 720px;
-      font-size: 1.1rem;
+    .lede,
+    .section-copy,
+    .small {
       color: var(--muted);
-      margin-bottom: 24px;
     }
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin: 20px 0 24px;
-    }
-
-    .stat {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 16px;
-    }
-
-    .stat-label {
-      display: block;
-      color: var(--muted);
-      font-size: 0.84rem;
-      margin-bottom: 4px;
-    }
-
-    .stat strong {
+    .lede,
+    .section-copy {
       font-size: 1.05rem;
+      max-width: 760px;
     }
 
-    .hero-links,
-    .footer-links {
+    .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
+      margin-top: 24px;
     }
 
     .button {
-      display: inline-block;
-      padding: 12px 18px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      font-weight: 700;
-      color: var(--text);
       background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--text);
+      display: inline-block;
+      font-weight: 700;
+      padding: 12px 18px;
+      text-decoration: none;
     }
 
     .button:hover {
@@ -207,57 +194,118 @@
     }
 
     .button-primary {
-      color: #03210f;
-      background: linear-gradient(135deg, var(--green) 0%, #bbf7d0 100%);
-      border-color: rgba(134, 239, 172, 0.6);
+      background: linear-gradient(135deg, var(--green) 0%, #c5f8da 100%);
+      border-color: rgba(149, 240, 193, 0.6);
+      color: #042312;
     }
 
     .button-secondary {
-      border-color: rgba(125, 211, 252, 0.35);
-    }
-
-    .button-paper {
-      color: #fef3c7;
-      background: rgba(251, 191, 36, 0.12);
-      border-color: rgba(251, 191, 36, 0.3);
+      border-color: rgba(139, 211, 255, 0.35);
     }
 
     .callout {
-      background: linear-gradient(135deg, rgba(10, 27, 20, 0.95), rgba(8, 19, 30, 0.95));
-      border: 1px solid rgba(134, 239, 172, 0.28);
-      border-radius: 16px;
-      padding: 16px 18px;
-      margin: 18px 0 0;
+      background: linear-gradient(135deg, rgba(9, 25, 18, 0.96), rgba(8, 19, 29, 0.96));
+      border: 1px solid rgba(149, 240, 193, 0.22);
+      border-radius: 18px;
       color: var(--muted);
+      margin-top: 16px;
+      padding: 16px 18px;
     }
 
     .callout strong {
       color: var(--green);
     }
 
-    .small {
+    .cards,
+    .link-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .link-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card,
+    .link-card {
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .link-card {
+      color: inherit;
+      display: block;
+      text-decoration: none;
+    }
+
+    .link-card strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .link-card span {
       color: var(--muted);
-      font-size: 0.95rem;
     }
 
-    .compat {
-      border-color: rgba(251, 191, 36, 0.25);
-      background:
-        linear-gradient(180deg, rgba(28, 20, 6, 0.94), rgba(12, 14, 21, 0.94));
+    .link-card:hover {
+      border-color: rgba(139, 211, 255, 0.42);
+      text-decoration: none;
     }
 
-    .compat h2 {
-      color: var(--gold);
+    .list {
+      list-style: none;
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .list li {
+      color: var(--muted);
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .list li::before {
+      color: var(--accent);
+      content: "•";
+      left: 0;
+      position: absolute;
+      top: 0;
+    }
+
+    .site-footer {
+      color: var(--muted);
+      font-size: 0.96rem;
+      padding: 10px 4px 0;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .link-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 760px) {
-      .stats {
+      .cards,
+      .link-grid {
         grid-template-columns: 1fr;
       }
 
-      section,
+      .panel,
       .hero {
         padding: 24px 20px;
+      }
+
+      .site-nav {
+        justify-content: flex-start;
       }
     }
   </style>
@@ -269,47 +317,45 @@
       <a href="../index.html#install">Install</a>
       <a href="./" aria-current="page">Proof</a>
       <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
-      <a href="../jonathan-gu-2016-reinforcement-learning-paper.pdf">Paper</a>
     </nav>
 
-    <section class="hero">
+    <section class="panel hero">
       <p class="eyebrow">OpenClawBrain proof</p>
-      <h1>Native V2 metadata, end to end.</h1>
+      <h1>Proof that the public install lane reports the real method.</h1>
       <p class="lede">
-        The router reports exactly what it runs: native V2 policy-gradient routing
-        and truthful operator metadata. The old V1 label seam is closed.
+        This page is for operators. Run the status command, compare the fields,
+        and confirm that the router reports its real V2 path.
       </p>
-      <div class="stats">
-        <div class="stat">
-          <span class="stat-label">Plugin</span>
-          <strong>v0.4.0</strong>
-        </div>
-        <div class="stat">
-          <span class="stat-label">CLI</span>
-          <strong>v0.4.10</strong>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Active pack</span>
-          <strong>pack-d099f991</strong>
-        </div>
-      </div>
-      <div class="hero-links">
-        <a class="button button-primary" href="../index.html#install">Install / Verify</a>
+      <div class="hero-actions">
+        <a class="button button-primary" href="../index.html#install">Go to install</a>
         <a class="button button-secondary" href="../">Back to homepage</a>
         <a class="button button-secondary" href="https://github.com/jonathangu/openclawbrain">GitHub</a>
-        <a class="button button-paper" href="../jonathan-gu-2016-reinforcement-learning-paper.pdf">2016 RL paper</a>
       </div>
     </section>
 
-    <section>
-      <h2>What the operator sees</h2>
-      <p>
-        Run the status command below. Every field reports its real V2 value.
+    <section class="panel">
+      <h2>What this page proves</h2>
+      <p class="section-copy">
+        The current public install lane can report concrete V2 metadata. You can
+        verify it from the status output alone.
       </p>
+      <ul class="list">
+        <li><code>path.pg = v2</code> reports the active policy-gradient generation.</li>
+        <li><code>path.method = policy_gradient_v2</code> reports the method by name.</li>
+        <li><code>path.target = trajectory_reconstruction</code> reports the learning target.</li>
+        <li><code>traced.*</code> fields show that traced routes, supervision, and updates exist.</li>
+      </ul>
       <div class="callout">
-        <strong>Learn proof:</strong> the published learn path produced and promoted
+        <strong>Published learn path:</strong> the promoted pack in this proof is
         <code>pack-d099f991</code>.
       </div>
+    </section>
+
+    <section class="panel">
+      <h2>Current proof output</h2>
+      <p class="section-copy">
+        Run status and compare your output with the fields below.
+      </p>
       <pre><code>STATUS ok
 path.pg            = v2
 path.method        = policy_gradient_v2
@@ -319,67 +365,69 @@ traced.routes      = 344
 traced.supervision = 32
 traced.updates     = 68</code></pre>
       <p class="small">
-        344 traced routes, 32 supervision signals, 68 updates.
-        Routing method: <code>policy_gradient_v2</code> targeting trajectory reconstruction.
-        This is the actual method the router learned with, not a carried-forward V1 label.
+        This output shows a real V2 method name and traced learning counts. It is
+        useful because it is specific, not because the numbers are large.
       </p>
-      <p class="small">
-        Starting fresh? Use the <a href="../index.html#install">install lane</a>,
-        then compare your status output against these fields.
-      </p>
+      <div class="cards">
+        <article class="card">
+          <h3>Path fields</h3>
+          <p class="small">
+            These lines identify the method and target that the router reports for this install.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Trace fields</h3>
+          <p class="small">
+            These counts show that traced routes, supervision, and updates were recorded.
+          </p>
+        </article>
+      </div>
     </section>
 
-    <section>
-      <h2>Reproduce from the public install lane</h2>
-      <p>
-        Install the plugin, run the CLI against your OpenClaw home, restart the gateway, and verify with one command.
+    <section class="panel">
+      <h2>Reproduce it from the public install lane</h2>
+      <p class="section-copy">
+        Use the same setup path shown on the homepage. Install, restart, then run status.
       </p>
-      <div class="callout">
-        <strong>Verified install lane:</strong> <code>@openclawbrain/openclaw@0.4.0</code> plus <code>@openclawbrain/cli@0.4.10</code>
-      </div>
-      <pre><code>openclaw plugins install @openclawbrain/openclaw@0.4.0
-npx @openclawbrain/cli@0.4.10 install --openclaw-home ~/.openclaw
+      <pre><code>openclaw plugins install @openclawbrain/openclaw
+npx @openclawbrain/cli install --openclaw-home ~/.openclaw
 openclaw gateway restart
-npx @openclawbrain/cli@0.4.10 status --openclaw-home ~/.openclaw --detailed</code></pre>
+npx @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed</code></pre>
       <p class="small">
-        Verification command: <code>npx @openclawbrain/cli@0.4.10 status --openclaw-home ~/.openclaw --detailed</code>
-      </p>
-      <p class="small">
-        Metadata note: native V2 metadata ships through <code>@openclawbrain/contracts@0.3.5</code>
-        and is consumed by <code>@openclawbrain/cli@0.4.10</code>. The install path stays plugin + CLI.
-      </p>
-      <p class="small">
-        Operator note: the plugin install may warn that the manifest id is <code>openclawbrain</code>
-        while the package says <code>openclaw</code>. This warning is cosmetic. The flow above is verified.
+        The last command is the one to compare. If your OpenClaw home lives
+        somewhere else, change the path.
       </p>
     </section>
 
-    <section class="compat">
-      <h2>Package reference</h2>
-      <p>
-        <code>@openclawbrain/openclaw@0.4.0</code> — plugin and runtime payload.<br />
-        <code>@openclawbrain/cli@0.4.10</code> — operator CLI (install, status, uninstall).<br />
-        <code>@openclawbrain/contracts@0.3.5</code> — shared contracts for the V2 metadata upgrade.
-      </p>
-    </section>
-
-    <section>
+    <section class="panel">
       <h2>Go deeper</h2>
-      <p>
-        Homepage for install, removal, and the memory loop. This page for the V2 proof.
-        Repo for source. Paper for background.
+      <p class="section-copy">
+        Use the homepage for the main product framing. Use this page when you need
+        concrete proof output.
       </p>
-      <div class="footer-links">
-        <a href="../">Homepage</a>
-        <a href="../index.html#install">Install section</a>
-        <a href="./">Proof page</a>
-        <a href="https://github.com/jonathangu/openclawbrain">GitHub repo</a>
-        <a href="https://www.npmjs.com/package/@openclawbrain/openclaw">Plugin package</a>
-        <a href="https://www.npmjs.com/package/@openclawbrain/cli">CLI package</a>
-        <a href="https://www.npmjs.com/package/@openclawbrain/contracts">Contracts package</a>
-        <a href="../jonathan-gu-2016-reinforcement-learning-paper.pdf">2016 RL paper</a>
+      <div class="link-grid">
+        <a class="link-card" href="../">
+          <strong>Homepage</strong>
+          <span>The public framing and the four-step model.</span>
+        </a>
+        <a class="link-card" href="../index.html#install">
+          <strong>Setup guide</strong>
+          <span>The install lane on the homepage.</span>
+        </a>
+        <a class="link-card" href="https://www.npmjs.com/package/@openclawbrain/openclaw">
+          <strong>Plugin package</strong>
+          <span>The OpenClaw plugin package.</span>
+        </a>
+        <a class="link-card" href="https://www.npmjs.com/package/@openclawbrain/cli">
+          <strong>CLI package</strong>
+          <span>The install and status commands.</span>
+        </a>
       </div>
     </section>
+
+    <footer class="site-footer">
+      <p>Built by Jonathan Gu. Apache 2.0 licensed. Open source from the start.</p>
+    </footer>
   </main>
 </body>
 </html>
