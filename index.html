@@ -499,18 +499,20 @@
     </section>
 
     <section class="panel" id="install">
-      <h2>Install</h2>
+      <h2>Install and verify</h2>
       <p class="section-copy">
-        Use the current public packages. Install the plugin, wire the CLI into
-        your OpenClaw home, restart the gateway, then run status.
+        Use the current public packages. The public flow is three commands to
+        install or update, then one command to verify: install the plugin, wire
+        the CLI into your OpenClaw home, restart the gateway, then run status.
       </p>
       <pre><code>openclaw plugins install @openclawbrain/openclaw
 npx @openclawbrain/cli install --openclaw-home ~/.openclaw
 openclaw gateway restart
 npx @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed</code></pre>
       <p class="install-note">
-        The last command is the quick check. Need the expected fields? Compare
-        your output with the <a href="proof/">proof page</a>.
+        The first three commands install or update. The last command verifies.
+        Need the expected fields? Compare your output with the
+        <a href="proof/">proof page</a>.
       </p>
     </section>
 
