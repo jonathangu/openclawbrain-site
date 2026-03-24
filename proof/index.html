@@ -6,12 +6,12 @@
   <title>Proof - OpenClawBrain</title>
   <meta
     name="description"
-    content="Proof for OpenClawBrain. Run the public install commands, compare the status output, and verify that the router reports its real V2 method."
+    content="Proof for OpenClawBrain. Run the public install commands, compare the status output, and capture a durable proof bundle when you need operator evidence."
   />
   <meta property="og:title" content="Proof - OpenClawBrain" />
   <meta
     property="og:description"
-    content="Operator proof for OpenClawBrain: concrete status output, field-by-field guidance, and the public install lane."
+    content="Operator proof for OpenClawBrain: concrete status output, proof-bundle capture, and the public install lane."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/proof/" />
@@ -323,8 +323,9 @@
       <p class="eyebrow">OpenClawBrain proof</p>
       <h1>Proof that the public install lane reports the real method.</h1>
       <p class="lede">
-        This page is for operators. Run the status command, compare the fields,
-        and confirm that the router reports its real V2 path.
+        This page is for operators. Run <code>status --detailed</code> for the
+        quick check, then run the proof command when you need one durable bundle
+        with the exact step logs and runtime evidence.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="../index.html#install">Go to install</a>
@@ -344,6 +345,7 @@
         <li><code>path.method = policy_gradient_v2</code> reports the method by name.</li>
         <li><code>path.target = trajectory_reconstruction</code> reports the learning target.</li>
         <li><code>traced.*</code> fields show that traced routes, supervision, and updates exist.</li>
+        <li><code>proof</code> captures one durable bundle with <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>, raw step logs, startup breadcrumbs, and runtime-load-proof snapshots.</li>
       </ul>
       <div class="callout">
         <strong>Published learn path:</strong> the promoted pack in this proof is
@@ -387,15 +389,20 @@ traced.updates     = 68</code></pre>
     <section class="panel">
       <h2>Reproduce it from the public install lane</h2>
       <p class="section-copy">
-        Use the same setup path shown on the homepage. Install, restart, then run status.
+        Use the same setup path shown on the homepage. Install, restart, run status for the quick check, then capture the proof bundle.
       </p>
       <pre><code>openclaw plugins install @openclawbrain/openclaw
 npx @openclawbrain/cli install --openclaw-home ~/.openclaw
 openclaw gateway restart
-npx @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed</code></pre>
+npx @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
+npx @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
       <p class="small">
-        The last command is the one to compare. If your OpenClaw home lives
-        somewhere else, change the path.
+        <code>status --detailed</code> is the fast compare surface. <code>proof</code>
+        writes <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>,
+        raw step logs, startup breadcrumbs, and runtime-load-proof snapshots into one bundle.
+        After install, the same surface is also available through the first-class
+        <code>openclawbrain proof --openclaw-home ~/.openclaw</code> command. If your
+        OpenClaw home lives somewhere else, change the path.
       </p>
     </section>
 
@@ -420,7 +427,7 @@ npx @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed</code></pre
         </a>
         <a class="link-card" href="https://www.npmjs.com/package/@openclawbrain/cli">
           <strong>CLI package</strong>
-          <span>The install and status commands.</span>
+          <span>The install, status, and proof commands.</span>
         </a>
       </div>
     </section>

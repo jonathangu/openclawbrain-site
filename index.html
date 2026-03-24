@@ -11,7 +11,7 @@
   <meta property="og:title" content="OpenClawBrain - Memory Layer for AI Agents" />
   <meta
     property="og:description"
-    content="Store corrections, retrieve them on the next similar task, learn from outcomes, and verify the install with one status command."
+    content="Store corrections, retrieve them on the next similar task, learn from outcomes, verify quickly with status, and capture a durable proof bundle when needed."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
@@ -499,20 +499,25 @@
     </section>
 
     <section class="panel" id="install">
-      <h2>Install and verify</h2>
+      <h2>Install, verify, and capture proof</h2>
       <p class="section-copy">
         Use the current public packages. The public flow is three commands to
-        install or update, then one command to verify: install the plugin, wire
-        the CLI into your OpenClaw home, restart the gateway, then run status.
+        install or update, one command to verify quickly, and one proof command
+        when you need a durable operator bundle.
       </p>
       <pre><code>openclaw plugins install @openclawbrain/openclaw
 npx @openclawbrain/cli install --openclaw-home ~/.openclaw
 openclaw gateway restart
-npx @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed</code></pre>
+npx @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
+npx @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
       <p class="install-note">
-        The first three commands install or update. The last command verifies.
-        Need the expected fields? Compare your output with the
-        <a href="proof/">proof page</a>.
+        The first three commands install or update. <code>status --detailed</code>
+        is the quick verify surface. <code>proof</code> writes <code>summary.md</code>,
+        <code>steps.json</code>, <code>verdict.json</code>, raw step logs, startup
+        breadcrumbs, and proof pointers under one bundle directory. After install,
+        the same surface is also available through the first-class
+        <code>openclawbrain proof --openclaw-home ~/.openclaw</code> command.
+        Need the expected fields? Compare your output with the <a href="proof/">proof page</a>.
       </p>
     </section>
 
@@ -532,7 +537,7 @@ npx @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed</code></pre
         </a>
         <a class="link-card" href="https://www.npmjs.com/package/@openclawbrain/cli">
           <strong>CLI package</strong>
-          <span>The install, status, and operator commands.</span>
+          <span>The install, status, proof, and operator commands.</span>
         </a>
         <a class="link-card" href="#install">
           <strong>Setup guide</strong>
