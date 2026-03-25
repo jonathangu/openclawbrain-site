@@ -501,9 +501,8 @@
     <section class="panel" id="install">
       <h2>Install or update, verify, and capture proof</h2>
       <p class="section-copy">
-        Use the current public packages. The public operator story has two literal
-        OpenClawBrain actions: one to install OpenClawBrain on a host that does not
-        have it yet, and one to update OpenClawBrain on a host that already has it.
+        Use the current public packages. If the host does not have OpenClawBrain
+        yet, install it. If it already has OpenClawBrain, update it.
       </p>
       <h3>Install OpenClawBrain</h3>
       <pre><code>openclaw plugins install @openclawbrain/openclaw
@@ -518,11 +517,11 @@ openclaw gateway restart
 npx -y @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
 npx -y @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
       <p class="install-note">
-        The real install command is <code>openclaw plugins install @openclawbrain/openclaw</code>.
-        The real update command is <code>openclaw plugins update openclawbrain</code>.
-        For an already-installed host, the plugin update is only step 1. You still
-        need to rerun the CLI <code>install</code> command so the activation root and
-        native package plugin wiring stay correct for that OpenClaw home.
+        Use <code>openclaw plugins install @openclawbrain/openclaw</code> to install
+        OpenClawBrain on a host that does not have it yet. Use <code>openclaw plugins update openclawbrain</code>
+        to update an existing install. If you are updating an existing host, the plugin
+        update is only step 1. You still need to rerun the CLI <code>install</code>
+        command so the activation root and native package plugin wiring stay correct for that OpenClaw home.
         <code>status --detailed</code> is the quick verify surface. <code>proof</code>
         writes <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>,
         raw step logs, startup breadcrumbs, and proof pointers under one bundle
@@ -561,11 +560,6 @@ npx -y @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --ski
 
     <footer class="site-footer">
       <p>Built by Jonathan Gu. Apache 2.0 licensed. Open source from the start.</p>
-    </footer>
-  </main>
-</body>
-</html>
-e start.</p>
     </footer>
   </main>
 </body>
