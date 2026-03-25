@@ -361,7 +361,7 @@
       <a href="#demo">Demo</a>
       <a href="#difference">How it differs</a>
       <a href="#how">How it works</a>
-      <a href="#install">Install</a>
+      <a href="#install">Install / Update</a>
       <a href="proof/">Proof</a>
       <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
     </nav>
@@ -378,7 +378,7 @@
         running. Learning happens in the background.
       </p>
       <div class="hero-actions">
-        <a class="button button-primary" href="#install">Install OpenClawBrain</a>
+        <a class="button button-primary" href="#install">Install or update OpenClawBrain</a>
         <a class="button button-secondary" href="#demo">See the demo</a>
         <a class="button button-secondary" href="proof/">Read the proof</a>
       </div>
@@ -499,27 +499,36 @@
     </section>
 
     <section class="panel" id="install">
-      <h2>Install, verify, and capture proof</h2>
+      <h2>Install or update, verify, and capture proof</h2>
       <p class="section-copy">
-        Use the current public packages. The public flow is three commands to
-        install or update, one command to verify quickly, and one proof command
-        when you need a durable operator bundle.
+        Use the current public packages. The public operator story has two explicit
+        entry points: one for a fresh install, and one for updating a host that
+        already has OpenClawBrain installed.
       </p>
+      <h3>Fresh install</h3>
       <pre><code>openclaw plugins install @openclawbrain/openclaw
-npx @openclawbrain/cli install --openclaw-home ~/.openclaw
+npx -y @openclawbrain/cli install --openclaw-home ~/.openclaw
 openclaw gateway restart
-npx @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
-npx @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
+npx -y @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
+npx -y @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
+      <h3>Update an existing host</h3>
+      <pre><code>openclaw plugins update openclawbrain
+npx -y @openclawbrain/cli install --openclaw-home ~/.openclaw
+openclaw gateway restart
+npx -y @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
+npx -y @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
       <p class="install-note">
-        The first three commands install or update. <code>status --detailed</code>
-        is the quick verify surface. <code>proof</code> writes <code>summary.md</code>,
-        <code>steps.json</code>, <code>verdict.json</code>, raw step logs, startup
-        breadcrumbs, and proof pointers under one bundle directory. After install,
-        the same surface is also available through the first-class
-        <code>openclawbrain proof --openclaw-home ~/.openclaw</code> command.
-        That proof lane freezes install/runtime/reporting truth; broader live-gain
-        claims still need their own evidence. Need the expected fields? Compare
-        your output with the <a href="proof/">proof page</a>.
+        For an already-installed host, the plugin update is only step 1. You still
+        need to rerun the CLI <code>install</code> command so the activation root and
+        native package plugin wiring stay correct for that OpenClaw home.
+        <code>status --detailed</code> is the quick verify surface. <code>proof</code>
+        writes <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>,
+        raw step logs, startup breadcrumbs, and proof pointers under one bundle
+        directory. After install or update, the same surface is also available
+        through the first-class <code>openclawbrain proof --openclaw-home ~/.openclaw</code>
+        command. That proof lane freezes install/runtime/reporting truth; broader
+        live-gain claims still need their own evidence. Need the expected fields?
+        Compare your output with the <a href="proof/">proof page</a>.
       </p>
     </section>
 

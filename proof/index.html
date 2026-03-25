@@ -314,14 +314,14 @@
   <main>
     <nav class="site-nav" aria-label="Primary">
       <a href="../">Home</a>
-      <a href="../index.html#install">Install</a>
+      <a href="../index.html#install">Install / Update</a>
       <a href="./" aria-current="page">Proof</a>
       <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
     </nav>
 
     <section class="panel hero">
       <p class="eyebrow">OpenClawBrain proof</p>
-      <h1>Proof that the public install lane reports the real method.</h1>
+      <h1>Proof that the public install and update lane reports the real method.</h1>
       <p class="lede">
         This page is for operators. Run <code>status --detailed</code> for the
         quick check, then run the proof command when you need one durable bundle
@@ -391,20 +391,27 @@ traced.updates     = &lt;host-specific count&gt;</code></pre>
     </section>
 
     <section class="panel">
-      <h2>Reproduce it from the public install lane</h2>
+      <h2>Reproduce it from the public install or update lane</h2>
       <p class="section-copy">
-        Use the same setup path shown on the homepage. Install, restart, run status for the quick check, then capture the proof bundle.
+        Use the same setup path shown on the homepage. For a fresh host, use the install command. For an existing host, use the update command first, then rerun the CLI install step, restart, run status for the quick check, and capture the proof bundle.
       </p>
+      <h3>Fresh install</h3>
       <pre><code>openclaw plugins install @openclawbrain/openclaw
-npx @openclawbrain/cli install --openclaw-home ~/.openclaw
+npx -y @openclawbrain/cli install --openclaw-home ~/.openclaw
 openclaw gateway restart
-npx @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
-npx @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
+npx -y @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
+npx -y @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
+      <h3>Update an existing host</h3>
+      <pre><code>openclaw plugins update openclawbrain
+npx -y @openclawbrain/cli install --openclaw-home ~/.openclaw
+openclaw gateway restart
+npx -y @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
+npx -y @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
       <p class="small">
-        <code>status --detailed</code> is the fast compare surface. <code>proof</code>
+        For an already-installed host, the plugin update is only step 1. You still need to rerun the CLI <code>install</code> command so the activation root and native package plugin wiring stay correct for that OpenClaw home. <code>status --detailed</code> is the fast compare surface. <code>proof</code>
         writes <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>,
         raw step logs, startup breadcrumbs, and runtime-load-proof snapshots into one bundle.
-        After install, the same surface is also available through the first-class
+        After install or update, the same surface is also available through the first-class
         <code>openclawbrain proof --openclaw-home ~/.openclaw</code> command. If your
         OpenClaw home lives somewhere else, change the path.
       </p>
