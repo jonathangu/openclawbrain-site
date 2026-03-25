@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OpenClawBrain - Memory Layer for AI Agents</title>
+  <title>OpenClawBrain - Bounded Memory for OpenClaw Agents</title>
   <meta
     name="description"
-    content="Your agent forgets everything between sessions. OpenClawBrain is a memory layer for AI agents that stores corrections, retrieves them when they matter, learns from outcomes, and shows the trace."
+    content="OpenClawBrain gives OpenClaw agents bounded useful context: store corrections, retrieve them when they matter, learn from outcomes, and keep the live path predictable."
   />
-  <meta property="og:title" content="OpenClawBrain - Memory Layer for AI Agents" />
+  <meta property="og:title" content="OpenClawBrain - Bounded Memory for OpenClaw Agents" />
   <meta
     property="og:description"
-    content="Store corrections, retrieve them on the next similar task, learn from outcomes, verify quickly with status, and capture a durable proof bundle when needed."
+    content="One install front door, bounded useful context, predictable live-path latency, quick status checks, and durable proof when you need operator evidence."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
@@ -499,37 +499,31 @@
     </section>
 
     <section class="panel" id="install">
-      <h2>Install or update, verify, and capture proof</h2>
+      <h2>Install, verify, and capture proof</h2>
       <p class="section-copy">
-        Use the current public packages. If the host does not have OpenClawBrain
-        yet, install it. If it already has OpenClawBrain, update it.
+        The public operator story is one command front door for one OpenClaw home.
+        The same lane should install, refresh, or repair the selected home, keep the
+        live path bounded, and make verification quick.
       </p>
-      <h3>Install OpenClawBrain</h3>
-      <pre><code>openclaw plugins install @openclawbrain/openclaw
-npx -y @openclawbrain/cli install --openclaw-home ~/.openclaw
+      <h3>Canonical operator lane</h3>
+      <pre><code>openclawbrain install --openclaw-home ~/.openclaw
 openclaw gateway restart
-npx -y @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
-npx -y @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
-      <h3>Update OpenClawBrain</h3>
-      <pre><code>openclaw plugins update openclawbrain
-npx -y @openclawbrain/cli install --openclaw-home ~/.openclaw
-openclaw gateway restart
-npx -y @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
-npx -y @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
+openclawbrain status --openclaw-home ~/.openclaw --detailed</code></pre>
       <p class="install-note">
-        Use <code>openclaw plugins install @openclawbrain/openclaw</code> to install
-        OpenClawBrain on a host that does not have it yet. Use <code>openclaw plugins update openclawbrain</code>
-        to update an existing install. If you are updating an existing host, the plugin
-        update is only step 1. You still need to rerun the CLI <code>install</code>
-        command so the activation root and native package plugin wiring stay correct for that OpenClaw home.
-        <code>status --detailed</code> is the quick verify surface. <code>proof</code>
-        writes <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>,
-        raw step logs, startup breadcrumbs, and proof pointers under one bundle
-        directory. After install or update, the same surface is also available
-        through the first-class <code>openclawbrain proof --openclaw-home ~/.openclaw</code>
-        command. That proof lane freezes install/runtime/reporting truth; broader
-        live-gain claims still need their own evidence. Need the expected fields?
-        Compare your output with the <a href="proof/">proof page</a>.
+        <code>install</code> is the public front door. It targets one OpenClaw home,
+        writes or repairs the hook for that home, and pins the activation root the runtime serves from.
+        <code>status --detailed</code> is the quick verify surface.
+      </p>
+      <h3>Durable proof when you need operator evidence</h3>
+      <pre><code>openclawbrain proof --openclaw-home ~/.openclaw</code></pre>
+      <p class="install-note">
+        The intended canonical lane is the same install command with optional <code>--proof</code>.
+        Until that lands cleanly across the operator surfaces, proof stays a separate follow-up command.
+        It writes <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>,
+        raw step logs, startup breadcrumbs, and proof pointers under one bundle directory.
+        If you are explicitly managing <code>@openclawbrain/openclaw</code> with OpenClaw's plugin manager,
+        keep that as an advanced package-management step and rerun <code>openclawbrain install --openclaw-home ~/.openclaw</code>
+        afterward. Need the expected fields? Compare your output with the <a href="proof/">proof page</a>.
       </p>
     </section>
 

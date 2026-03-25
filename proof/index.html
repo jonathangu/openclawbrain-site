@@ -6,12 +6,12 @@
   <title>Proof - OpenClawBrain</title>
   <meta
     name="description"
-    content="Proof for OpenClawBrain. Run the public install commands, compare the status output, and capture a durable proof bundle when you need operator evidence."
+    content="Proof for OpenClawBrain: run the one-command install lane, compare status output, and capture a durable proof bundle when you need operator evidence."
   />
   <meta property="og:title" content="Proof - OpenClawBrain" />
   <meta
     property="og:description"
-    content="Operator proof for OpenClawBrain: concrete status output, proof-bundle capture, and the public install lane."
+    content="Operator proof for OpenClawBrain: one install front door, concrete status output, and proof-bundle capture."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/proof/" />
@@ -391,29 +391,21 @@ traced.updates     = &lt;host-specific count&gt;</code></pre>
     </section>
 
     <section class="panel">
-      <h2>Reproduce it from the public install or update lane</h2>
+      <h2>Reproduce it from the public install lane</h2>
       <p class="section-copy">
-        Use the same setup path shown on the homepage. If the host does not have OpenClawBrain yet, install it. If it already has OpenClawBrain, update it first, then rerun the CLI install step, restart, run status for the quick check, and capture the proof bundle.
+        Use the same setup path shown on the homepage. The public operator story is one command pinned to one OpenClaw home, then a restart, a status check, and proof only when you need durable operator evidence.
       </p>
-      <h3>Install OpenClawBrain</h3>
-      <pre><code>openclaw plugins install @openclawbrain/openclaw
-npx -y @openclawbrain/cli install --openclaw-home ~/.openclaw
+      <h3>Canonical operator lane</h3>
+      <pre><code>openclawbrain install --openclaw-home ~/.openclaw
 openclaw gateway restart
-npx -y @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
-npx -y @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
-      <h3>Update OpenClawBrain</h3>
-      <pre><code>openclaw plugins update openclawbrain
-npx -y @openclawbrain/cli install --openclaw-home ~/.openclaw
-openclaw gateway restart
-npx -y @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
-npx -y @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
+openclawbrain status --openclaw-home ~/.openclaw --detailed</code></pre>
+      <h3>Durable proof</h3>
+      <pre><code>openclawbrain proof --openclaw-home ~/.openclaw</code></pre>
       <p class="small">
-        Use <code>openclaw plugins install @openclawbrain/openclaw</code> to install OpenClawBrain. Use <code>openclaw plugins update openclawbrain</code> to update an existing install. If you are updating an existing host, the plugin update is only step 1. You still need to rerun the CLI <code>install</code> command so the activation root and native package plugin wiring stay correct for that OpenClaw home. <code>status --detailed</code> is the fast compare surface. <code>proof</code>
+        <code>install</code> is the public front door for the selected home. It writes or repairs the hook for that home and pins the activation root the runtime serves from. <code>status --detailed</code> is the fast compare surface. <code>proof</code>
         writes <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>,
         raw step logs, startup breadcrumbs, and runtime-load-proof snapshots into one bundle.
-        After install or update, the same surface is also available through the first-class
-        <code>openclawbrain proof --openclaw-home ~/.openclaw</code> command. If your
-        OpenClaw home lives somewhere else, change the path.
+        The intended canonical lane is the same install command with optional <code>--proof</code>; until that surface is fully aligned, proof stays a separate follow-up command. If you are explicitly managing <code>@openclawbrain/openclaw</code> through OpenClaw's plugin manager, rerun <code>openclawbrain install --openclaw-home ~/.openclaw</code> afterward. If your OpenClaw home lives somewhere else, change the path.
       </p>
     </section>
 
