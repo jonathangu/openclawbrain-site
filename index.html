@@ -501,23 +501,25 @@
     <section class="panel" id="install">
       <h2>Install or update, verify, and capture proof</h2>
       <p class="section-copy">
-        Use the current public packages. The public operator story has two explicit
-        entry points: one for a fresh install, and one for updating a host that
-        already has OpenClawBrain installed.
+        Use the current public packages. The public operator story has two literal
+        OpenClawBrain actions: one to install OpenClawBrain on a host that does not
+        have it yet, and one to update OpenClawBrain on a host that already has it.
       </p>
-      <h3>Fresh install</h3>
+      <h3>Install OpenClawBrain</h3>
       <pre><code>openclaw plugins install @openclawbrain/openclaw
 npx -y @openclawbrain/cli install --openclaw-home ~/.openclaw
 openclaw gateway restart
 npx -y @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
 npx -y @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
-      <h3>Update an existing host</h3>
+      <h3>Update OpenClawBrain</h3>
       <pre><code>openclaw plugins update openclawbrain
 npx -y @openclawbrain/cli install --openclaw-home ~/.openclaw
 openclaw gateway restart
 npx -y @openclawbrain/cli status --openclaw-home ~/.openclaw --detailed
 npx -y @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --skip-restart</code></pre>
       <p class="install-note">
+        The real install command is <code>openclaw plugins install @openclawbrain/openclaw</code>.
+        The real update command is <code>openclaw plugins update openclawbrain</code>.
         For an already-installed host, the plugin update is only step 1. You still
         need to rerun the CLI <code>install</code> command so the activation root and
         native package plugin wiring stay correct for that OpenClaw home.
@@ -559,6 +561,11 @@ npx -y @openclawbrain/cli proof --openclaw-home ~/.openclaw --skip-install --ski
 
     <footer class="site-footer">
       <p>Built by Jonathan Gu. Apache 2.0 licensed. Open source from the start.</p>
+    </footer>
+  </main>
+</body>
+</html>
+e start.</p>
     </footer>
   </main>
 </body>
