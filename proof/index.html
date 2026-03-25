@@ -337,8 +337,9 @@
     <section class="panel">
       <h2>What this page proves</h2>
       <p class="section-copy">
-        The current public install lane can report concrete V2 metadata. You can
-        verify it from the status output alone.
+        The current public install lane can report concrete V2 metadata and capture
+        one durable operator bundle. Verify it from the surfaced fields, not from
+        fixed counts that only belong to one host.
       </p>
       <ul class="list">
         <li><code>path.pg = v2</code> reports the active policy-gradient generation.</li>
@@ -348,27 +349,30 @@
         <li><code>proof</code> captures one durable bundle with <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>, raw step logs, startup breadcrumbs, and runtime-load-proof snapshots.</li>
       </ul>
       <div class="callout">
-        <strong>Published learn path:</strong> the promoted pack in this proof is
-        <code>pack-d099f991</code>.
+        <strong>Boundary:</strong> this is operator proof for install, runtime,
+        and reporting truth. Your promoted pack id and traced counts will differ
+        by host, and this page does not claim universal memory citations or live
+        answer-quality gains by itself.
       </div>
     </section>
 
     <section class="panel">
-      <h2>Current proof output</h2>
+      <h2>Example proof output</h2>
       <p class="section-copy">
-        Run status and compare your output with the fields below.
+        Run status and compare your output with the fields below. The exact pack id
+        and counts vary by host and learning state.
       </p>
       <pre><code>STATUS ok
 path.pg            = v2
 path.method        = policy_gradient_v2
 path.target        = trajectory_reconstruction
-path.trajectories  = 344
-traced.routes      = 344
-traced.supervision = 32
-traced.updates     = 68</code></pre>
+path.trajectories  = &lt;host-specific count&gt;
+traced.routes      = &lt;host-specific count&gt;
+traced.supervision = &lt;host-specific count&gt;
+traced.updates     = &lt;host-specific count&gt;</code></pre>
       <p class="small">
-        This output shows a real V2 method name and traced learning counts. It is
-        useful because it is specific, not because the numbers are large.
+        This output is useful because the method, target, pack, and traced-learning
+        surfaces are real. The exact counts are not stable public constants.
       </p>
       <div class="cards">
         <article class="card">
