@@ -330,8 +330,8 @@
 <body>
   <main>
     <nav class="site-nav" aria-label="Primary">
-      <a href="../index.html#install">Install</a>
-      <a href="../index.html#upgrade">Upgrade</a>
+      <a href="../install/">Install</a>
+      <a href="../upgrade/">Upgrade</a>
       <a href="../how-it-works/">How it works</a>
       <a href="./" aria-current="page">Proof</a>
       <a href="../troubleshooting/">Troubleshooting</a>
@@ -342,16 +342,16 @@
       <p class="eyebrow">OpenClawBrain proof</p>
       <h1>Compare your host with a healthy one before you claim the lane is working.</h1>
       <p class="lede">
-        Proof is not a separate product story. It is the same install-first lane plus one durable bundle. Use the pinned home
-        <code>/Users/guclaw/.openclaw</code> on the <code>openclawbrain</code> commands, compare the detailed status fields,
-        and capture a bundle only when you need a durable audit surface.
+        Proof is the same install-first lane plus one durable bundle. Use the same pinned home
+        <code>/Users/guclaw/.openclaw</code> on the <code>openclawbrain</code> commands, compare detailed status,
+        and capture a bundle when you need durable evidence.
       </p>
       <p class="lede">
-        The healthy reference bundle on March 27, 2026 returned <code>success_and_proven</code>. Install, runtime, plugin load,
-        startup breadcrumb, runtime-load proof, and detailed status all aligned.
+        The healthy reference bundle on March 27, 2026 returned <code>success_and_proven</code>. Install, runtime,
+        plugin load, startup breadcrumb, runtime-load proof, and detailed status aligned.
       </p>
       <div class="hero-actions">
-        <a class="button button-primary" href="../index.html#install">Go to install</a>
+        <a class="button button-primary" href="../install/">Go to install</a>
         <a class="button button-secondary" href="../troubleshooting/">Troubleshoot the lane</a>
         <a class="button button-secondary" href="../how-it-works/">Read the lifecycle guide</a>
       </div>
@@ -395,25 +395,22 @@ serve       state=serving_active_pack failOpen=no hardFail=no usedRouteFn=yes aw
     </section>
 
     <section class="panel">
-      <h2>What this page proves, and what it does not</h2>
+      <h2>What proof covers</h2>
       <p class="section-copy">
-        This page is intentionally narrow. It proves install, load, serving, and reporting truth on a healthy exercised host surface, then shows how to reproduce that comparison on yours.
+        Use this page to confirm install, load, serving, and reporting truth on a healthy host, then reproduce that comparison on yours.
       </p>
       <ul class="list">
         <li><code>bundle verdict: success_and_proven</code> means the captured bundle aligned across install, runtime, plugin load, breadcrumbs, runtime-load proof, and detailed status.</li>
         <li><code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code> are the top-level public truth signals.</li>
         <li><code>proof</code> writes <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>, raw step logs, startup breadcrumbs, and the runtime-load-proof snapshot into one durable bundle.</li>
       </ul>
-      <div class="callout">
-        <strong>Boundary:</strong> this page does not claim every host will have the same pack id, graph size, route count, or supervision count. Those vary by host state.
-        It also does not claim universal answer-quality gains by itself. It claims that the install lane can be verified honestly.
-      </div>
+      <p class="small">Pack ids and counters can differ by host state. The compare fields above should still line up.</p>
     </section>
 
     <section class="panel">
       <h2>Run the same lane on your host</h2>
       <p class="section-copy">
-        Keep the exact same selected home on the OpenClawBrain commands before and after restart. Compare the fast status surface first. Capture proof second.
+        Keep the same selected home on the OpenClawBrain commands before and after restart. Compare status first. Capture proof second.
       </p>
       <div class="cards">
         <article class="card">
@@ -429,7 +426,7 @@ openclawbrain proof --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
           <h3>One selected home stays in scope</h3>
           <p class="small">
             <code>install</code>, <code>status</code>, and <code>proof</code> all accept <code>--openclaw-home</code>. Keep them pinned to
-            <code>/Users/guclaw/.openclaw</code>. <code>openclaw gateway restart</code> does not take that flag, so the restart step is the only command in the lane without it.
+            <code>/Users/guclaw/.openclaw</code>. <code>openclaw gateway restart</code> is the only step without that flag.
           </p>
           <p class="small">
             If you explicitly manage <code>@openclawbrain/openclaw</code> with the OpenClaw plugin manager, rerun
@@ -442,21 +439,21 @@ openclawbrain proof --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
     <section class="panel">
       <h2>Bundle contents worth checking</h2>
       <p class="section-copy">
-        The proof bundle is most useful when you want a durable snapshot instead of a terminal scrollback.
+        Use the proof bundle when terminal scrollback is no longer enough.
       </p>
       <div class="cards">
         <article class="card">
           <span class="card-label">Summary surface</span>
           <h3><code>summary.md</code> and <code>verdict.json</code></h3>
           <p class="small">
-            These summarize the bundle verdict, severity, passed checks, missing checks, warnings, and step ledger so you can audit quickly.
+            These summarize the verdict, severity, passed checks, warnings, and step ledger so you can audit quickly.
           </p>
         </article>
         <article class="card">
           <span class="card-label">Runtime truth</span>
           <h3>Detailed status and runtime-load proof</h3>
           <p class="small">
-            The reference bundle preserved the runtime proof file at <code>~/.openclawbrain/activation/attachment-truth/runtime-load-proofs.json</code> alongside the detailed status output.
+            The reference bundle preserved <code>~/.openclawbrain/activation/attachment-truth/runtime-load-proofs.json</code> alongside the detailed status output.
           </p>
         </article>
       </div>
@@ -465,12 +462,12 @@ openclawbrain proof --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
     <section class="panel">
       <h2>Go deeper</h2>
       <p class="section-copy">
-        Use the homepage for the install-first lane, the lifecycle guide for the harvest and promotion story, and troubleshooting when your own status surface does not align yet.
+        Use the install lane for commands, the lifecycle guide for harvest and promotion, and troubleshooting when your status surface does not align yet.
       </p>
       <div class="link-grid">
-        <a class="link-card" href="../">
-          <strong>Homepage</strong>
-          <span>The install-first front door, upgrade lane, and canonical visual.</span>
+        <a class="link-card" href="../install/">
+          <strong>Install / upgrade</strong>
+          <span>The install-first front door, repair lane, and canonical commands.</span>
         </a>
         <a class="link-card" href="../how-it-works/">
           <strong>How it works</strong>

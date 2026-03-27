@@ -314,8 +314,8 @@
 <body>
   <main>
     <nav class="site-nav" aria-label="Primary">
-      <a href="../index.html#install">Install</a>
-      <a href="../index.html#upgrade">Upgrade</a>
+      <a href="../install/">Install</a>
+      <a href="../upgrade/">Upgrade</a>
       <a href="../how-it-works/">How it works</a>
       <a href="../proof/">Proof</a>
       <a href="./" aria-current="page">Troubleshooting</a>
@@ -326,11 +326,11 @@
       <p class="eyebrow">OpenClawBrain troubleshooting</p>
       <h1>When the lane looks wrong, keep the scope tight and compare the right fields.</h1>
       <p class="lede">
-        Troubleshooting is still the same operator lane. Pin the same home, rerun install, restart the gateway, compare
-        <code>status --detailed</code>, and only then capture proof. Do not switch homes or invent a second workflow in the middle.
+        Pin the same home, rerun install, restart the gateway, compare <code>status --detailed</code>, and only then
+        capture proof. Do not switch homes or invent a second workflow in the middle.
       </p>
       <div class="hero-actions">
-        <a class="button button-primary" href="../index.html#install">Run the install lane</a>
+        <a class="button button-primary" href="../install/">Run the install lane</a>
         <a class="button button-secondary" href="../proof/">Compare proof</a>
         <a class="button button-secondary" href="../how-it-works/">Understand the lifecycle</a>
       </div>
@@ -339,14 +339,14 @@
     <section class="panel">
       <h2>Fast triage</h2>
       <p class="section-copy">
-        These are the first things to check when the surface does not line up with the healthy reference host.
+        These are the first things to check when your surface does not line up with the healthy reference host.
       </p>
       <div class="cards">
         <article class="card">
           <span class="card-label">Status missing</span>
           <h3><code>STATUS ok</code> does not appear</h3>
           <p class="small">
-            Treat that as the lane not converged yet. Rerun <code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'</code>,
+            Treat the lane as not converged yet. Rerun <code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'</code>,
             restart the gateway, and compare detailed status again before chasing deeper explanations.
           </p>
         </article>
@@ -354,8 +354,8 @@
           <span class="card-label">Load proof missing</span>
           <h3><code>loadProof=status_probe_ready</code> is absent</h3>
           <p class="small">
-            The runtime load is not proven yet. Re-run install on the same home, restart, and compare with the proof page. If it still fails to line up,
-            capture a proof bundle so you have step logs and breadcrumbs instead of guesswork.
+            Runtime load is not proven yet. Re-run install on the same home, restart, and compare with the proof page.
+            If it still fails to line up, capture a proof bundle so you have step logs and breadcrumbs instead of guesswork.
           </p>
         </article>
         <article class="card">
@@ -370,21 +370,22 @@
           <span class="card-label">Route function missing</span>
           <h3><code>routeFn available=yes</code> is not present</h3>
           <p class="small">
-            Learned route availability depends on host state. Check whether the runtime is already serving an active pack and whether the learning surfaces are populated.
+            Learned route availability depends on host state. Check whether the runtime is already serving an active pack and whether learning surfaces are populated.
             Compare with the proof page rather than assuming every host should already match the exercised one.
           </p>
         </article>
       </div>
       <div class="callout">
         <strong>Important:</strong> the healthy host on March 27, 2026 had both <code>serve state=serving_active_pack</code> and <code>routeFn available=yes</code>.
-        Your own host can be healthy earlier in the lifecycle and still not show those fields yet.
+        Earlier healthy hosts may not show those fields yet.
       </div>
     </section>
 
     <section class="panel">
       <h2>Canonical recovery lane</h2>
       <p class="section-copy">
-        When in doubt, rerun the public lane exactly. Keep the path pinned on the OpenClawBrain commands. The restart command remains the only step without <code>--openclaw-home</code>.
+        When in doubt, rerun the public lane exactly. Keep the path pinned on the OpenClawBrain commands.
+        The restart command remains the only step without <code>--openclaw-home</code>.
       </p>
       <pre><code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'
 openclaw gateway restart
@@ -393,7 +394,7 @@ openclawbrain proof --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
       <ul class="list">
         <li><code>install</code> is the public install, upgrade, and repair surface for the selected home.</li>
         <li><code>status --detailed</code> is the fast compare surface for attachment, load proof, serving state, and learned route availability.</li>
-        <li><code>proof</code> is the durable follow-up when you need a bundle instead of a terminal scrollback.</li>
+        <li><code>proof</code> is the durable follow-up when terminal scrollback is not enough.</li>
       </ul>
     </section>
 
@@ -404,8 +405,8 @@ openclawbrain proof --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
           <span class="card-label">Scope drift</span>
           <h3>Changing the selected home mid-debug</h3>
           <p class="small">
-            The public lane is scoped to one OpenClaw home. If you change the home for <code>install</code> but not for <code>status</code> or <code>proof</code>,
-            you are no longer comparing the same boundary.
+            The public lane is scoped to one OpenClaw home. If you change the home for <code>install</code> but not for
+            <code>status</code> or <code>proof</code>, you are no longer comparing the same boundary.
           </p>
         </article>
         <article class="card">
@@ -422,11 +423,11 @@ openclawbrain proof --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
     <section class="panel">
       <h2>Go deeper</h2>
       <p class="section-copy">
-        Use the homepage for the main install-first flow, the proof page for the healthy reference surface, and the lifecycle guide when you need to understand why a healthy host might still be pre-promotion.
+        Use the install lane for the main flow, the proof page for the healthy reference surface, and the lifecycle guide when you need to understand why a healthy host might still be pre-promotion.
       </p>
       <div class="link-grid">
-        <a class="link-card" href="../">
-          <strong>Homepage</strong>
+        <a class="link-card" href="../install/">
+          <strong>Install / upgrade</strong>
           <span>The install-first front door with the canonical commands and top-level proof signals.</span>
         </a>
         <a class="link-card" href="../proof/">

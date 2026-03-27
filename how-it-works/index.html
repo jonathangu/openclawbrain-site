@@ -388,8 +388,8 @@
 <body>
   <main>
     <nav class="site-nav" aria-label="Primary">
-      <a href="../index.html#install">Install</a>
-      <a href="../index.html#upgrade">Upgrade</a>
+      <a href="../install/">Install</a>
+      <a href="../upgrade/">Upgrade</a>
       <a href="./" aria-current="page">How it works</a>
       <a href="../proof/">Proof</a>
       <a href="../troubleshooting/">Troubleshooting</a>
@@ -400,57 +400,57 @@
       <p class="eyebrow">OpenClawBrain lifecycle</p>
       <h1>What happens to your history after install.</h1>
       <p class="lede">
-        The public story starts on an existing OpenClaw host, not in a toy graph. On the exercised host at
-        <code>/Users/guclaw/.openclaw</code>, the latest proof bundle returned <code>success_and_proven</code>.
-        The runtime is already serving a promoted pack, and the learned route function is available.
+        OpenClawBrain starts on a real OpenClaw host, not a toy graph. On the exercised host at
+        <code>/Users/guclaw/.openclaw</code>, the latest proof bundle returned <code>success_and_proven</code>
+        with a promoted pack live and a learned route function available.
       </p>
       <p class="lede">
-        This page explains the full chain in one pass: init gives you the attachment boundary, harvest turns your surfaced history into candidate material,
-        replay gates promotion, and the live runtime serves bounded context instead of raw-history prompt sprawl.
+        This page covers the rest of the chain: init gives the attachment boundary, harvest turns surfaced history into
+        candidate structure, replay gates promotion, and the runtime serves bounded context instead of raw-history prompt sprawl.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="#harvest">Jump to harvest</a>
         <a class="button button-secondary" href="../proof/">Compare proof</a>
-        <a class="button button-secondary" href="../index.html#install">Install / upgrade</a>
+        <a class="button button-secondary" href="../install/">Install / upgrade</a>
       </div>
     </section>
 
     <section class="panel" id="real-host-snapshot">
       <h2>Real host snapshot: what the healthy lane proves today</h2>
       <p class="section-copy">
-        This is not generic AI-memory marketing. It is a real host surface captured on March 27, 2026 after install, runtime, and proof signals aligned.
+        A real host capture from March 27, 2026 after install, load, serving, and reporting lined up.
       </p>
       <div class="stats-grid">
         <article class="stat-card">
           <span class="stat-label">Proof verdict</span>
           <span class="stat-value">success_and_proven</span>
-          <p>Install, runtime, plugin load, startup breadcrumb, runtime-load proof, and detailed status all aligned.</p>
+          <p>Bundle verdict aligned install, runtime, load proof, and detailed status.</p>
         </article>
         <article class="stat-card">
           <span class="stat-label">Promoted pack</span>
           <span class="stat-value mono">pack-9d43af80</span>
-          <p>Detailed status reports <code>serve state=serving_active_pack</code> and <code>routeFn available=yes</code>.</p>
+          <p>Detailed status also reported <code>serve state=serving_active_pack</code> and <code>routeFn available=yes</code>.</p>
         </article>
         <article class="stat-card">
           <span class="stat-label">Current graph</span>
           <span class="stat-value">192 blocks</span>
-          <p>The strongest live block is <code>human-label-harvest</code>, which matches the product story.</p>
+          <p>Strongest live block: <code>human-label-harvest</code>.</p>
         </article>
         <article class="stat-card">
           <span class="stat-label">Traced learning</span>
           <span class="stat-value">1457 routes</span>
-          <p>Plus <code>32</code> supervision artifacts and <code>58</code> updates on the traced learning surface.</p>
+          <p>Plus <code>32</code> supervision artifacts and <code>58</code> updates.</p>
         </article>
       </div>
       <p class="source-note">
-        Source surfaces: detailed status, proof summary, and the exercised host bundle captured March 27, 2026.
+        Source: detailed status, proof summary, and the exercised-host bundle captured March 27, 2026.
       </p>
     </section>
 
     <section class="panel">
       <h2>The story should fit in three ideas</h2>
       <p class="section-copy">
-        If the page says more than this before it says these three things, it is telling the story backwards.
+        If the story gets longer before it says these three things, it is backwards.
       </p>
       <div class="story-grid">
         <article class="card">
@@ -474,19 +474,18 @@
     <section class="panel">
       <h2>What the graph looks like after INIT</h2>
       <p class="section-copy">
-        Right after init, the graph is a scaffold, not a miracle. That is the correct product behavior. Init should make the runtime attachable and inspectable,
-        not pretend the system already learned from months of real work.
+        Init should make the runtime attachable and inspectable. It is a scaffold, not a finished brain.
       </p>
       <div class="cards">
         <article class="card">
           <span class="card-label">Fixture proof</span>
           <h3>Earlier init runs stayed tiny on purpose</h3>
-          <p>An earlier captured init run produced <code>3 nodes</code> and <code>4 edges</code>. That is useful because it makes the first-run state visible instead of mystical.</p>
+          <p>An earlier init run produced <code>3 nodes</code> and <code>4 edges</code>. Small on purpose makes first-run state visible.</p>
         </article>
         <article class="card">
           <span class="card-label">Current host baseline</span>
           <h3>The initial pack is still a baseline, not a mature brain</h3>
-          <p>The current host still retains an initial pack with <code>8 blocks</code>, <code>0</code> human labels, and <code>0</code> structural ops for split, merge, prune, and connect.</p>
+          <p>The current host still retains an initial pack with <code>8 blocks</code>, <code>0</code> human labels, and <code>0</code> structural ops.</p>
         </article>
       </div>
       <div class="figure-grid">
@@ -498,31 +497,31 @@
         </figure>
       </div>
       <p class="caption">
-        Install gives you the live attachment boundary. The graph becomes interesting only after real turns, explicit corrections, exports, replay, and promotion.
+        Install gives the attachment boundary. Real turns, exports, corrections, replay, and promotion make the graph useful.
       </p>
     </section>
 
     <section class="panel" id="harvest">
       <h2>What gets harvested - and what does not</h2>
       <p class="section-copy">
-        This is the missing middle of the story. You already have conversations, memory markdown, docs, and corrections scattered across your workspace.
-        Harvest is the auditable step that turns those human-facing surfaces into candidate graph material without turning the whole filesystem into prompt sludge.
+        You already have conversations, memory markdown, docs, and corrections. Harvest turns those surfaced inputs into
+        candidate graph material without crawling your whole filesystem.
       </p>
       <div class="mini-grid">
         <article class="mini-card">
           <span class="card-label">Conversations</span>
           <h3>Exported turns become searchable navigation</h3>
-          <p>Bulk conversation history is compacted into summaries that help the runtime decide where to look. Raw source stays available for exact expansion later.</p>
+          <p>Exports compress bulky history into searchable summaries. Raw source stays available for exact expansion.</p>
         </article>
         <article class="mini-card">
           <span class="card-label">Memory markdown</span>
           <h3>Operator-written notes stay legible</h3>
-          <p>Memory notes remain human-readable, but the harvester can also type them into candidate graph material the runtime can serve from later.</p>
+          <p>Operator notes stay readable and can still become served graph material later.</p>
         </article>
         <article class="mini-card">
           <span class="card-label">Docs and corrections</span>
           <h3>Explicit corrections become authority</h3>
-          <p>When a user or operator states current truth directly, that typed correction can outrank a stale summary or recap once it is promoted.</p>
+          <p>Direct corrections can outrank stale recap once they are promoted.</p>
         </article>
       </div>
       <div class="figure-grid">
@@ -546,7 +545,7 @@ type: correction
 Use the staging endpoint for tests.
 Never hit production in test runs.</code></pre>
           <p>
-            The harvester reads the note, keeps the file human-readable, emits a compact navigation summary, and types the explicit correction so it can later win over a stale recap.
+            The harvester keeps the file readable, emits a compact navigation summary, and types the correction so it can later beat a stale recap.
           </p>
         </article>
         <article class="qa-card">
@@ -556,48 +555,26 @@ Never hit production in test runs.</code></pre>
 Agent: [uses production endpoint]
 User: No. Staging. Always staging for tests.</code></pre>
           <p>
-            The correction turn becomes a typed correction event. Summaries may still help navigation, but the correction is the durable current-truth layer that wins when they disagree.
+            The correction turn becomes durable current-truth memory. Summaries can still help navigation, but the correction wins when they disagree.
           </p>
         </article>
       </div>
-      <div class="mini-grid">
-        <article class="mini-card">
-          <span class="card-label">Wins</span>
-          <h3>Correction memory</h3>
-          <p>Explicit corrections are current-truth authority. They are the first thing that should win when old recap disagrees.</p>
-        </article>
-        <article class="mini-card">
-          <span class="card-label">Expands</span>
-          <h3>Raw source</h3>
-          <p>Raw turns and files keep the exact quotes available for drill-down when a summary is not precise enough.</p>
-        </article>
-        <article class="mini-card">
-          <span class="card-label">Navigates</span>
-          <h3>Summary / LCM</h3>
-          <p>Summaries stay cheap to search across bulky history. They tell the runtime where to look, not what should currently win.</p>
-        </article>
-      </div>
       <div class="callout">
-        <strong>What the harvester skips:</strong> binary files, credentials, <code>.env</code> files, anything outside the declared OpenClaw home,
-        and anything the operator has not explicitly exported or marked as memory. The system does not crawl your filesystem. It reads what you gave it.
-      </div>
-      <div class="callout">
-        <strong>One-line rule:</strong> use summaries as a search abstraction over history; use typed correction memory as the durable current-truth layer.
+        <strong>Rule:</strong> summaries navigate, raw source expands, corrections win. The harvester skips binary files,
+        credentials, <code>.env</code> files, anything outside the declared OpenClaw home, and anything not explicitly exported or marked as memory.
       </div>
     </section>
 
     <section class="panel">
       <h2>Then what happens: raw history, candidate graph, promoted graph</h2>
       <p class="section-copy">
-        The graph evolves in layers. First you have raw usage. Then the learner forms candidate structure from exports, labels, and traces.
-        Then replay decides whether that candidate deserves promotion into the live runtime.
+        History becomes candidate structure, then replay decides whether that candidate becomes the live pack.
       </p>
       <div class="figure-grid">
         <figure>
           <img src="./chart-02-graph-evolves.svg" alt="Three-stage diagram showing raw usage, candidate graph, and promoted graph." />
           <figcaption>
-            <strong>The important transition:</strong> the graph does not just get bigger. It gets cleaner. Old noise fades, stronger relationships appear,
-            and promoted structure becomes bounded retrieval instead of free-form prompt sprawl.
+            <strong>The important transition:</strong> the graph does not just get bigger. It gets cleaner, and promoted structure becomes bounded retrieval instead of prompt sprawl.
           </figcaption>
         </figure>
       </div>
@@ -611,7 +588,7 @@ User: No. Staging. Always staging for tests.</code></pre>
     <section class="panel">
       <h2>What replay actually does</h2>
       <p class="section-copy">
-        Replay is the gate between “we learned something” and “the live runtime is allowed to believe it.” Without replay, one bad candidate could mutate serving truth on the hot path.
+        Replay is the gate between “we learned something” and “the runtime may serve it.” Without replay, one bad candidate could mutate serving truth on the hot path.
       </p>
       <div class="figure-grid">
         <figure>
@@ -632,26 +609,25 @@ User: No. Staging. Always staging for tests.</code></pre>
     <section class="panel">
       <h2>How the graph evolves over time on the current host</h2>
       <p class="section-copy">
-        The exercised host gives a clean storyline. The active promoted pack was built from real event ranges, real feedback, and replay-gated promotion.
-        That evidence now materializes as a <code>192</code>-block graph with traced learning updates.
+        On the exercised host, real events, feedback, and replay-gated promotion produced a <code>192</code>-block graph with visible traced-learning updates.
       </p>
       <div class="cards">
         <article class="card">
           <span class="card-label">Before learning is visible</span>
           <h3>Init proves attachment, not maturity</h3>
-          <p>Init gives a tiny graph. Structural ops are still zero. The operator can prove attachment and load, but there is not much learned structure to inspect yet.</p>
+          <p>Init gives a tiny graph with zero structural ops. You can prove attachment and load before there is much learned structure to inspect.</p>
         </article>
         <article class="card">
           <span class="card-label">After real supervision</span>
           <h3>The live pack shows real learning surfaces</h3>
-          <p>The current pack has <code>33</code> human labels, <code>32</code> supervision artifacts, <code>58</code> updates, and already shows split, merge, prune, and connect behavior.</p>
+          <p>The current pack has <code>33</code> human labels, <code>32</code> supervision artifacts, <code>58</code> updates, and visible split, merge, prune, and connect behavior.</p>
         </article>
       </div>
       <div class="figure-grid">
         <figure>
           <img src="./chart-04-timeline.svg" alt="Timeline showing the path from install to first turns to candidate learning to promoted serving." />
           <figcaption>
-            <strong>Time matters.</strong> The graph does not improve just because more data exists. It improves when exports, explicit supervision, and replay-gated promotion turn history into a cleaner serving surface.
+            <strong>Time matters.</strong> The graph improves when exports, supervision, and replay-gated promotion turn history into a cleaner serving surface.
           </figcaption>
         </figure>
       </div>
@@ -659,17 +635,16 @@ User: No. Staging. Always staging for tests.</code></pre>
         <li><strong>Current strongest block:</strong> <code>runtime-graph-173ddc7d:human-label-harvest</code>.</li>
         <li><strong>Current structural change:</strong> <code>split:1</code>, <code>merge:1</code>, <code>prune:1</code>, <code>connect:3</code> with <code>6</code> created edges.</li>
         <li><strong>Current learned route surface:</strong> <code>routes=1457</code>, <code>supervision=32</code>, <code>updates=58</code>.</li>
-        <li><strong>Current serve truth:</strong> the runtime is serving a promoted immutable pack, not mutating live state on the hot path.</li>
       </ul>
     </section>
 
     <section class="panel">
       <h2>Use the install-first lane, then come back here for the deeper story</h2>
       <p class="section-copy">
-        The homepage is the canonical place for commands. This page exists to explain why the install lane behaves the way it does and why a healthy host can still move through multiple lifecycle states over time.
+        Use the install lane for commands. Come back here when you want the deeper story behind harvest, replay, and promotion.
       </p>
       <div class="link-grid">
-        <a class="link-card" href="../index.html#install">
+        <a class="link-card" href="../install/">
           <strong>Install / upgrade</strong>
           <span>The public front door with the pinned-home commands and top-level truth signals.</span>
         </a>
