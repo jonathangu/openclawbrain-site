@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="660" viewBox="0 0 1200 660" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0c1825"/><stop offset="100%" stop-color="#071019"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="160%" height="160%"><feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#000" flood-opacity="0.25"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#8bd3ff"/></marker>
+    <style>
+      .title{fill:#eef4f9;font:700 34px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .subtitle{fill:#a8b7c6;font:400 16px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .label{fill:#eef4f9;font:700 18px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .body{fill:#a8b7c6;font:400 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .code{fill:#8bd3ff;font:600 13px 'SF Mono',Menlo,Consolas,monospace}
+      .chip{fill:#95f0c1;font:700 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    </style>
+  </defs>
+  <rect width="1200" height="660" rx="28" fill="url(#bg)"/>
+  <text x="36" y="50" class="title">After INIT: scaffold, not intelligence</text>
+  <text x="36" y="78" class="subtitle">This is the honest first-run state on a working OpenClaw host.</text>
+  
+<path d="M246 230 C320 230, 336 230, 402 230" stroke="#8bd3ff" stroke-width="4" marker-end="url(#arrow)"/>
+<path d="M557 230 C633 230, 648 230, 712 230" stroke="#8bd3ff" stroke-width="4" marker-end="url(#arrow)"/>
+<path d="M867 230 C936 230, 956 230, 1020 230" stroke="#8bd3ff" stroke-width="4" marker-end="url(#arrow)"/>
+<rect x="60" y="170" width="185" height="140" rx="24" fill="#0d1a28" stroke="#ffd580" stroke-opacity="0.4" filter="url(#shadow)"/>
+<text x="78" y="202" class="label">Existing OpenClaw host</text>
+<text x="78" y="230" class="body">OpenClaw is already running.</text>
+<text x="78" y="250" class="body">The agent works today.</text>
+<text x="78" y="272" class="code">~/.openclaw</text>
+<rect x="402" y="150" width="155" height="180" rx="24" fill="#0d1a28" stroke="#8bd3ff" stroke-opacity="0.4" filter="url(#shadow)"/>
+<text x="420" y="182" class="label">INIT / install</text>
+<text x="420" y="210" class="body">Write or repair the hook.</text>
+<text x="420" y="230" class="body">Pin the activation root.</text>
+<text x="420" y="250" class="body">Prepare the runtime to load.</text>
+<text x="420" y="272" class="code">openclawbrain install</text>
+<text x="420" y="290" class="code">--openclaw-home ~/.openclaw</text>
+<rect x="712" y="150" width="155" height="180" rx="24" fill="#0d1a28" stroke="#95f0c1" stroke-opacity="0.4" filter="url(#shadow)"/>
+<text x="730" y="182" class="label">Runtime loads</text>
+<text x="730" y="210" class="body">Gateway restart loads the</text>
+<text x="730" y="230" class="body">extension into the live path.</text>
+<text x="730" y="252" class="code">[openclawbrain] BRAIN LOADED</text>
+<rect x="1020" y="150" width="140" height="180" rx="24" fill="#0d1a28" stroke="#f2a8ff" stroke-opacity="0.4" filter="url(#shadow)"/>
+<text x="1038" y="182" class="label">After INIT</text>
+<text x="1038" y="210" class="body">Healthy runtime, but very little</text>
+<text x="1038" y="230" class="body">learned structure yet.</text>
+<text x="1038" y="252" class="code">loadProof=status_probe_ready</text>
+<rect x="120" y="420" width="960" height="190" rx="28" fill="#102235" stroke="#95f0c1" stroke-opacity="0.26"/>
+<text x="150" y="462" class="label">What the graph actually looks like right after INIT</text>
+<circle cx="260" cy="540" r="34" fill="#153047" stroke="#ffd580" stroke-opacity="0.5"/><text x="230" y="545" class="body">host</text>
+<circle cx="470" cy="540" r="42" fill="#153047" stroke="#8bd3ff" stroke-opacity="0.5"/><text x="427" y="545" class="body">activation</text><text x="438" y="563" class="body">root</text>
+<circle cx="695" cy="540" r="38" fill="#153047" stroke="#95f0c1" stroke-opacity="0.5"/><text x="664" y="545" class="body">hook +</text><text x="664" y="563" class="body">runtime</text>
+<circle cx="915" cy="540" r="34" fill="#153047" stroke="#f2a8ff" stroke-opacity="0.5"/><text x="894" y="545" class="body">tiny</text><text x="883" y="563" class="body">state</text>
+<path d="M294 540 L424 540" stroke="#8bd3ff" stroke-width="4" marker-end="url(#arrow)"/>
+<path d="M512 540 L649 540" stroke="#8bd3ff" stroke-width="4" marker-end="url(#arrow)"/>
+<path d="M733 540 L875 540" stroke="#8bd3ff" stroke-width="4" marker-end="url(#arrow)"/>
+<text x="152" y="594" class="body">INIT creates the container and wiring. It does not instantly create a rich learned city.</text>
+
+</svg>

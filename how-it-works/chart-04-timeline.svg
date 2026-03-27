@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0c1825"/><stop offset="100%" stop-color="#071019"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="160%" height="160%"><feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#000" flood-opacity="0.25"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#8bd3ff"/></marker>
+    <style>
+      .title{fill:#eef4f9;font:700 34px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .subtitle{fill:#a8b7c6;font:400 16px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .label{fill:#eef4f9;font:700 18px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .body{fill:#a8b7c6;font:400 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .code{fill:#8bd3ff;font:600 13px 'SF Mono',Menlo,Consolas,monospace}
+      .chip{fill:#95f0c1;font:700 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    </style>
+  </defs>
+  <rect width="1200" height="620" rx="28" fill="url(#bg)"/>
+  <text x="36" y="50" class="title">What happens over time after install</text>
+  <text x="36" y="78" class="subtitle">The graph moves from scaffold to raw evidence to promoted serving.</text>
+  
+<line x1="120" y1="300" x2="1080" y2="300" stroke="#8bd3ff" stroke-width="6" stroke-linecap="round"/>
+<circle cx="160" cy="300" r="18" fill="#ffd580"/>
+<circle cx="390" cy="300" r="18" fill="#8bd3ff"/>
+<circle cx="620" cy="300" r="18" fill="#f2a8ff"/>
+<circle cx="850" cy="300" r="18" fill="#95f0c1"/>
+<circle cx="1040" cy="300" r="18" fill="#cbf8db"/>
+<rect x="70" y="120" width="180" height="120" rx="24" fill="#0d1a28" stroke="#ffd580" stroke-opacity="0.4" filter="url(#shadow)"/>
+<text x="88" y="152" class="label">Day 0: install</text>
+<text x="88" y="180" class="body">Hook written.</text>
+<text x="88" y="200" class="body">Activation root pinned.</text>
+<text x="88" y="222" class="code">BRAIN LOADED</text>
+<rect x="300" y="120" width="180" height="120" rx="24" fill="#0d1a28" stroke="#8bd3ff" stroke-opacity="0.4" filter="url(#shadow)"/>
+<text x="318" y="152" class="label">Day 1: first turns</text>
+<text x="318" y="180" class="body">Corrections land.</text>
+<text x="318" y="200" class="body">Exports become visible.</text>
+<text x="318" y="222" class="code">firstExport=yes</text>
+<rect x="530" y="120" width="180" height="120" rx="24" fill="#0d1a28" stroke="#f2a8ff" stroke-opacity="0.4" filter="url(#shadow)"/>
+<text x="548" y="152" class="label">Day 2: candidate</text>
+<text x="548" y="180" class="body">Graph gets structure.</text>
+<text x="548" y="200" class="body">Replay starts gating.</text>
+<text x="548" y="222" class="code">candidate pack</text>
+<rect x="760" y="120" width="180" height="120" rx="24" fill="#0d1a28" stroke="#95f0c1" stroke-opacity="0.4" filter="url(#shadow)"/>
+<text x="778" y="152" class="label">Day 3: promotion</text>
+<text x="778" y="180" class="body">Live runtime serves</text>
+<text x="778" y="200" class="body">the promoted pack.</text>
+<text x="778" y="222" class="code">serving_active_pack</text>
+<rect x="950" y="120" width="180" height="120" rx="24" fill="#0d1a28" stroke="#cbf8db" stroke-opacity="0.4" filter="url(#shadow)"/>
+<text x="968" y="152" class="label">Later</text>
+<text x="968" y="180" class="body">Better repeat behavior.</text>
+<text x="968" y="200" class="body">Less session amnesia.</text>
+<text x="968" y="222" class="code">routeFn available=yes</text>
+<rect x="90" y="380" width="1020" height="180" rx="26" fill="#102235" stroke="#8bd3ff" stroke-opacity="0.26"/>
+<text x="125" y="424" class="label">What the current host proves today</text>
+<text x="125" y="452" class="body">This is no longer a hypothetical timeline. The current shared ~/.openclaw host is already on the promoted stage.</text>
+<text x="125" y="476" class="code">proof verdict: success_and_proven</text>
+<text x="125" y="500" class="code">loadProof=status_probe_ready</text>
+<text x="125" y="524" class="code">serveState=serving_active_pack</text>
+<text x="525" y="476" class="code">routeFn available=yes</text>
+<text x="525" y="500" class="code">pack=pack-9d43af80</text>
+<text x="525" y="524" class="code">graph blocks=192   routes=1457   supervision=32   updates=58</text>
+
+</svg>

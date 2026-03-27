@@ -6,12 +6,12 @@
   <title>How OpenClawBrain Works - OpenClawBrain</title>
   <meta
     name="description"
-    content="How OpenClawBrain works: what first install does on an existing OpenClaw host, how replay works, how learning works, and what changes over time."
+    content="A real OpenClawBrain story with real examples: what happens after init, what replay does, how the graph evolves over time, and how to visualize it well."
   />
   <meta property="og:title" content="How OpenClawBrain Works - OpenClawBrain" />
   <meta
     property="og:description"
-    content="The end-to-end OpenClawBrain lifecycle: install, replay, learning, over-time behavior, and operator verification."
+    content="A real-host OpenClawBrain walkthrough: install, init state, replay gating, graph evolution, and a concrete visualization plan."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/how-it-works/" />
@@ -26,6 +26,8 @@
       --line: rgba(168, 183, 198, 0.16);
       --accent: #8bd3ff;
       --green: #95f0c1;
+      --amber: #ffd580;
+      --pink: #f2a8ff;
       --code: #08111a;
       --shadow: 0 20px 70px rgba(0, 0, 0, 0.25);
     }
@@ -42,11 +44,11 @@
         radial-gradient(circle at top, var(--bg-glow), transparent 32%),
         linear-gradient(180deg, #09121c 0%, var(--bg) 100%);
       color: var(--text);
-      line-height: 1.55;
+      line-height: 1.58;
     }
 
     main {
-      max-width: 980px;
+      max-width: 1080px;
       margin: 0 auto;
       padding: 32px 20px 56px;
     }
@@ -97,16 +99,16 @@
 
     h1 {
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(2.6rem, 8vw, 4.5rem);
+      font-size: clamp(2.7rem, 8vw, 4.5rem);
       letter-spacing: -0.04em;
       line-height: 0.96;
-      margin: 0 0 16px;
-      max-width: 760px;
+      margin: 0 0 18px;
+      max-width: 860px;
     }
 
     h2 {
       color: var(--accent);
-      font-size: 1.42rem;
+      font-size: 1.46rem;
       line-height: 1.15;
       margin: 0 0 12px;
     }
@@ -130,7 +132,8 @@
     }
 
     code,
-    pre code {
+    pre code,
+    .mono {
       font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
       font-size: 0.95rem;
     }
@@ -161,14 +164,16 @@
 
     .lede,
     .section-copy,
-    .small {
+    .small,
+    .caption,
+    .source-note {
       color: var(--muted);
     }
 
     .lede,
     .section-copy {
       font-size: 1.05rem;
-      max-width: 760px;
+      max-width: 860px;
     }
 
     .hero-actions {
@@ -217,46 +222,164 @@
     }
 
     .cards,
+    .stats-grid,
+    .qa-grid,
+    .figure-grid,
+    .plan-grid,
+    .link-grid,
+    .mini-grid,
+    .table-wrap {
+      margin-top: 18px;
+    }
+
+    .cards,
+    .stats-grid,
+    .qa-grid,
+    .plan-grid,
+    .mini-grid,
     .link-grid {
       display: grid;
       gap: 14px;
-      margin-top: 18px;
     }
 
     .cards {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .stats-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .qa-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .plan-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .mini-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .link-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
+    .figure-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+      margin-top: 18px;
+    }
+
     .card,
-    .link-card {
+    .stat-card,
+    .qa-card,
+    .plan-card,
+    .mini-card,
+    .link-card,
+    figure {
       background: var(--panel-soft);
       border: 1px solid var(--line);
       border-radius: 18px;
       padding: 18px;
     }
 
-    .link-card {
-      color: inherit;
-      display: block;
-      text-decoration: none;
+    .stat-card {
+      padding: 18px 16px;
     }
 
-    .link-card strong {
+    .stat-label {
+      color: var(--muted);
       display: block;
+      font-size: 0.86rem;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .stat-value {
+      display: block;
+      font-size: 1.65rem;
+      font-weight: 800;
+      line-height: 1.05;
       margin-bottom: 8px;
     }
 
-    .link-card span {
+    .stat-card p,
+    .qa-card p,
+    .plan-card p,
+    .mini-card p,
+    .card p {
       color: var(--muted);
+      margin-bottom: 0;
     }
 
-    .link-card:hover {
-      border-color: rgba(139, 211, 255, 0.42);
-      text-decoration: none;
+    .figure-grid figure {
+      padding: 16px;
+    }
+
+    .figure-grid img {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid rgba(168, 183, 198, 0.14);
+      background: rgba(4, 11, 18, 0.75);
+    }
+
+    figcaption {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 12px;
+    }
+
+    .plan-number {
+      color: var(--green);
+      display: inline-block;
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .caption {
+      font-size: 0.98rem;
+      margin-top: 8px;
+      max-width: 820px;
+    }
+
+    .source-note {
+      font-size: 0.94rem;
+      margin-top: 16px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 640px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid rgba(168, 183, 198, 0.14);
+      padding: 12px 10px;
+      text-align: left;
+    }
+
+    th {
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    td {
+      color: var(--muted);
+      vertical-align: top;
     }
 
     .list {
@@ -280,6 +403,26 @@
       top: 0;
     }
 
+    .link-card {
+      color: inherit;
+      display: block;
+      text-decoration: none;
+    }
+
+    .link-card strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .link-card span {
+      color: var(--muted);
+    }
+
+    .link-card:hover {
+      border-color: rgba(139, 211, 255, 0.42);
+      text-decoration: none;
+    }
+
     .site-footer {
       color: var(--muted);
       font-size: 0.96rem;
@@ -287,7 +430,12 @@
       text-align: center;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 980px) {
+      .stats-grid,
+      .mini-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .link-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -295,6 +443,10 @@
 
     @media (max-width: 760px) {
       .cards,
+      .stats-grid,
+      .qa-grid,
+      .plan-grid,
+      .mini-grid,
       .link-grid {
         grid-template-columns: 1fr;
       }
@@ -322,169 +474,349 @@
 
     <section class="panel hero">
       <p class="eyebrow">OpenClawBrain lifecycle</p>
-      <h1>What actually happens when you install the brain.</h1>
+      <h1>A real story with real examples, not just a slogan.</h1>
       <p class="lede">
-        OpenClawBrain adds a learned memory layer to OpenClaw without moving learning work onto the live response path.
-        The runtime serves promoted packs, not partially written state, so useful context stays bounded and latency stays predictable.
+        The right way to understand OpenClawBrain is to watch one real host move through four states:
+        <strong>init</strong>, <strong>raw history</strong>, <strong>replay-gated candidate learning</strong>, and <strong>promoted serving</strong>.
+        This page uses current host data instead of generic AI-memory marketing.
       </p>
       <p class="lede">
-        This page is the end-to-end guide: first install on an existing OpenClaw host, what replay means,
-        what learning means, what healthy status looks like, and what changes over time after install.
+        It answers the questions people actually ask: what happens to history and memory markdown, what the graph looks like right after init,
+        what replay really does, how the graph evolves over time, and what a good visualization stack should look like next.
       </p>
       <div class="hero-actions">
-        <a class="button button-primary" href="../index.html#install">Install / verify</a>
+        <a class="button button-primary" href="#real-host-snapshot">Jump to the real host snapshot</a>
         <a class="button button-secondary" href="../proof/">Read the proof page</a>
-        <a class="button button-secondary" href="../">Back to homepage</a>
+        <a class="button button-secondary" href="../index.html#install">Install / verify</a>
       </div>
     </section>
 
-    <section class="panel">
-      <h2>Start with the architecture</h2>
+    <section class="panel" id="real-host-snapshot">
+      <h2>Real host snapshot: what the shared brain install proves today</h2>
       <p class="section-copy">
-        OpenClawBrain has two public pieces. <code>@openclawbrain/openclaw</code> is the plugin and runtime package inside OpenClaw.
-        <code>@openclawbrain/cli</code> is the operator CLI that installs, verifies, captures proof, and manages the host-side lifecycle.
+        This is not a hypothetical timeline. On the current shared <code>~/.openclaw</code> host, the latest proof bundle returned
+        <code>success_and_proven</code>. The live runtime is serving a promoted pack, the learned route function is available,
+        and the graph has already moved beyond init scaffold into replay-gated learned serving.
       </p>
-      <div class="cards">
-        <article class="card">
-          <h3>Runtime / plugin layer</h3>
-          <p class="small">
-            During prompt build, the installed extension reads the current promoted pack, compiles a bounded slice of context,
-            and injects it into the prompt. If the memory layer is unavailable, the agent still runs.
+      <div class="stats-grid">
+        <article class="stat-card">
+          <span class="stat-label">Proof verdict</span>
+          <span class="stat-value">success_and_proven</span>
+          <p>Install, restart, plugin load, startup breadcrumb, runtime-load proof, and detailed status all aligned.</p>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Live promoted pack</span>
+          <span class="stat-value mono">pack-9d43af80</span>
+          <p>Detailed status shows <code>serve state=serving_active_pack</code> and <code>routeFn available=yes</code>.</p>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Current graph</span>
+          <span class="stat-value">192 blocks</span>
+          <p>The strongest live block is <code>human-label-harvest</code>, which is exactly what you want in a teaching-driven system.</p>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Traced learning</span>
+          <span class="stat-value">1457 routes</span>
+          <p>Plus <code>32</code> supervision artifacts and <code>58</code> updates in the traced learning surface.</p>
+        </article>
+      </div>
+      <div class="mini-grid">
+        <article class="mini-card">
+          <h3>What changed structurally</h3>
+          <p><code>split:1</code>, <code>merge:1</code>, <code>prune:1</code>, <code>connect:3</code>, with <code>6</code> created edges on the current active graph.</p>
+        </article>
+        <article class="mini-card">
+          <h3>What stayed stable</h3>
+          <p>Live serving still runs on promoted immutable packs, not half-written hot-path mutations.</p>
+        </article>
+        <article class="mini-card">
+          <h3>What the operator sees</h3>
+          <p>Fast truth surfaces: <code>loadProof=status_probe_ready</code>, <code>serving_active_pack</code>, and pack + graph counters.</p>
+        </article>
+      </div>
+      <p class="source-note">
+        Snapshot source: current active pack manifest + graph materialization + detailed status + proof bundle captured March 26–27, 2026 on the shared host.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>First principle: what do we do with the history and memory markdown files?</h2>
+      <p class="section-copy">
+        The answer should be boringly honest: we do <strong>not</strong> dump every old markdown file into every prompt. We keep operator-readable history surfaces,
+        compact them into navigable memory structures, and let explicit current-truth corrections outrank stale recap when the two disagree.
+      </p>
+      <div class="qa-grid">
+        <article class="qa-card">
+          <h3>Human-facing source of truth</h3>
+          <p>
+            Durable files such as memory notes, summaries, and operator-edited markdown stay legible and auditable. They are the surface a human can inspect,
+            edit, diff, and reason about.
           </p>
         </article>
-        <article class="card">
-          <h3>Operator / learning layer</h3>
-          <p class="small">
-            After the response path finishes, OpenClawBrain exports turns and evidence, builds candidate packs,
-            runs replay and health checks, and promotes a new pack only if it passes.
+        <article class="qa-card">
+          <h3>Runtime-facing source of truth</h3>
+          <p>
+            The runtime turns long history into a searchable abstraction: LCM summaries help the system decide <em>where to look</em>, raw expansion gets exact detail,
+            and typed correction memory decides <em>what should currently win</em> when history conflicts.
+          </p>
+        </article>
+        <article class="qa-card">
+          <h3>Why this split matters</h3>
+          <p>
+            Summaries are navigation, not authority. They are cheap enough to search broadly, but they should not override an explicit user correction or a more exact raw quote.
+          </p>
+        </article>
+        <article class="qa-card">
+          <h3>What the promoted pack serves</h3>
+          <p>
+            The live prompt path serves a bounded slice from the active promoted pack. That means old markdown and old transcript history influence routing and recall,
+            but they do not become an unbounded prompt tax.
           </p>
         </article>
       </div>
       <div class="callout">
-        <strong>The key boundary:</strong> live serving stays fast and bounded. Learning happens later, off the response path.
+        <strong>One-line rule:</strong> use summaries as a search abstraction over history; use typed correction memory as the durable current-truth layer.
       </div>
     </section>
 
     <section class="panel">
-      <h2>What install does on an existing OpenClaw host</h2>
+      <h2>What the graph looks like after INIT</h2>
       <p class="section-copy">
-        Install does not train a giant model on the spot. It converges one selected OpenClaw home onto the supported runtime layout,
-        repairs the hook if it drifted, and pins the activation root that the runtime serves from.
+        Right after init, the graph is a scaffold, not a miracle. That is the correct product behavior. Init should make the runtime attachable and inspectable,
+        not pretend the system already learned from months of real work.
       </p>
-      <h3>Canonical operator lane</h3>
+      <div class="cards">
+        <article class="card">
+          <h3>Fixture-level init proof</h3>
+          <p>
+            An earlier captured init run produced <code>3 nodes</code> and <code>4 edges</code>. That is useful because it makes the first-run state visible instead of mystical.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Current host initial pack</h3>
+          <p>
+            The current host still retains an initial pack with <code>8 blocks</code>, <code>0</code> human labels, and <code>0</code> structural ops for split / merge / prune / connect.
+            That is the pre-learning baseline the system grows from.
+          </p>
+        </article>
+      </div>
+      <div class="figure-grid">
+        <figure>
+          <img src="./chart-01-after-init.svg" alt="Diagram showing the after-init state as a scaffold rather than a rich learned graph." />
+          <figcaption>
+            <strong>After init:</strong> the hook is installed, the activation root is pinned, the runtime can say <code>BRAIN LOADED</code>, and the operator can verify load proof.
+            But the learned graph is still tiny. That is healthy.
+          </figcaption>
+        </figure>
+      </div>
+      <p class="caption">
+        The honest story is: install gives you a live attachment boundary, not a mature memory city. The graph becomes interesting only after real turns,
+        explicit corrections, trace exports, replay, and promotion.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>Then what happens: raw history, candidate graph, promoted graph</h2>
+      <p class="section-copy">
+        The graph evolves in layers. First you have raw usage. Then the learner forms candidate structure from exports, labels, and traces.
+        Then replay decides whether that candidate deserves promotion into the live runtime.
+      </p>
+      <div class="figure-grid">
+        <figure>
+          <img src="./chart-02-graph-evolves.svg" alt="Three-stage diagram showing raw usage, candidate graph, and promoted graph." />
+          <figcaption>
+            <strong>The important transition:</strong> the graph does not just get bigger. It gets cleaner. Old noise fades, strong clusters appear,
+            and learned <code>STOP</code> or route choices become part of bounded retrieval instead of free-form prompt sprawl.
+          </figcaption>
+        </figure>
+      </div>
+      <ul class="list">
+        <li><strong>Raw usage:</strong> real turns, explicit corrections, and traces start as ordinary substrate history.</li>
+        <li><strong>Candidate graph:</strong> exports and learning create a provisional structure that is still not live.</li>
+        <li><strong>Promoted graph:</strong> only replay-passing structure becomes the runtime-visible active pack.</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h2>What replay actually does</h2>
+      <p class="section-copy">
+        Replay is the gate between “we learned something” and “the live runtime is allowed to believe it.” Without replay, the system would be one bad candidate away
+        from mutating its serving truth on the hot path.
+      </p>
+      <div class="figure-grid">
+        <figure>
+          <img src="./chart-03-replay-gate.svg" alt="Diagram showing replay as the gate between candidate packs and promoted serving." />
+          <figcaption>
+            <strong>Replay is not decoration.</strong> It reconstructs the relevant trajectories, checks retrieval/reporting behavior, and only then allows promotion.
+            If the candidate fails, the current promoted pack stays live.
+          </figcaption>
+        </figure>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Recorded replay mode</th>
+              <th>Quality score</th>
+              <th>Compile OK</th>
+              <th>Phrase hits</th>
+              <th>Promotion signal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>no_brain</code></td>
+              <td>0</td>
+              <td>0 / 2</td>
+              <td>0 / 2</td>
+              <td>No promotion</td>
+            </tr>
+            <tr>
+              <td><code>vector_only</code></td>
+              <td>100</td>
+              <td>2 / 2</td>
+              <td>2 / 2</td>
+              <td>Usable baseline</td>
+            </tr>
+            <tr>
+              <td><code>graph_prior_only</code></td>
+              <td>100</td>
+              <td>2 / 2</td>
+              <td>2 / 2</td>
+              <td>Usable baseline</td>
+            </tr>
+            <tr>
+              <td><code>learned_route</code></td>
+              <td>100</td>
+              <td>2 / 2</td>
+              <td>2 / 2</td>
+              <td>Recorded replay includes a promotion path</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="caption">
+        That is the public point of replay: not just to say “learning happened,” but to prove that the learned path can survive reconstruction and still earn live serving.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>How the graph evolves over time on the current host</h2>
+      <p class="section-copy">
+        The current shared host gives a clean real-world storyline. The active promoted pack was built from an event range containing <code>150</code> events,
+        including <code>117</code> interaction events and <code>33</code> feedback events. That evidence now materializes as a <code>192</code>-block graph with traced learning updates.
+      </p>
+      <div class="cards">
+        <article class="card">
+          <h3>Before learning becomes visible</h3>
+          <p>
+            Init gives a tiny graph. Structural ops are still zero. The operator can prove attachment and load, but there is not much learned structure to inspect yet.
+          </p>
+        </article>
+        <article class="card">
+          <h3>After real supervision</h3>
+          <p>
+            The live pack now contains <code>33</code> human labels, <code>32</code> supervision artifacts, and <code>58</code> recorded updates.
+            The graph has already split, merged, pruned, and connected new relationships.
+          </p>
+        </article>
+      </div>
+      <div class="figure-grid">
+        <figure>
+          <img src="./chart-04-timeline.svg" alt="Timeline showing the path from install to first turns to candidate learning to promoted serving." />
+          <figcaption>
+            <strong>Time matters.</strong> The graph does not become better just because more data exists. It becomes better when exported history, explicit supervision,
+            and replay-gated promotion turn that history into a cleaner serving surface.
+          </figcaption>
+        </figure>
+      </div>
+      <ul class="list">
+        <li><strong>Current strongest block:</strong> <code>runtime-graph-173ddc7d:human-label-harvest</code>.</li>
+        <li><strong>Current structural change:</strong> <code>split:1</code>, <code>merge:1</code>, <code>prune:1</code>, <code>connect:3</code> with <code>6</code> created edges.</li>
+        <li><strong>Current learned route surface:</strong> <code>routes=1457</code>, <code>supervision=32</code>, <code>updates=58</code>.</li>
+        <li><strong>Current serve truth:</strong> the runtime is serving a promoted immutable pack, not mutating live state on the hot path.</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <h2>How to visualize this nicely: the deep detailed plan</h2>
+      <p class="section-copy">
+        The right visualization system should not be “a random force-directed graph because graphs are cool.” It should tell a sequence of truths at increasing depth:
+        operator truth, lifecycle truth, graph-shape truth, and replay-decision truth.
+      </p>
+      <div class="plan-grid">
+        <article class="plan-card">
+          <span class="plan-number">Layer 1 — operator truth</span>
+          <h3>Status-first cards</h3>
+          <p>
+            Start with a date-stamped host snapshot: proof verdict, promoted pack, route function state, graph size, traced routes, and structural ops.
+            This is the “is it real?” layer.
+          </p>
+        </article>
+        <article class="plan-card">
+          <span class="plan-number">Layer 2 — lifecycle story</span>
+          <h3>Timeline before graph hairballs</h3>
+          <p>
+            Show <em>init → raw turns → candidate pack → replay gate → promoted serving</em>. Most people understand the system once that sequence is visually explicit.
+          </p>
+        </article>
+        <article class="plan-card">
+          <span class="plan-number">Layer 3 — graph anatomy</span>
+          <h3>Progressive graph reveal</h3>
+          <p>
+            Start with tiny post-init structure, then show which blocks become stronger over time, which nodes were pruned, which merges occurred, and which new connections were added.
+          </p>
+        </article>
+        <article class="plan-card">
+          <span class="plan-number">Layer 4 — replay microscope</span>
+          <h3>Why this pack won</h3>
+          <p>
+            Let operators inspect a candidate pack, the replay checks it passed or failed, and the exact reasons promotion happened or did not happen.
+          </p>
+        </article>
+        <article class="plan-card">
+          <span class="plan-number">Layer 5 — current-truth overlay</span>
+          <h3>Authority vs recap</h3>
+          <p>
+            Make it visually obvious which items are summary navigation, which items are raw-source expansions, and which items are explicit correction memories that currently win.
+          </p>
+        </article>
+        <article class="plan-card">
+          <span class="plan-number">Layer 6 — interactive operator mode</span>
+          <h3>Time scrubber + diff mode</h3>
+          <p>
+            The ideal final surface is a scrubber that lets you compare <em>after init</em>, <em>after first export</em>, <em>after replay</em>, and <em>current promoted state</em> with node/edge diffs.
+          </p>
+        </article>
+      </div>
+      <div class="callout">
+        <strong>Design rule:</strong> the first view should answer “is this real?”; the second should answer “what changed?”; the third should answer “why does the runtime trust this?”
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Operator commands for reproducing the story yourself</h2>
+      <p class="section-copy">
+        If you want to reproduce the whole lifecycle on your own host, do it in this order: converge install, restart the runtime, inspect detailed status,
+        then capture a durable proof bundle.
+      </p>
       <pre><code>openclawbrain install --openclaw-home ~/.openclaw
 openclaw gateway restart
-openclawbrain status --openclaw-home ~/.openclaw --detailed</code></pre>
+openclawbrain status --openclaw-home ~/.openclaw --detailed
+openclawbrain proof --openclaw-home ~/.openclaw</code></pre>
       <ul class="list">
-        <li><code>install</code> targets one OpenClaw home, writes or repairs the hook for that home, and pins the activation root the runtime serves from.</li>
-        <li><code>openclaw gateway restart</code> reloads the runtime so the installed hook can actually load into the live agent process.</li>
-        <li><code>status --detailed</code> verifies the selected home and reports whether the runtime is attached, loadable, and proven on the exercised host surface.</li>
+        <li><code>install</code> repairs or writes the hook, pins the activation root, and converges the host onto the supported layout.</li>
+        <li><code>gateway restart</code> reloads the live runtime so the hook can actually load.</li>
+        <li><code>status --detailed</code> shows whether you are still in init-only territory or already serving a promoted pack.</li>
+        <li><code>proof</code> captures the durable bundle you can audit later.</li>
       </ul>
-      <p class="small">
-        Healthy signals include <code>loadProof=status_probe_ready</code> and <code>attachTruth ... runtime=proven</code>.
-        Once a promoted pack exists, healthy detailed status should also report <code>serveState=serving_active_pack</code> and, where surfaced,
-        <code>routeFn available=yes</code>. Startup breadcrumbs can also show <code>BRAIN LOADED</code> after the gateway restart.
-      </p>
-      <div class="callout">
-        <strong>First-run truth:</strong> immediately after install there may be no promoted pack yet.
-        That is normal. The runtime can be attached before learned serving is active.
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>What replay means</h2>
-      <p class="section-copy">
-        Replay is the gate between a candidate pack and the live runtime. Instead of trusting a freshly built pack immediately,
-        OpenClawBrain replays the relevant evidence and checks whether the candidate reproduces the right retrieval and reporting behavior.
-      </p>
-      <div class="cards">
-        <article class="card">
-          <h3>Why replay exists</h3>
-          <p class="small">
-            It keeps the live path on promoted packs instead of half-written state. A candidate that cannot survive replay does not get served.
-          </p>
-        </article>
-        <article class="card">
-          <h3>What replay protects</h3>
-          <p class="small">
-            It protects installation truth, runtime truth, and learning truth from drifting apart. The runtime should only serve a pack that passed the promotion gate.
-          </p>
-        </article>
-      </div>
-      <p class="small">
-        In practice, replay is part of the candidate-pack build and promotion flow: export turns, build a candidate pack, run replay and health checks,
-        and promote only if that candidate passes.
-      </p>
-    </section>
-
-    <section class="panel">
-      <h2>What learning means</h2>
-      <p class="section-copy">
-        Learning in OpenClawBrain is not a single one-time training job. It is the background process that turns real usage into better promoted packs over time.
-      </p>
-      <div class="steps-grid">
-        <article class="card">
-          <span class="step-label">1</span>
-          <h3>Export</h3>
-          <p class="small">After the agent replies, OpenClawBrain exports the turns and evidence from that completed response path.</p>
-        </article>
-        <article class="card">
-          <span class="step-label">2</span>
-          <h3>Build</h3>
-          <p class="small">The learner turns those exports into a candidate pack instead of editing the live runtime state in place.</p>
-        </article>
-        <article class="card">
-          <span class="step-label">3</span>
-          <h3>Replay and check</h3>
-          <p class="small">Replay and health checks verify whether the candidate deserves promotion.</p>
-        </article>
-        <article class="card">
-          <span class="step-label">4</span>
-          <h3>Promote</h3>
-          <p class="small">Only a passing candidate becomes the new active promoted pack for live retrieval.</p>
-        </article>
-      </div>
-      <div class="callout">
-        <strong>Why this matters:</strong> live answers stay predictable while the system keeps learning from real work in the background.
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>What changes over time</h2>
-      <p class="section-copy">
-        The brain becomes more useful gradually. Install prepares the host. Real turns create exports. Exports become candidate packs.
-        Passing candidates become promoted packs. Promoted packs are what the live runtime actually serves.
-      </p>
-      <ul class="list">
-        <li><strong>Right after install:</strong> the host can be attached and healthy even if no learned pack is serving yet.</li>
-        <li><strong>After real usage:</strong> export and learning have material to process.</li>
-        <li><strong>After first promotion:</strong> detailed status can truthfully report <code>serveState=serving_active_pack</code>.</li>
-        <li><strong>Over longer usage:</strong> better routes and useful retrievals can become repeatable behavior instead of one-off prompt luck.</li>
-      </ul>
-      <p class="small">
-        If the memory layer is missing, broken, or not yet ready, OpenClawBrain fails open and the agent still replies normally.
-      </p>
-    </section>
-
-    <section class="panel">
-      <h2>How to verify and capture durable proof</h2>
-      <p class="section-copy">
-        Start with detailed status for the fast operator check. When you need one durable bundle with the exact commands, logs, and verdict,
-        capture proof as a separate follow-up command.
-      </p>
-      <h3>Fast verify</h3>
-      <pre><code>openclawbrain status --openclaw-home ~/.openclaw --detailed</code></pre>
-      <h3>Durable proof</h3>
-      <pre><code>openclawbrain proof --openclaw-home ~/.openclaw</code></pre>
-      <p class="small">
-        Today, proof remains a separate follow-up surface. It captures the install / restart / status / runtime evidence bundle with summary and raw artifacts.
-      </p>
     </section>
 
     <section class="panel">
       <h2>Go deeper</h2>
       <p class="section-copy">
-        Use the homepage for product framing, this page for the lifecycle explanation, and the proof page for concrete operator evidence.
+        Use the homepage for product framing, this page for the real lifecycle story, and the proof page for operator evidence. If you want the deeper architectural split,
+        read the routing-prior and corrections notes in the repo docs.
       </p>
       <div class="link-grid">
         <a class="link-card" href="../">
@@ -495,19 +827,18 @@ openclawbrain status --openclaw-home ~/.openclaw --detailed</code></pre>
           <strong>Proof</strong>
           <span>Concrete install, runtime, and reporting evidence.</span>
         </a>
-        <a class="link-card" href="https://www.npmjs.com/package/@openclawbrain/openclaw">
-          <strong>Plugin package</strong>
-          <span>The OpenClaw plugin and runtime package.</span>
+        <a class="link-card" href="https://github.com/jonathangu/openclawbrain/blob/main/docs/architecture/routing-prior.md">
+          <strong>Routing prior</strong>
+          <span>Why summaries choose where to look, not what should win.</span>
         </a>
-        <a class="link-card" href="https://www.npmjs.com/package/@openclawbrain/cli">
-          <strong>CLI package</strong>
-          <span>The install, status, and proof commands.</span>
+        <a class="link-card" href="https://github.com/jonathangu/openclawbrain/blob/main/docs/architecture/corrections.md">
+          <strong>Corrections</strong>
+          <span>Why explicit correction memory outranks stale recap.</span>
         </a>
       </div>
     </section>
 
     <footer class="site-footer">
-
       <p>Built by Jonathan Gu. Apache 2.0 licensed. Open source from the start.</p>
     </footer>
   </main>

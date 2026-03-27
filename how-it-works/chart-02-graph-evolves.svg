@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0c1825"/><stop offset="100%" stop-color="#071019"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="160%" height="160%"><feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#000" flood-opacity="0.25"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#8bd3ff"/></marker>
+    <style>
+      .title{fill:#eef4f9;font:700 34px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .subtitle{fill:#a8b7c6;font:400 16px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .label{fill:#eef4f9;font:700 18px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .body{fill:#a8b7c6;font:400 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .code{fill:#8bd3ff;font:600 13px 'SF Mono',Menlo,Consolas,monospace}
+      .chip{fill:#95f0c1;font:700 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    </style>
+  </defs>
+  <rect width="1200" height="680" rx="28" fill="url(#bg)"/>
+  <text x="36" y="50" class="title">How the graph evolves over time</text>
+  <text x="36" y="78" class="subtitle">The graph becomes not just bigger, but more organized and more selective.</text>
+  
+<rect x="48" y="130" width="330" height="510" rx="28" fill="#0d1a28" stroke="#8bd3ff" stroke-opacity="0.25"/>
+<rect x="434" y="130" width="330" height="510" rx="28" fill="#0d1a28" stroke="#f2a8ff" stroke-opacity="0.25"/>
+<rect x="820" y="130" width="332" height="510" rx="28" fill="#0d1a28" stroke="#95f0c1" stroke-opacity="0.25"/>
+<text x="72" y="165" class="label">1. Raw usage</text>
+<text x="458" y="165" class="label">2. Candidate graph</text>
+<text x="844" y="165" class="label">3. Promoted graph</text>
+<circle cx="135" cy="250" r="30" fill="#17314a" stroke="#8bd3ff" stroke-opacity="0.5"/><text x="118" y="255" class="body">Q1</text>
+<circle cx="255" cy="250" r="30" fill="#17314a" stroke="#8bd3ff" stroke-opacity="0.5"/><text x="237" y="255" class="body">A1</text>
+<circle cx="195" cy="350" r="38" fill="#162d24" stroke="#95f0c1" stroke-opacity="0.5"/><text x="163" y="355" class="body">correction</text>
+<circle cx="135" cy="470" r="30" fill="#17314a" stroke="#8bd3ff" stroke-opacity="0.5"/><text x="118" y="475" class="body">Q2</text>
+<circle cx="255" cy="470" r="30" fill="#17314a" stroke="#8bd3ff" stroke-opacity="0.5"/><text x="237" y="475" class="body">A2</text>
+<path d="M165 250 L225 250" stroke="#8bd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M255 280 L215 315" stroke="#8bd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M175 385 L145 438" stroke="#8bd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M165 470 L225 470" stroke="#8bd3ff" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="72" y="570" class="body">Real turns, explicit corrections, and traces</text>
+<text x="72" y="590" class="body">start as a history graph.</text>
+
+<circle cx="520" cy="235" r="34" fill="#17314a" stroke="#8bd3ff" stroke-opacity="0.5"/><text x="491" y="240" class="body">install</text>
+<circle cx="676" cy="210" r="34" fill="#162d24" stroke="#95f0c1" stroke-opacity="0.5"/><text x="651" y="215" class="body">proof</text>
+<circle cx="560" cy="370" r="34" fill="#16232d" stroke="#f2a8ff" stroke-opacity="0.5"/><text x="525" y="375" class="body">first-run</text>
+<circle cx="675" cy="470" r="40" fill="#162d24" stroke="#95f0c1" stroke-opacity="0.5"/><text x="636" y="475" class="body">status fields</text>
+<circle cx="490" cy="520" r="30" fill="#17314a" stroke="#8bd3ff" stroke-opacity="0.35"/><text x="473" y="525" class="body">Q3</text>
+<path d="M552 228 L642 214" stroke="#8bd3ff" stroke-width="3" stroke-dasharray="8 8" marker-end="url(#arrow)"/>
+<path d="M531 267 L552 334" stroke="#8bd3ff" stroke-width="3" stroke-dasharray="8 8" marker-end="url(#arrow)"/>
+<path d="M584 388 L647 448" stroke="#8bd3ff" stroke-width="3" stroke-dasharray="8 8" marker-end="url(#arrow)"/>
+<path d="M508 491 L512 404" stroke="#8bd3ff" stroke-width="3" stroke-dasharray="8 8" marker-end="url(#arrow)"/>
+<text x="458" y="570" class="body">The learner proposes clusters and routes,</text>
+<text x="458" y="590" class="body">but they are still provisional.</text>
+
+<circle cx="915" cy="230" r="38" fill="#162d24" stroke="#95f0c1" stroke-opacity="0.7"/><text x="877" y="235" class="body">install cluster</text>
+<circle cx="1060" cy="255" r="40" fill="#162d24" stroke="#95f0c1" stroke-opacity="0.7"/><text x="1026" y="250" class="body">proof +</text><text x="1023" y="268" class="body">status</text>
+<circle cx="975" cy="410" r="42" fill="#162d24" stroke="#95f0c1" stroke-opacity="0.7"/><text x="944" y="405" class="body">current</text><text x="946" y="423" class="body">query</text>
+<circle cx="878" cy="520" r="28" fill="#162d24" stroke="#95f0c1" stroke-opacity="0.7"/><text x="848" y="525" class="body">STOP</text>
+<circle cx="1110" cy="470" r="26" fill="#16232d" stroke="#5f7083" stroke-opacity="0.4"/><text x="1082" y="475" class="body">old noise</text>
+<path d="M1009 394 L1029 292" stroke="#95f0c1" stroke-width="5" marker-end="url(#arrow)"/>
+<path d="M939 383 L923 271" stroke="#95f0c1" stroke-width="5" marker-end="url(#arrow)"/>
+<path d="M949 447 L895 493" stroke="#95f0c1" stroke-width="5" marker-end="url(#arrow)"/>
+<path d="M1012 425 L1085 455" stroke="#6b7d8f" stroke-width="2" stroke-dasharray="8 8" marker-end="url(#arrow)"/>
+<text x="844" y="570" class="body">Replay and promotion keep the live route clean:</text>
+<text x="844" y="590" class="body">strong clusters, highlighted path, old noise faded.</text>
+
+</svg>
