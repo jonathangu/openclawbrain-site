@@ -321,7 +321,7 @@
 
     <section class="panel hero">
       <p class="eyebrow">OpenClawBrain proof</p>
-      <h1>Proof that the public install and update lane reports the real method.</h1>
+      <h1>Proof that the public install lane reports the real runtime state.</h1>
       <p class="lede">
         This page is for operators. Run <code>status --detailed</code> for the
         quick check, then run the proof command when you need one durable bundle
@@ -337,22 +337,22 @@
     <section class="panel">
       <h2>What this page proves</h2>
       <p class="section-copy">
-        The current public install lane can report concrete V2 metadata and capture
-        one durable operator bundle. Verify it from the surfaced fields, not from
-        fixed counts that only belong to one host.
+        The current public install lane can prove install, runtime, and reporting
+        truth on the exercised host surface, then capture one durable operator bundle.
+        Verify it from the surfaced fields, not from fixed counts that only belong to one host.
       </p>
       <ul class="list">
-        <li><code>path.pg = v2</code> reports the active policy-gradient generation.</li>
-        <li><code>path.method = policy_gradient_v2</code> reports the method by name.</li>
-        <li><code>path.target = trajectory_reconstruction</code> reports the learning target.</li>
-        <li><code>traced.*</code> fields show that traced routes, supervision, and updates exist.</li>
-        <li><code>proof</code> captures one durable bundle with <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>, raw step logs, startup breadcrumbs, and runtime-load-proof snapshots.</li>
+        <li><code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>, and <code>attachTruth ... runtime=proven</code> show that the selected home is healthy.</li>
+        <li><code>serve state=serving_active_pack</code> shows the live path is serving a promoted pack after first promotion.</li>
+        <li><code>path ... pg=v2 method=policy_gradient_v2 target=trajectory_reconstruction</code> reports the active learning path truthfully.</li>
+        <li><code>traced ... routes=... supervision=... updates=...</code> shows that traced routes, supervision, and updates exist.</li>
+        <li><code>proof</code> captures one durable bundle with <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>, raw step logs, startup breadcrumbs, and the runtime-load-proof, coverage, and hardening snapshots.</li>
       </ul>
       <div class="callout">
         <strong>Boundary:</strong> this is operator proof for install, runtime,
         and reporting truth. Your promoted pack id and traced counts will differ
-        by host, and this page does not claim universal memory citations or live
-        answer-quality gains by itself.
+        by host, and this page does not claim same-gateway multi-profile support,
+        universal memory citations, or live answer-quality gains by itself.
       </div>
     </section>
 
@@ -363,28 +363,26 @@
         and counts vary by host and learning state.
       </p>
       <pre><code>STATUS ok
-path.pg            = v2
-path.method        = policy_gradient_v2
-path.target        = trajectory_reconstruction
-path.trajectories  = &lt;host-specific count&gt;
-traced.routes      = &lt;host-specific count&gt;
-traced.supervision = &lt;host-specific count&gt;
-traced.updates     = &lt;host-specific count&gt;</code></pre>
+hook        install=installed loadability=loadable loadProof=status_probe_ready
+attachTruth current=current_profile hook=present config=allows_load runtime=proven
+serve       state=serving_active_pack
+path        source=materialized_candidate pg=v2 method=policy_gradient_v2 target=trajectory_reconstruction connect=&lt;host-specific count&gt; trajectories=&lt;host-specific count&gt; bindingQuality=&lt;host-specific value&gt;
+traced      present=yes routes=&lt;host-specific count&gt; supervision=&lt;host-specific count&gt; updates=&lt;host-specific count&gt;</code></pre>
       <p class="small">
-        This output is useful because the method, target, pack, and traced-learning
-        surfaces are real. The exact counts are not stable public constants.
+        This output is useful because the health, path, and traced-learning surfaces
+        are real. The exact counts and binding quality are not stable public constants.
       </p>
       <div class="cards">
         <article class="card">
-          <h3>Path fields</h3>
+          <h3>Health fields</h3>
           <p class="small">
-            These lines identify the method and target that the router reports for this install.
+            These lines show that the selected OpenClaw home is attached, loadable, and runtime-proven.
           </p>
         </article>
         <article class="card">
-          <h3>Trace fields</h3>
+          <h3>Path and trace fields</h3>
           <p class="small">
-            These counts show that traced routes, supervision, and updates were recorded.
+            These lines identify the active learning path and show that traced routes, supervision, and updates were recorded.
           </p>
         </article>
       </div>
@@ -404,7 +402,7 @@ openclawbrain status --openclaw-home ~/.openclaw --detailed</code></pre>
       <p class="small">
         <code>install</code> is the public front door for the selected home. It writes or repairs the hook for that home and pins the activation root the runtime serves from. <code>status --detailed</code> is the fast compare surface. <code>proof</code>
         writes <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>,
-        raw step logs, startup breadcrumbs, and runtime-load-proof snapshots into one bundle.
+        raw step logs, startup breadcrumbs, and the runtime-load-proof, coverage, and hardening snapshots into one bundle.
         The intended canonical lane is the same install command with optional <code>--proof</code>; until that surface is fully aligned, proof stays a separate follow-up command. If you are explicitly managing <code>@openclawbrain/openclaw</code> through OpenClaw's plugin manager, rerun <code>openclawbrain install --openclaw-home ~/.openclaw</code> afterward. If your OpenClaw home lives somewhere else, change the path.
       </p>
     </section>

@@ -448,7 +448,7 @@
           <h3>It learns which memories are useful</h3>
           <p class="small">
             Many systems store memories and retrieve them by similarity. OpenClawBrain can
-            promote corrections that helped and demote context that did not.
+            promote routes that helped while failed candidates stay off the live path.
           </p>
         </article>
         <article class="card">
@@ -514,13 +514,19 @@ openclawbrain status --openclaw-home ~/.openclaw --detailed</code></pre>
         writes or repairs the hook for that home, and pins the activation root the runtime serves from.
         <code>status --detailed</code> is the quick verify surface.
       </p>
+      <p class="install-note">
+        A healthy install should report <code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>,
+        and <code>attachTruth ... runtime=proven</code>. After the first promoted pack exists,
+        the same status surface should also report <code>serveState=serving_active_pack</code>.
+      </p>
       <h3>Durable proof when you need operator evidence</h3>
       <pre><code>openclawbrain proof --openclaw-home ~/.openclaw</code></pre>
       <p class="install-note">
         The intended canonical lane is the same install command with optional <code>--proof</code>.
         Until that lands cleanly across the operator surfaces, proof stays a separate follow-up command.
         It writes <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>,
-        raw step logs, startup breadcrumbs, and proof pointers under one bundle directory.
+        raw step logs, startup breadcrumbs, and the runtime-load-proof, coverage, and hardening snapshots
+        under one bundle directory.
         If you are explicitly managing <code>@openclawbrain/openclaw</code> with OpenClaw's plugin manager,
         keep that as an advanced package-management step and rerun <code>openclawbrain install --openclaw-home ~/.openclaw</code>
         afterward. Need the expected fields? Compare your output with the <a href="proof/">proof page</a>.
