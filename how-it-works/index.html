@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How OpenClawBrain Works - OpenClawBrain</title>
+  <meta
+    name="description"
+    content="How OpenClawBrain works: what first install does on an existing OpenClaw host, how replay works, how learning works, and what changes over time."
+  />
+  <meta property="og:title" content="How OpenClawBrain Works - OpenClawBrain" />
+  <meta
+    property="og:description"
+    content="The end-to-end OpenClawBrain lifecycle: install, replay, learning, over-time behavior, and operator verification."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://openclawbrain.ai/how-it-works/" />
+  <style>
+    :root {
+      --bg: #071019;
+      --bg-glow: rgba(90, 166, 214, 0.16);
+      --panel: rgba(10, 19, 30, 0.94);
+      --panel-soft: rgba(14, 26, 39, 0.94);
+      --text: #eef4f9;
+      --muted: #a8b7c6;
+      --line: rgba(168, 183, 198, 0.16);
+      --accent: #8bd3ff;
+      --green: #95f0c1;
+      --code: #08111a;
+      --shadow: 0 20px 70px rgba(0, 0, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, var(--bg-glow), transparent 32%),
+        linear-gradient(180deg, #09121c 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 20px 56px;
+    }
+
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 12px;
+      margin: 0 0 14px;
+      padding: 0 4px;
+    }
+
+    .site-nav a {
+      color: var(--muted);
+      font-size: 0.95rem;
+      text-decoration: none;
+    }
+
+    .site-nav a:hover,
+    .site-nav a[aria-current="page"] {
+      color: var(--text);
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+      padding: 30px;
+    }
+
+    .hero {
+      background:
+        linear-gradient(160deg, rgba(17, 31, 47, 0.98) 0%, rgba(8, 15, 24, 0.98) 100%);
+      padding: 38px 30px 30px;
+    }
+
+    .eyebrow {
+      color: var(--green);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 8vw, 4.5rem);
+      letter-spacing: -0.04em;
+      line-height: 0.96;
+      margin: 0 0 16px;
+      max-width: 760px;
+    }
+
+    h2 {
+      color: var(--accent);
+      font-size: 1.42rem;
+      line-height: 1.15;
+      margin: 0 0 12px;
+    }
+
+    h3 {
+      font-size: 1.04rem;
+      line-height: 1.25;
+      margin: 0 0 8px;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code,
+    pre code {
+      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.95rem;
+    }
+
+    code {
+      background: rgba(8, 17, 27, 0.82);
+      border: 1px solid rgba(168, 183, 198, 0.12);
+      border-radius: 6px;
+      padding: 2px 6px;
+    }
+
+    pre {
+      background: var(--code);
+      border: 1px solid rgba(168, 183, 198, 0.14);
+      border-radius: 16px;
+      margin: 16px 0;
+      overflow-x: auto;
+      padding: 18px;
+    }
+
+    pre code {
+      background: transparent;
+      border: 0;
+      display: block;
+      line-height: 1.7;
+      padding: 0;
+    }
+
+    .lede,
+    .section-copy,
+    .small {
+      color: var(--muted);
+    }
+
+    .lede,
+    .section-copy {
+      font-size: 1.05rem;
+      max-width: 760px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--text);
+      display: inline-block;
+      font-weight: 700;
+      padding: 12px 18px;
+      text-decoration: none;
+    }
+
+    .button:hover {
+      text-decoration: none;
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, var(--green) 0%, #c5f8da 100%);
+      border-color: rgba(149, 240, 193, 0.6);
+      color: #042312;
+    }
+
+    .button-secondary {
+      border-color: rgba(139, 211, 255, 0.35);
+    }
+
+    .callout {
+      background: linear-gradient(135deg, rgba(9, 25, 18, 0.96), rgba(8, 19, 29, 0.96));
+      border: 1px solid rgba(149, 240, 193, 0.22);
+      border-radius: 18px;
+      color: var(--muted);
+      margin-top: 16px;
+      padding: 16px 18px;
+    }
+
+    .callout strong {
+      color: var(--green);
+    }
+
+    .cards,
+    .link-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .link-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card,
+    .link-card {
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .link-card {
+      color: inherit;
+      display: block;
+      text-decoration: none;
+    }
+
+    .link-card strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .link-card span {
+      color: var(--muted);
+    }
+
+    .link-card:hover {
+      border-color: rgba(139, 211, 255, 0.42);
+      text-decoration: none;
+    }
+
+    .list {
+      list-style: none;
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .list li {
+      color: var(--muted);
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .list li::before {
+      color: var(--accent);
+      content: "•";
+      left: 0;
+      position: absolute;
+      top: 0;
+    }
+
+    .site-footer {
+      color: var(--muted);
+      font-size: 0.96rem;
+      padding: 10px 4px 0;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .link-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .cards,
+      .link-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel,
+      .hero {
+        padding: 24px 20px;
+      }
+
+      .site-nav {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../">Home</a>
+      <a href="../index.html#install">Install / Update</a>
+      <a href="../proof/">Proof</a>
+      <a href="./" aria-current="page">How It Works</a>
+      <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
+    </nav>
+
+    <section class="panel hero">
+      <p class="eyebrow">OpenClawBrain lifecycle</p>
+      <h1>What actually happens when you install the brain.</h1>
+      <p class="lede">
+        OpenClawBrain adds a learned memory layer to OpenClaw without moving learning work onto the live response path.
+        The runtime serves promoted packs, not partially written state, so useful context stays bounded and latency stays predictable.
+      </p>
+      <p class="lede">
+        This page is the end-to-end guide: first install on an existing OpenClaw host, what replay means,
+        what learning means, what healthy status looks like, and what changes over time after install.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="../index.html#install">Install / verify</a>
+        <a class="button button-secondary" href="../proof/">Read the proof page</a>
+        <a class="button button-secondary" href="../">Back to homepage</a>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Start with the architecture</h2>
+      <p class="section-copy">
+        OpenClawBrain has two public pieces. <code>@openclawbrain/openclaw</code> is the plugin and runtime package inside OpenClaw.
+        <code>@openclawbrain/cli</code> is the operator CLI that installs, verifies, captures proof, and manages the host-side lifecycle.
+      </p>
+      <div class="cards">
+        <article class="card">
+          <h3>Runtime / plugin layer</h3>
+          <p class="small">
+            During prompt build, the installed extension reads the current promoted pack, compiles a bounded slice of context,
+            and injects it into the prompt. If the memory layer is unavailable, the agent still runs.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Operator / learning layer</h3>
+          <p class="small">
+            After the response path finishes, OpenClawBrain exports turns and evidence, builds candidate packs,
+            runs replay and health checks, and promotes a new pack only if it passes.
+          </p>
+        </article>
+      </div>
+      <div class="callout">
+        <strong>The key boundary:</strong> live serving stays fast and bounded. Learning happens later, off the response path.
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>What install does on an existing OpenClaw host</h2>
+      <p class="section-copy">
+        Install does not train a giant model on the spot. It converges one selected OpenClaw home onto the supported runtime layout,
+        repairs the hook if it drifted, and pins the activation root that the runtime serves from.
+      </p>
+      <h3>Canonical operator lane</h3>
+      <pre><code>openclawbrain install --openclaw-home ~/.openclaw
+openclaw gateway restart
+openclawbrain status --openclaw-home ~/.openclaw --detailed</code></pre>
+      <ul class="list">
+        <li><code>install</code> targets one OpenClaw home, writes or repairs the hook for that home, and pins the activation root the runtime serves from.</li>
+        <li><code>openclaw gateway restart</code> reloads the runtime so the installed hook can actually load into the live agent process.</li>
+        <li><code>status --detailed</code> verifies the selected home and reports whether the runtime is attached, loadable, and proven on the exercised host surface.</li>
+      </ul>
+      <p class="small">
+        Healthy signals include <code>loadProof=status_probe_ready</code> and <code>attachTruth ... runtime=proven</code>.
+        Once a promoted pack exists, healthy detailed status should also report <code>serveState=serving_active_pack</code> and, where surfaced,
+        <code>routeFn available=yes</code>. Startup breadcrumbs can also show <code>BRAIN LOADED</code> after the gateway restart.
+      </p>
+      <div class="callout">
+        <strong>First-run truth:</strong> immediately after install there may be no promoted pack yet.
+        That is normal. The runtime can be attached before learned serving is active.
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>What replay means</h2>
+      <p class="section-copy">
+        Replay is the gate between a candidate pack and the live runtime. Instead of trusting a freshly built pack immediately,
+        OpenClawBrain replays the relevant evidence and checks whether the candidate reproduces the right retrieval and reporting behavior.
+      </p>
+      <div class="cards">
+        <article class="card">
+          <h3>Why replay exists</h3>
+          <p class="small">
+            It keeps the live path on promoted packs instead of half-written state. A candidate that cannot survive replay does not get served.
+          </p>
+        </article>
+        <article class="card">
+          <h3>What replay protects</h3>
+          <p class="small">
+            It protects installation truth, runtime truth, and learning truth from drifting apart. The runtime should only serve a pack that passed the promotion gate.
+          </p>
+        </article>
+      </div>
+      <p class="small">
+        In practice, replay is part of the candidate-pack build and promotion flow: export turns, build a candidate pack, run replay and health checks,
+        and promote only if that candidate passes.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>What learning means</h2>
+      <p class="section-copy">
+        Learning in OpenClawBrain is not a single one-time training job. It is the background process that turns real usage into better promoted packs over time.
+      </p>
+      <div class="steps-grid">
+        <article class="card">
+          <span class="step-label">1</span>
+          <h3>Export</h3>
+          <p class="small">After the agent replies, OpenClawBrain exports the turns and evidence from that completed response path.</p>
+        </article>
+        <article class="card">
+          <span class="step-label">2</span>
+          <h3>Build</h3>
+          <p class="small">The learner turns those exports into a candidate pack instead of editing the live runtime state in place.</p>
+        </article>
+        <article class="card">
+          <span class="step-label">3</span>
+          <h3>Replay and check</h3>
+          <p class="small">Replay and health checks verify whether the candidate deserves promotion.</p>
+        </article>
+        <article class="card">
+          <span class="step-label">4</span>
+          <h3>Promote</h3>
+          <p class="small">Only a passing candidate becomes the new active promoted pack for live retrieval.</p>
+        </article>
+      </div>
+      <div class="callout">
+        <strong>Why this matters:</strong> live answers stay predictable while the system keeps learning from real work in the background.
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>What changes over time</h2>
+      <p class="section-copy">
+        The brain becomes more useful gradually. Install prepares the host. Real turns create exports. Exports become candidate packs.
+        Passing candidates become promoted packs. Promoted packs are what the live runtime actually serves.
+      </p>
+      <ul class="list">
+        <li><strong>Right after install:</strong> the host can be attached and healthy even if no learned pack is serving yet.</li>
+        <li><strong>After real usage:</strong> export and learning have material to process.</li>
+        <li><strong>After first promotion:</strong> detailed status can truthfully report <code>serveState=serving_active_pack</code>.</li>
+        <li><strong>Over longer usage:</strong> better routes and useful retrievals can become repeatable behavior instead of one-off prompt luck.</li>
+      </ul>
+      <p class="small">
+        If the memory layer is missing, broken, or not yet ready, OpenClawBrain fails open and the agent still replies normally.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>How to verify and capture durable proof</h2>
+      <p class="section-copy">
+        Start with detailed status for the fast operator check. When you need one durable bundle with the exact commands, logs, and verdict,
+        capture proof as a separate follow-up command.
+      </p>
+      <h3>Fast verify</h3>
+      <pre><code>openclawbrain status --openclaw-home ~/.openclaw --detailed</code></pre>
+      <h3>Durable proof</h3>
+      <pre><code>openclawbrain proof --openclaw-home ~/.openclaw</code></pre>
+      <p class="small">
+        Today, proof remains a separate follow-up surface. It captures the install / restart / status / runtime evidence bundle with summary and raw artifacts.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>Go deeper</h2>
+      <p class="section-copy">
+        Use the homepage for product framing, this page for the lifecycle explanation, and the proof page for concrete operator evidence.
+      </p>
+      <div class="link-grid">
+        <a class="link-card" href="../">
+          <strong>Homepage</strong>
+          <span>The public framing and install lane.</span>
+        </a>
+        <a class="link-card" href="../proof/">
+          <strong>Proof</strong>
+          <span>Concrete install, runtime, and reporting evidence.</span>
+        </a>
+        <a class="link-card" href="https://www.npmjs.com/package/@openclawbrain/openclaw">
+          <strong>Plugin package</strong>
+          <span>The OpenClaw plugin and runtime package.</span>
+        </a>
+        <a class="link-card" href="https://www.npmjs.com/package/@openclawbrain/cli">
+          <strong>CLI package</strong>
+          <span>The install, status, and proof commands.</span>
+        </a>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+
+      <p>Built by Jonathan Gu. Apache 2.0 licensed. Open source from the start.</p>
+    </footer>
+  </main>
+</body>
+</html>
