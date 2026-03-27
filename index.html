@@ -3,31 +3,34 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OpenClawBrain - Bounded Memory for OpenClaw Agents</title>
+  <title>OpenClawBrain | Install-first bounded memory for OpenClaw</title>
   <meta
     name="description"
-    content="OpenClawBrain gives OpenClaw agents bounded useful context: store corrections, retrieve them when they matter, learn from outcomes, and keep the live path predictable."
+    content="Install OpenClawBrain on an existing OpenClaw host, upgrade or repair with the same command, verify with detailed status, and capture proof when you need operator evidence."
   />
-  <meta property="og:title" content="OpenClawBrain - Bounded Memory for OpenClaw Agents" />
+  <meta property="og:title" content="OpenClawBrain | Install-first bounded memory for OpenClaw" />
   <meta
     property="og:description"
-    content="One install front door, bounded useful context, predictable live-path latency, quick status checks, and durable proof when you need operator evidence."
+    content="One install front door, one pinned OpenClaw home, visible proof signals, and a clear story from messy history to bounded live context."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
   <style>
     :root {
       --bg: #071019;
-      --bg-glow: rgba(90, 166, 214, 0.16);
-      --panel: rgba(10, 19, 30, 0.94);
-      --panel-soft: rgba(14, 26, 39, 0.94);
+      --bg-glow: rgba(109, 199, 255, 0.16);
+      --panel: rgba(9, 18, 29, 0.95);
+      --panel-soft: rgba(14, 26, 39, 0.96);
+      --panel-strong: rgba(18, 33, 48, 0.98);
       --text: #eef4f9;
       --muted: #a8b7c6;
       --line: rgba(168, 183, 198, 0.16);
       --accent: #8bd3ff;
       --green: #95f0c1;
-      --code: #08111a;
-      --shadow: 0 20px 70px rgba(0, 0, 0, 0.25);
+      --amber: #ffd580;
+      --pink: #f2a8ff;
+      --code: #07111b;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
     }
 
     * {
@@ -39,14 +42,14 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top, var(--bg-glow), transparent 32%),
+        radial-gradient(circle at top, var(--bg-glow), transparent 34%),
         linear-gradient(180deg, #09121c 0%, var(--bg) 100%);
       color: var(--text);
-      line-height: 1.55;
+      line-height: 1.58;
     }
 
     main {
-      max-width: 1040px;
+      max-width: 1120px;
       margin: 0 auto;
       padding: 32px 20px 56px;
     }
@@ -74,7 +77,7 @@
     .panel {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 22px;
+      border-radius: 24px;
       box-shadow: var(--shadow);
       margin-bottom: 18px;
       padding: 30px;
@@ -82,37 +85,86 @@
 
     .hero {
       background:
-        linear-gradient(160deg, rgba(17, 31, 47, 0.98) 0%, rgba(8, 15, 24, 0.98) 100%);
-      padding: 38px 30px 30px;
+        linear-gradient(160deg, rgba(18, 33, 48, 0.98) 0%, rgba(8, 15, 24, 0.98) 100%);
+      padding: 36px 30px 30px;
+    }
+
+    .hero-layout,
+    .lane-grid,
+    .signal-grid,
+    .story-grid,
+    .benefit-grid,
+    .visual-notes,
+    .link-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-layout,
+    .lane-grid {
+      grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.9fr);
+      align-items: start;
+    }
+
+    .signal-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 22px;
+    }
+
+    .story-grid,
+    .benefit-grid,
+    .visual-notes {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .link-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .eyebrow,
+    .panel-label,
+    .card-label {
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
     .eyebrow {
-      color: var(--green);
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
       margin-bottom: 12px;
-      text-transform: uppercase;
+    }
+
+    .panel-label {
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .card-label {
+      display: block;
+      margin-bottom: 8px;
     }
 
     h1 {
       font-family: Georgia, "Times New Roman", serif;
       font-size: clamp(2.8rem, 8vw, 4.9rem);
-      letter-spacing: -0.04em;
-      line-height: 0.96;
+      letter-spacing: -0.045em;
+      line-height: 0.95;
       margin: 0 0 16px;
-      max-width: 800px;
+      max-width: 760px;
     }
 
     h2 {
       color: var(--accent);
-      font-size: 1.45rem;
+      font-size: 1.48rem;
       line-height: 1.15;
       margin: 0 0 12px;
     }
 
     h3 {
-      font-size: 1.04rem;
+      font-size: 1.06rem;
       line-height: 1.25;
       margin: 0 0 8px;
     }
@@ -129,39 +181,15 @@
       text-decoration: underline;
     }
 
-    code,
-    pre code {
-      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.95rem;
-    }
-
-    code {
-      background: rgba(8, 17, 27, 0.82);
-      border: 1px solid rgba(168, 183, 198, 0.12);
-      border-radius: 6px;
-      padding: 2px 6px;
-    }
-
-    pre {
-      background: var(--code);
-      border: 1px solid rgba(168, 183, 198, 0.14);
-      border-radius: 16px;
-      margin: 16px 0;
-      overflow-x: auto;
-      padding: 18px;
-    }
-
-    pre code {
-      background: transparent;
-      border: 0;
-      display: block;
-      line-height: 1.7;
-      padding: 0;
+    .lede,
+    .section-copy,
+    .small,
+    .caption {
+      color: var(--muted);
     }
 
     .lede,
     .section-copy {
-      color: var(--muted);
       font-size: 1.05rem;
       max-width: 760px;
     }
@@ -189,7 +217,7 @@
     }
 
     .button-primary {
-      background: linear-gradient(135deg, var(--green) 0%, #c5f8da 100%);
+      background: linear-gradient(135deg, var(--green) 0%, #c8f8dd 100%);
       border-color: rgba(149, 240, 193, 0.6);
       color: #042312;
     }
@@ -198,76 +226,77 @@
       border-color: rgba(139, 211, 255, 0.35);
     }
 
-    .feature-strip,
-    .demo-grid,
-    .compare-grid,
-    .steps-grid,
-    .link-grid {
-      display: grid;
-      gap: 14px;
-      margin-top: 20px;
-    }
-
-    .feature-strip {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .demo-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .compare-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .steps-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .link-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .feature-item,
+    .lane-card,
     .card,
-    .link-card {
+    .signal-card,
+    .link-card,
+    .visual-frame {
       background: var(--panel-soft);
       border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 18px;
+      border-radius: 20px;
+      padding: 20px;
     }
 
-    .feature-item strong,
+    .lane-card {
+      background:
+        linear-gradient(180deg, rgba(18, 33, 48, 0.98) 0%, rgba(10, 19, 30, 0.98) 100%);
+    }
+
+    .lane-step {
+      border-top: 1px solid rgba(168, 183, 198, 0.12);
+      margin-top: 14px;
+      padding-top: 14px;
+    }
+
+    .lane-step:first-of-type {
+      border-top: 0;
+      margin-top: 0;
+      padding-top: 0;
+    }
+
+    .signal-card strong,
     .link-card strong {
       display: block;
       margin-bottom: 8px;
     }
 
-    .feature-item span,
-    .link-card span,
-    .small,
-    .card ul {
-      color: var(--muted);
-    }
-
-    .turn-label,
-    .step-label {
-      color: var(--green);
-      display: inline-block;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-    }
-
-    .dialogue {
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .dialogue strong {
+    .signal-value {
       color: var(--text);
+      display: block;
+      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+
+    code,
+    pre code {
+      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.95rem;
+    }
+
+    code {
+      background: rgba(8, 17, 27, 0.82);
+      border: 1px solid rgba(168, 183, 198, 0.12);
+      border-radius: 6px;
+      padding: 2px 6px;
+    }
+
+    pre {
+      background: var(--code);
+      border: 1px solid rgba(168, 183, 198, 0.14);
+      border-radius: 16px;
+      margin: 12px 0 0;
+      overflow-x: auto;
+      padding: 16px;
+    }
+
+    pre code {
+      background: transparent;
+      border: 0;
+      display: block;
+      line-height: 1.7;
+      padding: 0;
+      white-space: pre;
     }
 
     .callout {
@@ -275,7 +304,7 @@
       border: 1px solid rgba(149, 240, 193, 0.22);
       border-radius: 18px;
       color: var(--muted);
-      margin-top: 16px;
+      margin-top: 18px;
       padding: 16px 18px;
     }
 
@@ -284,35 +313,29 @@
     }
 
     .list {
-      list-style: none;
-      margin-top: 12px;
-      display: grid;
-      gap: 10px;
+      color: var(--muted);
+      margin: 16px 0 0 18px;
     }
 
     .list li {
-      color: var(--muted);
-      padding-left: 16px;
-      position: relative;
+      margin-bottom: 10px;
     }
 
-    .list li::before {
-      color: var(--accent);
-      content: "•";
-      left: 0;
-      position: absolute;
-      top: 0;
-    }
-
-    .install-note {
-      color: var(--muted);
-      margin-top: 10px;
+    .visual-frame img {
+      border-radius: 16px;
+      display: block;
+      width: 100%;
+      height: auto;
     }
 
     .link-card {
       color: inherit;
       display: block;
       text-decoration: none;
+    }
+
+    .link-card span {
+      color: var(--muted);
     }
 
     .link-card:hover {
@@ -322,26 +345,27 @@
 
     .site-footer {
       color: var(--muted);
-      font-size: 0.96rem;
-      padding: 10px 4px 0;
+      font-size: 0.94rem;
+      padding: 8px 4px 0;
       text-align: center;
     }
 
-    @media (max-width: 900px) {
-      .feature-strip,
-      .steps-grid,
+    @media (max-width: 960px) {
+      .hero-layout,
+      .lane-grid,
+      .signal-grid,
+      .story-grid,
+      .benefit-grid,
+      .visual-notes,
       .link-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 760px) {
-      .demo-grid,
-      .compare-grid,
-      .feature-strip,
-      .steps-grid,
-      .link-grid {
-        grid-template-columns: 1fr;
+    @media (max-width: 720px) {
+      main {
+        padding-left: 16px;
+        padding-right: 16px;
       }
 
       .panel,
@@ -358,203 +382,252 @@
 <body>
   <main>
     <nav class="site-nav" aria-label="Primary">
-      <a href="#demo">Demo</a>
-      <a href="#difference">How it differs</a>
-      <a href="#how">How it works</a>
-      <a href="#install">Install / Update</a>
-      <a href="how-it-works/">Lifecycle guide</a>
+      <a href="#install">Install</a>
+      <a href="#upgrade">Upgrade</a>
+      <a href="how-it-works/">How it works</a>
       <a href="proof/">Proof</a>
+      <a href="troubleshooting/">Troubleshooting</a>
       <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
     </nav>
 
     <section class="panel hero">
-      <p class="eyebrow">OpenClawBrain for OpenClaw</p>
-      <h1>Your agent forgets everything between sessions. This fixes that.</h1>
-      <p class="lede">
-        OpenClawBrain is a memory layer for AI agents. It keeps the corrections,
-        preferences, and past outcomes that usually vanish when a session ends.
-      </p>
-      <p class="lede">
-        It runs locally. If the memory layer has nothing useful, your agent keeps
-        running. Learning happens in the background.
-      </p>
-      <div class="hero-actions">
-        <a class="button button-primary" href="#install">Install or update OpenClawBrain</a>
-        <a class="button button-secondary" href="how-it-works/">How it works end to end</a>
-        <a class="button button-secondary" href="proof/">Read the proof</a>
-      </div>
-      <div class="feature-strip">
-        <div class="feature-item">
-          <strong>Local by default</strong>
-          <span>Install into <code>~/.openclaw</code> and keep the memory close to the agent runtime.</span>
-        </div>
-        <div class="feature-item">
-          <strong>Keeps working without a match</strong>
-          <span>When memory helps, it adds context. If no matching correction is found, the agent still answers.</span>
-        </div>
-        <div class="feature-item">
-          <strong>Learns over time</strong>
-          <span>Useful corrections can become repeatable behavior instead of a one-off prompt fix.</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel" id="demo">
-      <h2>Watch an agent learn in four turns</h2>
-      <p class="section-copy">
-        Most memory systems store facts. OpenClawBrain stores corrections — and
-        brings them back before the agent makes the same mistake twice.
-      </p>
-      <div class="demo-grid">
-        <article class="card">
-          <span class="turn-label">Turn 1</span>
-          <h3>The first answer is wrong</h3>
-          <p class="dialogue"><strong>User:</strong> How should you answer me?</p>
-          <p class="dialogue"><strong>Agent:</strong> I&apos;ll answer in long freeform paragraphs.</p>
-        </article>
-        <article class="card">
-          <span class="turn-label">Turn 2</span>
-          <h3>The user corrects it</h3>
-          <p class="dialogue"><strong>User:</strong> Keep it concise. Use bullets. End with the next action.</p>
-          <p class="dialogue"><strong>Agent:</strong> Understood. I&apos;ll answer that way from now on.</p>
-        </article>
-        <article class="card">
-          <span class="turn-label">Turn 3</span>
-          <h3>The same task returns later</h3>
-          <p class="dialogue"><strong>User:</strong> How should you answer me?</p>
-          <p class="dialogue"><strong>System:</strong> Matching correction found before the answer is written.</p>
-        </article>
-        <article class="card">
-          <span class="turn-label">Turn 4</span>
-          <h3>The behavior changes</h3>
-          <p class="dialogue"><strong>Agent:</strong> Concisely, with bullets, ending with the next action.</p>
-          <p class="dialogue"><strong>Trace:</strong> The retrieved correction is visible with the path that won.</p>
-        </article>
-      </div>
-      <div class="callout">
-        <strong>What changed:</strong> OpenClawBrain stored the correction after turn 2.
-        On the next similar task, it retrieved that correction before the answer
-        was generated.
-      </div>
-    </section>
-
-    <section class="panel" id="difference">
-      <h2>Three things most memory systems do not do</h2>
-      <p class="section-copy">
-        OpenClawBrain is not just a place to dump notes. It is built to change
-        future behavior, show its work, and stay out of the response path.
-      </p>
-      <div class="compare-grid">
-        <article class="card">
-          <h3>It learns which memories are useful</h3>
-          <p class="small">
-            Many systems store memories and retrieve them by similarity. OpenClawBrain can
-            promote routes that helped while failed candidates stay off the live path.
+      <div class="hero-layout">
+        <div>
+          <p class="eyebrow">Install OpenClawBrain on an existing OpenClaw host</p>
+          <h1>Install it, upgrade it, and verify it before you trust it.</h1>
+          <p class="lede">
+            OpenClawBrain turns the history you already have into a bounded memory layer for OpenClaw. It harvests conversations, memory notes,
+            docs, and corrections, promotes only replay-passing packs, and serves a small live slice instead of stuffing raw history into every prompt.
           </p>
-        </article>
-        <article class="card">
-          <h3>It shows its work</h3>
-          <p class="small">
-            When an answer goes wrong, you can inspect the retrieved context and
-            the route that won. The behavior is not a black box.
+          <p class="lede">
+            The healthy reference host at <code>/Users/guclaw/.openclaw</code> already reports <code>STATUS ok</code>,
+            <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>.
+            Start with install. Compare status. Capture proof when you need durable operator evidence.
           </p>
-        </article>
-        <article class="card">
-          <h3>It learns in the background</h3>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#install">Install now</a>
+            <a class="button button-secondary" href="#upgrade">Upgrade / repair</a>
+            <a class="button button-secondary" href="proof/">Compare proof</a>
+          </div>
+        </div>
+        <aside class="lane-card" aria-label="Canonical operator lane">
+          <span class="panel-label">Canonical operator lane</span>
+          <h2>One selected home. One front door. One fast verify surface.</h2>
+          <div class="lane-step">
+            <h3>Install or repair</h3>
+            <pre><code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
+          </div>
+          <div class="lane-step">
+            <h3>Reload the live runtime</h3>
+            <pre><code>openclaw gateway restart</code></pre>
+          </div>
+          <div class="lane-step">
+            <h3>Verify detailed status</h3>
+            <pre><code>openclawbrain status --openclaw-home '/Users/guclaw/.openclaw' --detailed</code></pre>
+          </div>
+          <div class="lane-step">
+            <h3>Capture durable proof</h3>
+            <pre><code>openclawbrain proof --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
+          </div>
           <p class="small">
-            Export, pack building, and promotion do not have to sit on the agent&apos;s
-            response path. If memory has nothing useful, the agent still answers.
+            <code>openclaw gateway restart</code> does not accept <code>--openclaw-home</code>. Keep the same selected home pinned on every
+            surrounding <code>openclawbrain</code> command.
           </p>
-        </article>
+        </aside>
       </div>
-    </section>
-
-    <section class="panel" id="how">
-      <h2>How it works</h2>
-      <p class="section-copy">
-        Four concrete steps. Store what mattered, retrieve it when needed, learn
-        from outcomes, and keep the path inspectable.
-      </p>
-      <div class="steps-grid">
-        <article class="card">
-          <span class="step-label">Store</span>
-          <h3>Save what changed the answer</h3>
-          <p class="small">Sessions, corrections, and outcomes go into the memory layer.</p>
+      <div class="signal-grid" id="proof" aria-label="Healthy host proof signals">
+        <article class="signal-card">
+          <strong>Status</strong>
+          <span class="signal-value">STATUS ok</span>
+          <p class="small">The selected home is healthy enough to inspect and serve from.</p>
         </article>
-        <article class="card">
-          <span class="step-label">Retrieve</span>
-          <h3>Bring back the right correction</h3>
-          <p class="small">Before a similar task, the agent can pull in the memory that matters.</p>
+        <article class="signal-card">
+          <strong>Runtime load proof</strong>
+          <span class="signal-value">loadProof=status_probe_ready</span>
+          <p class="small">The runtime can prove the brain actually loaded, not just that files exist.</p>
         </article>
-        <article class="card">
-          <span class="step-label">Learn</span>
-          <h3>Keep the paths that help</h3>
-          <p class="small">Helpful routes can gain weight over time instead of resetting every session.</p>
+        <article class="signal-card">
+          <strong>Serving state</strong>
+          <span class="signal-value">serve state=serving_active_pack</span>
+          <p class="small">The live path is serving a promoted pack instead of mutating hot-path truth.</p>
         </article>
-        <article class="card">
-          <span class="step-label">Trace</span>
-          <h3>Show what happened</h3>
-          <p class="small">The retrieved context and the winning route can stay visible for inspection.</p>
+        <article class="signal-card">
+          <strong>Learned route</strong>
+          <span class="signal-value">routeFn available=yes</span>
+          <p class="small">The reference host is already using a learned route function on the serve path.</p>
         </article>
       </div>
     </section>
 
     <section class="panel" id="install">
-      <h2>Install, verify, and capture proof</h2>
+      <h2>Install first. Upgrade with the same command. Verify immediately.</h2>
       <p class="section-copy">
-        The public operator story is one command front door for one OpenClaw home.
-        The same lane should install, refresh, or repair the selected home, keep the
-        live path bounded, and make verification quick.
+        The public operator story is intentionally compact. <code>openclawbrain install</code> is the install lane, the upgrade lane, and the repair lane for
+        the selected OpenClaw home. The rest of the flow exists to prove that the runtime and the reporting surfaces agree.
       </p>
-      <h3>Canonical operator lane</h3>
-      <pre><code>openclawbrain install --openclaw-home ~/.openclaw
-openclaw gateway restart
-openclawbrain status --openclaw-home ~/.openclaw --detailed</code></pre>
-      <p class="install-note">
-        <code>install</code> is the public front door. It targets one OpenClaw home,
-        writes or repairs the hook for that home, and pins the activation root the runtime serves from.
-        <code>status --detailed</code> is the quick verify surface.
+      <div class="lane-grid">
+        <article class="card">
+          <span class="card-label">New install</span>
+          <h3>Attach OpenClawBrain to the host you already run</h3>
+          <p class="small">
+            Use this when the host does not have OpenClawBrain yet. The command converges plugin packaging, repairs the hook if needed,
+            and pins the activation root for the selected home.
+          </p>
+          <pre><code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
+        </article>
+        <article class="card" id="upgrade">
+          <span class="card-label">Upgrade / repair</span>
+          <h3>Refresh an existing install without switching lanes</h3>
+          <p class="small">
+            Use the exact same command after package-manager changes, host drift, or an awkward partial install. The public upgrade story is not a second workflow.
+          </p>
+          <pre><code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
+        </article>
+      </div>
+      <div class="story-grid" aria-label="Verify and proof steps">
+        <article class="card">
+          <span class="card-label">Restart</span>
+          <h3>Reload the gateway</h3>
+          <p class="small">Install converges the boundary. Restart makes the live runtime load the updated hook.</p>
+          <pre><code>openclaw gateway restart</code></pre>
+        </article>
+        <article class="card">
+          <span class="card-label">Verify</span>
+          <h3>Compare detailed status</h3>
+          <p class="small">This is the fast surface for attachment, load proof, serving state, and learned route availability.</p>
+          <pre><code>openclawbrain status --openclaw-home '/Users/guclaw/.openclaw' --detailed</code></pre>
+        </article>
+        <article class="card">
+          <span class="card-label">Proof</span>
+          <h3>Capture the durable bundle only when you need it</h3>
+          <p class="small">The proof command packages summary, verdict, step logs, startup breadcrumbs, and runtime-load proof into one bundle directory.</p>
+          <pre><code>openclawbrain proof --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
+        </article>
+      </div>
+      <div class="callout">
+        <strong>Path discipline matters:</strong> keep <code>/Users/guclaw/.openclaw</code> pinned on install, status, and proof. The restart command sits between them,
+        but it does not take the path flag itself.
+      </div>
+      <pre><code>STATUS ok
+hook        install=installed loadability=loadable loadProof=status_probe_ready layout=native_package_plugin additional=0 detail=profile hook is installed via native package plugin at ~/.openclaw/extensions/openclawbrain (manifest=openclawbrain install=openclawbrain package=@openclawbrain/openclaw)
+routeFn     available=yes freshness=updated trained=2026-03-27T04:30:28.906Z updated=none used=2026-03-27T06:49:38.082Z why=current serve proof used the learned route_fn; active route_fn last served a learned turn at 2026-03-27T06:49:38.082Z
+serve       state=serving_active_pack failOpen=no hardFail=no usedRouteFn=yes awaitingFirstExport=no detail=current profile is serving promoted pack pack-9d43af80; serve-visible change came from activation promotion, not hot-path mutation</code></pre>
+      <p class="caption">
+        Healthy-host reference captured from the detailed status surface on March 27, 2026. Your pack id and counters can differ; the truth signals above should still line up.
       </p>
-      <p class="install-note">
-        A healthy install should report <code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>,
-        and <code>attachTruth ... runtime=proven</code>. After the first promoted pack exists,
-        the same status surface should also report <code>serveState=serving_active_pack</code>.
+    </section>
+
+    <section class="panel">
+      <h2>What happens to your history after install</h2>
+      <p class="section-copy">
+        OpenClawBrain does not dump your whole past into the prompt. It harvests the material you already surfaced, learns in the background, promotes only replay-ready packs,
+        and serves bounded live context when it actually helps.
       </p>
-      <h3>Durable proof when you need operator evidence</h3>
-      <pre><code>openclawbrain proof --openclaw-home ~/.openclaw</code></pre>
-      <p class="install-note">
-        The intended canonical lane is the same install command with optional <code>--proof</code>.
-        Until that lands cleanly across the operator surfaces, proof stays a separate follow-up command.
-        It writes <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>,
-        raw step logs, startup breadcrumbs, and the runtime-load-proof, coverage, and hardening snapshots
-        under one bundle directory.
-        If you are explicitly managing <code>@openclawbrain/openclaw</code> with OpenClaw's plugin manager,
-        keep that as an advanced package-management step and rerun <code>openclawbrain install --openclaw-home ~/.openclaw</code>
-        afterward. Need the expected fields? Compare your output with the <a href="proof/">proof page</a> or read the <a href="how-it-works/">lifecycle guide</a> for the full install → replay → learning story.
+      <div class="visual-frame">
+        <img
+          src="assets/canonical-brain-flow.svg"
+          alt="Canonical OpenClawBrain visual showing messy history flowing through harvest into a promoted brain and then into bounded live context."
+        />
+      </div>
+      <div class="visual-notes">
+        <article class="card">
+          <span class="card-label">Authority</span>
+          <h3>Corrections outrank stale recap</h3>
+          <p class="small">
+            Explicit user corrections become durable current-truth memory. Summaries help navigation, but they do not win when they conflict with a direct correction.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-label">Boundaries</span>
+          <h3>Harvest is selective, not invasive</h3>
+          <p class="small">
+            The harvester reads exported conversations, memory notes, docs, and corrections you already surfaced. It skips <code>.env</code>, binary junk,
+            and unexported filesystem noise.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-label">Live path</span>
+          <h3>Bounded context stays on the hot path</h3>
+          <p class="small">
+            The live runtime serves a small useful slice plus learned routing. If the brain has nothing useful or is unavailable, the agent still answers.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>What it actually does</h2>
+      <p class="section-copy">
+        The product story should fit in one pass: harvest what matters, promote only proven structure, and serve bounded context instead of prompt sprawl.
       </p>
+      <div class="story-grid">
+        <article class="card">
+          <span class="card-label">Harvest</span>
+          <h3>Read the useful parts of the past you already have</h3>
+          <p class="small">
+            Exported turns, memory markdown, docs, and explicit corrections become candidate graph material. Summaries compact bulk history so the runtime can search it cheaply.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-label">Promote</span>
+          <h3>Learn in the background and only serve promoted packs</h3>
+          <p class="small">
+            Candidate structure is not live by default. Replay gates promotion so the runtime serves proven packs rather than half-written hot-path mutations.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-label">Serve bounded context</span>
+          <h3>Inject a small useful slice, not your whole life history</h3>
+          <p class="small">
+            The runtime serves the active promoted pack, a bounded structural budget, and the learned <code>route_fn</code> when available. That keeps latency and trust visible.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Why operators care</h2>
+      <p class="section-copy">
+        The point is not just “memory.” The point is operator reality: quicker installs, visible truth surfaces, less session amnesia, and a live path that stays bounded.
+      </p>
+      <div class="benefit-grid">
+        <article class="card">
+          <h3>No raw-history prompt stuffing</h3>
+          <p class="small">Bulk history becomes searchable summaries and exact-source expansions when needed, not an unbounded prompt tax on every answer.</p>
+        </article>
+        <article class="card">
+          <h3>Learning stays off the hot path</h3>
+          <p class="small">Export, replay, and pack promotion happen outside the live answer step. The served runtime stays inspectable and predictable.</p>
+        </article>
+        <article class="card">
+          <h3>Fail-open behavior remains honest</h3>
+          <p class="small">If there is no useful memory match or the promoted pack is unavailable, the agent still runs instead of collapsing behind a broken memory dependency.</p>
+        </article>
+      </div>
     </section>
 
     <section class="panel">
       <h2>Go deeper</h2>
       <p class="section-copy">
-        Read the source, inspect the packages, or jump back to the setup steps.
+        Use the homepage to install and verify, the lifecycle guide to understand the harvest and promotion story, the proof page to compare real output,
+        and troubleshooting when your lane does not line up.
       </p>
       <div class="link-grid">
+        <a class="link-card" href="how-it-works/">
+          <strong>How it works</strong>
+          <span>The deeper story: init scaffold, harvest, replay gate, promoted packs, and bounded live context.</span>
+        </a>
+        <a class="link-card" href="proof/">
+          <strong>Proof</strong>
+          <span>The reference host signals, proof bundle boundary, and the exact compare surfaces to use.</span>
+        </a>
+        <a class="link-card" href="troubleshooting/">
+          <strong>Troubleshooting</strong>
+          <span>What to do when install converges but status, load proof, or serving state still look wrong.</span>
+        </a>
         <a class="link-card" href="https://github.com/jonathangu/openclawbrain">
           <strong>GitHub</strong>
-          <span>Source code, issues, and release history.</span>
-        </a>
-        <a class="link-card" href="https://www.npmjs.com/package/@openclawbrain/openclaw">
-          <strong>Plugin package</strong>
-          <span>The OpenClaw plugin and runtime package.</span>
-        </a>
-        <a class="link-card" href="https://www.npmjs.com/package/@openclawbrain/cli">
-          <strong>CLI package</strong>
-          <span>The install, status, proof, and operator commands.</span>
-        </a>
-        <a class="link-card" href="how-it-works/">
-          <strong>Lifecycle guide</strong>
-          <span>What install does, how replay works, how learning works, and what changes over time.</span>
+          <span>Source code, packages, docs, and architecture notes.</span>
         </a>
       </div>
     </section>

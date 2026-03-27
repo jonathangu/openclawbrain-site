@@ -37,7 +37,7 @@
 <text x="903" y="175" class="body">If replay passes, the candidate</text>
 <text x="903" y="195" class="body">becomes the new active pack</text>
 <text x="903" y="215" class="body">for the live runtime.</text>
-<text x="903" y="237" class="code">serveState=serving_active_pack</text>
+<text x="903" y="237" class="code">serve state=serving_active_pack</text>
 <rect x="885" y="330" width="245" height="170" rx="24" fill="#0d1a28" stroke="#ff9ca8" stroke-opacity="0.4" filter="url(#shadow)"/>
 <text x="903" y="362" class="label">Reject / keep current</text>
 <text x="903" y="390" class="body">If replay fails, the runtime</text>
@@ -47,7 +47,7 @@
 <rect x="110" y="470" width="980" height="140" rx="24" fill="#102235" stroke="#95f0c1" stroke-opacity="0.25"/>
 <text x="140" y="515" class="label">Current host truth</text>
 <text x="140" y="540" class="body">On this host today, replay has already promoted a live pack: pack-9d43af80.</text>
-<text x="140" y="562" class="body">Detailed status shows routeFn available=yes, serveState=serving_active_pack, and traced routes / supervision / updates are present.</text>
+<text x="140" y="562" class="body">Detailed status shows routeFn available=yes, serve state=serving_active_pack, and traced routes / supervision / updates are present.</text>
 <text x="140" y="592" class="code">routes=1457   supervision=32   updates=58   pack=pack-9d43af80</text>
 
 </svg>

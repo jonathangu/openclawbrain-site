@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="820" viewBox="0 0 1440 820" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f1f30" />
+      <stop offset="100%" stop-color="#071019" />
+    </linearGradient>
+    <linearGradient id="panelFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#102236" />
+      <stop offset="100%" stop-color="#0b1724" />
+    </linearGradient>
+    <linearGradient id="promptFill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#102539" />
+      <stop offset="100%" stop-color="#0e1d2c" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000000" flood-opacity="0.28" />
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="11" refY="6" orient="auto">
+      <path d="M0 0L12 6L0 12Z" fill="#8bd3ff" />
+    </marker>
+    <style>
+      .title{fill:#eef4f9;font:700 42px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .subtitle{fill:#a8b7c6;font:400 18px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .chip{fill:#95f0c1;font:700 13px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:.12em;text-transform:uppercase}
+      .label{fill:#eef4f9;font:700 24px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .body{fill:#a8b7c6;font:400 15px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .note{fill:#0a1620;font:700 13px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+      .code{fill:#8bd3ff;font:600 14px 'SF Mono',Menlo,Consolas,monospace}
+      .prompt{fill:#eef4f9;font:600 14px 'SF Mono',Menlo,Consolas,monospace}
+    </style>
+  </defs>
+
+  <rect width="1440" height="820" rx="34" fill="url(#bg)" />
+  <circle cx="250" cy="110" r="180" fill="#8bd3ff" fill-opacity="0.05" />
+  <circle cx="1180" cy="120" r="220" fill="#95f0c1" fill-opacity="0.05" />
+
+  <text x="60" y="78" class="title">Messy history → harvest → promoted brain → bounded live context</text>
+  <text x="60" y="112" class="subtitle">The system reads what you already surfaced, promotes only replay-passing packs, and serves a small useful slice instead of dumping raw history into every prompt.</text>
+
+  <line x1="345" y1="350" x2="430" y2="350" stroke="#8bd3ff" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)" />
+  <line x1="680" y1="350" x2="765" y2="350" stroke="#8bd3ff" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)" />
+  <line x1="1010" y1="350" x2="1095" y2="350" stroke="#8bd3ff" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)" />
+
+  <rect x="60" y="170" width="285" height="420" rx="28" fill="url(#panelFill)" stroke="#ffd580" stroke-opacity="0.42" filter="url(#shadow)" />
+  <text x="88" y="214" class="chip">1 Your world</text>
+  <text x="88" y="250" class="label">Messy history</text>
+  <text x="88" y="282" class="body">Conversations, memory notes, docs, and explicit corrections already exist. They are useful, but they are not prompt-ready.</text>
+
+  <rect x="88" y="316" width="230" height="54" rx="16" fill="#132a3f" stroke="#8bd3ff" stroke-opacity="0.3" />
+  <text x="108" y="349" class="body">Conversation exports</text>
+  <text x="108" y="368" class="code">old turns, outcomes, transcripts</text>
+
+  <rect x="88" y="384" width="230" height="54" rx="16" fill="#132a3f" stroke="#95f0c1" stroke-opacity="0.3" />
+  <text x="108" y="417" class="body">Memory markdown</text>
+  <text x="108" y="436" class="code">notes, recaps, operator edits</text>
+
+  <rect x="88" y="452" width="230" height="54" rx="16" fill="#132a3f" stroke="#f2a8ff" stroke-opacity="0.3" />
+  <text x="108" y="485" class="body">Docs and corrections</text>
+  <text x="108" y="504" class="code">instructions, fixes, preferences</text>
+
+  <rect x="88" y="530" width="230" height="34" rx="17" fill="#ffd580" />
+  <text x="106" y="552" class="note">Not all of this belongs in the live prompt.</text>
+
+  <rect x="395" y="150" width="285" height="460" rx="28" fill="url(#panelFill)" stroke="#8bd3ff" stroke-opacity="0.42" filter="url(#shadow)" />
+  <text x="423" y="194" class="chip">2 Harvest</text>
+  <text x="423" y="230" class="label">Read, type, compact, rank</text>
+  <text x="423" y="262" class="body">Harvest is an auditable transformation step. It reads surfaced material, compacts bulky history, and extracts typed corrections that can later outrank stale recap.</text>
+
+  <rect x="423" y="304" width="229" height="56" rx="16" fill="#0f2336" stroke="#8bd3ff" stroke-opacity="0.28" />
+  <text x="445" y="336" class="body">Read exported turns</text>
+  <text x="445" y="355" class="code">summaries for cheap navigation</text>
+
+  <rect x="423" y="376" width="229" height="56" rx="16" fill="#0f2336" stroke="#95f0c1" stroke-opacity="0.28" />
+  <text x="445" y="408" class="body">Extract corrections</text>
+  <text x="445" y="427" class="code">typed memory with authority</text>
+
+  <rect x="423" y="448" width="229" height="56" rx="16" fill="#0f2336" stroke="#f2a8ff" stroke-opacity="0.28" />
+  <text x="445" y="480" class="body">Compact docs and notes</text>
+  <text x="445" y="499" class="code">context blocks, not raw sprawl</text>
+
+  <rect x="423" y="536" width="229" height="46" rx="18" fill="#95f0c1" />
+  <text x="443" y="564" class="note">Skips .env, binary junk, and unexported noise.</text>
+
+  <rect x="730" y="150" width="285" height="460" rx="28" fill="url(#panelFill)" stroke="#95f0c1" stroke-opacity="0.42" filter="url(#shadow)" />
+  <text x="758" y="194" class="chip">3 Promoted brain</text>
+  <text x="758" y="230" class="label">Candidate first, live after promotion</text>
+  <text x="758" y="262" class="body">Learning happens off the hot path. Candidate structure is replay-checked before promotion, and explicit corrections can outrank older recap once promoted.</text>
+
+  <rect x="792" y="322" width="160" height="184" rx="22" fill="#122b20" stroke="#95f0c1" stroke-opacity="0.34" />
+  <rect x="772" y="300" width="160" height="184" rx="22" fill="#11253a" stroke="#8bd3ff" stroke-opacity="0.28" />
+  <rect x="752" y="278" width="160" height="184" rx="22" fill="#2c1836" stroke="#f2a8ff" stroke-opacity="0.28" />
+  <circle cx="834" cy="345" r="9" fill="#95f0c1" />
+  <circle cx="875" cy="370" r="8" fill="#8bd3ff" />
+  <circle cx="820" cy="402" r="8" fill="#ffd580" />
+  <circle cx="888" cy="422" r="9" fill="#f2a8ff" />
+  <line x1="834" y1="345" x2="875" y2="370" stroke="#8bd3ff" stroke-width="3" />
+  <line x1="875" y1="370" x2="888" y2="422" stroke="#8bd3ff" stroke-width="3" />
+  <line x1="820" y1="402" x2="888" y2="422" stroke="#8bd3ff" stroke-width="3" />
+  <text x="780" y="500" class="body">Candidate graph</text>
+  <text x="780" y="520" class="body">Background learning</text>
+  <text x="780" y="540" class="body">Replay-gated promotion</text>
+  <text x="780" y="572" class="code">correction &gt; raw source &gt; summary</text>
+
+  <rect x="1065" y="170" width="315" height="420" rx="28" fill="url(#promptFill)" stroke="#f2a8ff" stroke-opacity="0.42" filter="url(#shadow)" />
+  <text x="1093" y="214" class="chip">4 Live prompt</text>
+  <text x="1093" y="250" class="label">Bounded live context</text>
+  <text x="1093" y="282" class="body">The runtime serves a small structural budget, not your whole archive. Learned routing can pick a useful slice, and the agent still fails open if memory is unavailable.</text>
+
+  <rect x="1093" y="322" width="258" height="172" rx="20" fill="#0b1723" stroke="#8bd3ff" stroke-opacity="0.32" />
+  <text x="1117" y="354" class="prompt">system prompt</text>
+  <rect x="1117" y="376" width="190" height="18" rx="9" fill="#95f0c1" fill-opacity="0.2" />
+  <rect x="1117" y="404" width="152" height="18" rx="9" fill="#8bd3ff" fill-opacity="0.2" />
+  <rect x="1117" y="432" width="178" height="18" rx="9" fill="#ffd580" fill-opacity="0.2" />
+  <rect x="1117" y="460" width="134" height="18" rx="9" fill="#f2a8ff" fill-opacity="0.2" />
+  <text x="1117" y="520" class="code">learned route_fn</text>
+  <text x="1117" y="548" class="code">maxBlocks=5</text>
+  <text x="1117" y="576" class="code">fail-open if unavailable</text>
+
+  <rect x="60" y="660" width="1320" height="98" rx="26" fill="#102235" stroke="#8bd3ff" stroke-opacity="0.24" />
+  <text x="92" y="704" class="label">Three trust rules this visual makes explicit</text>
+  <text x="92" y="732" class="body">1. Corrections outrank stale summary.  2. Harvest skips .env, binary junk, and unexported filesystem noise.  3. The live prompt gets bounded context, not your whole history.</text>
+</svg>
