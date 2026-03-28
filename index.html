@@ -505,6 +505,9 @@
         </article>
       </div>
       <div class="callout">
+        <strong>Activation and teacher wiring are separate.</strong> If you see <code>BRAIN LOADED</code> or the selected home shows as attached, the OpenClawBrain hook is wired correctly for that OpenClaw home. That does <em>not</em> by itself prove an optional teacher model is configured. Teacher wiring uses dedicated config fields such as <code>brainTeacherEnabled</code>, <code>brainTeacherProvider</code>, and <code>brainTeacherModel</code>, and the same status surface should report <code>teacherConfigured=true</code>, the expected provider/model, and <code>teacherConfigError=null</code>.
+      </div>
+      <div class="callout">
         <strong>Path discipline matters:</strong> keep <code>/Users/guclaw/.openclaw</code> pinned on install, status, and proof. The restart command sits between them,
         but it does not take the path flag itself.
       </div>
