@@ -400,7 +400,7 @@
             docs, and corrections, promotes only replay-passing packs, and serves a small live slice instead of stuffing raw history into every prompt.
           </p>
           <p class="lede">
-            The healthy reference host at <code>/Users/guclaw/.openclaw</code> already reports <code>STATUS ok</code>,
+            The healthy reference host at <code>~/.openclaw</code> already reports <code>STATUS ok</code>,
             <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>.
             Start with install. Compare status. Capture proof when you need durable operator evidence.
           </p>
@@ -415,7 +415,7 @@
           <h2>One selected home. One front door. One fast verify surface.</h2>
           <div class="lane-step">
             <h3>Install or repair</h3>
-            <pre><code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
+            <pre><code>openclawbrain install --openclaw-home '~/.openclaw'</code></pre>
           </div>
           <div class="lane-step">
             <h3>Reload the live runtime</h3>
@@ -423,11 +423,11 @@
           </div>
           <div class="lane-step">
             <h3>Verify detailed status</h3>
-            <pre><code>openclawbrain status --openclaw-home '/Users/guclaw/.openclaw' --detailed</code></pre>
+            <pre><code>openclawbrain status --openclaw-home '~/.openclaw' --detailed</code></pre>
           </div>
           <div class="lane-step">
             <h3>Capture durable proof</h3>
-            <pre><code>openclawbrain proof --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
+            <pre><code>openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
           </div>
           <p class="small">
             <code>openclaw gateway restart</code> does not accept <code>--openclaw-home</code>. Keep the same selected home pinned on every
@@ -473,7 +473,7 @@
             Use this when the host does not have OpenClawBrain yet. The command converges plugin packaging, repairs the hook if needed,
             and pins the activation root for the selected home.
           </p>
-          <pre><code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
+          <pre><code>openclawbrain install --openclaw-home '~/.openclaw'</code></pre>
         </article>
         <article class="card" id="upgrade">
           <span class="card-label">Upgrade / repair</span>
@@ -481,7 +481,7 @@
           <p class="small">
             Use the exact same command after package-manager changes, host drift, or an awkward partial install. The public upgrade story is not a second workflow.
           </p>
-          <pre><code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
+          <pre><code>openclawbrain install --openclaw-home '~/.openclaw'</code></pre>
         </article>
       </div>
       <div class="story-grid" aria-label="Verify and proof steps">
@@ -495,20 +495,20 @@
           <span class="card-label">Verify</span>
           <h3>Compare detailed status</h3>
           <p class="small">This is the fast surface for attachment, load proof, serving state, and learned route availability.</p>
-          <pre><code>openclawbrain status --openclaw-home '/Users/guclaw/.openclaw' --detailed</code></pre>
+          <pre><code>openclawbrain status --openclaw-home '~/.openclaw' --detailed</code></pre>
         </article>
         <article class="card">
           <span class="card-label">Proof</span>
           <h3>Capture the durable bundle only when you need it</h3>
           <p class="small">The proof command packages summary, verdict, step logs, startup breadcrumbs, and runtime-load proof into one bundle directory.</p>
-          <pre><code>openclawbrain proof --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
+          <pre><code>openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         </article>
       </div>
       <div class="callout">
         <strong>Activation and teacher wiring are separate.</strong> If you see <code>BRAIN LOADED</code> or the selected home shows as attached, the OpenClawBrain hook is wired correctly for that OpenClaw home. That does <em>not</em> by itself prove an optional teacher model is configured. Teacher wiring uses dedicated config fields such as <code>brainTeacherEnabled</code>, <code>brainTeacherProvider</code>, and <code>brainTeacherModel</code>, and the same status surface should report <code>teacherConfigured=true</code>, the expected provider/model, and <code>teacherConfigError=null</code>.
       </div>
       <div class="callout">
-        <strong>Path discipline matters:</strong> keep <code>/Users/guclaw/.openclaw</code> pinned on install, status, and proof. The restart command sits between them,
+        <strong>Path discipline matters:</strong> keep <code>~/.openclaw</code> pinned on install, status, and proof. The restart command sits between them,
         but it does not take the path flag itself.
       </div>
       <pre><code>STATUS ok

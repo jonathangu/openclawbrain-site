@@ -343,7 +343,7 @@
       <h1>Compare your host with a healthy one before you claim the lane is working.</h1>
       <p class="lede">
         Proof is the same install-first lane plus one durable bundle. Use the same pinned home
-        <code>/Users/guclaw/.openclaw</code> on the <code>openclawbrain</code> commands, compare detailed status,
+        <code>~/.openclaw</code> on the <code>openclawbrain</code> commands, compare detailed status,
         and capture a bundle when you need durable evidence.
       </p>
       <p class="lede">
@@ -416,21 +416,21 @@ serve       state=serving_active_pack failOpen=no hardFail=no usedRouteFn=yes aw
         <article class="card">
           <span class="card-label">Canonical commands</span>
           <h3>Install, restart, verify, prove</h3>
-          <pre><code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'
+          <pre><code>openclawbrain install --openclaw-home '~/.openclaw'
 openclaw gateway restart
-openclawbrain status --openclaw-home '/Users/guclaw/.openclaw' --detailed
-openclawbrain proof --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
+openclawbrain status --openclaw-home '~/.openclaw' --detailed
+openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         </article>
         <article class="card">
           <span class="card-label">Why the path stays pinned</span>
           <h3>One selected home stays in scope</h3>
           <p class="small">
             <code>install</code>, <code>status</code>, and <code>proof</code> all accept <code>--openclaw-home</code>. Keep them pinned to
-            <code>/Users/guclaw/.openclaw</code>. <code>openclaw gateway restart</code> is the only step without that flag.
+            <code>~/.openclaw</code>. <code>openclaw gateway restart</code> is the only step without that flag.
           </p>
           <p class="small">
             If you explicitly manage <code>@openclawbrain/openclaw</code> with the OpenClaw plugin manager, rerun
-            <code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'</code> afterward so the hook and activation root converge again.
+            <code>openclawbrain install --openclaw-home '~/.openclaw'</code> afterward so the hook and activation root converge again.
           </p>
         </article>
       </div>

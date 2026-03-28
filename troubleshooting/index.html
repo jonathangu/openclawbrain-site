@@ -346,7 +346,7 @@
           <span class="card-label">Status missing</span>
           <h3><code>STATUS ok</code> does not appear</h3>
           <p class="small">
-            Treat the lane as not converged yet. Rerun <code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'</code>,
+            Treat the lane as not converged yet. Rerun <code>openclawbrain install --openclaw-home '~/.openclaw'</code>,
             restart the gateway, and compare detailed status again before chasing deeper explanations.
           </p>
         </article>
@@ -387,10 +387,10 @@
         When in doubt, rerun the public lane exactly. Keep the path pinned on the OpenClawBrain commands.
         The restart command remains the only step without <code>--openclaw-home</code>.
       </p>
-      <pre><code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'
+      <pre><code>openclawbrain install --openclaw-home '~/.openclaw'
 openclaw gateway restart
-openclawbrain status --openclaw-home '/Users/guclaw/.openclaw' --detailed
-openclawbrain proof --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
+openclawbrain status --openclaw-home '~/.openclaw' --detailed
+openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
       <ul class="list">
         <li><code>install</code> is the public install, upgrade, and repair surface for the selected home.</li>
         <li><code>status --detailed</code> is the fast compare surface for attachment, load proof, serving state, and learned route availability.</li>
@@ -414,7 +414,7 @@ openclawbrain proof --openclaw-home '/Users/guclaw/.openclaw'</code></pre>
           <h3>Managing the plugin package but not re-converging install</h3>
           <p class="small">
             If you explicitly manage <code>@openclawbrain/openclaw</code> with the OpenClaw plugin manager, rerun
-            <code>openclawbrain install --openclaw-home '/Users/guclaw/.openclaw'</code> afterward so the public lane can repair hooks and pin the activation root again.
+            <code>openclawbrain install --openclaw-home '~/.openclaw'</code> afterward so the public lane can repair hooks and pin the activation root again.
           </p>
         </article>
       </div>
