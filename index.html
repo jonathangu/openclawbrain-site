@@ -150,7 +150,7 @@
 
     h1 {
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(2.9rem, 8vw, 5rem);
+      font-size: clamp(2.2rem, 7.5vw, 5rem);
       letter-spacing: -0.045em;
       line-height: 0.95;
       margin: 0 0 16px;
@@ -282,6 +282,9 @@
       border: 1px solid rgba(168, 183, 198, 0.12);
       border-radius: 6px;
       padding: 2px 6px;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     pre {
@@ -381,6 +384,36 @@
 
       .site-nav {
         justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 520px) {
+      h1 {
+        font-size: clamp(2rem, 10.5vw, 2.9rem);
+        line-height: 0.98;
+      }
+
+      .hero,
+      .panel {
+        padding: 20px 16px;
+      }
+
+      .hero-actions {
+        gap: 10px;
+      }
+
+      .button {
+        width: 100%;
+        text-align: center;
+      }
+
+      .pill {
+        font-size: 0.86rem;
+        padding: 7px 10px;
+      }
+
+      .site-nav {
+        gap: 10px;
       }
     }
   </style>
