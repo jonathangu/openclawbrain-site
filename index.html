@@ -636,6 +636,9 @@ serve       state=serving_active_pack failOpen=no hardFail=no usedRouteFn=yes aw
           </p>
         </article>
       </div>
+      <p class="section-copy" style="margin-top: 18px;">
+        The shortest clean mental model is: <strong>learner</strong> = the background pipeline that watches events, builds candidate packs, and updates routing; <strong>teacher</strong> = the optional local model that adds supervision off the hot path; <strong><code>route_fn</code></strong> = the learned policy artifact the live runtime uses to pick which bounded context blocks to inject.
+      </p>
     </section>
 
     <section class="panel">

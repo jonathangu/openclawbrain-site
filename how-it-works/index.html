@@ -470,6 +470,21 @@
           <p>Summaries help navigation, raw source expands for detail, and corrections can win when history conflicts. The prompt stays bounded.</p>
         </article>
       </div>
+      <div class="cards" style="margin-top: 18px;">
+        <article class="card">
+          <span class="card-label">Learner</span>
+          <h3>The background pipeline</h3>
+          <p>The learner watches exported events, binds feedback back to prior route decisions, builds candidate packs, and updates the learned routing policy off the hot path.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Teacher + <code>route_fn</code></span>
+          <h3>Supervise first, serve later</h3>
+          <p>The teacher is the optional local model that adds supervision artifacts. The learned <code>route_fn</code> is the policy the live runtime uses to choose which bounded graph blocks to inject before prompt build.</p>
+        </article>
+      </div>
+      <p class="caption">
+        Short version: teacher helps label, learner turns labels plus traces plus feedback into a better promoted pack, and the live runtime serves that pack through a bounded learned <code>route_fn</code>.
+      </p>
     </section>
 
     <section class="panel">
