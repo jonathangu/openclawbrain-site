@@ -6,12 +6,12 @@
   <title>Proof | OpenClawBrain</title>
   <meta
     name="description"
-    content="Compare your detailed status output with the healthy OpenClawBrain host, then capture a durable proof bundle with the same pinned OpenClaw home."
+    content="Compare your detailed status output with the healthy OpenClawBrain host, and keep the current published-package proof boundary explicit when proof or reinstall verdicts lag the runtime."
   />
   <meta property="og:title" content="Proof | OpenClawBrain" />
   <meta
     property="og:description"
-    content="The reference proof signals, one pinned OpenClaw home, and the durable operator bundle boundary for OpenClawBrain."
+    content="The reference proof signals, the current published npm boundary, and the durable operator bundle boundary for OpenClawBrain."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/proof/" />
@@ -348,7 +348,7 @@
       </p>
       <p class="lede">
         The healthy reference bundle on March 27, 2026 returned <code>success_and_proven</code>. Install, runtime,
-        plugin load, startup breadcrumb, runtime-load proof, and detailed status aligned.
+        plugin load, startup breadcrumb, runtime-load proof, and detailed status aligned. On March 29, 2026, published-package dogfood also showed the split npm packages attach and load on a fresh sterile home, even though the current published CLI still grades proof and reinstall too strictly.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="../install/">Go to install</a>
@@ -360,7 +360,8 @@
     <section class="panel">
       <h2>Healthy reference host</h2>
       <p class="section-copy">
-        These are the high-value compare points from the exercised host. Your pack id and counters can vary; the important part is that status, serving, and route surfaces agree.
+        These are the high-value compare points from the exercised host. Your pack id and counters can vary.
+        On fresh seed-state hosts, the runtime/load/serve/route lines matter more than matching <code>STATUS ok</code> byte-for-byte.
       </p>
       <div class="signal-grid" aria-label="Reference proof signals">
         <article class="signal-card">
@@ -395,16 +396,53 @@ serve       state=serving_active_pack failOpen=no hardFail=no usedRouteFn=yes aw
     </section>
 
     <section class="panel">
+      <h2>Current release boundary</h2>
+      <p class="section-copy">
+        Keep live-host proof, canonical repo truth, and published npm truth separate. As of March 30, 2026 they line up on runtime load and no longer diverge on the old blocking verdict gap, though fresh custom-home proof can still carry warning-level noise.
+      </p>
+      <div class="cards">
+        <article class="card">
+          <span class="card-label">Published today</span>
+          <h3>Current split packages on npm</h3>
+          <p class="small">
+            <code>@openclawbrain/openclaw@0.4.5</code> and <code>@openclawbrain/cli@0.4.16</code> are the live published pair.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-label">Sterile dogfood</span>
+          <h3>Published detailed status proved the runtime</h3>
+          <p class="small">
+            A fresh sterile install reached <code>runtime=proven</code>, <code>loadProof=status_probe_ready</code>,
+            <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code> after a clean gateway start.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-label">Residual warning</span>
+          <h3>Published proof is no longer falsely blocking the sterile lane</h3>
+          <p class="small">
+            On the March 30 sterile rerun, published <code>proof</code> returned <code>success_but_proof_incomplete</code> with warning-level
+            <code>status_warn</code> and <code>gateway_health</code>, while published reinstall returned <code>converged_with_warnings</code>
+            instead of <code>manual_action_required</code>. Detailed status still proved runtime load throughout.
+          </p>
+        </article>
+      </div>
+      <div class="callout">
+        <strong>Repo truth:</strong> canonical <code>openclawbrain</code> <code>main</code> already carried the verdict repair through <code>ec53e9c</code>, and the published npm pair now carries it too. The remaining custom-home proof differences are warning-level, not blocking.
+      </div>
+    </section>
+
+    <section class="panel">
       <h2>What proof covers</h2>
       <p class="section-copy">
         Use this page to confirm install, load, serving, and reporting truth on a healthy host, then reproduce that comparison on yours.
       </p>
       <ul class="list">
         <li><code>bundle verdict: success_and_proven</code> means the captured bundle aligned across install, runtime, plugin load, breadcrumbs, runtime-load proof, and detailed status.</li>
-        <li><code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code> are the top-level public truth signals.</li>
+        <li>On the exercised March 27 host, <code>STATUS ok</code> lined up with <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>. On fresh seed-state hosts, the load/serve/route lines can already be healthy while the headline still says <code>STATUS warn</code>.</li>
         <li><code>proof</code> writes <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>, raw step logs, startup breadcrumbs, and the runtime-load-proof snapshot into one durable bundle.</li>
+        <li>On published <code>@openclawbrain/cli@0.4.16</code>, <code>status --detailed</code> remains the stronger compare surface when fresh custom-home proof stays degraded on warning-level checks.</li>
       </ul>
-      <p class="small">Pack ids and counters can differ by host state. The compare fields above should still line up.</p>
+      <p class="small">Pack ids and counters can differ by host state. Use the exercised-host surface as a reference, not as a requirement that every fresh host show <code>STATUS ok</code>.</p>
     </section>
 
     <section class="panel">
@@ -433,6 +471,11 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
             <code>openclawbrain install --openclaw-home '~/.openclaw'</code> afterward so the hook and activation root converge again.
           </p>
         </article>
+      </div>
+      <div class="callout">
+        <strong>Published CLI 0.4.16 note:</strong> if the same host already shows <code>runtime=proven</code>, <code>loadProof=status_probe_ready</code>,
+        <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>, treat detailed status as the stronger truth surface when proof stays degraded on warning-level checks.
+        The old blocking verdict gap is fixed in the current npm release.
       </div>
     </section>
 

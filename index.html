@@ -6,12 +6,12 @@
   <title>OpenClawBrain | Install-first bounded memory for OpenClaw</title>
   <meta
     name="description"
-    content="Install OpenClawBrain on an existing OpenClaw host, upgrade or repair with the same command, verify with detailed status, and capture proof when you need operator evidence."
+    content="Install or repair OpenClawBrain on an existing OpenClaw host, verify with detailed status, keep the current published-package boundary explicit, and capture proof when you need operator evidence."
   />
   <meta property="og:title" content="OpenClawBrain | Install-first bounded memory for OpenClaw" />
   <meta
     property="og:description"
-    content="One install front door, one pinned OpenClaw home, visible proof signals, and a clear story from messy history to bounded live context."
+    content="One install front door, one pinned OpenClaw home, visible proof signals, and an honest current-truth ladder from live host proof to published npm behavior."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
@@ -400,9 +400,9 @@
             docs, and corrections, promotes only replay-passing packs, and serves a small live slice instead of stuffing raw history into every prompt.
           </p>
           <p class="lede">
-            The healthy reference host at <code>~/.openclaw</code> already reports <code>STATUS ok</code>,
+            On March 27, 2026, the exercised host at <code>~/.openclaw</code> reported <code>STATUS ok</code>,
             <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>.
-            Start with install. Compare status. Capture proof when you need durable operator evidence.
+            On March 30, 2026, published-package dogfood reran on the fresh sterile lane with the live split release and showed that install, status, and proof now stay on the warning side of the boundary instead of falsely blocking healthy runtime load.
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="#install">Install now</a>
@@ -455,6 +455,54 @@
           <strong>Learned route</strong>
           <span class="signal-value">routeFn available=yes</span>
           <p class="small">The reference host is already using a learned route function on the serve path.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>What is actually proven today</h2>
+      <p class="section-copy">
+        Canonical <code>openclawbrain</code> <code>main</code> already carries the post-publish runtime repair through <code>ec53e9c</code>,
+        and root <code>npm test</code> is green there. The public story should keep repo truth, live-host truth, and the currently published npm boundary separate instead of blending them together.
+      </p>
+      <div class="benefit-grid">
+        <article class="card">
+          <span class="card-label">Published npm</span>
+          <h3>Fresh sterile install works on the split packages</h3>
+          <p class="small">
+            <code>@openclawbrain/openclaw@0.4.5</code> and <code>@openclawbrain/cli@0.4.16</code> attached cleanly on a fresh sterile OpenClaw home.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-label">Strongest published signal</span>
+          <h3>Detailed status already proves runtime load</h3>
+          <p class="small">
+            On that sterile host, published <code>status --detailed</code> showed <code>runtime=proven</code>,
+            <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-label">Published repair</span>
+          <h3>Published proof and reinstall no longer block the sterile lane</h3>
+          <p class="small">
+            On March 30, 2026, published <code>@openclawbrain/cli@0.4.16</code> returned <code>converged_with_warnings</code> for install and
+            <code>success_but_proof_incomplete</code> for proof on the sterile rerun. The old <code>ec53e9c</code> verdict repair is now live on npm.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-label">Recorded rerun</span>
+          <h3>One real trace now reruns with a clear learned-route win</h3>
+          <p class="small">
+            <code>real-trace-live-proof-story</code> reran at <code>learned_route 100</code> versus <code>graph_prior_only 70</code> and <code>vector_only 70</code>
+            after the carry-forward fix. That is a targeted rerun, not a broad benchmark claim.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-label">Teacher truth</span>
+          <h3>Idle cycles are no longer lumped in with misses</h3>
+          <p class="small">
+            Operator status now separates benign no-op cycles from cycles that likely missed teachable material, so fresh idle time does not look like the same problem as a labeler miss.
+          </p>
         </article>
       </div>
     </section>
@@ -516,7 +564,9 @@ hook        install=installed loadability=loadable loadProof=status_probe_ready 
 routeFn     available=yes freshness=updated trained=2026-03-27T04:30:28.906Z updated=none used=2026-03-27T06:49:38.082Z why=current serve proof used the learned route_fn; active route_fn last served a learned turn at 2026-03-27T06:49:38.082Z
 serve       state=serving_active_pack failOpen=no hardFail=no usedRouteFn=yes awaitingFirstExport=no detail=current profile is serving promoted pack pack-9d43af80; serve-visible change came from activation promotion, not hot-path mutation</code></pre>
       <p class="caption">
-        Healthy-host reference captured from the detailed status surface on March 27, 2026. Your pack id and counters can differ; the truth signals above should still line up.
+        Healthy-host reference captured from the detailed status surface on March 27, 2026. Your pack id and counters can differ.
+        On a fresh seed-state host, <code>STATUS warn</code> can still coexist with healthy <code>runtime=proven</code>, <code>loadProof=status_probe_ready</code>,
+        <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>.
       </p>
     </section>
 

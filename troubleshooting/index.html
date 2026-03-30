@@ -6,12 +6,12 @@
   <title>Troubleshooting | OpenClawBrain</title>
   <meta
     name="description"
-    content="Troubleshoot the OpenClawBrain install lane when status, load proof, serving state, or learned route availability do not line up."
+    content="Troubleshoot the OpenClawBrain install lane when load proof, serving state, learned route availability, or published CLI verdicts do not line up."
   />
   <meta property="og:title" content="Troubleshooting | OpenClawBrain" />
   <meta
     property="og:description"
-    content="Fast operator checks for the OpenClawBrain install lane: rerun install on the pinned home, restart, compare detailed status, and capture proof when needed."
+    content="Fast operator checks for the OpenClawBrain install lane: rerun install on the pinned home, restart, compare detailed status, and keep the current published CLI boundary explicit."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/troubleshooting/" />
@@ -329,6 +329,11 @@
         Pin the same home, rerun install, restart the gateway, compare <code>status --detailed</code>, and only then
         capture proof. Do not switch homes or invent a second workflow in the middle.
       </p>
+      <p class="lede">
+        On March 29, 2026, a fresh sterile published install still reported <code>STATUS warn</code> while <code>runtime=proven</code>,
+        <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code> were already healthy.
+        Compare the detailed lines before declaring the lane broken.
+      </p>
       <div class="hero-actions">
         <a class="button button-primary" href="../install/">Run the install lane</a>
         <a class="button button-secondary" href="../proof/">Compare proof</a>
@@ -343,19 +348,19 @@
       </p>
       <div class="cards">
         <article class="card">
-          <span class="card-label">Status missing</span>
-          <h3><code>STATUS ok</code> does not appear</h3>
+          <span class="card-label">Load not proven</span>
+          <h3><code>runtime=proven</code> or <code>loadProof=status_probe_ready</code> is absent</h3>
           <p class="small">
             Treat the lane as not converged yet. Rerun <code>openclawbrain install --openclaw-home '~/.openclaw'</code>,
             restart the gateway, and compare detailed status again before chasing deeper explanations.
           </p>
         </article>
         <article class="card">
-          <span class="card-label">Load proof missing</span>
-          <h3><code>loadProof=status_probe_ready</code> is absent</h3>
+          <span class="card-label">Headline warn</span>
+          <h3><code>STATUS warn</code> can still be a fresh-host state</h3>
           <p class="small">
-            Runtime load is not proven yet. Re-run install on the same home, restart, and compare with the proof page.
-            If it still fails to line up, capture a proof bundle so you have step logs and breadcrumbs instead of guesswork.
+            If detailed status also shows <code>runtime=proven</code>, <code>loadProof=status_probe_ready</code>,
+            <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>, the host can already be healthy and the current published CLI verdict can still be too strict.
           </p>
         </article>
         <article class="card">
@@ -376,8 +381,8 @@
         </article>
       </div>
       <div class="callout">
-        <strong>Important:</strong> the healthy host on March 27, 2026 had both <code>serve state=serving_active_pack</code> and <code>routeFn available=yes</code>.
-        Earlier healthy hosts may not show those fields yet.
+        <strong>Important:</strong> the healthy host on March 27, 2026 returned <code>STATUS ok</code> with <code>serve state=serving_active_pack</code> and <code>routeFn available=yes</code>.
+        The fresh sterile published dogfood host on March 29, 2026 still showed <code>STATUS warn</code> while those deeper runtime/load/serve/route signals were already healthy.
       </div>
     </section>
 
@@ -396,6 +401,28 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         <li><code>status --detailed</code> is the fast compare surface for attachment, load proof, serving state, and learned route availability.</li>
         <li><code>proof</code> is the durable follow-up when terminal scrollback is not enough.</li>
       </ul>
+    </section>
+
+    <section class="panel">
+      <h2>Two boundary notes that save time</h2>
+      <div class="cards">
+        <article class="card">
+          <span class="card-label">Published CLI gap</span>
+          <h3>Proof or reinstall can still over-warn on a fresh seed-state host</h3>
+          <p class="small">
+            On published <code>@openclawbrain/cli@0.4.16</code>, a degraded <code>proof</code> verdict or <code>converged_with_warnings</code> install on a fresh seed-state host
+            can still reflect warning-level custom-home proof noise when detailed status already proves load and serving truth.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-label">Teacher idle</span>
+          <h3>Benign no-op cycles are not the same as missed teachable material</h3>
+          <p class="small">
+            Treat &quot;no eligible feedback, operator overrides, or matched interaction text&quot; as benign idle time. Worry when candidate interactions existed
+            but the labeler emitted no reusable labels or failed open.
+          </p>
+        </article>
+      </div>
     </section>
 
     <section class="panel">
