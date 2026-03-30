@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OpenClawBrain | Install-first bounded memory for OpenClaw</title>
+  <title>OpenClawBrain | Install-first memory for OpenClaw</title>
   <meta
     name="description"
-    content="Install or repair OpenClawBrain on an existing OpenClaw host, verify with detailed status, keep the current published-package boundary explicit, and capture proof when you need operator evidence."
+    content="OpenClawBrain gives OpenClaw a pinned install, restart, status, and proof lane with compressed proof, a clear runtime boundary, and honest current-truth signals."
   />
-  <meta property="og:title" content="OpenClawBrain | Install-first bounded memory for OpenClaw" />
+  <meta property="og:title" content="OpenClawBrain | Install-first memory for OpenClaw" />
   <meta
     property="og:description"
-    content="One install front door, one pinned OpenClaw home, visible proof signals, and an honest current-truth ladder from live host proof to published npm behavior."
+    content="One front door for install and upgrade, a compressed proof strip, and a truthful split between the runtime payload and the operator CLI."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
@@ -21,7 +21,6 @@
       --bg-glow: rgba(109, 199, 255, 0.16);
       --panel: rgba(9, 18, 29, 0.95);
       --panel-soft: rgba(14, 26, 39, 0.96);
-      --panel-strong: rgba(18, 33, 48, 0.98);
       --text: #eef4f9;
       --muted: #a8b7c6;
       --line: rgba(168, 183, 198, 0.16);
@@ -90,30 +89,32 @@
     }
 
     .hero-layout,
-    .lane-grid,
-    .signal-grid,
-    .story-grid,
-    .benefit-grid,
-    .visual-notes,
+    .trust-grid,
+    .route-grid,
+    .feature-grid,
+    .quick-grid,
     .link-grid {
       display: grid;
       gap: 14px;
     }
 
-    .hero-layout,
-    .lane-grid {
-      grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.9fr);
+    .hero-layout {
+      grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.9fr);
       align-items: start;
     }
 
-    .signal-grid {
+    .trust-grid,
+    .feature-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      margin-top: 22px;
+      margin-top: 18px;
     }
 
-    .story-grid,
-    .benefit-grid,
-    .visual-notes {
+    .route-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .quick-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       margin-top: 18px;
     }
@@ -124,8 +125,8 @@
     }
 
     .eyebrow,
-    .panel-label,
-    .card-label {
+    .card-label,
+    .panel-label {
       color: var(--green);
       font-size: 0.78rem;
       font-weight: 700;
@@ -149,7 +150,7 @@
 
     h1 {
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(2.8rem, 8vw, 4.9rem);
+      font-size: clamp(2.9rem, 8vw, 5rem);
       letter-spacing: -0.045em;
       line-height: 0.95;
       margin: 0 0 16px;
@@ -158,7 +159,7 @@
 
     h2 {
       color: var(--accent);
-      font-size: 1.48rem;
+      font-size: 1.5rem;
       line-height: 1.15;
       margin: 0 0 12px;
     }
@@ -184,14 +185,15 @@
     .lede,
     .section-copy,
     .small,
-    .caption {
+    .caption,
+    .meta-line {
       color: var(--muted);
     }
 
     .lede,
     .section-copy {
       font-size: 1.05rem;
-      max-width: 760px;
+      max-width: 780px;
     }
 
     .hero-actions {
@@ -226,11 +228,18 @@
       border-color: rgba(139, 211, 255, 0.35);
     }
 
+    .hero-note {
+      color: var(--muted);
+      margin-top: 16px;
+      max-width: 760px;
+    }
+
     .lane-card,
     .card,
     .signal-card,
+    .route-card,
     .link-card,
-    .visual-frame {
+    .quick-card {
       background: var(--panel-soft);
       border: 1px solid var(--line);
       border-radius: 20px;
@@ -242,36 +251,30 @@
         linear-gradient(180deg, rgba(18, 33, 48, 0.98) 0%, rgba(10, 19, 30, 0.98) 100%);
     }
 
-    .lane-step {
+    .step {
       border-top: 1px solid rgba(168, 183, 198, 0.12);
       margin-top: 14px;
       padding-top: 14px;
     }
 
-    .lane-step:first-of-type {
+    .step:first-of-type {
       border-top: 0;
       margin-top: 0;
       padding-top: 0;
     }
 
-    .signal-card strong,
-    .link-card strong {
-      display: block;
-      margin-bottom: 8px;
+    .signal-value,
+    .command,
+    code,
+    pre code {
+      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.95rem;
     }
 
     .signal-value {
       color: var(--text);
       display: block;
-      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.95rem;
       margin-bottom: 8px;
-    }
-
-    code,
-    pre code {
-      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.95rem;
     }
 
     code {
@@ -304,7 +307,7 @@
       border: 1px solid rgba(149, 240, 193, 0.22);
       border-radius: 18px;
       color: var(--muted);
-      margin-top: 18px;
+      margin-top: 16px;
       padding: 16px 18px;
     }
 
@@ -312,35 +315,39 @@
       color: var(--green);
     }
 
-    .list {
-      color: var(--muted);
-      margin: 16px 0 0 18px;
+    .meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
     }
 
-    .list li {
-      margin-bottom: 10px;
+    .pill {
+      border: 1px solid rgba(168, 183, 198, 0.16);
+      border-radius: 999px;
+      color: var(--text);
+      font-size: 0.92rem;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.02);
     }
 
-    .visual-frame img {
-      border-radius: 16px;
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-
-    .link-card {
-      color: inherit;
-      display: block;
+    .route-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
       text-decoration: none;
+      color: inherit;
     }
 
-    .link-card span {
-      color: var(--muted);
-    }
-
-    .link-card:hover {
+    .route-card:hover {
       border-color: rgba(139, 211, 255, 0.42);
       text-decoration: none;
+    }
+
+    .route-card span,
+    .link-card span,
+    .small {
+      color: var(--muted);
     }
 
     .site-footer {
@@ -350,13 +357,12 @@
       text-align: center;
     }
 
-    @media (max-width: 960px) {
+    @media (max-width: 980px) {
       .hero-layout,
-      .lane-grid,
-      .signal-grid,
-      .story-grid,
-      .benefit-grid,
-      .visual-notes,
+      .trust-grid,
+      .route-grid,
+      .feature-grid,
+      .quick-grid,
       .link-grid {
         grid-template-columns: 1fr;
       }
@@ -382,8 +388,8 @@
 <body>
   <main>
     <nav class="site-nav" aria-label="Primary">
-      <a href="#install">Install</a>
-      <a href="#upgrade">Upgrade</a>
+      <a href="install/">Install</a>
+      <a href="upgrade/">Upgrade</a>
       <a href="how-it-works/">How it works</a>
       <a href="proof/">Proof</a>
       <a href="troubleshooting/">Troubleshooting</a>
@@ -393,49 +399,55 @@
     <section class="panel hero">
       <div class="hero-layout">
         <div>
-          <p class="eyebrow">Install OpenClawBrain on an existing OpenClaw host</p>
-          <h1>Install it, upgrade it, and verify it before you trust it.</h1>
+          <p class="eyebrow">OpenClawBrain</p>
+          <h1>OpenClaw memory that stays bounded, verified, and easy to repair.</h1>
           <p class="lede">
-            OpenClawBrain turns the history you already have into a bounded memory layer for OpenClaw. It harvests conversations, memory notes,
-            docs, and corrections, promotes only replay-passing packs, and serves a small live slice instead of stuffing raw history into every prompt.
-          </p>
-          <p class="lede">
-            On March 27, 2026, the exercised host at <code>~/.openclaw</code> reported <code>STATUS ok</code>,
-            <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>.
-            On March 30, 2026, published-package dogfood reran on the fresh sterile lane with the live split release and showed that install, status, and proof now stay on the warning side of the boundary instead of falsely blocking healthy runtime load.
+            Install on a pinned OpenClaw home, restart the gateway, check detailed status, and capture proof only when you need a durable bundle.
+            The split is intentional: <code>@openclawbrain/openclaw</code> is the runtime payload; <code>@openclawbrain/cli</code> is the operator lane.
           </p>
           <div class="hero-actions">
-            <a class="button button-primary" href="#install">Install now</a>
-            <a class="button button-secondary" href="#upgrade">Upgrade / repair</a>
+            <a class="button button-primary" href="install/">Install now</a>
+            <a class="button button-secondary" href="upgrade/">Upgrade / repair</a>
             <a class="button button-secondary" href="proof/">Compare proof</a>
           </div>
+          <p class="hero-note">
+            Published packages today: <code>@openclawbrain/openclaw@0.4.5</code> and <code>@openclawbrain/cli@0.4.16</code>.
+            Fresh sterile published dogfood still showed warning-level proof noise, so detailed status remains the sharper compare surface when proof is noisy.
+          </p>
+          <div class="meta-bar" aria-label="At a glance">
+            <span class="pill">Pinned home</span>
+            <span class="pill">Compressed proof</span>
+            <span class="pill">Truthful split</span>
+            <span class="pill">Restart / status / proof</span>
+          </div>
         </div>
+
         <aside class="lane-card" aria-label="Canonical operator lane">
           <span class="panel-label">Canonical operator lane</span>
-          <h2>One selected home. One front door. One fast verify surface.</h2>
-          <div class="lane-step">
+          <h2>One home. One restart. One status check. One proof bundle.</h2>
+          <div class="step">
             <h3>Install or repair</h3>
             <pre><code>openclawbrain install --openclaw-home '~/.openclaw'</code></pre>
           </div>
-          <div class="lane-step">
-            <h3>Reload the live runtime</h3>
+          <div class="step">
+            <h3>Reload the gateway</h3>
             <pre><code>openclaw gateway restart</code></pre>
           </div>
-          <div class="lane-step">
+          <div class="step">
             <h3>Verify detailed status</h3>
             <pre><code>openclawbrain status --openclaw-home '~/.openclaw' --detailed</code></pre>
           </div>
-          <div class="lane-step">
-            <h3>Capture durable proof</h3>
+          <div class="step">
+            <h3>Capture proof when you need it</h3>
             <pre><code>openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
           </div>
-          <p class="small">
-            <code>openclaw gateway restart</code> does not accept <code>--openclaw-home</code>. Keep the same selected home pinned on every
-            surrounding <code>openclawbrain</code> command.
+          <p class="small" style="margin-top: 12px;">
+            Keep the same selected home pinned on every <code>openclawbrain</code> command. The restart command sits between install and verify, but it does not take the path flag itself.
           </p>
         </aside>
       </div>
-      <div class="signal-grid" id="proof" aria-label="Healthy host proof signals">
+
+      <div class="trust-grid" id="proof" aria-label="Healthy host proof signals">
         <article class="signal-card">
           <strong>Status</strong>
           <span class="signal-value">STATUS ok</span>
@@ -444,7 +456,7 @@
         <article class="signal-card">
           <strong>Runtime load proof</strong>
           <span class="signal-value">loadProof=status_probe_ready</span>
-          <p class="small">The runtime can prove the brain actually loaded, not just that files exist.</p>
+          <p class="small">The runtime can prove the brain loaded, not just that files exist.</p>
         </article>
         <article class="signal-card">
           <strong>Serving state</strong>
@@ -462,228 +474,167 @@
     <section class="panel">
       <h2>What is actually proven today</h2>
       <p class="section-copy">
-        Canonical <code>openclawbrain</code> <code>main</code> already carries the post-publish runtime repair through <code>ec53e9c</code>,
-        and root <code>npm test</code> is green there. The public story should keep repo truth, live-host truth, and the currently published npm boundary separate instead of blending them together.
+        Keep repo truth, published-package truth, and live-host proof separate. The healthy reference host and the fresh sterile published dogfood are not the same claim.
       </p>
-      <div class="benefit-grid">
-        <article class="card">
-          <span class="card-label">Published npm</span>
-          <h3>Fresh sterile install works on the split packages</h3>
-          <p class="small">
-            <code>@openclawbrain/openclaw@0.4.5</code> and <code>@openclawbrain/cli@0.4.16</code> attached cleanly on a fresh sterile OpenClaw home.
-          </p>
+      <div class="quick-grid">
+        <article class="quick-card">
+          <span class="card-label">Published pair</span>
+          <h3>Current npm releases</h3>
+          <p class="small">The live public split is <code>@openclawbrain/openclaw@0.4.5</code> plus <code>@openclawbrain/cli@0.4.16</code>.</p>
         </article>
-        <article class="card">
-          <span class="card-label">Strongest published signal</span>
-          <h3>Detailed status already proves runtime load</h3>
-          <p class="small">
-            On that sterile host, published <code>status --detailed</code> showed <code>runtime=proven</code>,
-            <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>.
-          </p>
+        <article class="quick-card">
+          <span class="card-label">Healthy host</span>
+          <h3>Reference signals line up</h3>
+          <p class="small"><code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code> were all observed together on the exercised host.</p>
         </article>
-        <article class="card">
-          <span class="card-label">Published repair</span>
-          <h3>Published proof and reinstall no longer block the sterile lane</h3>
-          <p class="small">
-            On March 30, 2026, published <code>@openclawbrain/cli@0.4.16</code> returned <code>converged_with_warnings</code> for install and
-            <code>success_but_proof_incomplete</code> for proof on the sterile rerun. The old <code>ec53e9c</code> verdict repair is now live on npm.
-          </p>
+        <article class="quick-card">
+          <span class="card-label">Residual noise</span>
+          <h3>Fresh sterile proof can still warn</h3>
+          <p class="small">The sterile published dogfood lane still showed warning-level proof noise. That does not undo the healthy runtime signals; it just means proof is not the only truth surface.</p>
         </article>
-        <article class="card">
-          <span class="card-label">Recorded rerun</span>
-          <h3>One real trace now reruns with a clear learned-route win</h3>
-          <p class="small">
-            <code>real-trace-live-proof-story</code> reran at <code>learned_route 100</code> versus <code>graph_prior_only 70</code> and <code>vector_only 70</code>
-            after the carry-forward fix. That is a targeted rerun, not a broad benchmark claim.
-          </p>
-        </article>
-        <article class="card">
-          <span class="card-label">Teacher truth</span>
-          <h3>Idle cycles are no longer lumped in with misses</h3>
-          <p class="small">
-            Operator status now separates benign no-op cycles from cycles that likely missed teachable material, so fresh idle time does not look like the same problem as a labeler miss.
-          </p>
-        </article>
+      </div>
+      <div class="callout">
+        <strong>Truth ladder:</strong> if a fresh host has healthy detailed status but proof still looks noisy, trust <code>status --detailed</code> first and treat proof as durable evidence, not as the only health check.
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>One route, one job</h2>
+      <p class="section-copy">
+        Each page exists to answer one question quickly. No memo hunt, no duplicate caveat wall.
+      </p>
+      <div class="route-grid">
+        <a class="route-card" href="install/">
+          <span class="card-label">Install</span>
+          <h3>Attach OpenClawBrain to a new home</h3>
+          <span>Use this when you want a clean install on a pinned OpenClaw home.</span>
+        </a>
+        <a class="route-card" href="upgrade/">
+          <span class="card-label">Upgrade</span>
+          <h3>Repair or refresh an existing host</h3>
+          <span>Use the same install lane again when packages, hooks, or wiring drift.</span>
+        </a>
+        <a class="route-card" href="how-it-works/">
+          <span class="card-label">How it works</span>
+          <h3>See the lifecycle from harvest to serve</h3>
+          <span>Read the short story of attachment, replay gating, and bounded runtime context.</span>
+        </a>
+        <a class="route-card" href="proof/">
+          <span class="card-label">Proof</span>
+          <h3>Compare your host against the healthy reference</h3>
+          <span>Check the compressed signals and the durable bundle boundary.</span>
+        </a>
+        <a class="route-card" href="troubleshooting/">
+          <span class="card-label">Troubleshooting</span>
+          <h3>Fix a lane that diverges</h3>
+          <span>Use this when status, serving, or proof no longer agree.</span>
+        </a>
       </div>
     </section>
 
     <section class="panel" id="install">
-      <h2>Install first. Upgrade with the same command. Verify immediately.</h2>
+      <h2>Install first. Restart, verify, and prove only when needed.</h2>
       <p class="section-copy">
-        The public operator story is intentionally compact. <code>openclawbrain install</code> is the install lane, the upgrade lane, and the repair lane for
-        the selected OpenClaw home. The rest of the flow exists to prove that the runtime and the reporting surfaces agree.
+        The public operator lane is intentionally short: install, restart, status, proof. That is enough to get a new host live and enough to repair a healthy one without changing the boundary.
       </p>
-      <div class="lane-grid">
+      <div class="feature-grid">
         <article class="card">
-          <span class="card-label">New install</span>
-          <h3>Attach OpenClawBrain to the host you already run</h3>
-          <p class="small">
-            Use this when the host does not have OpenClawBrain yet. The command converges plugin packaging, repairs the hook if needed,
-            and pins the activation root for the selected home.
-          </p>
-          <pre><code>openclawbrain install --openclaw-home '~/.openclaw'</code></pre>
+          <span class="card-label">Install</span>
+          <h3>Make the host attachable</h3>
+          <p class="small">The install command converges the plugin boundary and pins the selected home for OpenClawBrain.</p>
         </article>
-        <article class="card" id="upgrade">
-          <span class="card-label">Upgrade / repair</span>
-          <h3>Refresh an existing install without switching lanes</h3>
-          <p class="small">
-            Use the exact same command after package-manager changes, host drift, or an awkward partial install. The public upgrade story is not a second workflow.
-          </p>
-          <pre><code>openclawbrain install --openclaw-home '~/.openclaw'</code></pre>
-        </article>
-      </div>
-      <div class="story-grid" aria-label="Verify and proof steps">
         <article class="card">
           <span class="card-label">Restart</span>
-          <h3>Reload the gateway</h3>
-          <p class="small">Install converges the boundary. Restart makes the live runtime load the updated hook.</p>
-          <pre><code>openclaw gateway restart</code></pre>
+          <h3>Reload the live runtime</h3>
+          <p class="small">Restart is the handoff between install and verify. It makes the gateway load the updated hook.</p>
         </article>
         <article class="card">
-          <span class="card-label">Verify</span>
-          <h3>Compare detailed status</h3>
-          <p class="small">This is the fast surface for attachment, load proof, serving state, and learned route availability.</p>
-          <pre><code>openclawbrain status --openclaw-home '~/.openclaw' --detailed</code></pre>
+          <span class="card-label">Status / proof</span>
+          <h3>Check truth, then capture evidence</h3>
+          <p class="small">Detailed status is the fast compare surface. Proof is the durable bundle when scrollback is not enough.</p>
         </article>
         <article class="card">
-          <span class="card-label">Proof</span>
-          <h3>Capture the durable bundle only when you need it</h3>
-          <p class="small">The proof command packages summary, verdict, step logs, startup breadcrumbs, and runtime-load proof into one bundle directory.</p>
-          <pre><code>openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
+          <span class="card-label">Split packages</span>
+          <h3>Runtime and operator concerns stay separate</h3>
+          <p class="small"><code>@openclawbrain/openclaw</code> carries the runtime payload; <code>@openclawbrain/cli</code> owns the install/status/proof lane.</p>
         </article>
       </div>
-      <div class="callout">
-        <strong>Activation and teacher wiring are separate.</strong> If you see <code>BRAIN LOADED</code> or the selected home shows as attached, the OpenClawBrain hook is wired correctly for that OpenClaw home. That does <em>not</em> by itself prove an optional teacher model is configured. Teacher wiring uses dedicated config fields such as <code>brainTeacherEnabled</code>, <code>brainTeacherProvider</code>, and <code>brainTeacherModel</code>, and the same status surface should report <code>teacherConfigured=true</code>, the expected provider/model, and <code>teacherConfigError=null</code>.
-      </div>
-      <div class="callout">
-        <strong>Path discipline matters:</strong> keep <code>~/.openclaw</code> pinned on install, status, and proof. The restart command sits between them,
-        but it does not take the path flag itself.
-      </div>
-      <pre><code>STATUS ok
-hook        install=installed loadability=loadable loadProof=status_probe_ready layout=native_package_plugin additional=0 detail=profile hook is installed via native package plugin at ~/.openclaw/extensions/openclawbrain (manifest=openclawbrain install=openclawbrain package=@openclawbrain/openclaw)
-routeFn     available=yes freshness=updated trained=2026-03-27T04:30:28.906Z updated=none used=2026-03-27T06:49:38.082Z why=current serve proof used the learned route_fn; active route_fn last served a learned turn at 2026-03-27T06:49:38.082Z
-serve       state=serving_active_pack failOpen=no hardFail=no usedRouteFn=yes awaitingFirstExport=no detail=current profile is serving promoted pack pack-9d43af80; serve-visible change came from activation promotion, not hot-path mutation</code></pre>
-      <p class="caption">
-        Healthy-host reference captured from the detailed status surface on March 27, 2026. Your pack id and counters can differ.
-        On a fresh seed-state host, <code>STATUS warn</code> can still coexist with healthy <code>runtime=proven</code>, <code>loadProof=status_probe_ready</code>,
-        <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>.
-      </p>
     </section>
 
-    <section class="panel">
-      <h2>What happens to your history after install</h2>
+    <section class="panel" id="upgrade">
+      <h2>Upgrade is the same lane, rerun for an existing host.</h2>
       <p class="section-copy">
-        OpenClawBrain does not dump your whole past into the prompt. It harvests the material you already surfaced, learns in the background, promotes only replay-ready packs,
-        and serves bounded live context when it actually helps.
+        There is not a separate magic second workflow today. When an existing host needs repair, refresh, or package reconciliation, rerun the install lane on the same pinned home and then verify.
       </p>
-      <div class="visual-frame">
-        <img
-          src="assets/canonical-brain-flow.svg"
-          alt="Canonical OpenClawBrain visual showing messy history flowing through harvest into a promoted brain and then into bounded live context."
-        />
-      </div>
-      <div class="visual-notes">
-        <article class="card">
-          <span class="card-label">Authority</span>
-          <h3>Corrections outrank stale recap</h3>
-          <p class="small">
-            Explicit user corrections become durable current-truth memory. Summaries help navigation, but they do not win when they conflict with a direct correction.
-          </p>
+      <div class="link-grid">
+        <article class="quick-card">
+          <span class="card-label">Rerun install</span>
+          <h3>Use the same front door</h3>
+          <p class="small">The upgrade story keeps the same command so the boundary stays honest and the host stays pinned.</p>
         </article>
-        <article class="card">
-          <span class="card-label">Boundaries</span>
-          <h3>Harvest is selective, not invasive</h3>
-          <p class="small">
-            The harvester reads exported conversations, memory notes, docs, and corrections you already surfaced. It skips <code>.env</code>, binary junk,
-            and unexported filesystem noise.
-          </p>
+        <article class="quick-card">
+          <span class="card-label">Restart</span>
+          <h3>Make the live runtime pick up the change</h3>
+          <p class="small">The gateway restart sits right after the rerun so the loaded hook and the installed files converge.</p>
         </article>
-        <article class="card">
-          <span class="card-label">Live path</span>
-          <h3>Bounded context stays on the hot path</h3>
-          <p class="small">
-            The live runtime serves a small useful slice plus learned routing. If the brain has nothing useful or is unavailable, the agent still answers.
-          </p>
+        <article class="quick-card">
+          <span class="card-label">Re-verify</span>
+          <h3>Compare status before you trust proof</h3>
+          <p class="small">If proof is noisy on a fresh host, detailed status is the better signal to read first.</p>
         </article>
       </div>
     </section>
 
     <section class="panel">
-      <h2>What it actually does</h2>
+      <h2>Why this feels like a product</h2>
       <p class="section-copy">
-        The product story should fit in one pass: harvest what matters, promote only proven structure, and serve bounded context instead of prompt sprawl.
+        It is not just memory. It is a bounded operator surface with fast truth, clear routes, and fewer ways to get lost.
       </p>
-      <div class="story-grid">
+      <div class="feature-grid">
         <article class="card">
-          <span class="card-label">Harvest</span>
-          <h3>Read the useful parts of the past you already have</h3>
-          <p class="small">
-            Exported turns, memory markdown, docs, and explicit corrections become candidate graph material. Summaries compact bulk history so the runtime can search it cheaply.
-          </p>
+          <span class="card-label">Fast value proposition</span>
+          <h3>One pinned home, one known flow</h3>
+          <p class="small">The top of the page tells you what to run before you have to read the architecture.</p>
         </article>
         <article class="card">
-          <span class="card-label">Promote</span>
-          <h3>Learn in the background and only serve promoted packs</h3>
-          <p class="small">
-            Candidate structure is not live by default. Replay gates promotion so the runtime serves proven packs rather than half-written hot-path mutations.
-          </p>
+          <span class="card-label">Compressed proof</span>
+          <h3>Evidence stays visible but small</h3>
+          <p class="small">The healthy host signals are on the page, but they do not sprawl into an audit memo.</p>
         </article>
         <article class="card">
-          <span class="card-label">Serve bounded context</span>
-          <h3>Inject a small useful slice, not your whole life history</h3>
-          <p class="small">
-            The runtime serves the active promoted pack, a bounded structural budget, and the learned <code>route_fn</code> when available. That keeps latency and trust visible.
-          </p>
-        </article>
-      </div>
-      <p class="section-copy" style="margin-top: 18px;">
-        The shortest clean mental model is: <strong>learner</strong> = the background pipeline that watches events, builds candidate packs, and updates routing; <strong>teacher</strong> = the optional local model that adds supervision off the hot path; <strong><code>route_fn</code></strong> = the learned policy artifact the live runtime uses to pick which bounded context blocks to inject.
-      </p>
-    </section>
-
-    <section class="panel">
-      <h2>Why operators care</h2>
-      <p class="section-copy">
-        The point is not just “memory.” The point is operator reality: quicker installs, visible truth surfaces, less session amnesia, and a live path that stays bounded.
-      </p>
-      <div class="benefit-grid">
-        <article class="card">
-          <h3>No raw-history prompt stuffing</h3>
-          <p class="small">Bulk history becomes searchable summaries and exact-source expansions when needed, not an unbounded prompt tax on every answer.</p>
+          <span class="card-label">Truthful caveat</span>
+          <h3>We do not oversell the sterile lane</h3>
+          <p class="small">Fresh published dogfood still had warning-level proof noise, so the copy stays honest about what is proven and what is merely trending healthy.</p>
         </article>
         <article class="card">
-          <h3>Learning stays off the hot path</h3>
-          <p class="small">Export, replay, and pack promotion happen outside the live answer step. The served runtime stays inspectable and predictable.</p>
-        </article>
-        <article class="card">
-          <h3>Fail-open behavior remains honest</h3>
-          <p class="small">If there is no useful memory match or the promoted pack is unavailable, the agent still runs instead of collapsing behind a broken memory dependency.</p>
+          <span class="card-label">Clear routing</span>
+          <h3>Every page has one job</h3>
+          <p class="small">Install, upgrade, how it works, proof, and troubleshooting each answer one operator question cleanly.</p>
         </article>
       </div>
     </section>
 
     <section class="panel">
-      <h2>Go deeper</h2>
+      <h2>Go deeper when you need it</h2>
       <p class="section-copy">
-        Use the homepage to install and verify, the lifecycle guide to understand the harvest and promotion story, the proof page to compare real output,
-        and troubleshooting when your lane does not line up.
+        Start with install, verify with proof, and move to the lifecycle or troubleshooting pages only when the lane needs explanation.
       </p>
       <div class="link-grid">
         <a class="link-card" href="how-it-works/">
           <strong>How it works</strong>
-          <span>The deeper story: init scaffold, harvest, replay gate, promoted packs, and bounded live context.</span>
+          <span>The short lifecycle story from attachment to replay gating and bounded serving.</span>
         </a>
         <a class="link-card" href="proof/">
           <strong>Proof</strong>
-          <span>The reference host signals, proof bundle boundary, and the exact compare surfaces to use.</span>
+          <span>The healthy reference host, the compressed signals, and the durable bundle boundary.</span>
         </a>
         <a class="link-card" href="troubleshooting/">
           <strong>Troubleshooting</strong>
-          <span>What to do when install converges but status, load proof, or serving state still look wrong.</span>
+          <span>Fast triage when status, serving state, or proof no longer agree.</span>
         </a>
         <a class="link-card" href="https://github.com/jonathangu/openclawbrain">
           <strong>GitHub</strong>
-          <span>Source code, packages, docs, and architecture notes.</span>
+          <span>Source code, package history, and release notes.</span>
         </a>
       </div>
     </section>

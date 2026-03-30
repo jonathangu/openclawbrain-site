@@ -6,12 +6,12 @@
   <title>Troubleshooting | OpenClawBrain</title>
   <meta
     name="description"
-    content="Troubleshoot the OpenClawBrain install lane when load proof, serving state, learned route availability, or published CLI verdicts do not line up."
+    content="Troubleshoot the OpenClawBrain lane when load proof, serving state, learned route availability, or published proof verdicts do not line up."
   />
   <meta property="og:title" content="Troubleshooting | OpenClawBrain" />
   <meta
     property="og:description"
-    content="Fast operator checks for the OpenClawBrain install lane: rerun install on the pinned home, restart, compare detailed status, and keep the current published CLI boundary explicit."
+    content="Fast operator triage for the OpenClawBrain install lane: keep the home pinned, restart, compare detailed status, then decide whether proof is actually broken."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/troubleshooting/" />
@@ -31,13 +31,7 @@
       --code: #07111b;
       --shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
@@ -46,268 +40,68 @@
       color: var(--text);
       line-height: 1.58;
     }
-
-    main {
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 32px 20px 56px;
-    }
-
+    main { max-width: 1040px; margin: 0 auto; padding: 32px 20px 56px; }
     .site-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 12px;
-      margin: 0 0 14px;
-      padding: 0 4px;
+      display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px;
+      margin: 0 0 14px; padding: 0 4px;
     }
-
-    .site-nav a {
-      color: var(--muted);
-      font-size: 0.95rem;
-      text-decoration: none;
-    }
-
-    .site-nav a:hover,
-    .site-nav a[aria-current="page"] {
-      color: var(--text);
-    }
-
+    .site-nav a { color: var(--muted); font-size: 0.95rem; text-decoration: none; }
+    .site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--text); }
     .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      margin-bottom: 18px;
-      padding: 30px;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 24px;
+      box-shadow: var(--shadow); margin-bottom: 18px; padding: 30px;
     }
-
     .hero {
-      background:
-        linear-gradient(160deg, rgba(18, 33, 48, 0.98) 0%, rgba(8, 15, 24, 0.98) 100%);
+      background: linear-gradient(160deg, rgba(18, 33, 48, 0.98) 0%, rgba(8, 15, 24, 0.98) 100%);
       padding: 36px 30px 30px;
     }
-
-    .eyebrow,
-    .card-label {
-      color: var(--green);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow {
-      margin-bottom: 12px;
-    }
-
-    .card-label {
-      display: block;
-      margin-bottom: 8px;
-    }
-
+    .eyebrow, .card-label { color: var(--green); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+    .eyebrow { margin-bottom: 12px; }
+    .card-label { display: block; margin-bottom: 8px; }
     h1 {
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(2.6rem, 8vw, 4.5rem);
-      letter-spacing: -0.045em;
-      line-height: 0.96;
-      margin: 0 0 16px;
-      max-width: 820px;
+      font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.6rem, 8vw, 4.5rem);
+      letter-spacing: -0.045em; line-height: 0.96; margin: 0 0 16px; max-width: 820px;
     }
-
-    h2 {
-      color: var(--accent);
-      font-size: 1.46rem;
-      line-height: 1.15;
-      margin: 0 0 12px;
-    }
-
-    h3 {
-      font-size: 1.05rem;
-      line-height: 1.25;
-      margin: 0 0 8px;
-    }
-
-    p {
-      margin: 0 0 14px;
-    }
-
-    a {
-      color: var(--accent);
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .lede,
-    .section-copy,
-    .small {
-      color: var(--muted);
-    }
-
-    .lede,
-    .section-copy {
-      font-size: 1.05rem;
-      max-width: 800px;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
+    h2 { color: var(--accent); font-size: 1.46rem; line-height: 1.15; margin: 0 0 12px; }
+    h3 { font-size: 1.05rem; line-height: 1.25; margin: 0 0 8px; }
+    p { margin: 0 0 14px; }
+    a { color: var(--accent); }
+    a:hover { text-decoration: underline; }
+    .lede, .section-copy, .small { color: var(--muted); }
+    .lede, .section-copy { font-size: 1.05rem; max-width: 800px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
     .button {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--text);
-      display: inline-block;
-      font-weight: 700;
-      padding: 12px 18px;
-      text-decoration: none;
+      background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line); border-radius: 999px;
+      color: var(--text); display: inline-block; font-weight: 700; padding: 12px 18px; text-decoration: none;
     }
-
-    .button:hover {
-      text-decoration: none;
-    }
-
-    .button-primary {
-      background: linear-gradient(135deg, var(--green) 0%, #c8f8dd 100%);
-      border-color: rgba(149, 240, 193, 0.6);
-      color: #042312;
-    }
-
-    .button-secondary {
-      border-color: rgba(139, 211, 255, 0.35);
-    }
-
-    .cards,
-    .link-grid {
-      display: grid;
-      gap: 14px;
-      margin-top: 18px;
-    }
-
-    .cards {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .link-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .card,
-    .link-card {
-      background: var(--panel-soft);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 20px;
-    }
-
-    code,
-    pre code {
-      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.95rem;
-    }
-
-    code {
-      background: rgba(8, 17, 27, 0.82);
-      border: 1px solid rgba(168, 183, 198, 0.12);
-      border-radius: 6px;
-      padding: 2px 6px;
-    }
-
+    .button:hover { text-decoration: none; }
+    .button-primary { background: linear-gradient(135deg, var(--green) 0%, #c8f8dd 100%); border-color: rgba(149, 240, 193, 0.6); color: #042312; }
+    .button-secondary { border-color: rgba(139, 211, 255, 0.35); }
+    .cards, .link-grid { display: grid; gap: 14px; margin-top: 18px; }
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .link-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card, .link-card { background: var(--panel-soft); border: 1px solid var(--line); border-radius: 20px; padding: 20px; }
+    code, pre code { font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.95rem; }
+    code { background: rgba(8, 17, 27, 0.82); border: 1px solid rgba(168, 183, 198, 0.12); border-radius: 6px; padding: 2px 6px; }
     pre {
-      background: var(--code);
-      border: 1px solid rgba(168, 183, 198, 0.14);
-      border-radius: 16px;
-      margin: 16px 0;
-      overflow-x: auto;
-      padding: 18px;
+      background: var(--code); border: 1px solid rgba(168, 183, 198, 0.14); border-radius: 16px; margin: 16px 0; overflow-x: auto; padding: 18px;
     }
-
-    pre code {
-      background: transparent;
-      border: 0;
-      display: block;
-      line-height: 1.7;
-      padding: 0;
-      white-space: pre;
-    }
-
+    pre code { background: transparent; border: 0; display: block; line-height: 1.7; padding: 0; white-space: pre; }
     .callout {
-      background: linear-gradient(135deg, rgba(9, 25, 18, 0.96), rgba(8, 19, 29, 0.96));
-      border: 1px solid rgba(149, 240, 193, 0.22);
-      border-radius: 18px;
-      color: var(--muted);
-      margin-top: 16px;
-      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(9, 25, 18, 0.96), rgba(8, 19, 29, 0.96)); border: 1px solid rgba(149, 240, 193, 0.22);
+      border-radius: 18px; color: var(--muted); margin-top: 16px; padding: 16px 18px;
     }
-
-    .callout strong {
-      color: var(--green);
-    }
-
-    .list {
-      color: var(--muted);
-      margin: 16px 0 0 18px;
-    }
-
-    .list li {
-      margin-bottom: 10px;
-    }
-
-    .link-card {
-      color: inherit;
-      display: block;
-      text-decoration: none;
-    }
-
-    .link-card strong {
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .link-card span {
-      color: var(--muted);
-    }
-
-    .link-card:hover {
-      border-color: rgba(139, 211, 255, 0.42);
-      text-decoration: none;
-    }
-
-    .site-footer {
-      color: var(--muted);
-      font-size: 0.94rem;
-      padding: 8px 4px 0;
-      text-align: center;
-    }
-
-    @media (max-width: 960px) {
-      .cards,
-      .link-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
+    .callout strong { color: var(--green); }
+    .link-card { color: inherit; display: block; text-decoration: none; }
+    .link-card strong { display: block; margin-bottom: 8px; }
+    .link-card span { color: var(--muted); }
+    .link-card:hover { border-color: rgba(139, 211, 255, 0.42); text-decoration: none; }
+    .site-footer { color: var(--muted); font-size: 0.94rem; padding: 8px 4px 0; text-align: center; }
+    @media (max-width: 960px) { .cards, .link-grid { grid-template-columns: 1fr; } }
     @media (max-width: 720px) {
-      main {
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-
-      .panel,
-      .hero {
-        padding: 24px 20px;
-      }
-
-      .site-nav {
-        justify-content: flex-start;
-      }
+      main { padding-left: 16px; padding-right: 16px; }
+      .panel, .hero { padding: 24px 20px; }
+      .site-nav { justify-content: flex-start; }
     }
   </style>
 </head>
@@ -326,13 +120,11 @@
       <p class="eyebrow">OpenClawBrain troubleshooting</p>
       <h1>When the lane looks wrong, keep the scope tight and compare the right fields.</h1>
       <p class="lede">
-        Pin the same home, rerun install, restart the gateway, compare <code>status --detailed</code>, and only then
-        capture proof. Do not switch homes or invent a second workflow in the middle.
+        The recovery loop is boring on purpose: keep the same selected home, rerun install, restart the gateway, compare detailed status, and only then decide whether proof is actually the problem.
       </p>
       <p class="lede">
-        On March 29, 2026, a fresh sterile published install still reported <code>STATUS warn</code> while <code>runtime=proven</code>,
-        <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code> were already healthy.
-        Compare the detailed lines before declaring the lane broken.
+        A fresh sterile published host can still show <code>STATUS warn</code> even while <code>loadProof=status_probe_ready</code>,
+        <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code> are already healthy. That is the difference between a noisy proof surface and a broken runtime.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="../install/">Run the install lane</a>
@@ -343,119 +135,85 @@
 
     <section class="panel">
       <h2>Fast triage</h2>
-      <p class="section-copy">
-        These are the first things to check when your surface does not line up with the healthy reference host.
-      </p>
+      <p class="section-copy">Start with the signal that failed first. Do not change homes halfway through the diagnosis.</p>
       <div class="cards">
         <article class="card">
           <span class="card-label">Load not proven</span>
-          <h3><code>runtime=proven</code> or <code>loadProof=status_probe_ready</code> is absent</h3>
-          <p class="small">
-            Treat the lane as not converged yet. Rerun <code>openclawbrain install --openclaw-home '~/.openclaw'</code>,
-            restart the gateway, and compare detailed status again before chasing deeper explanations.
-          </p>
+          <h3><code>loadProof=status_probe_ready</code> is missing</h3>
+          <p class="small">Rerun <code>openclawbrain install --openclaw-home '~/.openclaw'</code>, restart the gateway, and compare detailed status again.</p>
         </article>
         <article class="card">
           <span class="card-label">Headline warn</span>
           <h3><code>STATUS warn</code> can still be a fresh-host state</h3>
-          <p class="small">
-            If detailed status also shows <code>runtime=proven</code>, <code>loadProof=status_probe_ready</code>,
-            <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>, the host can already be healthy and the current published CLI verdict can still be too strict.
-          </p>
+          <p class="small">If detailed status already shows the healthy runtime signals, the host may be fine even when proof still emits warning-level noise.</p>
         </article>
         <article class="card">
           <span class="card-label">Serving state differs</span>
-          <h3><code>serve state=serving_active_pack</code> is not present</h3>
-          <p class="small">
-            That is not automatically an install failure. A fresh or lightly used host can still be at init scaffold or pre-promotion state.
-            Use the lifecycle guide to distinguish “healthy but not promoted yet” from “broken install.”
-          </p>
+          <h3><code>serve state=serving_active_pack</code> is missing</h3>
+          <p class="small">That is not automatically an install failure. A fresh or lightly used host can still be pre-promotion.</p>
         </article>
         <article class="card">
           <span class="card-label">Route function missing</span>
-          <h3><code>routeFn available=yes</code> is not present</h3>
-          <p class="small">
-            Learned route availability depends on host state. Check whether the runtime is already serving an active pack and whether learning surfaces are populated.
-            Compare with the proof page rather than assuming every host should already match the exercised one.
-          </p>
+          <h3><code>routeFn available=yes</code> is missing</h3>
+          <p class="small">Check whether the runtime is already serving a promoted pack and compare with the proof page instead of assuming every host should match the exercised one.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>Important:</strong> the healthy host on March 27, 2026 returned <code>STATUS ok</code> with <code>serve state=serving_active_pack</code> and <code>routeFn available=yes</code>.
-        The fresh sterile published dogfood host on March 29, 2026 still showed <code>STATUS warn</code> while those deeper runtime/load/serve/route signals were already healthy.
+        <strong>Use the same compare surface:</strong> the healthy host returned <code>STATUS ok</code> together with the load proof, serving state, and learned route. If your host does not, the next step is usually reinstall plus restart, not a new theory.
       </div>
     </section>
 
     <section class="panel">
       <h2>Canonical recovery lane</h2>
       <p class="section-copy">
-        When in doubt, rerun the public lane exactly. Keep the path pinned on the OpenClawBrain commands.
-        The restart command remains the only step without <code>--openclaw-home</code>.
+        When in doubt, rerun the public lane exactly. The restart command remains the only step without <code>--openclaw-home</code>.
       </p>
       <pre><code>openclawbrain install --openclaw-home '~/.openclaw'
 openclaw gateway restart
 openclawbrain status --openclaw-home '~/.openclaw' --detailed
 openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
-      <ul class="list">
-        <li><code>install</code> is the public install, upgrade, and repair surface for the selected home.</li>
-        <li><code>status --detailed</code> is the fast compare surface for attachment, load proof, serving state, and learned route availability.</li>
-        <li><code>proof</code> is the durable follow-up when terminal scrollback is not enough.</li>
+      <ul class="cards" style="grid-template-columns: repeat(3, minmax(0, 1fr)); list-style: none; padding-left: 0;">
+        <li class="card">
+          <span class="card-label">1. Install</span>
+          <h3>Repair the boundary</h3>
+          <p class="small">Re-run install to converge the hook and pin the host again.</p>
+        </li>
+        <li class="card">
+          <span class="card-label">2. Restart</span>
+          <h3>Reload the live runtime</h3>
+          <p class="small">Restart makes the gateway pick up the updated state.</p>
+        </li>
+        <li class="card">
+          <span class="card-label">3. Verify</span>
+          <h3>Read status before proof</h3>
+          <p class="small">Detailed status is the faster truth surface when proof is noisy.</p>
+        </li>
       </ul>
     </section>
 
     <section class="panel">
-      <h2>Two boundary notes that save time</h2>
-      <div class="cards">
-        <article class="card">
-          <span class="card-label">Published CLI gap</span>
-          <h3>Proof or reinstall can still over-warn on a fresh seed-state host</h3>
-          <p class="small">
-            On published <code>@openclawbrain/cli@0.4.16</code>, a degraded <code>proof</code> verdict or <code>converged_with_warnings</code> install on a fresh seed-state host
-            can still reflect warning-level custom-home proof noise when detailed status already proves load and serving truth.
-          </p>
-        </article>
-        <article class="card">
-          <span class="card-label">Teacher idle</span>
-          <h3>Benign no-op cycles are not the same as missed teachable material</h3>
-          <p class="small">
-            Treat &quot;no eligible feedback, operator overrides, or matched interaction text&quot; as benign idle time. Worry when candidate interactions existed
-            but the labeler emitted no reusable labels or failed open.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>Two common operator mistakes</h2>
+      <h2>Two mistakes to avoid</h2>
       <div class="cards">
         <article class="card">
           <span class="card-label">Scope drift</span>
           <h3>Changing the selected home mid-debug</h3>
-          <p class="small">
-            The public lane is scoped to one OpenClaw home. If you change the home for <code>install</code> but not for
-            <code>status</code> or <code>proof</code>, you are no longer comparing the same boundary.
-          </p>
+          <p class="small">If install, status, and proof do not point at the same home, you are no longer comparing the same boundary.</p>
         </article>
         <article class="card">
           <span class="card-label">Package drift</span>
-          <h3>Managing the plugin package but not re-converging install</h3>
-          <p class="small">
-            If you explicitly manage <code>@openclawbrain/openclaw</code> with the OpenClaw plugin manager, rerun
-            <code>openclawbrain install --openclaw-home '~/.openclaw'</code> afterward so the public lane can repair hooks and pin the activation root again.
-          </p>
+          <h3>Managing the plugin package without re-converging install</h3>
+          <p class="small">If you changed <code>@openclawbrain/openclaw</code> directly, rerun the install lane afterward so the hook and activation root converge again.</p>
         </article>
       </div>
     </section>
 
     <section class="panel">
       <h2>Go deeper</h2>
-      <p class="section-copy">
-        Use the install lane for the main flow, the proof page for the healthy reference surface, and the lifecycle guide when you need to understand why a healthy host might still be pre-promotion.
-      </p>
+      <p class="section-copy">Use the install lane for the main flow, the proof page for the healthy reference surface, and the lifecycle guide when you want the architecture story.</p>
       <div class="link-grid">
         <a class="link-card" href="../install/">
           <strong>Install / upgrade</strong>
-          <span>The install-first front door with the canonical commands and top-level proof signals.</span>
+          <span>The pinned-home front door and the safe repair lane.</span>
         </a>
         <a class="link-card" href="../proof/">
           <strong>Proof</strong>
@@ -463,11 +221,11 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         </a>
         <a class="link-card" href="../how-it-works/">
           <strong>How it works</strong>
-          <span>The deeper explanation of harvest, replay, promotion, and bounded live context.</span>
+          <span>The lifecycle from harvest to promotion and bounded serving.</span>
         </a>
         <a class="link-card" href="https://github.com/jonathangu/openclawbrain">
           <strong>GitHub</strong>
-          <span>Source code, packages, and architecture notes.</span>
+          <span>Source code, package history, and release notes.</span>
         </a>
       </div>
     </section>

@@ -6,12 +6,12 @@
   <title>Proof | OpenClawBrain</title>
   <meta
     name="description"
-    content="Compare your detailed status output with the healthy OpenClawBrain host, and keep the current published-package proof boundary explicit when proof or reinstall verdicts lag the runtime."
+    content="Compare your host with the healthy OpenClawBrain reference, then capture a durable proof bundle only when you need evidence beyond terminal scrollback."
   />
   <meta property="og:title" content="Proof | OpenClawBrain" />
   <meta
     property="og:description"
-    content="The reference proof signals, the current published npm boundary, and the durable operator bundle boundary for OpenClawBrain."
+    content="Compressed proof signals, the healthy host reference, and the current published boundary for OpenClawBrain."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/proof/" />
@@ -30,13 +30,7 @@
       --code: #07111b;
       --shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
@@ -45,285 +39,72 @@
       color: var(--text);
       line-height: 1.58;
     }
-
-    main {
-      max-width: 1040px;
-      margin: 0 auto;
-      padding: 32px 20px 56px;
-    }
-
+    main { max-width: 1040px; margin: 0 auto; padding: 32px 20px 56px; }
     .site-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 12px;
-      margin: 0 0 14px;
-      padding: 0 4px;
+      display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px;
+      margin: 0 0 14px; padding: 0 4px;
     }
-
-    .site-nav a {
-      color: var(--muted);
-      font-size: 0.95rem;
-      text-decoration: none;
-    }
-
-    .site-nav a:hover,
-    .site-nav a[aria-current="page"] {
-      color: var(--text);
-    }
-
+    .site-nav a { color: var(--muted); font-size: 0.95rem; text-decoration: none; }
+    .site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--text); }
     .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      margin-bottom: 18px;
-      padding: 30px;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 24px;
+      box-shadow: var(--shadow); margin-bottom: 18px; padding: 30px;
     }
-
     .hero {
-      background:
-        linear-gradient(160deg, rgba(18, 33, 48, 0.98) 0%, rgba(8, 15, 24, 0.98) 100%);
+      background: linear-gradient(160deg, rgba(18, 33, 48, 0.98) 0%, rgba(8, 15, 24, 0.98) 100%);
       padding: 36px 30px 30px;
     }
-
-    .eyebrow,
-    .card-label {
-      color: var(--green);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow {
-      margin-bottom: 12px;
-    }
-
-    .card-label {
-      display: block;
-      margin-bottom: 8px;
-    }
-
+    .eyebrow, .card-label { color: var(--green); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+    .eyebrow { margin-bottom: 12px; }
+    .card-label { display: block; margin-bottom: 8px; }
     h1 {
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(2.7rem, 8vw, 4.6rem);
-      letter-spacing: -0.045em;
-      line-height: 0.96;
-      margin: 0 0 16px;
-      max-width: 820px;
+      font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.7rem, 8vw, 4.6rem);
+      letter-spacing: -0.045em; line-height: 0.96; margin: 0 0 16px; max-width: 820px;
     }
-
-    h2 {
-      color: var(--accent);
-      font-size: 1.46rem;
-      line-height: 1.15;
-      margin: 0 0 12px;
-    }
-
-    h3 {
-      font-size: 1.05rem;
-      line-height: 1.25;
-      margin: 0 0 8px;
-    }
-
-    p {
-      margin: 0 0 14px;
-    }
-
-    a {
-      color: var(--accent);
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .lede,
-    .section-copy,
-    .small,
-    .caption {
-      color: var(--muted);
-    }
-
-    .lede,
-    .section-copy {
-      font-size: 1.05rem;
-      max-width: 800px;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
+    h2 { color: var(--accent); font-size: 1.46rem; line-height: 1.15; margin: 0 0 12px; }
+    h3 { font-size: 1.05rem; line-height: 1.25; margin: 0 0 8px; }
+    p { margin: 0 0 14px; }
+    a { color: var(--accent); }
+    a:hover { text-decoration: underline; }
+    .lede, .section-copy, .small, .caption { color: var(--muted); }
+    .lede, .section-copy { font-size: 1.05rem; max-width: 800px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
     .button {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: var(--text);
-      display: inline-block;
-      font-weight: 700;
-      padding: 12px 18px;
-      text-decoration: none;
+      background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line); border-radius: 999px;
+      color: var(--text); display: inline-block; font-weight: 700; padding: 12px 18px; text-decoration: none;
     }
-
-    .button:hover {
-      text-decoration: none;
-    }
-
-    .button-primary {
-      background: linear-gradient(135deg, var(--green) 0%, #c8f8dd 100%);
-      border-color: rgba(149, 240, 193, 0.6);
-      color: #042312;
-    }
-
-    .button-secondary {
-      border-color: rgba(139, 211, 255, 0.35);
-    }
-
-    .cards,
-    .signal-grid,
-    .link-grid {
-      display: grid;
-      gap: 14px;
-      margin-top: 18px;
-    }
-
-    .cards {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .signal-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .link-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .card,
-    .signal-card,
-    .link-card {
-      background: var(--panel-soft);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 20px;
-    }
-
-    .signal-card strong,
-    .link-card strong {
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .signal-value {
-      color: var(--text);
-      display: block;
-      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.95rem;
-      margin-bottom: 8px;
-    }
-
-    code,
-    pre code {
-      font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.95rem;
-    }
-
-    code {
-      background: rgba(8, 17, 27, 0.82);
-      border: 1px solid rgba(168, 183, 198, 0.12);
-      border-radius: 6px;
-      padding: 2px 6px;
-    }
-
+    .button:hover { text-decoration: none; }
+    .button-primary { background: linear-gradient(135deg, var(--green) 0%, #c8f8dd 100%); border-color: rgba(149, 240, 193, 0.6); color: #042312; }
+    .button-secondary { border-color: rgba(139, 211, 255, 0.35); }
+    .signal-grid, .cards, .link-grid { display: grid; gap: 14px; margin-top: 18px; }
+    .signal-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .link-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card, .signal-card, .link-card { background: var(--panel-soft); border: 1px solid var(--line); border-radius: 20px; padding: 20px; }
+    .signal-card strong, .link-card strong { display: block; margin-bottom: 8px; }
+    .signal-value { color: var(--text); display: block; font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.95rem; margin-bottom: 8px; }
+    code, pre code { font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.95rem; }
+    code { background: rgba(8, 17, 27, 0.82); border: 1px solid rgba(168, 183, 198, 0.12); border-radius: 6px; padding: 2px 6px; }
     pre {
-      background: var(--code);
-      border: 1px solid rgba(168, 183, 198, 0.14);
-      border-radius: 16px;
-      margin: 16px 0;
-      overflow-x: auto;
-      padding: 18px;
+      background: var(--code); border: 1px solid rgba(168, 183, 198, 0.14); border-radius: 16px; margin: 16px 0; overflow-x: auto; padding: 18px;
     }
-
-    pre code {
-      background: transparent;
-      border: 0;
-      display: block;
-      line-height: 1.7;
-      padding: 0;
-      white-space: pre;
-    }
-
-    .list {
-      color: var(--muted);
-      margin: 16px 0 0 18px;
-    }
-
-    .list li {
-      margin-bottom: 10px;
-    }
-
+    pre code { background: transparent; border: 0; display: block; line-height: 1.7; padding: 0; white-space: pre; }
     .callout {
-      background: linear-gradient(135deg, rgba(9, 25, 18, 0.96), rgba(8, 19, 29, 0.96));
-      border: 1px solid rgba(149, 240, 193, 0.22);
-      border-radius: 18px;
-      color: var(--muted);
-      margin-top: 16px;
-      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(9, 25, 18, 0.96), rgba(8, 19, 29, 0.96)); border: 1px solid rgba(149, 240, 193, 0.22);
+      border-radius: 18px; color: var(--muted); margin-top: 16px; padding: 16px 18px;
     }
-
-    .callout strong {
-      color: var(--green);
-    }
-
-    .link-card {
-      color: inherit;
-      display: block;
-      text-decoration: none;
-    }
-
-    .link-card span {
-      color: var(--muted);
-    }
-
-    .link-card:hover {
-      border-color: rgba(139, 211, 255, 0.42);
-      text-decoration: none;
-    }
-
-    .site-footer {
-      color: var(--muted);
-      font-size: 0.94rem;
-      padding: 8px 4px 0;
-      text-align: center;
-    }
-
-    @media (max-width: 960px) {
-      .cards,
-      .signal-grid,
-      .link-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
+    .callout strong { color: var(--green); }
+    .list { color: var(--muted); margin: 16px 0 0 18px; }
+    .list li { margin-bottom: 10px; }
+    .link-card { color: inherit; display: block; text-decoration: none; }
+    .link-card span { color: var(--muted); }
+    .link-card:hover { border-color: rgba(139, 211, 255, 0.42); text-decoration: none; }
+    .site-footer { color: var(--muted); font-size: 0.94rem; padding: 8px 4px 0; text-align: center; }
+    @media (max-width: 960px) { .signal-grid, .cards, .link-grid { grid-template-columns: 1fr; } }
     @media (max-width: 720px) {
-      main {
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-
-      .panel,
-      .hero {
-        padding: 24px 20px;
-      }
-
-      .site-nav {
-        justify-content: flex-start;
-      }
+      main { padding-left: 16px; padding-right: 16px; }
+      .panel, .hero { padding: 24px 20px; }
+      .site-nav { justify-content: flex-start; }
     }
   </style>
 </head>
@@ -340,28 +121,27 @@
 
     <section class="panel hero">
       <p class="eyebrow">OpenClawBrain proof</p>
-      <h1>Compare your host with a healthy one before you claim the lane is working.</h1>
+      <h1>Compare your host against the healthy reference, then decide what to trust.</h1>
       <p class="lede">
-        Proof is the same install-first lane plus one durable bundle. Use the same pinned home
-        <code>~/.openclaw</code> on the <code>openclawbrain</code> commands, compare detailed status,
-        and capture a bundle when you need durable evidence.
+        Proof keeps the same pinned home and compresses the evidence into a durable bundle. The fastest path is still status first,
+        then proof only when you want a record you can keep.
       </p>
       <p class="lede">
-        The healthy reference bundle on March 27, 2026 returned <code>success_and_proven</code>. Install, runtime,
-        plugin load, startup breadcrumb, runtime-load proof, and detailed status aligned. On March 29, 2026, published-package dogfood also showed the split npm packages attach and load on a fresh sterile home, even though the current published CLI still grades proof and reinstall too strictly.
+        The healthy reference host returned the same four core signals together: <code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>,
+        <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>. Fresh sterile published dogfood still had warning-level proof noise,
+        so the page stays honest about where the current truth is strongest.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="../install/">Go to install</a>
-        <a class="button button-secondary" href="../troubleshooting/">Troubleshoot the lane</a>
-        <a class="button button-secondary" href="../how-it-works/">Read the lifecycle guide</a>
+        <a class="button button-secondary" href="../troubleshooting/">Troubleshoot</a>
+        <a class="button button-secondary" href="../how-it-works/">Read the lifecycle</a>
       </div>
     </section>
 
     <section class="panel">
       <h2>Healthy reference host</h2>
       <p class="section-copy">
-        These are the high-value compare points from the exercised host. Your pack id and counters can vary.
-        On fresh seed-state hosts, the runtime/load/serve/route lines matter more than matching <code>STATUS ok</code> byte-for-byte.
+        These are the signals that matter most when you compare a real host. Pack ids and counters can vary; the four core lines should be the fast read.
       </p>
       <div class="signal-grid" aria-label="Reference proof signals">
         <article class="signal-card">
@@ -372,12 +152,12 @@
         <article class="signal-card">
           <strong>Load proof</strong>
           <span class="signal-value">loadProof=status_probe_ready</span>
-          <p class="small">Runtime load is proven, not merely inferred from filesystem state.</p>
+          <p class="small">Runtime load is proven, not just inferred from filesystem state.</p>
         </article>
         <article class="signal-card">
           <strong>Serving state</strong>
           <span class="signal-value">serve state=serving_active_pack</span>
-          <p class="small">The runtime is serving a promoted pack rather than hot-path mutation.</p>
+          <p class="small">The runtime is serving a promoted pack instead of mutating hot-path truth.</p>
         </article>
         <article class="signal-card">
           <strong>Learned route</strong>
@@ -386,69 +166,49 @@
         </article>
       </div>
       <pre><code>STATUS ok
-hook        install=installed loadability=loadable loadProof=status_probe_ready layout=native_package_plugin additional=0 detail=profile hook is installed via native package plugin at ~/.openclaw/extensions/openclawbrain (manifest=openclawbrain install=openclawbrain package=@openclawbrain/openclaw)
-serving     pack=pack-9d43af80 lastExport=2026-03-26T18:58:04.355Z lastPromotion=2026-03-27T04:30:28.906Z
-routeFn     available=yes freshness=updated trained=2026-03-27T04:30:28.906Z updated=none used=2026-03-27T06:49:38.082Z why=current serve proof used the learned route_fn; active route_fn last served a learned turn at 2026-03-27T06:49:38.082Z
-serve       state=serving_active_pack failOpen=no hardFail=no usedRouteFn=yes awaitingFirstExport=no detail=current profile is serving promoted pack pack-9d43af80; serve-visible change came from activation promotion, not hot-path mutation</code></pre>
-      <p class="caption">
-        Reference output captured from the healthy host's detailed status surface on March 27, 2026.
-      </p>
+loadProof=status_probe_ready
+serve state=serving_active_pack
+routeFn available=yes</code></pre>
+      <p class="caption">Reference output distilled from the healthy exercised host on March 27, 2026.</p>
     </section>
 
     <section class="panel">
       <h2>Current release boundary</h2>
       <p class="section-copy">
-        Keep live-host proof, canonical repo truth, and published npm truth separate. As of March 30, 2026 they line up on runtime load and no longer diverge on the old blocking verdict gap, though fresh custom-home proof can still carry warning-level noise.
+        Keep the live host, canonical repo, and published npm pair separate. That is the only way the proof story stays truthful.
       </p>
       <div class="cards">
         <article class="card">
           <span class="card-label">Published today</span>
-          <h3>Current split packages on npm</h3>
-          <p class="small">
-            <code>@openclawbrain/openclaw@0.4.5</code> and <code>@openclawbrain/cli@0.4.16</code> are the live published pair.
-          </p>
+          <h3>Current split packages</h3>
+          <p class="small"><code>@openclawbrain/openclaw@0.4.5</code> and <code>@openclawbrain/cli@0.4.16</code> are the live released packages.</p>
         </article>
         <article class="card">
           <span class="card-label">Sterile dogfood</span>
-          <h3>Published detailed status proved the runtime</h3>
-          <p class="small">
-            A fresh sterile install reached <code>runtime=proven</code>, <code>loadProof=status_probe_ready</code>,
-            <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code> after a clean gateway start.
-          </p>
-        </article>
-        <article class="card">
-          <span class="card-label">Residual warning</span>
-          <h3>Published proof is no longer falsely blocking the sterile lane</h3>
-          <p class="small">
-            On the March 30 sterile rerun, published <code>proof</code> returned <code>success_but_proof_incomplete</code> with warning-level
-            <code>status_warn</code> and <code>gateway_health</code>, while published reinstall returned <code>converged_with_warnings</code>
-            instead of <code>manual_action_required</code>. Detailed status still proved runtime load throughout.
-          </p>
+          <h3>Runtime proved even when proof stayed noisy</h3>
+          <p class="small">A fresh sterile install reached <code>runtime=proven</code>, <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code> after a clean restart.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>Repo truth:</strong> canonical <code>openclawbrain</code> <code>main</code> already carried the verdict repair through <code>ec53e9c</code>, and the published npm pair now carries it too. The remaining custom-home proof differences are warning-level, not blocking.
+        <strong>Residual warning:</strong> the published sterile lane still showed warning-level proof noise. That is why the site treats detailed status as the stronger truth surface when proof does not fully converge.
       </div>
     </section>
 
     <section class="panel">
-      <h2>What proof covers</h2>
-      <p class="section-copy">
-        Use this page to confirm install, load, serving, and reporting truth on a healthy host, then reproduce that comparison on yours.
-      </p>
+      <h2>What proof is for</h2>
+      <p class="section-copy">Use proof when you need durable evidence or a shareable bundle, not because it should be the only health check.</p>
       <ul class="list">
-        <li><code>bundle verdict: success_and_proven</code> means the captured bundle aligned across install, runtime, plugin load, breadcrumbs, runtime-load proof, and detailed status.</li>
-        <li>On the exercised March 27 host, <code>STATUS ok</code> lined up with <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>. On fresh seed-state hosts, the load/serve/route lines can already be healthy while the headline still says <code>STATUS warn</code>.</li>
-        <li><code>proof</code> writes <code>summary.md</code>, <code>steps.json</code>, <code>verdict.json</code>, raw step logs, startup breadcrumbs, and the runtime-load-proof snapshot into one durable bundle.</li>
-        <li>On published <code>@openclawbrain/cli@0.4.16</code>, <code>status --detailed</code> remains the stronger compare surface when fresh custom-home proof stays degraded on warning-level checks.</li>
+        <li><code>bundle verdict: success_and_proven</code> means install, runtime, breadcrumbs, load proof, and detailed status aligned in the captured bundle.</li>
+        <li>When a fresh host looks healthy but proof still warns, read <code>status --detailed</code> first and keep the bundle for later comparison.</li>
+        <li>The bundle writes <code>summary.md</code>, <code>verdict.json</code>, <code>steps.json</code>, logs, breadcrumbs, and runtime-load proof into one directory.</li>
+        <li>Pack ids and counters are host-state dependent. The healthy signals matter more than exact numbers.</li>
       </ul>
-      <p class="small">Pack ids and counters can differ by host state. Use the exercised-host surface as a reference, not as a requirement that every fresh host show <code>STATUS ok</code>.</p>
     </section>
 
     <section class="panel">
-      <h2>Run the same lane on your host</h2>
+      <h2>Run the same comparison on your host</h2>
       <p class="section-copy">
-        Keep the same selected home on the OpenClawBrain commands before and after restart. Compare status first. Capture proof second.
+        Keep the home pinned, restart once, then compare status before you trust proof.
       </p>
       <div class="cards">
         <article class="card">
@@ -460,69 +220,32 @@ openclawbrain status --openclaw-home '~/.openclaw' --detailed
 openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         </article>
         <article class="card">
-          <span class="card-label">Why the path stays pinned</span>
-          <h3>One selected home stays in scope</h3>
-          <p class="small">
-            <code>install</code>, <code>status</code>, and <code>proof</code> all accept <code>--openclaw-home</code>. Keep them pinned to
-            <code>~/.openclaw</code>. <code>openclaw gateway restart</code> is the only step without that flag.
-          </p>
-          <p class="small">
-            If you explicitly manage <code>@openclawbrain/openclaw</code> with the OpenClaw plugin manager, rerun
-            <code>openclawbrain install --openclaw-home '~/.openclaw'</code> afterward so the hook and activation root converge again.
-          </p>
-        </article>
-      </div>
-      <div class="callout">
-        <strong>Published CLI 0.4.16 note:</strong> if the same host already shows <code>runtime=proven</code>, <code>loadProof=status_probe_ready</code>,
-        <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>, treat detailed status as the stronger truth surface when proof stays degraded on warning-level checks.
-        The old blocking verdict gap is fixed in the current npm release.
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>Bundle contents worth checking</h2>
-      <p class="section-copy">
-        Use the proof bundle when terminal scrollback is no longer enough.
-      </p>
-      <div class="cards">
-        <article class="card">
-          <span class="card-label">Summary surface</span>
-          <h3><code>summary.md</code> and <code>verdict.json</code></h3>
-          <p class="small">
-            These summarize the verdict, severity, passed checks, warnings, and step ledger so you can audit quickly.
-          </p>
-        </article>
-        <article class="card">
-          <span class="card-label">Runtime truth</span>
-          <h3>Detailed status and runtime-load proof</h3>
-          <p class="small">
-            The reference bundle preserved <code>~/.openclawbrain/activation/attachment-truth/runtime-load-proofs.json</code> alongside the detailed status output.
-          </p>
+          <span class="card-label">How to read it</span>
+          <h3>Proof is the durable record, not the first read</h3>
+          <p class="small">If <code>status --detailed</code> already shows the healthy signals, proof should mostly confirm and package them, even if it still emits warning-level noise on a fresh host.</p>
         </article>
       </div>
     </section>
 
     <section class="panel">
       <h2>Go deeper</h2>
-      <p class="section-copy">
-        Use the install lane for commands, the lifecycle guide for harvest and promotion, and troubleshooting when your status surface does not align yet.
-      </p>
+      <p class="section-copy">Use install for the lane, how-it-works for the lifecycle, and troubleshooting when proof or status drift.</p>
       <div class="link-grid">
         <a class="link-card" href="../install/">
           <strong>Install / upgrade</strong>
-          <span>The install-first front door, repair lane, and canonical commands.</span>
+          <span>The front door for a pinned home and the safe repair lane.</span>
         </a>
         <a class="link-card" href="../how-it-works/">
           <strong>How it works</strong>
-          <span>The deeper story from init scaffold to harvest, replay, promotion, and bounded serving.</span>
+          <span>The lifecycle story from harvest through promotion and bounded serving.</span>
         </a>
         <a class="link-card" href="../troubleshooting/">
           <strong>Troubleshooting</strong>
-          <span>What to check when load proof, serving state, or route availability are missing.</span>
+          <span>Fast triage when the healthy signals do not line up.</span>
         </a>
         <a class="link-card" href="https://github.com/jonathangu/openclawbrain">
           <strong>GitHub</strong>
-          <span>Source code, package docs, and architecture notes.</span>
+          <span>Source code, package history, and release notes.</span>
         </a>
       </div>
     </section>

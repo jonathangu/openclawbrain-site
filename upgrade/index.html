@@ -2,12 +2,217 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>OpenClawBrain Upgrade</title>
-  <meta http-equiv="refresh" content="0; url=../#upgrade" />
-  <link rel="canonical" href="https://openclawbrain.ai/" />
-  <meta name="description" content="Redirecting to the OpenClawBrain upgrade and repair entry point." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Upgrade | OpenClawBrain</title>
+  <meta
+    name="description"
+    content="Upgrade or repair OpenClawBrain on an existing host by rerunning the same pinned install lane, then restart and verify the runtime."
+  />
+  <meta property="og:title" content="Upgrade | OpenClawBrain" />
+  <meta
+    property="og:description"
+    content="The upgrade and repair page for OpenClawBrain: rerun the same install lane on the same home, restart, and check status."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://openclawbrain.ai/upgrade/" />
+  <style>
+    :root {
+      --bg: #071019;
+      --bg-glow: rgba(109, 199, 255, 0.16);
+      --panel: rgba(9, 18, 29, 0.95);
+      --panel-soft: rgba(14, 26, 39, 0.96);
+      --text: #eef4f9;
+      --muted: #a8b7c6;
+      --line: rgba(168, 183, 198, 0.16);
+      --accent: #8bd3ff;
+      --green: #95f0c1;
+      --code: #07111b;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, var(--bg-glow), transparent 34%),
+        linear-gradient(180deg, #09121c 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.58;
+    }
+    main { max-width: 1040px; margin: 0 auto; padding: 32px 20px 56px; }
+    .site-nav {
+      display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px;
+      margin: 0 0 14px; padding: 0 4px;
+    }
+    .site-nav a { color: var(--muted); font-size: 0.95rem; text-decoration: none; }
+    .site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--text); }
+    .panel {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 24px;
+      box-shadow: var(--shadow); margin-bottom: 18px; padding: 30px;
+    }
+    .hero {
+      background: linear-gradient(160deg, rgba(18, 33, 48, 0.98) 0%, rgba(8, 15, 24, 0.98) 100%);
+      padding: 36px 30px 30px;
+    }
+    .eyebrow, .card-label { color: var(--green); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+    .eyebrow { margin-bottom: 12px; }
+    .card-label { display: block; margin-bottom: 8px; }
+    h1 {
+      font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.7rem, 8vw, 4.7rem);
+      letter-spacing: -0.045em; line-height: 0.95; margin: 0 0 16px; max-width: 760px;
+    }
+    h2 { color: var(--accent); font-size: 1.46rem; line-height: 1.15; margin: 0 0 12px; }
+    h3 { font-size: 1.05rem; line-height: 1.25; margin: 0 0 8px; }
+    p { margin: 0 0 14px; }
+    a { color: var(--accent); }
+    a:hover { text-decoration: underline; }
+    .lede, .section-copy, .small { color: var(--muted); }
+    .lede, .section-copy { font-size: 1.05rem; max-width: 800px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .button {
+      background: rgba(255, 255, 255, 0.03); border: 1px solid var(--line); border-radius: 999px;
+      color: var(--text); display: inline-block; font-weight: 700; padding: 12px 18px; text-decoration: none;
+    }
+    .button:hover { text-decoration: none; }
+    .button-primary { background: linear-gradient(135deg, var(--green) 0%, #c8f8dd 100%); border-color: rgba(149, 240, 193, 0.6); color: #042312; }
+    .button-secondary { border-color: rgba(139, 211, 255, 0.35); }
+    .cards, .link-grid { display: grid; gap: 14px; margin-top: 18px; }
+    .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .link-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card, .link-card { background: var(--panel-soft); border: 1px solid var(--line); border-radius: 20px; padding: 20px; }
+    code, pre code { font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.95rem; }
+    code { background: rgba(8, 17, 27, 0.82); border: 1px solid rgba(168, 183, 198, 0.12); border-radius: 6px; padding: 2px 6px; }
+    pre {
+      background: var(--code); border: 1px solid rgba(168, 183, 198, 0.14); border-radius: 16px; margin: 16px 0; overflow-x: auto; padding: 18px;
+    }
+    pre code { background: transparent; border: 0; display: block; line-height: 1.7; padding: 0; white-space: pre; }
+    .callout {
+      background: linear-gradient(135deg, rgba(9, 25, 18, 0.96), rgba(8, 19, 29, 0.96)); border: 1px solid rgba(149, 240, 193, 0.22);
+      border-radius: 18px; color: var(--muted); margin-top: 16px; padding: 16px 18px;
+    }
+    .callout strong { color: var(--green); }
+    .link-card { color: inherit; display: block; text-decoration: none; }
+    .link-card strong { display: block; margin-bottom: 8px; }
+    .link-card span { color: var(--muted); }
+    .link-card:hover { border-color: rgba(139, 211, 255, 0.42); text-decoration: none; }
+    .site-footer { color: var(--muted); font-size: 0.94rem; padding: 8px 4px 0; text-align: center; }
+    @media (max-width: 960px) { .cards, .link-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 720px) {
+      main { padding-left: 16px; padding-right: 16px; }
+      .panel, .hero { padding: 24px 20px; }
+      .site-nav { justify-content: flex-start; }
+    }
+  </style>
 </head>
 <body>
-  <p>Redirecting to the OpenClawBrain upgrade entry point: <a href="../#upgrade">openclawbrain.ai/#upgrade</a></p>
+  <main>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="../install/">Install</a>
+      <a href="./" aria-current="page">Upgrade</a>
+      <a href="../how-it-works/">How it works</a>
+      <a href="../proof/">Proof</a>
+      <a href="../troubleshooting/">Troubleshooting</a>
+      <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
+    </nav>
+
+    <section class="panel hero">
+      <p class="eyebrow">OpenClawBrain upgrade / repair</p>
+      <h1>Rerun the same install lane on an existing host.</h1>
+      <p class="lede">
+        Upgrade is not a second hidden workflow. When a host needs package refresh, hook repair, or boundary reconciliation, rerun the same pinned install lane and then restart and verify.
+      </p>
+      <p class="lede">
+        That keeps the product honest: one front door for a new host and the same front door for an existing one that needs repair.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#lane">See the lane</a>
+        <a class="button button-secondary" href="../install/">New install</a>
+        <a class="button button-secondary" href="../troubleshooting/">Troubleshoot</a>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>What upgrade means here</h2>
+      <p class="section-copy">The job is to get an existing host back into the same pinned, inspectable state as a clean install.</p>
+      <div class="cards">
+        <article class="card">
+          <span class="card-label">Refresh packages</span>
+          <h3>Pick up the current published split</h3>
+          <p class="small">The live pair is <code>@openclawbrain/openclaw@0.4.5</code> and <code>@openclawbrain/cli@0.4.16</code>.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Repair drift</span>
+          <h3>Re-converge the hook and activation root</h3>
+          <p class="small">The install lane repairs the host boundary without making you learn a new command family.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Verify again</span>
+          <h3>Restart, then read status before proof</h3>
+          <p class="small">If proof is still noisy after the rerun, detailed status is the quicker way to confirm the runtime is healthy.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="lane">
+      <h2>Canonical upgrade lane</h2>
+      <p class="section-copy">
+        Use the same command you would use for a new install. The difference is the reason you are running it, not the command surface.
+      </p>
+      <pre><code>openclawbrain install --openclaw-home '~/.openclaw'
+openclaw gateway restart
+openclawbrain status --openclaw-home '~/.openclaw' --detailed
+openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
+      <div class="callout">
+        <strong>Upgrade truth:</strong> the published sterile dogfood lane still had warning-level proof noise, even though the healthy runtime signals were already present. That is why the upgrade page emphasizes restart and detailed status, not proof alone.
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>When this page is the right page</h2>
+      <div class="cards">
+        <article class="card">
+          <span class="card-label">Package drift</span>
+          <h3>Your installed host is older than the published pair</h3>
+          <p class="small">Rerun the install lane so the host picks up the current runtime and CLI packages.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Hook drift</span>
+          <h3>The plugin or activation root needs repair</h3>
+          <p class="small">Use this page when the boundary is present but no longer converged cleanly.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Post-change verify</span>
+          <h3>You want to confirm the runtime actually loaded</h3>
+          <p class="small">Restart and detailed status tell you whether the live path is healthy before you bother with proof.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Go deeper</h2>
+      <p class="section-copy">If the host still looks wrong after the rerun, go straight to troubleshooting or compare the healthy reference proof.</p>
+      <div class="link-grid">
+        <a class="link-card" href="../install/">
+          <strong>Install</strong>
+          <span>The same pinned-home lane for a new host.</span>
+        </a>
+        <a class="link-card" href="../proof/">
+          <strong>Proof</strong>
+          <span>The healthy reference host and compressed evidence.</span>
+        </a>
+        <a class="link-card" href="../troubleshooting/">
+          <strong>Troubleshooting</strong>
+          <span>Fast triage when the lane still diverges.</span>
+        </a>
+        <a class="link-card" href="../how-it-works/">
+          <strong>How it works</strong>
+          <span>The lifecycle story behind the lane.</span>
+        </a>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>Built by Jonathan Gu. Apache 2.0 licensed. Open source from the start.</p>
+    </footer>
+  </main>
 </body>
 </html>
