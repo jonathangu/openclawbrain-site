@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OpenClawBrain | Memory that helps OpenClaw stop forgetting</title>
+  <title>OpenClawBrain | Useful memory for OpenClaw</title>
   <meta
     name="description"
-    content="OpenClawBrain gives OpenClaw bounded useful memory: it learns from surfaced history, brings back what matters, and avoids dumping raw history into every prompt."
+    content="OpenClawBrain gives OpenClaw a bounded memory layer that learns from prior work, brings back the useful parts, and avoids stuffing raw history into every prompt."
   />
-  <meta property="og:title" content="OpenClawBrain | Memory that helps OpenClaw stop forgetting" />
+  <meta property="og:title" content="OpenClawBrain | Useful memory for OpenClaw" />
   <meta
     property="og:description"
-    content="OpenClawBrain helps OpenClaw remember useful corrections and context with bounded live memory instead of raw-history overload."
+    content="OpenClawBrain helps OpenClaw learn from prior work and serve a small useful memory slice instead of raw-history overload."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
@@ -469,13 +469,13 @@
     <section class="panel hero">
       <div class="hero-grid">
         <div>
-          <p class="eyebrow">What Is OpenClawBrain?</p>
-          <h1>Help OpenClaw stop forgetting the useful stuff.</h1>
+          <p class="eyebrow">Useful memory for OpenClaw</p>
+          <h1>Give OpenClaw memory that can help.</h1>
           <p class="lede">
-            OpenClawBrain is a memory system for OpenClaw. It learns from surfaced history, corrections, and notes, then brings back a small useful slice when it matters instead of dumping raw history into every prompt.
+            OpenClawBrain is an open-source memory layer for OpenClaw. It learns from surfaced history, notes, and corrections, then brings back a small useful slice when it matters.
           </p>
           <p class="lede">
-            The payoff is simple: less repetition, less prompt bloat, and a better shot that yesterday's fix is still available tomorrow.
+            The payoff is simple: fewer repeated fixes, less prompt bloat, and a better chance that yesterday's lesson is still available tomorrow.
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="install/">Try OpenClawBrain</a>
@@ -483,28 +483,28 @@
             <a class="button button-secondary" href="proof/">See proof</a>
           </div>
           <div class="signal-row" aria-label="At a glance">
-            <span class="signal">Less repetition</span>
-            <span class="signal">Bounded live context</span>
-            <span class="signal">Learns off the hot path</span>
+            <span class="signal">Fewer repeated fixes</span>
+            <span class="signal">Small live context</span>
+            <span class="signal">Learns outside live runs</span>
             <span class="signal">Open source</span>
           </div>
         </div>
 
         <aside class="story-card" aria-label="Plain-English summary">
           <span class="panel-label">In Plain English</span>
-          <h2>It tries to remember lessons, not just logs.</h2>
+          <h2>It is built to carry forward useful lessons.</h2>
           <div class="story-list">
             <div class="story-item">
-              <h3>1. Read what you already surfaced</h3>
-              <p class="small">Exports, notes, docs, and explicit corrections can become memory material.</p>
+              <h3>1. Learn from work you already did</h3>
+              <p class="small">Notes, surfaced history, docs, and explicit corrections can become memory material.</p>
             </div>
             <div class="story-item">
-              <h3>2. Promote only what survives replay</h3>
-              <p class="small">Learning happens away from the live prompt, and promoted structure has to pass checks before it becomes active.</p>
+              <h3>2. Keep live runs bounded</h3>
+              <p class="small">Learning happens away from the live prompt. The runtime serves a small slice instead of your whole archive.</p>
             </div>
             <div class="story-item">
-              <h3>3. Serve a bounded slice</h3>
-              <p class="small">The runtime aims to return a few useful blocks, not your whole archive.</p>
+              <h3>3. Make it inspectable</h3>
+              <p class="small">You can check install, status, proof, and source instead of guessing what the system is doing.</p>
             </div>
           </div>
         </aside>
@@ -513,57 +513,57 @@
 
     <section class="panel">
       <p class="panel-label">Why Should I Care?</p>
-      <h2>It is for people who are tired of reteaching the same agent.</h2>
+      <h2>If you use an agent seriously, you end up teaching the same lesson twice.</h2>
       <p class="section-copy">
-        If you use OpenClaw enough, you eventually hit the same pain: the agent forgets a correction, misses a preference, or loses a pattern you already paid to discover. OpenClawBrain is meant to give those lessons a path back into the next run.
+        That gets expensive fast. You fix a workflow, correct an assumption, or explain a preference, then you have to do it again next week because the useful part fell back into old scrollback. OpenClawBrain is meant to give those lessons a path back into the next run.
       </p>
       <div class="benefit-grid">
         <article class="card">
           <span class="card-label">Less repetition</span>
           <h3>Stop restating the same fix</h3>
-          <p class="small">When you correct a workflow or preference, the point is to have that correction show up before the same mistake repeats.</p>
+          <p class="small">When you correct a workflow or preference, the useful outcome is seeing that correction before the same mistake repeats.</p>
         </article>
         <article class="card">
           <span class="card-label">More continuity</span>
           <h3>Carry forward what mattered</h3>
-          <p class="small">Useful past work can stay available across sessions instead of each run starting from zero.</p>
+          <p class="small">Useful past work can stay available across sessions instead of every run starting from zero again.</p>
         </article>
         <article class="card">
           <span class="card-label">Lean prompts</span>
-          <h3>Keep the hot path small</h3>
+          <h3>Keep the live prompt small</h3>
           <p class="small">A bounded memory slice is easier to use than stuffing full scrollback into every prompt and hoping the right line wins.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>Why this matters:</strong> memory only helps if it changes the next answer without turning the prompt into luggage.
+        <strong>Why this matters:</strong> memory only helps if it improves the next answer without making every prompt bigger and slower.
       </div>
     </section>
 
     <section class="panel">
       <p class="panel-label">Why Is This Better Than Raw History Or Vanilla RAG?</p>
-      <h2>The goal is not more memory. It is better memory selection.</h2>
+      <h2>The hard part is not storing text. It is deciding what should come back now.</h2>
       <p class="section-copy">
-        Raw history can be useful as an archive. Naive memory can store notes. Vanilla RAG can retrieve similar text. None of those automatically solve the live-prompt problem: deciding what actually deserves to come back right now.
+        Raw history is useful as an archive. Naive memory can save notes. Vanilla RAG can pull up similar text. None of those, by themselves, solve the live prompt problem: deciding what deserves to come back right now and keeping that answer small enough to use.
       </p>
       <div class="compare-grid">
         <article class="card">
           <span class="card-label">Raw history</span>
-          <h3>Too much context, too little judgment</h3>
+          <h3>Good archive, bad live context</h3>
           <p class="small">A giant transcript remembers everything and helps with very little unless you manually sift it first.</p>
         </article>
         <article class="card">
           <span class="card-label">Naive memory / vanilla RAG</span>
           <h3>Retrieval is not the same as learning</h3>
-          <p class="small">Similarity search can fetch related text, but it does not automatically learn which past corrections actually improved behavior.</p>
+          <p class="small">Similarity search can fetch related text, but it does not automatically learn which corrections actually improved behavior.</p>
         </article>
         <article class="card">
           <span class="card-label">OpenClawBrain</span>
-          <h3>Promote what proves useful</h3>
-          <p class="small">It harvests surfaced material, promotes structure only after replay checks, and serves a bounded slice through a learned route function.</p>
+          <h3>Bring back a bounded useful slice</h3>
+          <p class="small">It learns from surfaced material, promotes what survives checks, and serves a small slice with learned selection instead of replaying the whole past.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>Think notebook, not shoebox:</strong> the design goal is to surface a few lessons that change behavior, not spray yesterday's scrollback into every run.
+        <strong>The point:</strong> bring back the few things that improve the next answer, not more text for its own sake.
       </div>
       <figure class="figure-card">
         <img
@@ -571,71 +571,49 @@
           alt="Diagram showing messy history becoming harvested material, a promoted brain, and bounded live context."
         />
         <figcaption>
-          Messy history becomes harvested material, then promoted memory, then bounded live context. The live prompt gets a small useful slice instead of the whole archive.
+          Surfaced history becomes learned memory, then bounded live context. The live prompt gets a small useful slice instead of the whole archive.
         </figcaption>
       </figure>
     </section>
 
     <section class="panel">
       <p class="panel-label">Why Should I Trust It?</p>
-      <h2>The public story stays tied to visible proof.</h2>
+      <h2>You can inspect it instead of taking it on faith.</h2>
       <p class="section-copy">
-        OpenClawBrain does not ask you to believe in invisible magic. The mechanism is documented, the source is public, and the healthiest reference host exposes named signals you can compare against.
+        OpenClawBrain does not ask you to believe in invisible magic. The code is public. The install and upgrade lanes are documented. The live path is inspectable through status and proof instead of hidden behind marketing copy.
       </p>
-      <div class="trust-grid" aria-label="Reference proof signals">
+      <div class="trust-grid" aria-label="Trust signals">
         <article class="signal-card">
-          <strong>Status</strong>
-          <span class="signal-value">STATUS ok</span>
-          <p class="small">The exercised host was healthy enough to inspect and serve from.</p>
+          <strong>Open source</strong>
+          <span class="signal-value">Code, docs, releases</span>
+          <p class="small">You can inspect the source, the install path, and the public record of changes.</p>
         </article>
         <article class="signal-card">
-          <strong>Load proof</strong>
-          <span class="signal-value">loadProof=status_probe_ready</span>
-          <p class="small">Runtime load is proven, not just inferred from files on disk.</p>
+          <strong>Visible status</strong>
+          <span class="signal-value">status --detailed</span>
+          <p class="small">There is a direct way to check whether the runtime is loaded and serving, not just installed on disk.</p>
         </article>
         <article class="signal-card">
-          <strong>Serving state</strong>
-          <span class="signal-value">serve state=serving_active_pack</span>
-          <p class="small">The live path is serving a promoted pack instead of mutating truth on the hot path.</p>
+          <strong>Bounded serving</strong>
+          <span class="signal-value">Small live slice</span>
+          <p class="small">Learning happens outside the live prompt, while the prompt itself stays capped and usable.</p>
         </article>
         <article class="signal-card">
-          <strong>Learned route</strong>
-          <span class="signal-value">routeFn available=yes</span>
-          <p class="small">The reference host already exposes a learned route function on the serve path.</p>
+          <strong>Real install and upgrade path</strong>
+          <span class="signal-value">Single canonical install lane</span>
+          <p class="small">New installs and upgrades use the same public lane instead of a private operator-only ritual.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>Honest boundary:</strong> the live released packages remain <code>@openclawbrain/openclaw@0.4.5</code> and <code>@openclawbrain/cli@0.4.16</code>. A fresh sterile published install still showed warning-level proof noise, so <code>status --detailed</code> is the sharper quick read and proof is supporting evidence, not the whole story.
-      </div>
-    </section>
-
-    <section class="panel">
-      <p class="panel-label">What Does It Look Like In Practice?</p>
-      <h2>From repeated correction to remembered correction.</h2>
-      <p class="section-copy">
-        This is the product promise in one plain-language example. The point is not photographic recall. The point is that a lesson that mattered before has a better path back into the next run.
-      </p>
-      <div class="example-grid">
-        <article class="example-card">
-          <span class="card-label">Before</span>
-          <h3>You keep repeating yourself</h3>
-          <p class="small">"Do not rewrite that migration again." "Keep the existing API shape." "Use the same fix as last time."</p>
-          <p class="small">Without a useful memory layer, those instructions are easy to lose between sessions or bury in old scrollback.</p>
-        </article>
-        <article class="example-card">
-          <span class="card-label">After</span>
-          <h3>The correction has a path back</h3>
-          <p class="small">OpenClawBrain can surface a promoted, bounded memory block before the same mistake happens again.</p>
-          <p class="small">That is the difference between "I have seen this before" and "I learned from this before."</p>
-        </article>
+        <strong>Honest boundary:</strong> this is a bounded memory layer, not a promise of perfect recall. The value is that useful prior work has a better chance to change the next run, and you can inspect whether that path is active.
       </div>
     </section>
 
     <section class="panel">
       <p class="panel-label">What Do I Do Next?</p>
-      <h2>Try it on one pinned OpenClaw home.</h2>
+      <h2>Install it on one OpenClaw home and verify it.</h2>
       <p class="section-copy">
-        The install lane is intentionally short and remains the canonical path. Use the same selected home on every <code>openclawbrain</code> command, restart once, then compare detailed status before you worry about proof noise.
+        The install lane is intentionally short and remains the canonical path. Use the same selected home on every <code>openclawbrain</code> command, restart once, then check detailed status and proof.
       </p>
       <div class="next-grid">
         <article class="lane-card">
@@ -652,17 +630,17 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         <div class="story-list">
           <article class="card">
             <span class="card-label">What to expect</span>
-            <h3>The first run should leave you with a readable boundary</h3>
+            <h3>The first run should leave you with a clean boundary</h3>
             <ul class="list">
               <li>A pinned host you can reason about</li>
               <li>A short lane you can rerun for repair or upgrade</li>
-              <li>A fast compare surface in <code>status --detailed</code></li>
+              <li>A fast check surface in <code>status --detailed</code></li>
             </ul>
           </article>
           <article class="card">
             <span class="card-label">Use the deeper routes when needed</span>
             <h3>Install first, then branch by question</h3>
-            <p class="small">Use <a href="how-it-works/">How it works</a> for mechanism, <a href="proof/">Proof</a> for evidence, and <a href="upgrade/">Upgrade</a> when an existing host needs the same lane again.</p>
+            <p class="small">Use <a href="how-it-works/">How it works</a> for the mechanism, <a href="proof/">Proof</a> for the evidence, and <a href="upgrade/">Upgrade</a> when an existing host needs the same lane again.</p>
           </article>
         </div>
       </div>
@@ -682,11 +660,11 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
       <div class="link-grid">
         <a class="link-card" href="how-it-works/">
           <strong>How it works</strong>
-          <span>The harvest -> promote -> serve story, with charts and the bounded-runtime mental model.</span>
+          <span>The learn-and-serve flow, with charts and the bounded runtime view.</span>
         </a>
         <a class="link-card" href="proof/">
           <strong>Proof</strong>
-          <span>The healthy reference host, compressed signals, and the current proof boundary.</span>
+          <span>Reference-host evidence and what the current proof actually shows.</span>
         </a>
         <a class="link-card" href="troubleshooting/">
           <strong>Troubleshooting</strong>
