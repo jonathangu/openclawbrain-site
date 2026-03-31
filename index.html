@@ -477,6 +477,9 @@
           <p class="lede">
             The payoff is simple: fewer repeated fixes, less prompt bloat, and a better chance that yesterday's lesson is still available tomorrow.
           </p>
+          <p class="lede">
+            Best for people who use OpenClaw often enough to keep teaching the same workflow, preference, or correction across sessions.
+          </p>
           <div class="hero-actions">
             <a class="button button-primary" href="install/">Try OpenClawBrain</a>
             <a class="button button-secondary" href="how-it-works/">See how it works</a>
@@ -504,7 +507,7 @@
             </div>
             <div class="story-item">
               <h3>3. Make it inspectable</h3>
-              <p class="small">You can check install, status, proof, and source instead of guessing what the system is doing.</p>
+              <p class="small">You can inspect the code, verify the runtime is loaded, and see whether the memory path is active.</p>
             </div>
           </div>
         </aside>
@@ -517,6 +520,9 @@
       <p class="section-copy">
         That gets expensive fast. You fix a workflow, correct an assumption, or explain a preference, then you have to do it again next week because the useful part fell back into old scrollback. OpenClawBrain is meant to give those lessons a path back into the next run.
       </p>
+      <div class="callout">
+        <strong>Concrete example:</strong> you correct an agent's deployment workflow once. Next week, that correction comes back before the same mistake repeats.
+      </div>
       <div class="benefit-grid">
         <article class="card">
           <span class="card-label">Less repetition</span>
@@ -580,7 +586,7 @@
       <p class="panel-label">Why Should I Trust It?</p>
       <h2>You can inspect it instead of taking it on faith.</h2>
       <p class="section-copy">
-        OpenClawBrain does not ask you to believe in invisible magic. The code is public. The install and upgrade lanes are documented. The live path is inspectable through status and proof instead of hidden behind marketing copy.
+        OpenClawBrain does not ask you to believe in invisible magic. The code is public. The runtime path is inspectable. The live prompt stays bounded. You can verify that the memory layer is loaded without taking the rest on faith.
       </p>
       <div class="trust-grid" aria-label="Trust signals">
         <article class="signal-card">
@@ -589,9 +595,9 @@
           <p class="small">You can inspect the source, the install path, and the public record of changes.</p>
         </article>
         <article class="signal-card">
-          <strong>Visible status</strong>
-          <span class="signal-value">status --detailed</span>
-          <p class="small">There is a direct way to check whether the runtime is loaded and serving, not just installed on disk.</p>
+          <strong>Visible runtime checks</strong>
+          <span class="signal-value">Loaded and serving</span>
+          <p class="small">There is a direct way to verify that the memory layer is active, not just installed on disk.</p>
         </article>
         <article class="signal-card">
           <strong>Bounded serving</strong>
@@ -613,7 +619,7 @@
       <p class="panel-label">What Do I Do Next?</p>
       <h2>Install it on one OpenClaw home and verify it.</h2>
       <p class="section-copy">
-        The install lane is intentionally short and remains the canonical path. Use the same selected home on every <code>openclawbrain</code> command, restart once, then check detailed status and proof.
+        If you already use OpenClaw regularly, install it on one OpenClaw home and verify the runtime once. The lane is intentionally short and remains the canonical path.
       </p>
       <div class="next-grid">
         <article class="lane-card">
@@ -634,7 +640,7 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
             <ul class="list">
               <li>A pinned host you can reason about</li>
               <li>A short lane you can rerun for repair or upgrade</li>
-              <li>A fast check surface in <code>status --detailed</code></li>
+              <li>A fast verification step after install</li>
             </ul>
           </article>
           <article class="card">
@@ -664,7 +670,7 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         </a>
         <a class="link-card" href="proof/">
           <strong>Proof</strong>
-          <span>Reference-host evidence and what the current proof actually shows.</span>
+          <span>What is publicly demonstrated today and how to inspect it.</span>
         </a>
         <a class="link-card" href="troubleshooting/">
           <strong>Troubleshooting</strong>
