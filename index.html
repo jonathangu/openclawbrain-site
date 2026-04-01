@@ -6,12 +6,12 @@
   <title>OpenClawBrain | Useful memory for OpenClaw</title>
   <meta
     name="description"
-    content="OpenClawBrain gives OpenClaw a bounded memory layer that learns from prior work, brings back the useful parts, and avoids stuffing raw history into every prompt."
+    content="OpenClawBrain gives OpenClaw a bounded graph-brain memory layer that improves agent performance, makes lower cost plausible, and avoids stuffing raw history or live LLM hops into every prompt."
   />
   <meta property="og:title" content="OpenClawBrain | Useful memory for OpenClaw" />
   <meta
     property="og:description"
-    content="OpenClawBrain helps OpenClaw learn from prior work and serve a small useful memory slice instead of raw-history overload."
+    content="OpenClawBrain helps OpenClaw learn from prior work, keep the hot path bounded, and serve a small useful memory slice instead of raw-history overload."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
@@ -472,13 +472,13 @@
           <p class="eyebrow">Useful memory for OpenClaw</p>
           <h1>Give OpenClaw memory that can help.</h1>
           <p class="lede">
-            OpenClawBrain is an open-source memory layer for OpenClaw. It learns from surfaced history, notes, and corrections, then brings back a small useful slice when it matters.
+            OpenClawBrain is an open-source graph-brain memory layer for OpenClaw. It organizes memories and tool-call history into a graph, brings back a small useful slice when it matters, and learns from outcomes in the background.
           </p>
           <p class="lede">
-            The payoff is simple: fewer repeated fixes, less prompt bloat, and a better chance that yesterday's lesson is still available tomorrow.
+            The product story is performance first, cost second, mechanism third: better agent performance is the win, lower cost is plausible, and bounded useful memory plus background learning are the mechanism.
           </p>
           <p class="lede">
-            Best for people who use OpenClaw often enough to keep teaching the same workflow, preference, or correction across sessions.
+            The hot path stays bounded and fast; it does not call a live LLM on every traversal hop.
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="install/">Try OpenClawBrain</a>
@@ -486,8 +486,8 @@
             <a class="button button-secondary" href="proof/">See proof</a>
           </div>
           <div class="signal-row" aria-label="At a glance">
-            <span class="signal">Fewer repeated fixes</span>
-            <span class="signal">Small live context</span>
+            <span class="signal">Better performance</span>
+            <span class="signal">Bounded hot path</span>
             <span class="signal">Learns outside live runs</span>
             <span class="signal">Open source</span>
           </div>
@@ -503,7 +503,7 @@
             </div>
             <div class="story-item">
               <h3>2. Keep live runs bounded</h3>
-              <p class="small">Learning happens away from the live prompt. The runtime serves a small slice instead of your whole archive.</p>
+              <p class="small">Learning happens away from the live prompt. The runtime serves a small slice instead of your whole archive, and it does not call a live LLM on every traversal hop.</p>
             </div>
             <div class="story-item">
               <h3>3. Make it inspectable</h3>
@@ -518,7 +518,7 @@
       <p class="panel-label">Why Should I Care?</p>
       <h2>If you use an agent seriously, you end up teaching the same lesson twice.</h2>
       <p class="section-copy">
-        That gets expensive fast. You fix a workflow, correct an assumption, or explain a preference, then you have to do it again next week because the useful part fell back into old scrollback. OpenClawBrain is meant to give those lessons a path back into the next run.
+        That gets expensive fast. You fix a workflow, correct an assumption, or explain a preference, then you have to do it again next week because the useful part fell back into old scrollback. OpenClawBrain is meant to give those lessons a path back into the next run while keeping the hot path bounded and fast.
       </p>
       <div class="callout">
         <strong>Concrete example:</strong> you correct an agent's deployment workflow once. Next week, that correction comes back before the same mistake repeats.
@@ -565,11 +565,11 @@
         <article class="card">
           <span class="card-label">OpenClawBrain</span>
           <h3>Bring back a bounded useful slice</h3>
-          <p class="small">It learns from surfaced material, promotes what survives checks, and serves a small slice with learned selection instead of replaying the whole past.</p>
+          <p class="small">It learns from surfaced material, promotes what survives checks, and serves a small slice with learned selection instead of replaying the whole past or calling a live LLM on every hop.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>The point:</strong> bring back the few things that improve the next answer, not more text for its own sake.
+        <strong>The point:</strong> bring back the few things that improve the next answer, not more text for its own sake, and keep the hot path bounded.
       </div>
       <figure class="figure-card">
         <img
@@ -586,7 +586,7 @@
       <p class="panel-label">Why Should I Trust It?</p>
       <h2>You can inspect it instead of taking it on faith.</h2>
       <p class="section-copy">
-        OpenClawBrain does not ask you to believe in invisible magic. The code is public. The runtime path is inspectable. The live prompt stays bounded. You can verify that the memory layer is loaded without taking the rest on faith.
+        OpenClawBrain does not ask you to believe in invisible magic. The code is public. The runtime path is inspectable. The live prompt stays bounded, and the runtime does not call a live LLM on every traversal hop. You can verify that the memory layer is loaded without taking the rest on faith.
       </p>
       <div class="trust-grid" aria-label="Trust signals">
         <article class="signal-card">
@@ -611,7 +611,10 @@
         </article>
       </div>
       <div class="callout">
-        <strong>Honest boundary:</strong> this is a bounded memory layer, not a promise of perfect recall. The value is that useful prior work has a better chance to change the next run, and you can inspect whether that path is active.
+        <strong>Honest boundary:</strong> this is a bounded memory layer, not a promise of perfect recall, and not a live-LLM-per-hop runtime. The value is that useful prior work has a better chance to change the next run, and you can inspect whether that path is active.
+      </div>
+      <div class="callout">
+        <strong>Proof note:</strong> checked replay already beats <code>no_brain</code> on real traces, and <code>learned_route</code> has real-trace wins. The replay set is still small and mixed, so lower cost is plausible, but direct spend savings are not yet proven.
       </div>
     </section>
 

@@ -6,12 +6,12 @@
   <title>How OpenClawBrain Works | OpenClawBrain</title>
   <meta
     name="description"
-    content="OpenClawBrain attaches to a pinned OpenClaw home, harvests surfaced history into candidate packs, promotes only replay-passing structure, and serves bounded context through a learned route function."
+    content="OpenClawBrain attaches to a pinned OpenClaw home, harvests surfaced history into candidate packs, promotes only replay-passing structure, and serves bounded context through a learned route function without live-LLM hops on the hot path."
   />
   <meta property="og:title" content="How OpenClawBrain Works | OpenClawBrain" />
   <meta
     property="og:description"
-    content="The short lifecycle story: attach, harvest, promote, and serve bounded context without turning every prompt into a raw-history dump."
+    content="The short lifecycle story: attach, harvest, promote, and serve bounded context without turning every prompt into a raw-history dump or a live-LLM-per-hop loop."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/how-it-works/" />
@@ -155,15 +155,15 @@
 
     <section class="panel hero">
       <p class="eyebrow">OpenClawBrain lifecycle</p>
-      <h1>Harvest the past, promote only what replays, and serve a bounded slice.</h1>
+      <h1>Harvest the past, promote only what replays, and serve a bounded graph-brain slice.</h1>
       <p class="lede">
-        OpenClawBrain is not a raw-history dump. It attaches to one pinned OpenClaw home, learns from surfaced history in the background,
+        OpenClawBrain is not a raw-history dump. It is a graph-brain memory layer that attaches to one pinned OpenClaw home, learns from surfaced history in the background,
         and serves only a small useful slice through a learned route function when that slice has actually been promoted.
       </p>
       <p class="lede">
         Healthy host proof on the exercised machine still matters: <code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>,
         <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>. Fresh sterile published dogfood still showed warning-level proof noise,
-        so the honest story is “healthy runtime, compressed proof, no oversell.”
+        so the honest story is “healthy runtime, compressed proof, no oversell, bounded hot path.”
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="#lifecycle">See the lifecycle</a>
@@ -174,7 +174,7 @@
         <span class="signal">Pinned home</span>
         <span class="signal">Replay-gated promotion</span>
         <span class="signal">Bounded live context</span>
-        <span class="signal">Learned route_fn</span>
+        <span class="signal">Bounded hot path</span>
       </div>
     </section>
 
@@ -186,8 +186,8 @@
       <div class="stats-grid">
         <article class="stat-card">
           <span class="stat-label">Published pair</span>
-          <span class="stat-value">0.4.6 / 0.4.18</span>
-          <p><code>@openclawbrain/openclaw@0.4.6</code> and <code>@openclawbrain/cli@0.4.18</code> are the live released packages.</p>
+          <span class="stat-value">0.4.6 / 0.4.19</span>
+          <p><code>@openclawbrain/openclaw@0.4.6</code> and <code>@openclawbrain/cli@0.4.19</code> are the live released packages.</p>
         </article>
         <article class="stat-card">
           <span class="stat-label">Healthy host</span>
@@ -226,7 +226,7 @@
         <article class="card">
           <span class="card-label">3. Serve bounded context</span>
           <h3>Inject a small useful slice</h3>
-          <p>The runtime serves a bounded context block plus the learned routing decision instead of stuffing raw history into every prompt.</p>
+          <p>The runtime serves a bounded context block plus the learned routing decision instead of stuffing raw history into every prompt or calling a live LLM on every hop.</p>
         </article>
       </div>
     </section>
@@ -267,7 +267,7 @@
         <figure>
           <img src="../assets/canonical-brain-flow.svg" alt="Canonical OpenClawBrain flow from history through harvest and promotion into bounded live context." />
           <figcaption>
-            The runtime does not try to read the whole past on every turn. It harvests, promotes, and serves only the useful slice.
+            The runtime does not try to read the whole past on every turn. It harvests, promotes, and serves only the useful slice without a live LLM call on every hop.
           </figcaption>
         </figure>
       </div>
@@ -276,7 +276,7 @@
     <section class="panel">
       <h2>One sentence version</h2>
       <p class="section-copy">
-        OpenClawBrain makes OpenClaw remember what matters without turning every answer into a history search problem.
+        OpenClawBrain makes OpenClaw remember what matters without turning every answer into a history search problem or a live-LLM-per-hop loop.
       </p>
       <div class="link-grid">
         <a class="link-card" href="../install/">
