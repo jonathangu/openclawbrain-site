@@ -181,13 +181,13 @@
     <section class="panel">
       <h2>Current evidence ladder</h2>
       <p class="section-copy">
-        The public story is still rooted in one healthy reference host plus the published split packages. Keep those claims separate and the product story stays clean.
+        The public story should feel like one product: one visible OpenClawBrain release, one healthy reference host, and one install lane. The split internals are real, but they are not the headline.
       </p>
       <div class="stats-grid">
         <article class="stat-card">
-          <span class="stat-label">Published pair</span>
-          <span class="stat-value">0.4.6 / 0.4.19</span>
-          <p><code>@openclawbrain/openclaw@0.4.6</code> and <code>@openclawbrain/cli@0.4.19</code> are the live released packages.</p>
+          <span class="stat-label">Public release</span>
+          <span class="stat-value">0.4.20</span>
+          <p>OpenClawBrain <code>0.4.20</code> is the current public release line. Internal package versions exist, but they are maintainer detail.</p>
         </article>
         <article class="stat-card">
           <span class="stat-label">Healthy host</span>
@@ -232,19 +232,19 @@
     </section>
 
     <section class="panel">
-      <h2>What each piece owns</h2>
+      <h2>What each layer owns</h2>
       <p class="section-copy">
-        The split architecture is intentional and useful: runtime payload, operator CLI, and learned route function each do one job.
+        The split architecture is intentional and useful: runtime payload, operator front door, and learned route function each do one job.
       </p>
       <div class="role-grid">
         <article class="card">
           <span class="card-label">Runtime payload</span>
-          <h3><code>@openclawbrain/openclaw</code></h3>
+          <h3>OpenClaw runtime layer</h3>
           <p>The plugin package carries the runtime behavior that OpenClaw loads as an extension.</p>
         </article>
         <article class="card">
-          <span class="card-label">Operator CLI</span>
-          <h3><code>@openclawbrain/cli</code></h3>
+          <span class="card-label">Operator front door</span>
+          <h3><code>openclawbrain install</code></h3>
           <p>The CLI owns install, status, proof, and the host-side setup logic the plugin should not own.</p>
         </article>
         <article class="card">
@@ -254,7 +254,7 @@
         </article>
       </div>
       <div class="callout">
-        <strong>Clean separation:</strong> the split packages are the right product architecture. The front door should still feel like one product, but the internals stay safely divided.
+        <strong>Clean separation:</strong> the split internals are the right architecture. The front door should still feel like one product, and the internals should stay safely divided.
       </div>
     </section>
 
