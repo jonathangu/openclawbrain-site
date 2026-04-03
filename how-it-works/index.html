@@ -6,12 +6,12 @@
   <title>How OpenClawBrain Works | OpenClawBrain</title>
   <meta
     name="description"
-    content="OpenClawBrain attaches to a pinned OpenClaw home, harvests surfaced history into candidate packs, promotes only replay-passing structure, and serves bounded context through a learned route function without live-LLM hops on the hot path."
+    content="OpenClawBrain attaches to one OpenClaw home directory, learns from past work in the background, and serves a small bounded memory slice at runtime without calling a live LLM on every hop."
   />
   <meta property="og:title" content="How OpenClawBrain Works | OpenClawBrain" />
   <meta
     property="og:description"
-    content="The short lifecycle story: attach, harvest, promote, and serve bounded context without turning every prompt into a raw-history dump or a live-LLM-per-hop loop."
+    content="The lifecycle: attach to one home, learn from past work, promote what passes checks, and serve bounded context without raw-history overload."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/how-it-works/" />
@@ -148,93 +148,90 @@
       <a href="../install/">Install</a>
       <a href="../upgrade/">Upgrade</a>
       <a href="./" aria-current="page">How it works</a>
-      <a href="../proof/">Proof</a>
+      <a href="../proof/">Verify</a>
       <a href="../troubleshooting/">Troubleshooting</a>
       <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
     </nav>
 
     <section class="panel hero">
       <p class="eyebrow">OpenClawBrain lifecycle</p>
-      <h1>Harvest the past, promote only what replays, and serve a bounded graph-brain slice.</h1>
+      <h1>Learn from the past. Serve only what helps.</h1>
       <p class="lede">
-        OpenClawBrain is not a raw-history dump. It is a graph-brain memory layer that attaches to one pinned OpenClaw home, learns from surfaced history in the background,
-        and serves only a small useful slice through a learned route function when that slice has actually been promoted.
+        OpenClawBrain attaches to one OpenClaw home directory, learns from past work in the background, and serves a small useful memory slice at runtime. It does not dump raw history into the prompt or call a live LLM on every hop.
       </p>
       <p class="lede">
-        Healthy host proof on the exercised machine still matters: <code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>,
-        <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>. Fresh sterile published dogfood still showed warning-level proof noise,
-        so the honest story is “healthy runtime, compressed proof, no oversell, bounded hot path.”
+        The result: your agent gets relevant context without bloated prompts. What follows is the mechanism.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="#lifecycle">See the lifecycle</a>
-        <a class="button button-secondary" href="../proof/">Compare proof</a>
-        <a class="button button-secondary" href="../install/">Install / upgrade</a>
+        <a class="button button-secondary" href="../proof/">Verify</a>
+        <a class="button button-secondary" href="../install/">Install</a>
       </div>
       <div class="signal-row" aria-label="At a glance">
-        <span class="signal">Pinned home</span>
+        <span class="signal">One home directory</span>
         <span class="signal">Replay-gated promotion</span>
         <span class="signal">Bounded live context</span>
-        <span class="signal">Bounded hot path</span>
+        <span class="signal">No live-LLM hops</span>
       </div>
     </section>
 
     <section class="panel">
-      <h2>Current evidence ladder</h2>
+      <h2>Where things stand</h2>
       <p class="section-copy">
-        The public story should feel like one product: one visible OpenClawBrain release, one healthy reference host, and one install lane. The split internals are real, but they are not the headline.
+        One release, one healthy reference host, one install path.
       </p>
       <div class="stats-grid">
         <article class="stat-card">
-          <span class="stat-label">Public release</span>
-          <span class="stat-value">0.4.21</span>
-          <p>OpenClawBrain <code>0.4.21</code> is the current public release line. Internal package versions exist, but they are maintainer detail.</p>
+          <span class="stat-label">Current release</span>
+          <span class="stat-value">0.4.26</span>
+          <p><code>OpenClawBrain 0.4.26</code> is the current public release.</p>
         </article>
         <article class="stat-card">
           <span class="stat-label">Healthy host</span>
           <span class="stat-value">STATUS ok</span>
-          <p>The exercised host aligned status, load proof, serving state, and route availability.</p>
+          <p>The exercised host shows aligned status, load proof, serving state, and route availability with nonzero truth.</p>
         </article>
         <article class="stat-card">
-          <span class="stat-label">Proof boundary</span>
-          <span class="stat-value">warning-level noise</span>
-          <p>Fresh sterile published dogfood still had proof noise, so proof is evidence, not the only health signal.</p>
+          <span class="stat-label">Proof lane</span>
+          <span class="stat-value">Hardened</span>
+          <p>The proof lane is hardened. Detailed status now exposes <code>feedback</code> and <code>attrCover</code>.</p>
         </article>
         <article class="stat-card">
-          <span class="stat-label">Operator lane</span>
-          <span class="stat-value">install / restart / status / proof</span>
-          <p>The operator surface stays short on purpose; the lifecycle stays inspectable.</p>
+          <span class="stat-label">Install path</span>
+          <span class="stat-value">Four commands</span>
+          <p>Install, restart, status, proof. Same commands for new installs and upgrades.</p>
         </article>
       </div>
     </section>
 
     <section class="panel" id="lifecycle">
-      <h2>The lifecycle has three jobs</h2>
+      <h2>Three jobs</h2>
       <p class="section-copy">
-        If any explanation gets longer than this, it is probably losing the point.
+        The lifecycle does three things. Everything else is detail.
       </p>
       <div class="story-grid">
         <article class="card">
           <span class="card-label">1. Attach</span>
-          <h3>Install on one selected home</h3>
-          <p>The install lane converges the hook, pins the activation root, and makes the host inspectable.</p>
+          <h3>Install on one home directory</h3>
+          <p>The install command wires up the plugin, sets the memory layer root, and makes the host inspectable.</p>
         </article>
         <article class="card">
           <span class="card-label">2. Learn and promote</span>
-          <h3>Keep the learning off the hot path</h3>
-          <p>Surfaced history becomes candidate structure, replay gates it, and only promoted packs reach the live runtime.</p>
+          <h3>Keep learning off the live path</h3>
+          <p>Past work becomes candidate memory. Replay gates it. Only promoted packs reach the live runtime.</p>
         </article>
         <article class="card">
           <span class="card-label">3. Serve bounded context</span>
           <h3>Inject a small useful slice</h3>
-          <p>The runtime serves a bounded context block plus the learned routing decision instead of stuffing raw history into every prompt or calling a live LLM on every hop.</p>
+          <p>The runtime injects bounded context plus a learned routing decision instead of stuffing raw history into every prompt.</p>
         </article>
       </div>
     </section>
 
     <section class="panel">
-      <h2>What each layer owns</h2>
+      <h2>What each layer does</h2>
       <p class="section-copy">
-        The split architecture is intentional and useful: runtime payload, operator front door, and learned route function each do one job.
+        Three layers, each with one job.
       </p>
       <div class="role-grid">
         <article class="card">
@@ -243,57 +240,57 @@
           <p>The plugin package carries the runtime behavior that OpenClaw loads as an extension.</p>
         </article>
         <article class="card">
-          <span class="card-label">Operator front door</span>
+          <span class="card-label">CLI</span>
           <h3><code>openclawbrain install</code></h3>
-          <p>The CLI owns install, status, proof, and the host-side setup logic the plugin should not own.</p>
+          <p>The CLI handles install, status, proof, and the host-side setup that the plugin should not own.</p>
         </article>
         <article class="card">
           <span class="card-label">Learned route</span>
           <h3><code>routeFn</code></h3>
-          <p>The live runtime uses the learned route function to decide which bounded blocks to inject before prompt build.</p>
+          <p>The runtime uses a learned route function to decide which bounded memory blocks to inject before prompt build.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>Clean separation:</strong> the split internals are the right architecture. The front door should still feel like one product, and the internals should stay safely divided.
+        <strong>Why the split:</strong> the runtime layer, CLI, and route function are separate by design. They should stay separate internally, but the install path should feel like one product.
       </div>
     </section>
 
     <section class="panel">
-      <h2>What the graph is doing</h2>
+      <h2>The flow</h2>
       <p class="section-copy">
-        The graph should be understandable at a glance: history in, candidate packs through replay, promoted pack out, then bounded serving.
+        History in, candidates through replay, promoted pack out, bounded serving.
       </p>
       <div class="figure-grid">
         <figure>
-          <img src="../assets/canonical-brain-flow.svg" alt="Canonical OpenClawBrain flow from history through harvest and promotion into bounded live context." />
+          <img src="../assets/canonical-brain-flow.svg" alt="OpenClawBrain flow from history through harvest and promotion into bounded live context." />
           <figcaption>
-            The runtime does not try to read the whole past on every turn. It harvests, promotes, and serves only the useful slice without a live LLM call on every hop.
+            The runtime does not read the whole past on every turn. It harvests, promotes, and serves only the useful slice.
           </figcaption>
         </figure>
       </div>
     </section>
 
     <section class="panel">
-      <h2>One sentence version</h2>
+      <h2>One sentence</h2>
       <p class="section-copy">
-        OpenClawBrain makes OpenClaw remember what matters without turning every answer into a history search problem or a live-LLM-per-hop loop.
+        OpenClawBrain makes OpenClaw remember what matters without turning every answer into a history search or a live-LLM loop.
       </p>
       <div class="link-grid">
         <a class="link-card" href="../install/">
           <strong>Install</strong>
-          <span>Attach the runtime to a pinned OpenClaw home.</span>
+          <span>Attach the runtime to one OpenClaw home directory.</span>
         </a>
         <a class="link-card" href="../proof/">
-          <strong>Proof</strong>
-          <span>Compare the healthy host and the durable bundle.</span>
+          <strong>Verify</strong>
+          <span>Check the healthy reference and verify your own host.</span>
         </a>
         <a class="link-card" href="../troubleshooting/">
           <strong>Troubleshooting</strong>
-          <span>Use the recovery lane when status and proof drift apart.</span>
+          <span>Fast triage when status and verification drift apart.</span>
         </a>
         <a class="link-card" href="../upgrade/">
           <strong>Upgrade</strong>
-          <span>Rerun the same lane to repair an existing host.</span>
+          <span>Rerun the same commands on an existing install.</span>
         </a>
       </div>
     </section>

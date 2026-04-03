@@ -6,12 +6,12 @@
   <title>Upgrade | OpenClawBrain</title>
   <meta
     name="description"
-    content="Upgrade or repair OpenClawBrain on an existing host by rerunning the same pinned install lane, then restart and verify the runtime."
+    content="Upgrade or repair OpenClawBrain on an existing install by rerunning the same four commands, then restart and verify."
   />
   <meta property="og:title" content="Upgrade | OpenClawBrain" />
   <meta
     property="og:description"
-    content="The upgrade and repair page for OpenClawBrain: rerun the same install lane on the same home, restart, and check status."
+    content="Upgrade OpenClawBrain by rerunning the same install commands on the same home directory, then restart and check status."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/upgrade/" />
@@ -115,22 +115,22 @@
       <a href="../install/">Install</a>
       <a href="./" aria-current="page">Upgrade</a>
       <a href="../how-it-works/">How it works</a>
-      <a href="../proof/">Proof</a>
+      <a href="../proof/">Verify</a>
       <a href="../troubleshooting/">Troubleshooting</a>
       <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
     </nav>
 
     <section class="panel hero">
       <p class="eyebrow">OpenClawBrain upgrade / repair</p>
-      <h1>Rerun the same install lane on an existing host.</h1>
+      <h1>Same commands, existing install.</h1>
       <p class="lede">
-        Upgrade is not a second hidden workflow. When a host needs package refresh, hook repair, or boundary reconciliation, rerun the same pinned install lane and then restart and verify.
+        Upgrade is not a separate workflow. When a host needs a package refresh or a repair, rerun the same four commands on the same home directory, then restart and verify.
       </p>
       <p class="lede">
-        That keeps the product honest: one front door for a new host and the same front door for an existing one that needs repair.
+        One path for new installs. The same path for upgrades.
       </p>
       <div class="hero-actions">
-        <a class="button button-primary" href="#lane">See the lane</a>
+        <a class="button button-primary" href="#lane">See the commands</a>
         <a class="button button-secondary" href="../install/">New install</a>
         <a class="button button-secondary" href="../troubleshooting/">Troubleshoot</a>
       </div>
@@ -138,80 +138,80 @@
 
     <section class="panel">
       <h2>What upgrade means here</h2>
-      <p class="section-copy">The job is to get an existing host back into the same pinned, inspectable state as a clean install.</p>
+      <p class="section-copy">The goal is to get an existing install back to the same clean state as a fresh one.</p>
       <div class="cards">
         <article class="card">
           <span class="card-label">Refresh packages</span>
-          <h3>Pick up the current public release</h3>
-          <p class="small">The current public release line is <code>OpenClawBrain 0.4.21</code>.</p>
+          <h3>Pick up the current release</h3>
+          <p class="small">The current release is <code>OpenClawBrain 0.4.26</code>.</p>
         </article>
         <article class="card">
           <span class="card-label">Repair drift</span>
-          <h3>Re-converge the hook and activation root</h3>
-          <p class="small">The install lane repairs the host boundary without making you learn a new command family.</p>
+          <h3>Bring the install back into alignment</h3>
+          <p class="small">The install command repairs the plugin and memory layer without making you learn new commands.</p>
         </article>
         <article class="card">
           <span class="card-label">Verify again</span>
-          <h3>Restart, then read status before proof</h3>
-          <p class="small">If proof is still noisy after the rerun, detailed status is the quicker way to confirm the runtime is healthy.</p>
+          <h3>Restart, then check status</h3>
+          <p class="small">After the rerun, <code>status --detailed</code> is the fastest way to confirm the runtime is healthy.</p>
         </article>
       </div>
     </section>
 
     <section class="panel" id="lane">
-      <h2>Canonical upgrade lane</h2>
+      <h2>Upgrade commands</h2>
       <p class="section-copy">
-        Use the same command you would use for a new install. The difference is the reason you are running it, not the command surface.
+        The same commands you would use for a new install. The difference is why you are running them, not what you type.
       </p>
       <pre><code>openclawbrain install --openclaw-home '~/.openclaw'
 openclaw gateway restart
 openclawbrain status --openclaw-home '~/.openclaw' --detailed
 openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
       <div class="callout">
-        <strong>Upgrade truth:</strong> the published sterile dogfood lane still had warning-level proof noise, even though the healthy runtime signals were already present. That is why the upgrade page emphasizes restart and detailed status, not proof alone.
+        <strong>Note:</strong> a fresh install may still show <code>STATUS warn</code> in the proof output even when the runtime signals are healthy. That is expected. Use <code>status --detailed</code> as the primary health check, not proof alone.
       </div>
     </section>
 
     <section class="panel">
-      <h2>When this page is the right page</h2>
+      <h2>When to use this page</h2>
       <div class="cards">
         <article class="card">
-          <span class="card-label">Package drift</span>
-          <h3>Your installed host is older than the published release</h3>
-          <p class="small">Rerun the install lane so the host picks up the current runtime and CLI packages.</p>
+          <span class="card-label">Outdated packages</span>
+          <h3>Your install is older than the current release</h3>
+          <p class="small">Rerun the install so the host picks up the current runtime and CLI packages.</p>
         </article>
         <article class="card">
-          <span class="card-label">Hook drift</span>
-          <h3>The plugin or activation root needs repair</h3>
-          <p class="small">Use this page when the boundary is present but no longer converged cleanly.</p>
+          <span class="card-label">Plugin drift</span>
+          <h3>The plugin or memory layer needs repair</h3>
+          <p class="small">Use this page when the install is present but no longer working cleanly.</p>
         </article>
         <article class="card">
           <span class="card-label">Post-change verify</span>
-          <h3>You want to confirm the runtime actually loaded</h3>
-          <p class="small">Restart and detailed status tell you whether the live path is healthy before you bother with proof.</p>
+          <h3>You want to confirm the runtime still works</h3>
+          <p class="small">Restart and detailed status tell you whether the runtime is healthy before you need the full proof bundle.</p>
         </article>
       </div>
     </section>
 
     <section class="panel">
       <h2>Go deeper</h2>
-      <p class="section-copy">If the host still looks wrong after the rerun, go straight to troubleshooting or compare the healthy reference proof.</p>
+      <p class="section-copy">If the install still looks wrong after the rerun, go to troubleshooting or compare against the healthy reference.</p>
       <div class="link-grid">
         <a class="link-card" href="../install/">
           <strong>Install</strong>
-          <span>The same pinned-home lane for a new host.</span>
+          <span>The same commands for a new home directory.</span>
         </a>
         <a class="link-card" href="../proof/">
-          <strong>Proof</strong>
-          <span>The healthy reference host and compressed evidence.</span>
+          <strong>Verify</strong>
+          <span>The healthy reference and how to check your own host.</span>
         </a>
         <a class="link-card" href="../troubleshooting/">
           <strong>Troubleshooting</strong>
-          <span>Fast triage when the lane still diverges.</span>
+          <span>Fast triage when the install still looks wrong.</span>
         </a>
         <a class="link-card" href="../how-it-works/">
           <strong>How it works</strong>
-          <span>The lifecycle story behind the lane.</span>
+          <span>The lifecycle behind the commands.</span>
         </a>
       </div>
     </section>

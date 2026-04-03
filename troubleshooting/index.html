@@ -6,12 +6,12 @@
   <title>Troubleshooting | OpenClawBrain</title>
   <meta
     name="description"
-    content="Troubleshoot the OpenClawBrain lane when load proof, serving state, learned route availability, or published proof verdicts do not line up."
+    content="Troubleshoot OpenClawBrain when load proof, serving state, learned route, or proof verdicts do not match the healthy reference."
   />
   <meta property="og:title" content="Troubleshooting | OpenClawBrain" />
   <meta
     property="og:description"
-    content="Fast operator triage for the OpenClawBrain install lane: keep the home pinned, restart, compare detailed status, then decide whether proof is actually broken."
+    content="Fast triage for OpenClawBrain: keep the home directory the same, rerun install, restart, compare detailed status, then decide whether proof is the problem."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/troubleshooting/" />
@@ -117,62 +117,62 @@
       <a href="../install/">Install</a>
       <a href="../upgrade/">Upgrade</a>
       <a href="../how-it-works/">How it works</a>
-      <a href="../proof/">Proof</a>
+      <a href="../proof/">Verify</a>
       <a href="./" aria-current="page">Troubleshooting</a>
       <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
     </nav>
 
     <section class="panel hero">
       <p class="eyebrow">OpenClawBrain troubleshooting</p>
-      <h1>When the lane looks wrong, keep the scope tight and compare the right fields.</h1>
+      <h1>Something looks wrong. Keep the scope tight.</h1>
       <p class="lede">
-        The recovery loop is boring on purpose: keep the same selected home, rerun install, restart the gateway, compare detailed status, and only then decide whether proof is actually the problem.
+        The fix is almost always the same: keep the same home directory, rerun install, restart the gateway, and compare <code>status --detailed</code>. Only then decide whether proof is actually the problem.
       </p>
       <p class="lede">
-        A fresh sterile published host can still show <code>STATUS warn</code> even while <code>loadProof=status_probe_ready</code>,
-        <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code> are already healthy. That is the difference between a noisy proof surface and a broken runtime.
+        A fresh host can show <code>STATUS warn</code> even when <code>loadProof=status_probe_ready</code>,
+        <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code> are healthy. That is a noisy proof surface, not a broken runtime.
       </p>
       <div class="hero-actions">
-        <a class="button button-primary" href="../install/">Run the install lane</a>
-        <a class="button button-secondary" href="../proof/">Compare proof</a>
-        <a class="button button-secondary" href="../how-it-works/">Understand the lifecycle</a>
+        <a class="button button-primary" href="../install/">Run the install commands</a>
+        <a class="button button-secondary" href="../proof/">Check verification</a>
+        <a class="button button-secondary" href="../how-it-works/">How it works</a>
       </div>
     </section>
 
     <section class="panel">
       <h2>Fast triage</h2>
-      <p class="section-copy">Start with the signal that failed first. Do not change homes halfway through the diagnosis.</p>
+      <p class="section-copy">Start with the signal that failed. Do not change home directories in the middle of the diagnosis.</p>
       <div class="cards">
         <article class="card">
           <span class="card-label">Load not proven</span>
           <h3><code>loadProof=status_probe_ready</code> is missing</h3>
-          <p class="small">Rerun <code>openclawbrain install --openclaw-home '~/.openclaw'</code>, restart the gateway, and compare detailed status again.</p>
+          <p class="small">Rerun <code>openclawbrain install --openclaw-home '~/.openclaw'</code>, restart the gateway, and check <code>status --detailed</code> again.</p>
         </article>
         <article class="card">
-          <span class="card-label">Headline warn</span>
-          <h3><code>STATUS warn</code> can still be a fresh-host state</h3>
-          <p class="small">If detailed status already shows the healthy runtime signals, the host may be fine even when proof still emits warning-level noise.</p>
+          <span class="card-label">Status warns</span>
+          <h3><code>STATUS warn</code> on a fresh host</h3>
+          <p class="small">If detailed status shows the healthy runtime signals, the host is fine. Proof warnings on a fresh host are expected.</p>
         </article>
         <article class="card">
-          <span class="card-label">Serving state differs</span>
+          <span class="card-label">Not serving</span>
           <h3><code>serve state=serving_active_pack</code> is missing</h3>
-          <p class="small">That is not automatically an install failure. A fresh or lightly used host can still be pre-promotion.</p>
+          <p class="small">Not always an install failure. A fresh or lightly used host may not have promoted packs yet.</p>
         </article>
         <article class="card">
-          <span class="card-label">Route function missing</span>
+          <span class="card-label">No route function</span>
           <h3><code>routeFn available=yes</code> is missing</h3>
-          <p class="small">Check whether the runtime is already serving a promoted pack and compare with the proof page instead of assuming every host should match the exercised one.</p>
+          <p class="small">Check whether the runtime is serving a promoted pack. Compare against the <a href="../proof/">verify page</a> reference instead of assuming every host should match the exercised one.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>Use the same compare surface:</strong> the healthy host returned <code>STATUS ok</code> together with the load proof, serving state, and learned route. If your host does not, the next step is usually reinstall plus restart, not a new theory.
+        <strong>The healthy reference:</strong> the exercised host shows <code>STATUS ok</code> with load proof, serving state, and learned route all aligned. If yours does not, the next step is usually reinstall plus restart.
       </div>
     </section>
 
     <section class="panel">
-      <h2>Canonical recovery lane</h2>
+      <h2>Recovery commands</h2>
       <p class="section-copy">
-        When in doubt, rerun the public lane exactly. The restart command remains the only step without <code>--openclaw-home</code>.
+        When in doubt, rerun the four commands in order. The restart is the only step without <code>--openclaw-home</code>.
       </p>
       <pre><code>openclawbrain install --openclaw-home '~/.openclaw'
 openclaw gateway restart
@@ -181,18 +181,18 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
       <ul class="cards" style="grid-template-columns: repeat(3, minmax(0, 1fr)); list-style: none; padding-left: 0;">
         <li class="card">
           <span class="card-label">1. Install</span>
-          <h3>Repair the boundary</h3>
-          <p class="small">Re-run install to converge the hook and pin the host again.</p>
+          <h3>Repair the install</h3>
+          <p class="small">Rerun install to repair the plugin and memory layer.</p>
         </li>
         <li class="card">
           <span class="card-label">2. Restart</span>
-          <h3>Reload the live runtime</h3>
+          <h3>Reload the runtime</h3>
           <p class="small">Restart makes the gateway pick up the updated state.</p>
         </li>
         <li class="card">
           <span class="card-label">3. Verify</span>
-          <h3>Read status before proof</h3>
-          <p class="small">Detailed status is the faster truth surface when proof is noisy.</p>
+          <h3>Check status before proof</h3>
+          <p class="small">Detailed status is the faster check when proof output is noisy.</p>
         </li>
       </ul>
     </section>
@@ -201,33 +201,33 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
       <h2>Two mistakes to avoid</h2>
       <div class="cards">
         <article class="card">
-          <span class="card-label">Scope drift</span>
-          <h3>Changing the selected home mid-debug</h3>
-          <p class="small">If install, status, and proof do not point at the same home, you are no longer comparing the same boundary.</p>
+          <span class="card-label">Wrong directory</span>
+          <h3>Changing the home directory mid-debug</h3>
+          <p class="small">If install, status, and proof do not point at the same home directory, you are comparing different installs.</p>
         </article>
         <article class="card">
-          <span class="card-label">Package drift</span>
-          <h3>Managing the plugin package without re-converging install</h3>
-          <p class="small">If you bypassed the install lane and changed plugin files directly, rerun the install lane afterward so the hook and activation root converge again.</p>
+          <span class="card-label">Manual edits</span>
+          <h3>Editing plugin files directly</h3>
+          <p class="small">If you changed plugin files by hand, rerun the install commands so the plugin and memory layer get back in sync.</p>
         </article>
       </div>
     </section>
 
     <section class="panel">
       <h2>Go deeper</h2>
-      <p class="section-copy">Use the install lane for the main flow, the proof page for the healthy reference surface, and the lifecycle guide when you want the architecture story.</p>
+      <p class="section-copy">Install for the commands, verify for the healthy reference, how-it-works for the architecture.</p>
       <div class="link-grid">
         <a class="link-card" href="../install/">
-          <strong>Install / upgrade</strong>
-          <span>The pinned-home front door and the safe repair lane.</span>
+          <strong>Install</strong>
+          <span>The four commands for a new or existing home directory.</span>
         </a>
         <a class="link-card" href="../proof/">
-          <strong>Proof</strong>
-          <span>The healthy reference host and the durable bundle boundary.</span>
+          <strong>Verify</strong>
+          <span>The healthy reference and the durable proof bundle.</span>
         </a>
         <a class="link-card" href="../how-it-works/">
           <strong>How it works</strong>
-          <span>The lifecycle from harvest to promotion and bounded serving.</span>
+          <span>The lifecycle from learning to promotion and bounded serving.</span>
         </a>
         <a class="link-card" href="https://github.com/jonathangu/openclawbrain">
           <strong>GitHub</strong>

@@ -6,12 +6,12 @@
   <title>Install | OpenClawBrain</title>
   <meta
     name="description"
-    content="Install OpenClawBrain on one pinned OpenClaw home, then restart, verify status, and capture proof only when you need a durable bundle."
+    content="Install OpenClawBrain on one OpenClaw home directory in four commands: install, restart, check status, verify."
   />
   <meta property="og:title" content="Install | OpenClawBrain" />
   <meta
     property="og:description"
-    content="The install front door for OpenClawBrain: pin the home, converge the hook, restart the gateway, and verify the runtime."
+    content="Install OpenClawBrain on one OpenClaw home directory, restart the gateway, and verify the runtime is loaded."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/install/" />
@@ -115,103 +115,103 @@
       <a href="./" aria-current="page">Install</a>
       <a href="../upgrade/">Upgrade</a>
       <a href="../how-it-works/">How it works</a>
-      <a href="../proof/">Proof</a>
+      <a href="../proof/">Verify</a>
       <a href="../troubleshooting/">Troubleshooting</a>
       <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
     </nav>
 
     <section class="panel hero">
       <p class="eyebrow">OpenClawBrain install</p>
-      <h1>Attach OpenClawBrain to one pinned OpenClaw home.</h1>
+      <h1>Install OpenClawBrain in four commands.</h1>
       <p class="lede">
-        This is the front door for a new host. It converges the hook, pins the activation root, and leaves you with the same simple operator lane every time: install, restart, status, proof.
+        Pick one OpenClaw home directory, run the install, restart the gateway, and check that the runtime loaded. That is the whole process.
       </p>
       <p class="lede">
-        The install lane also doubles as the safe repair lane for an existing host. That is deliberate: one command, one boundary, no second workflow to memorize.
+        These same four commands also work as the repair path. If something drifts, rerun them on the same home directory instead of learning a second workflow.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="#commands">See the commands</a>
         <a class="button button-secondary" href="../upgrade/">Upgrade / repair</a>
-        <a class="button button-secondary" href="../proof/">Compare proof</a>
+        <a class="button button-secondary" href="../proof/">Verify it works</a>
       </div>
     </section>
 
     <section class="panel">
       <h2>What install does</h2>
-      <p class="section-copy">A successful install gives you a pinned host boundary, an attached runtime, and a clean path to restart and verify.</p>
+      <p class="section-copy">A successful install attaches the memory runtime to your chosen OpenClaw home directory and leaves it ready to verify.</p>
       <div class="cards">
         <article class="card">
-          <span class="card-label">Pin the home</span>
-          <h3>Keep one selected OpenClaw home in scope</h3>
-          <p class="small">Use the same <code>--openclaw-home</code> value every time so the boundary stays readable.</p>
+          <span class="card-label">Choose one home</span>
+          <h3>Point every command at the same directory</h3>
+          <p class="small">Use the same <code>--openclaw-home</code> value every time so the install stays clean and inspectable.</p>
         </article>
         <article class="card">
-          <span class="card-label">Converge the hook</span>
-          <h3>Repair the attachment path</h3>
-          <p class="small">The install command aligns the hook and the activation root for the selected host.</p>
+          <span class="card-label">Attach the runtime</span>
+          <h3>Connect the memory layer to OpenClaw</h3>
+          <p class="small">The install command wires up the plugin and memory layer for the selected home directory.</p>
         </article>
         <article class="card">
-          <span class="card-label">Prepare verification</span>
-          <h3>Leave the host ready for restart and status</h3>
-          <p class="small">Install is not the last step. Restart and detailed status make the live runtime truth visible.</p>
+          <span class="card-label">Ready to verify</span>
+          <h3>Restart and check status right after</h3>
+          <p class="small">Install is not the last step. Restart and detailed status confirm the runtime is actually loaded and serving.</p>
         </article>
       </div>
     </section>
 
     <section class="panel" id="commands">
-      <h2>Canonical install lane</h2>
+      <h2>Install commands</h2>
       <p class="section-copy">
-        Run these in order on the same pinned home. The restart command is the only step that does not take <code>--openclaw-home</code>.
+        Run these in order on the same home directory. The restart command is the only step without <code>--openclaw-home</code>.
       </p>
       <pre><code>openclawbrain install --openclaw-home '~/.openclaw'
 openclaw gateway restart
 openclawbrain status --openclaw-home '~/.openclaw' --detailed
 openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
       <div class="callout">
-        <strong>Truth note:</strong> the public release line is <code>OpenClawBrain 0.4.21</code>. The install lane is still: run <code>openclawbrain install</code>, restart the gateway, then trust <code>status --detailed</code> as the quick live check; use <code>proof</code> when you need a durable evidence bundle.
+        <strong>Version:</strong> the current release is <code>OpenClawBrain 0.4.26</code>. The install path is: run <code>openclawbrain install</code>, restart the gateway, then use <code>status --detailed</code> as the fast live check. Use <code>proof</code> when you need a durable evidence bundle.
       </div>
     </section>
 
     <section class="panel">
-      <h2>When this page is the right page</h2>
+      <h2>When to use this page</h2>
       <div class="cards">
         <article class="card">
-          <span class="card-label">New host</span>
+          <span class="card-label">New install</span>
           <h3>You are installing for the first time</h3>
-          <p class="small">Use this route when the host does not have OpenClawBrain attached yet.</p>
+          <p class="small">Start here when the home directory does not have OpenClawBrain attached yet.</p>
         </article>
         <article class="card">
-          <span class="card-label">Existing host</span>
-          <h3>You want the same lane for repair</h3>
-          <p class="small">Rerun install on the same home when the hook or packaging drifts.</p>
+          <span class="card-label">Repair</span>
+          <h3>Something drifted on an existing install</h3>
+          <p class="small">Rerun the same four commands on the same home directory to bring it back into a clean state.</p>
         </article>
         <article class="card">
           <span class="card-label">Verify next</span>
-          <h3>You want to check the live runtime after install</h3>
-          <p class="small">Go straight to status after restart so you know whether the runtime actually loaded.</p>
+          <h3>You want to confirm the runtime loaded</h3>
+          <p class="small">After restart, check <code>status --detailed</code> to confirm the runtime is active.</p>
         </article>
       </div>
     </section>
 
     <section class="panel">
       <h2>Go deeper</h2>
-      <p class="section-copy">If you already have a host, the upgrade page is the same lane with a different reason for running it.</p>
+      <p class="section-copy">Already installed? The upgrade page covers the same commands for an existing host.</p>
       <div class="link-grid">
         <a class="link-card" href="../upgrade/">
           <strong>Upgrade / repair</strong>
-          <span>Rerun the same install lane on an existing host.</span>
+          <span>Rerun the same commands on an existing install.</span>
         </a>
         <a class="link-card" href="../how-it-works/">
           <strong>How it works</strong>
-          <span>The lifecycle story from harvest to bounded serving.</span>
+          <span>The lifecycle from learning to bounded serving.</span>
         </a>
         <a class="link-card" href="../proof/">
-          <strong>Proof</strong>
-          <span>The healthy reference host and compressed proof signals.</span>
+          <strong>Verify</strong>
+          <span>The healthy reference and how to check your own host.</span>
         </a>
         <a class="link-card" href="../troubleshooting/">
           <strong>Troubleshooting</strong>
-          <span>Fast triage when status or proof does not line up.</span>
+          <span>Fast triage when status or verification do not line up.</span>
         </a>
       </div>
     </section>

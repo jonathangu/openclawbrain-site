@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Proof | OpenClawBrain</title>
+  <title>Verify | OpenClawBrain</title>
   <meta
     name="description"
-    content="Compare your host with the healthy OpenClawBrain reference, then capture a durable proof bundle only when you need evidence beyond terminal scrollback."
+    content="Verify that OpenClawBrain is running correctly by comparing your host against the healthy reference signals, then capture a durable proof bundle when needed."
   />
-  <meta property="og:title" content="Proof | OpenClawBrain" />
+  <meta property="og:title" content="Verify | OpenClawBrain" />
   <meta
     property="og:description"
-    content="Compressed proof signals, the healthy host reference, and the current published boundary for OpenClawBrain."
+    content="Check your OpenClawBrain install against the healthy reference. Status first, proof bundle when you need a durable record."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/proof/" />
@@ -120,133 +120,130 @@
       <a href="../install/">Install</a>
       <a href="../upgrade/">Upgrade</a>
       <a href="../how-it-works/">How it works</a>
-      <a href="./" aria-current="page">Proof</a>
+      <a href="./" aria-current="page">Verify</a>
       <a href="../troubleshooting/">Troubleshooting</a>
       <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
     </nav>
 
     <section class="panel hero">
-      <p class="eyebrow">OpenClawBrain proof</p>
-      <h1>Compare your host against the healthy reference, then decide what to trust.</h1>
+      <p class="eyebrow">OpenClawBrain verify</p>
+      <h1>Check that it is running and doing its job.</h1>
       <p class="lede">
-        Proof keeps the same pinned home and compresses the evidence into a durable bundle. The fastest path is still status first,
-        then proof only when you want a record you can keep.
+        After install, <code>status --detailed</code> is the fast check. It tells you whether the runtime is loaded, serving, and routing. The <code>proof</code> command captures a durable bundle when you need a record you can keep.
       </p>
       <p class="lede">
-        The healthy reference host returned the same four core signals together: <code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>,
-        <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>. Fresh sterile published dogfood still had warning-level proof noise,
-        so the page stays honest about where the current truth is strongest.
+        The proof lane is now hardened. Detailed status exposes <code>feedback</code> and <code>attrCover</code>, and the exercised host shows nonzero truth across all four core signals.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="../install/">Go to install</a>
         <a class="button button-secondary" href="../troubleshooting/">Troubleshoot</a>
-        <a class="button button-secondary" href="../how-it-works/">Read the lifecycle</a>
+        <a class="button button-secondary" href="../how-it-works/">How it works</a>
       </div>
     </section>
 
     <section class="panel">
-      <h2>Healthy reference host</h2>
+      <h2>Healthy reference</h2>
       <p class="section-copy">
-        These are the signals that matter most when you compare a real host. Pack ids and counters can vary; the four core lines should be the fast read.
+        These four signals are what matter. If your host shows all four, the runtime is working. Pack ids and counters vary by host; the four lines below are the fast read.
       </p>
-      <div class="signal-grid" aria-label="Reference proof signals">
+      <div class="signal-grid" aria-label="Reference signals">
         <article class="signal-card">
           <strong>Status</strong>
           <span class="signal-value">STATUS ok</span>
-          <p class="small">The detailed status surface is healthy enough to trust for the selected home.</p>
+          <p class="small">The runtime is healthy for the selected home directory.</p>
         </article>
         <article class="signal-card">
           <strong>Load proof</strong>
           <span class="signal-value">loadProof=status_probe_ready</span>
-          <p class="small">Runtime load is proven, not just inferred from filesystem state.</p>
+          <p class="small">The runtime is proven loaded, not just installed on disk.</p>
         </article>
         <article class="signal-card">
           <strong>Serving state</strong>
           <span class="signal-value">serve state=serving_active_pack</span>
-          <p class="small">The runtime is serving a promoted pack instead of mutating hot-path truth.</p>
+          <p class="small">The runtime is serving a promoted memory pack.</p>
         </article>
         <article class="signal-card">
           <strong>Learned route</strong>
           <span class="signal-value">routeFn available=yes</span>
-          <p class="small">The serve path has a learned route function available on the healthy host.</p>
+          <p class="small">The learned route function is available and active.</p>
         </article>
       </div>
       <pre><code>STATUS ok
 loadProof=status_probe_ready
 serve state=serving_active_pack
 routeFn available=yes</code></pre>
-      <p class="caption">Reference output distilled from the healthy exercised host on March 27, 2026.</p>
+      <p class="caption">Reference output from the healthy exercised host.</p>
     </section>
 
     <section class="panel">
-      <h2>Current release boundary</h2>
+      <h2>Current release</h2>
       <p class="section-copy">
-        Keep the live host, canonical repo, and published package separate. That is the only way the proof story stays truthful.
+        The exercised host, the published package, and the repo are three separate things. Keeping them separate is what makes verification honest.
       </p>
       <div class="cards">
         <article class="card">
-          <span class="card-label">Published today</span>
-          <h3>Current public release</h3>
-          <p class="small"><code>OpenClawBrain 0.4.21</code> is the current public release line. Internal package versions still exist, but they are not the public story.</p>
+          <span class="card-label">Release</span>
+          <h3><code>OpenClawBrain 0.4.26</code></h3>
+          <p class="small">The current public release. Internal package versions exist but are not the public story.</p>
         </article>
         <article class="card">
-          <span class="card-label">Sterile dogfood</span>
-          <h3>Runtime proved even when proof stayed noisy</h3>
-          <p class="small">A fresh sterile install reached <code>runtime=proven</code>, <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code> after a clean restart.</p>
+          <span class="card-label">Exercised host</span>
+          <h3>Nonzero truth across all four signals</h3>
+          <p class="small">The exercised host shows <code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>. Detailed status now exposes <code>feedback</code> and <code>attrCover</code>.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>Residual warning:</strong> the published sterile lane still showed warning-level proof noise. That is why the site treats detailed status as the stronger truth surface when proof does not fully converge.
+        <strong>Fresh-host note:</strong> a fresh install may show <code>STATUS warn</code> even when the runtime signals are healthy. That is expected. Use <code>status --detailed</code> as the primary check, not proof alone.
       </div>
     </section>
 
     <section class="panel">
-      <h2>What proof is for</h2>
-      <p class="section-copy">Use proof when you need durable evidence or a shareable bundle, not because it should be the only health check.</p>
+      <h2>When to use each command</h2>
+      <p class="section-copy">Use <code>status --detailed</code> for the fast check. Use <code>proof</code> when you need a durable record.</p>
       <ul class="list">
-        <li><code>bundle verdict: success_and_proven</code> means install, runtime, breadcrumbs, load proof, and detailed status aligned in the captured bundle.</li>
-        <li>When a fresh host looks healthy but proof still warns, read <code>status --detailed</code> first and keep the bundle for later comparison.</li>
-        <li>The bundle writes <code>summary.md</code>, <code>verdict.json</code>, <code>steps.json</code>, logs, breadcrumbs, and runtime-load proof into one directory.</li>
-        <li>Pack ids and counters are host-state dependent. The healthy signals matter more than exact numbers.</li>
+        <li><code>status --detailed</code> is the fast live check. It now exposes <code>feedback</code> and <code>attrCover</code> alongside the four core signals.</li>
+        <li><code>proof</code> captures a durable bundle: <code>summary.md</code>, <code>verdict.json</code>, <code>steps.json</code>, logs, and runtime-load proof in one directory.</li>
+        <li><code>bundle verdict: success_and_proven</code> means install, runtime, load proof, and detailed status all aligned in the captured bundle.</li>
+        <li>Pack ids and counters depend on host state. The four healthy signals matter more than exact numbers.</li>
       </ul>
       <div class="callout">
-        <strong>Replay reality check:</strong> checked replay already beats <code>no_brain</code> on real traces, and <code>learned_route</code> has real-trace wins. The replay set is still small and mixed, so the broad winner is not settled and direct spend savings are not yet proven.
+        <strong>Current evidence:</strong> checked replay beats <code>no_brain</code> on real traces, and <code>learned_route</code> has real-trace wins. The replay set is still growing, so lower cost is plausible but direct spend savings are not yet proven.
       </div>
     </section>
 
     <section class="panel">
-      <h2>Run the same comparison on your host</h2>
+      <h2>Run the same check on your host</h2>
       <p class="section-copy">
-        Keep the home pinned, restart once, then compare status before you trust proof.
+        Keep the home directory the same, restart once, then compare status before you run proof.
       </p>
       <div class="cards">
         <article class="card">
-          <span class="card-label">Canonical commands</span>
-          <h3>Install, restart, verify, prove</h3>
+          <span class="card-label">Commands</span>
+          <h3>Install, restart, status, proof</h3>
           <pre><code>openclawbrain install --openclaw-home '~/.openclaw'
 openclaw gateway restart
 openclawbrain status --openclaw-home '~/.openclaw' --detailed
 openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         </article>
         <article class="card">
-          <span class="card-label">How to read it</span>
-          <h3>Proof is the durable record, not the first read</h3>
-          <p class="small">If <code>status --detailed</code> already shows the healthy signals, proof should mostly confirm and package them, even if it still emits warning-level noise on a fresh host.</p>
+          <span class="card-label">How to read the output</span>
+          <h3>Status first, proof second</h3>
+          <p class="small">If <code>status --detailed</code> already shows the four healthy signals, the proof bundle should confirm and package them. A fresh host may still emit warnings in the proof output.</p>
         </article>
       </div>
     </section>
 
     <section class="panel">
       <h2>Go deeper</h2>
-      <p class="section-copy">Use install for the lane, how-it-works for the lifecycle, and troubleshooting when proof or status drift.</p>
+      <p class="section-copy">Install for the commands, how-it-works for the mechanism, troubleshooting when things do not line up.</p>
       <div class="link-grid">
         <a class="link-card" href="../install/">
-          <strong>Install / upgrade</strong>
-          <span>The front door for a pinned home and the safe repair lane.</span>
+          <strong>Install</strong>
+          <span>The four commands for a new or existing home directory.</span>
         </a>
         <a class="link-card" href="../how-it-works/">
           <strong>How it works</strong>
-          <span>The lifecycle story from harvest through promotion and bounded serving.</span>
+          <span>The lifecycle from learning through promotion and bounded serving.</span>
         </a>
         <a class="link-card" href="../troubleshooting/">
           <strong>Troubleshooting</strong>
