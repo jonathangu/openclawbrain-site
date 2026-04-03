@@ -84,11 +84,12 @@
       border-color: rgba(149, 240, 193, 0.6); color: #042312;
     }
     .button-secondary { border-color: rgba(139, 211, 255, 0.35); }
-    .stats-grid, .story-grid, .role-grid, .link-grid, .figure-grid { display: grid; gap: 14px; margin-top: 18px; }
+    .stats-grid, .story-grid, .role-grid, .link-grid, .figure-grid, .flow-rail { display: grid; gap: 14px; margin-top: 18px; }
     .stats-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .story-grid, .role-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .link-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .figure-grid { grid-template-columns: 1fr; }
+    .flow-rail { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .card, .stat-card, .link-card, figure {
       background: var(--panel-soft); border: 1px solid var(--line); border-radius: 20px; padding: 20px;
     }
@@ -118,6 +119,24 @@
       border-radius: 18px; color: var(--muted); margin-top: 16px; padding: 16px 18px;
     }
     .callout strong { color: var(--green); }
+    .detail-list { color: var(--muted); margin: 12px 0 0 18px; }
+    .detail-list li { margin-bottom: 10px; }
+    .flow-step {
+      background: linear-gradient(180deg, rgba(12, 24, 36, 0.98), rgba(8, 16, 25, 0.98));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 20px;
+    }
+    .flow-step p { color: var(--muted); margin-bottom: 0; }
+    .step-number {
+      color: var(--amber);
+      display: inline-block;
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
     .link-card { color: inherit; display: block; text-decoration: none; }
     .link-card strong { display: block; margin-bottom: 8px; }
     .link-card span { color: var(--muted); }
@@ -126,7 +145,7 @@
     figcaption { color: var(--muted); margin-top: 12px; }
     .site-footer { color: var(--muted); font-size: 0.94rem; padding: 8px 4px 0; text-align: center; }
     @media (max-width: 960px) {
-      .stats-grid, .story-grid, .role-grid, .link-grid { grid-template-columns: 1fr; }
+      .stats-grid, .story-grid, .role-grid, .link-grid, .flow-rail { grid-template-columns: 1fr; }
     }
     @media (max-width: 720px) {
       main { padding-left: 16px; padding-right: 16px; }
@@ -207,75 +226,167 @@
     </section>
 
     <section class="panel" id="lifecycle">
-      <h2>Three jobs</h2>
+      <h2>The system in one pass</h2>
       <p class="section-copy">
-        The lifecycle does three things. Everything else is detail.
+        OpenClawBrain does not do one thing. It runs a loop: store the past, turn it into a graph, learn better routes in the background, promote what survives replay, then serve only the small slice that helps now.
+      </p>
+      <div class="flow-rail">
+        <article class="flow-step">
+          <span class="step-number">Step 1</span>
+          <h3>Store the raw material</h3>
+          <p>It keeps transcripts, corrections, documents, tool traces, status evidence, and operator notes as durable memory instead of leaving them trapped in old chats.</p>
+        </article>
+        <article class="flow-step">
+          <span class="step-number">Step 2</span>
+          <h3>Turn memory into a graph</h3>
+          <p>Nodes hold facts, corrections, examples, traces, and artifacts. Edges start simple, then become useful: override, evidence, related step, good next hop.</p>
+        </article>
+        <article class="flow-step">
+          <span class="step-number">Step 3</span>
+          <h3>Learn better routes off the hot path</h3>
+          <p>Replay, labels, and the async teacher score traversal choices in the background. Candidate packs improve there, not in the live user request.</p>
+        </article>
+        <article class="flow-step">
+          <span class="step-number">Step 4</span>
+          <h3>Serve a bounded useful slice</h3>
+          <p>The runtime injects the few pieces that matter before the same mistake repeats. It does not dump the whole past into every prompt.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>The graph is the point</h2>
+      <p class="section-copy">
+        This is not just a bigger transcript store. OpenClawBrain organizes memory into a graph so retrieval can move from “what happened near what” to “what helps answer what.”
       </p>
       <div class="story-grid">
         <article class="card">
-          <span class="card-label">1. Attach</span>
-          <h3>Install on one home directory</h3>
-          <p>The install command wires up the plugin, sets the memory layer root, and makes the host inspectable.</p>
+          <span class="card-label">Nodes</span>
+          <h3>What gets stored</h3>
+          <p>Corrections, examples, tool results, docs, status facts, summaries, and replay evidence can all become nodes.</p>
         </article>
         <article class="card">
-          <span class="card-label">2. Learn and promote</span>
-          <h3>Keep learning off the live path</h3>
-          <p>Past work becomes candidate memory. Replay gates it. Only promoted packs reach the live runtime.</p>
+          <span class="card-label">Edges</span>
+          <h3>How memory gets structure</h3>
+          <p>Edges start as time and task adjacency. Later they can mean override, support, belongs-with, or likely-next-useful-step.</p>
         </article>
         <article class="card">
-          <span class="card-label">3. Serve bounded context</span>
-          <h3>Inject a small useful slice</h3>
-          <p>The runtime injects bounded context plus a learned routing decision instead of stuffing raw history into every prompt.</p>
+          <span class="card-label">Packs</span>
+          <h3>What the runtime actually serves</h3>
+          <p>The live system serves promoted packs, not half-written state. That keeps rollback simple and the hot path predictable.</p>
         </article>
       </div>
     </section>
 
     <section class="panel">
-      <h2>What each layer does</h2>
+      <h2>How graph traversal works</h2>
       <p class="section-copy">
-        Three layers, each with one job.
+        Query-time traversal must stay fast. So the runtime does not ask a live LLM what to do at every hop. It uses a small learned route function to decide which branches to expand, which memories to pull forward, and when to stop.
       </p>
       <div class="role-grid">
         <article class="card">
-          <span class="card-label">Runtime payload</span>
-          <h3>OpenClaw runtime layer</h3>
-          <p>The plugin package carries the runtime behavior that OpenClaw loads as an extension.</p>
+          <span class="card-label">Runtime routeFn</span>
+          <h3>Fast local policy</h3>
+          <p>The runtime route function is the hot-path policy. It scores edges against the current query and decides what is worth expanding.</p>
         </article>
         <article class="card">
-          <span class="card-label">CLI</span>
-          <h3><code>openclawbrain install</code></h3>
-          <p>The CLI handles install, status, proof, and the host-side setup that the plugin should not own.</p>
+          <span class="card-label">Branching</span>
+          <h3>More than top-k search</h3>
+          <p>Traversal can fan out across multiple edges. It can stop one branch early and keep exploring another when that is better for the final answer.</p>
         </article>
         <article class="card">
-          <span class="card-label">Learned route</span>
-          <h3><code>routeFn</code></h3>
-          <p>The runtime uses a learned route function to decide which bounded memory blocks to inject before prompt build.</p>
+          <span class="card-label">STOP matters</span>
+          <h3>Knowing when not to keep digging</h3>
+          <p>A good memory system learns when more retrieval will help and when it will only add latency, noise, or token cost.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>Why the split:</strong> the runtime layer, CLI, and route function are separate by design. They should stay separate internally, but the install path should feel like one product.
+        <strong>Important:</strong> the runtime path should feel intelligent without paying the price of per-hop live LLM calls. That is why the learned <code>routeFn</code> is central.
       </div>
     </section>
 
     <section class="panel">
-      <h2>The flow</h2>
+      <h2>Where labels come from</h2>
       <p class="section-copy">
-        History in, candidates through replay, promoted pack out, bounded serving.
+        OpenClawBrain does not trust one source of feedback. It combines several, with a clear hierarchy.
       </p>
-      <div class="figure-grid">
-        <figure>
-          <img src="../assets/canonical-brain-flow.svg" alt="OpenClawBrain flow from history through harvest and promotion into bounded live context." />
-          <figcaption>
-            The runtime does not read the whole past on every turn. It harvests, promotes, and serves only the useful slice.
-          </figcaption>
-        </figure>
+      <ul class="detail-list">
+        <li><strong>Human feedback</strong> is strongest. If a user corrects the agent, that should outweigh stale recap material.</li>
+        <li><strong>Self-learning</strong> matters when the system can see that a route helped or hurt a later outcome.</li>
+        <li><strong>Harvester signals</strong> capture durable structure from the artifacts themselves.</li>
+        <li><strong>Async teacher labels</strong> provide dense weak supervision at many traversal decision points.</li>
+      </ul>
+      <p class="section-copy">
+        In practice, the teacher provides most of the volume. Human correction provides the highest trust.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>The async teacher and dreaming loop</h2>
+      <p class="section-copy">
+        The teacher is not there to slow down the live runtime. It runs in the background. That is where the dreaming loop lives.
+      </p>
+      <div class="story-grid">
+        <article class="card">
+          <span class="card-label">Replay</span>
+          <h3>Revisit real past queries</h3>
+          <p>Replay asks which paths were useful, which branches were distractions, and which stops were right.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Teacher</span>
+          <h3>Label decision points</h3>
+          <p>An async teacher model can label route choices densely without blocking the live request path.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Dreaming</span>
+          <h3>Keep improving off to the side</h3>
+          <p>Dreaming is the passive background loop: generate more labels, update the route policy, and apply improvements when state locks allow.</p>
+        </article>
       </div>
+    </section>
+
+    <section class="panel">
+      <h2>Promotion is the safety rail</h2>
+      <p class="section-copy">
+        Learning does not write straight into the live runtime. Candidate packs have to survive replay and health checks first.
+      </p>
+      <div class="role-grid">
+        <article class="card">
+          <span class="card-label">Candidate</span>
+          <h3>Build new memory off-path</h3>
+          <p>New graph state and route updates land in candidate packs first.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Replay-gated</span>
+          <h3>Check whether the route is actually better</h3>
+          <p>Replay and health checks decide whether a candidate route helps, hurts, or should stay out of the live path.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Promoted</span>
+          <h3>Serve only what passed</h3>
+          <p>The runtime serves the promoted pack. That is what makes rollback and operator proof possible.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>What makes OCB special</h2>
+      <p class="section-copy">
+        The trick is not “more memory.” The trick is learned bounded retrieval.
+      </p>
+      <ul class="detail-list">
+        <li>It uses a graph, not just a flat transcript dump.</li>
+        <li>It learns a fast local route function instead of depending on live per-hop LLM calls.</li>
+        <li>It keeps teaching and labeling off the hot path.</li>
+        <li>It promotes and serves packs instead of mutating live memory directly.</li>
+        <li>It can fail open. If memory is unavailable, the agent still runs.</li>
+      </ul>
     </section>
 
     <section class="panel">
       <h2>One sentence</h2>
       <p class="section-copy">
-        OpenClawBrain makes OpenClaw remember what matters without turning every answer into a history search or a live-LLM loop.
+        OpenClawBrain gives OpenClaw useful memory: a graph that learns better routes in the background and serves the right small slice at runtime.
       </p>
       <div class="link-grid">
         <a class="link-card" href="../install/">
