@@ -185,20 +185,20 @@ routeFn available=yes</code></pre>
       <div class="cards">
         <article class="card">
           <span class="card-label">Release</span>
-          <h3><code>OpenClawBrain 0.4.29</code></h3>
-          <p class="small">The current public release. Internal package versions exist but are not the public story.</p>
+          <h3><code>OpenClawBrain 0.4.30</code></h3>
+          <p class="small">The current public release. Internal package versions exist but are not the public story. 0.4.30 makes daemon-vs-hook skew explicit in status and proof output.</p>
         </article>
         <article class="card">
           <span class="card-label">Exercised host</span>
           <h3>Nonzero truth across all four signals</h3>
-          <p class="small">The exercised host shows <code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>. Detailed status now exposes <code>feedback</code> and <code>attrCover</code>.</p>
+          <p class="small">The exercised host shows <code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>. Detailed status now exposes <code>feedback</code>, <code>attrCover</code>, and daemon-vs-hook alignment.</p>
         </article>
       </div>
       <div class="callout">
         <strong>Teacher v3 truth boundary:</strong> shipped today means the substrate is complete, replay-gated promotion is live, and bounded canary discipline is part of the runtime/proof path. Target-state stays named as target-state wherever broader examples or rollout shapes are still future work.
       </div>
       <div class="callout">
-        <strong>Fresh-host note:</strong> a fresh install may show <code>STATUS warn</code> even when the runtime signals are healthy. That is expected. Use <code>status --detailed</code> as the primary check, not proof alone.
+        <strong>Fresh-host note:</strong> a fresh install may show <code>STATUS warn</code> even when the runtime signals are healthy. That is expected. In 0.4.30, half-converged states (daemon running but hook not wired, or vice versa) now block with an explicit message instead of silently passing. Use <code>status --detailed</code> as the primary check, not proof alone.
       </div>
     </section>
 
@@ -206,7 +206,7 @@ routeFn available=yes</code></pre>
       <h2>When to use each command</h2>
       <p class="section-copy">Use <code>status --detailed</code> for the fast check. Use <code>proof</code> when you need a durable record.</p>
       <ul class="list">
-        <li><code>status --detailed</code> is the fast live check. It now exposes <code>feedback</code> and <code>attrCover</code> alongside the four core signals.</li>
+        <li><code>status --detailed</code> is the fast live check. It now exposes <code>feedback</code>, <code>attrCover</code>, and daemon-vs-hook alignment alongside the four core signals. Half-converged states surface as explicit blocks rather than silent passes.</li>
         <li><code>proof</code> captures a durable bundle: <code>summary.md</code>, <code>verdict.json</code>, <code>steps.json</code>, logs, and runtime-load proof in one directory.</li>
         <li><code>bundle verdict: success_and_proven</code> means install, runtime, load proof, and detailed status all aligned in the captured bundle.</li>
         <li>Pack ids and counters depend on host state. The four healthy signals matter more than exact numbers.</li>
