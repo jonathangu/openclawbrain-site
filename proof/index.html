@@ -134,7 +134,7 @@
         After install, <code>status --detailed</code> is the fast check. It tells you whether the runtime is loaded, serving, and routing. The <code>proof</code> command captures a durable bundle when you need a record you can keep.
       </p>
       <p class="lede">
-        The proof lane is now hardened. Detailed status exposes <code>feedback</code> and <code>attrCover</code>, and the exercised host shows nonzero truth across all four core signals.
+        The public story is explicit about shipped versus target-state. Teacher v3 substrate is complete, and the runtime/proof adoption path is landed through replay-gated promotion and bounded canary discipline. Anything still future work stays labeled target-state on purpose.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="../install/">Go to install</a>
@@ -195,6 +195,9 @@ routeFn available=yes</code></pre>
         </article>
       </div>
       <div class="callout">
+        <strong>Teacher v3 truth boundary:</strong> shipped today means the substrate is complete, replay-gated promotion is live, and bounded canary discipline is part of the runtime/proof path. Target-state stays named as target-state wherever broader examples or rollout shapes are still future work.
+      </div>
+      <div class="callout">
         <strong>Fresh-host note:</strong> a fresh install may show <code>STATUS warn</code> even when the runtime signals are healthy. That is expected. Use <code>status --detailed</code> as the primary check, not proof alone.
       </div>
     </section>
@@ -207,6 +210,7 @@ routeFn available=yes</code></pre>
         <li><code>proof</code> captures a durable bundle: <code>summary.md</code>, <code>verdict.json</code>, <code>steps.json</code>, logs, and runtime-load proof in one directory.</li>
         <li><code>bundle verdict: success_and_proven</code> means install, runtime, load proof, and detailed status all aligned in the captured bundle.</li>
         <li>Pack ids and counters depend on host state. The four healthy signals matter more than exact numbers.</li>
+        <li>The public worked examples on <a href="../how-it-works/">How it works</a> trace the same lifecycle: proposal, replay, bounded canary discipline, then promotion or shadow-only retention.</li>
       </ul>
       <div class="callout">
         <strong>Current evidence:</strong> checked replay beats <code>no_brain</code> on real traces, and <code>learned_route</code> has real-trace wins. The replay set is still growing, so lower cost is plausible but direct spend savings are not yet proven.

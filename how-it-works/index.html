@@ -181,7 +181,7 @@
         OpenClawBrain attaches to one OpenClaw home directory, learns from past work in the background, and serves a small useful memory slice at runtime. It does not dump raw history into the prompt or call a live LLM on every hop.
       </p>
       <p class="lede">
-        The result: your agent gets relevant context without bloated prompts. What follows is the mechanism.
+        The result: your agent gets relevant context without bloated prompts. The Teacher v3 substrate is shipped; runtime/proof adoption is shipped through replay and bounded canary discipline; anything still future work is called target-state instead of being blurred together.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="#lifecycle">See the lifecycle</a>
@@ -199,7 +199,7 @@
     <section class="panel">
       <h2>Where things stand</h2>
       <p class="section-copy">
-        One release, one healthy reference host, one install path.
+        One release, one shipped substrate story, one honest proof lane.
       </p>
       <div class="stats-grid">
         <article class="stat-card">
@@ -208,14 +208,14 @@
           <p><code>OpenClawBrain 0.4.27</code> is the current public release.</p>
         </article>
         <article class="stat-card">
-          <span class="stat-label">Healthy host</span>
-          <span class="stat-value">STATUS ok</span>
-          <p>The exercised host shows aligned status, load proof, serving state, and route availability with nonzero truth.</p>
+          <span class="stat-label">Shipped substrate</span>
+          <span class="stat-value">Teacher v3 complete</span>
+          <p>The Teacher v3 substrate is complete. That is the shipped base the rest of the story sits on.</p>
         </article>
         <article class="stat-card">
           <span class="stat-label">Proof lane</span>
-          <span class="stat-value">Hardened</span>
-          <p>The proof lane is hardened. Detailed status now exposes <code>feedback</code> and <code>attrCover</code>.</p>
+          <span class="stat-value">Replay + canary</span>
+          <p>Runtime/proof adoption lands through replay-gated promotion and bounded canary discipline; target-state stays labeled until it lands.</p>
         </article>
         <article class="stat-card">
           <span class="stat-label">Install path</span>
@@ -366,6 +366,38 @@
           <h3>Serve only what passed</h3>
           <p>The runtime serves the promoted pack. That is what makes rollback and operator proof possible.</p>
         </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Worked example: one Teacher v3 lifecycle</h2>
+      <p class="section-copy">
+        A skeptical reader should be able to trace one path from proposal to outcome. This is the public example shape: propose, replay, guard with bounded canary discipline, then promote or stay shadow-only.
+      </p>
+      <div class="stats-grid">
+        <article class="stat-card">
+          <span class="stat-label">1. Proposal</span>
+          <span class="stat-value">Evidence attached</span>
+          <p>A compiler or lint proposal carries lineage, evidence, and counterevidence so the next step is inspectable.</p>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">2. Replay</span>
+          <span class="stat-value">Real traces</span>
+          <p>The proposal is replayed against real candidate state so the decision comes from behavior, not wishful prose.</p>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">3. Canary</span>
+          <span class="stat-value">Bounded and off by default</span>
+          <p>Canary discipline keeps the runtime path explicit: it only opens when replay and proof say the change is ready.</p>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">4. Outcome</span>
+          <span class="stat-value">Promoted or shadow-only</span>
+          <p>If the proposal wins, it is promoted. If it loses or stays unready, it remains shadow-only and target-state stays labeled as such.</p>
+        </article>
+      </div>
+      <div class="callout">
+        <strong>Shipped vs target-state:</strong> this lifecycle is the shipped path. Broader class coverage and any future rollout shapes are still target-state until they land.
       </div>
     </section>
 
