@@ -185,8 +185,8 @@ routeFn available=yes</code></pre>
       <div class="cards">
         <article class="card">
           <span class="card-label">Release</span>
-          <h3><code>OpenClawBrain 0.4.30</code></h3>
-          <p class="small">The current public release. Internal package versions exist but are not the public story. 0.4.30 makes daemon-vs-hook skew explicit in status and proof output.</p>
+          <h3><code>OpenClawBrain 0.4.31</code></h3>
+          <p class="small">The current public release. Internal package versions exist but are not the public story. Status and proof keep daemon-vs-hook alignment explicit so skew is visible instead of being blurred away.</p>
         </article>
         <article class="card">
           <span class="card-label">Exercised host</span>
@@ -198,7 +198,7 @@ routeFn available=yes</code></pre>
         <strong>Teacher v3 truth boundary:</strong> shipped today means the substrate is complete, replay-gated promotion is live, and bounded canary discipline is part of the runtime/proof path. Target-state stays named as target-state wherever broader examples or rollout shapes are still future work.
       </div>
       <div class="callout">
-        <strong>Fresh-host note:</strong> a fresh install may show <code>STATUS warn</code> even when the runtime signals are healthy. That is expected. In 0.4.30, half-converged states (daemon running but hook not wired, or vice versa) now block with an explicit message instead of silently passing. Use <code>status --detailed</code> as the primary check, not proof alone.
+        <strong>Fresh-host note:</strong> a fresh install may show <code>STATUS warn</code> even when the runtime signals are healthy. That is expected. Half-converged states (daemon running but hook not wired, or vice versa) block with an explicit message instead of silently passing. Use <code>status --detailed</code> as the primary check, not proof alone.
       </div>
     </section>
 

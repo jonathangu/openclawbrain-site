@@ -131,7 +131,7 @@
         The fix is almost always the same: keep the same home directory, rerun install, restart the gateway, and compare <code>status --detailed</code>. Only then decide whether proof is actually the problem.
       </p>
       <p class="lede">
-        In 0.4.30, daemon-vs-hook skew and half-converged states surface as explicit blocks instead of silent passes. A fresh host can still show <code>STATUS warn</code> even when the runtime signals are healthy. That is a noisy proof surface, not a broken runtime.
+        Daemon-vs-hook skew and half-converged states surface as explicit blocks instead of silent passes. A fresh host can still show <code>STATUS warn</code> even when the runtime signals are healthy. That is a noisy proof surface, not a broken runtime.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="../install/">Run the install commands</a>
@@ -167,7 +167,7 @@
         <article class="card">
           <span class="card-label">Daemon-vs-hook skew</span>
           <h3>Daemon running but hook not wired, or vice versa</h3>
-          <p class="small">In 0.4.30, <code>status --detailed</code> flags this explicitly. A half-converged state (one side active, the other missing) now blocks with a clear message. Rerun the install and restart to bring both sides into alignment.</p>
+          <p class="small"><code>status --detailed</code> flags this explicitly. A half-converged state (one side active, the other missing) blocks with a clear message. Rerun the install and restart to bring both sides into alignment.</p>
         </article>
       </div>
       <div class="callout">
