@@ -6,12 +6,12 @@
   <title>Upgrade | OpenClawBrain</title>
   <meta
     name="description"
-    content="Upgrade or repair OpenClawBrain on an existing install by rerunning the same four commands, then restart and verify."
+    content="Upgrade or repair OpenClawBrain on an existing install by rerunning the same four commands. Existing users keep their earned preferences on top."
   />
   <meta property="og:title" content="Upgrade | OpenClawBrain" />
   <meta
     property="og:description"
-    content="Upgrade OpenClawBrain by rerunning the same install commands on the same home directory, then restart and check status."
+    content="Upgrade OpenClawBrain by rerunning the same install commands on the same home directory. Existing users keep their earned preferences on top."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/upgrade/" />
@@ -126,10 +126,10 @@
       <p class="eyebrow">OpenClawBrain upgrade / repair</p>
       <h1>Same commands, existing install.</h1>
       <p class="lede">
-        Upgrade is not a separate workflow. When a host needs a package refresh or a repair, rerun the same four commands on the same home directory, then restart and verify.
+        Upgrade is not a separate workflow. When a host needs a package refresh or a repair, rerun the same four commands on the same home directory; OpenClawBrain rebuilds the user layer on top of the stronger generic prior, then restarts and verifies.
       </p>
       <p class="lede">
-        One path for new installs. The same path for upgrades.
+        One path for new installs. The same path for upgrades, without resetting the user's earned preferences.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="#lane">See the commands</a>
@@ -140,17 +140,17 @@
 
     <section class="panel">
       <h2>What upgrade means here</h2>
-      <p class="section-copy">The goal is to get an existing install back to the same clean state as a fresh one.</p>
+      <p class="section-copy">The goal is to refresh the generic prior while preserving the preferences, corrections, and habits the user already earned.</p>
       <div class="cards">
         <article class="card">
           <span class="card-label">Refresh packages</span>
           <h3>Pick up the current release</h3>
-          <p class="small">The current release is <code>OpenClawBrain 0.4.32</code>.</p>
+          <p class="small">The current release is <code>OpenClawBrain 0.4.32</code>. The new prior ships with it.</p>
         </article>
         <article class="card">
-          <span class="card-label">Repair drift</span>
-          <h3>Bring the install back into alignment</h3>
-          <p class="small">The install command repairs the plugin and memory layer without making you learn new commands.</p>
+          <span class="card-label">Rebase the user layer</span>
+          <h3>Keep earned preferences on top</h3>
+          <p class="small">The install command refreshes the generic prior without dropping the preferences the user already trained.</p>
         </article>
         <article class="card">
           <span class="card-label">Verify again</span>
@@ -170,7 +170,7 @@ openclaw gateway restart
 openclawbrain status --openclaw-home '~/.openclaw' --detailed
 openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
       <div class="callout">
-        <strong>Note:</strong> a fresh install may still show <code>STATUS warn</code> in the proof output even when the runtime signals are healthy. That is expected. Use <code>status --detailed</code> as the primary health check, not proof alone.
+        <strong>Upgrade behavior:</strong> existing users automatically rebase onto the cold-start prior and keep their earned preferences on top. You are refreshing the generic prior, not resetting the personal layer.
       </div>
     </section>
 
@@ -180,7 +180,7 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         <article class="card">
           <span class="card-label">Outdated packages</span>
           <h3>Your install is older than the current release</h3>
-          <p class="small">Rerun the install so the host picks up the current runtime and CLI packages.</p>
+          <p class="small">Rerun the install so the host picks up the current runtime and CLI packages, plus the updated cold-start prior.</p>
         </article>
         <article class="card">
           <span class="card-label">Plugin drift</span>

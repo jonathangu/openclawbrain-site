@@ -6,12 +6,12 @@
   <title>OpenClawBrain | Useful memory for OpenClaw</title>
   <meta
     name="description"
-    content="OpenClawBrain gives OpenClaw a bounded memory layer that improves agent performance and reduces cost pressure by injecting a small useful slice instead of raw history into every prompt."
+    content="OpenClawBrain gives OpenClaw a bounded memory layer, a cold-start prior for new users, and an upgrade path that keeps learned preferences on top."
   />
   <meta property="og:title" content="OpenClawBrain | Useful memory for OpenClaw" />
   <meta
     property="og:description"
-    content="OpenClawBrain helps OpenClaw remember what worked, keep prompts small, and stop re-learning the same lessons."
+    content="OpenClawBrain helps OpenClaw remember what worked, starts new users on the cold-start prior, and preserves learned preferences on upgrade."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
@@ -614,6 +614,34 @@
       </div>
       <div class="callout">
         <strong>Current evidence:</strong> the proof lane is hardened and exercised. Checked replay beats <code>no_brain</code> on real traces, and learned routing has real-trace wins. Detailed status now exposes <code>feedback</code>, <code>attrCover</code>, and daemon-vs-hook alignment; half-converged states block explicitly instead of passing silently. The exercised host shows nonzero truth. Lower cost is plausible but direct spend savings are not yet proven.
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="panel-label">Release update</p>
+      <h2>Cold start is the default. Upgrade keeps your earned preferences.</h2>
+      <p class="section-copy">
+        New users now land on the cold-start prior automatically. Existing users rerun the same install lane; OpenClawBrain rebuilds their preferences on top of the stronger generic prior, so the user layer stays in place.
+      </p>
+      <div class="benefit-grid">
+        <article class="card">
+          <span class="card-label">New users</span>
+          <h3>Default to the cold-start prior</h3>
+          <p class="small">Fresh installs start with a strong generic prior. No extra flag is needed.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Existing users</span>
+          <h3>Rebase on top of your history</h3>
+          <p class="small">Upgrades preserve your saved preferences, corrections, and habits.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">One lane</span>
+          <h3>Same commands, clearer intent</h3>
+          <p class="small">Install stays the same. What changes is whether the home is fresh or already personalized.</p>
+        </article>
+      </div>
+      <div class="callout">
+        <strong>Release note:</strong> this change is about behavior, not a new command. Fresh users get the cold-start prior by default. Existing users keep their earned preferences while the generic prior gets stronger underneath them.
       </div>
     </section>
 
