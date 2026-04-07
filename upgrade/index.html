@@ -126,7 +126,7 @@
       <p class="eyebrow">OpenClawBrain upgrade / repair</p>
       <h1>Same commands, existing install.</h1>
       <p class="lede">
-        Upgrade is not a separate workflow. When a host needs a package refresh or a repair, rerun the same four commands on the same home directory; OpenClawBrain rebuilds the user layer on top of the stronger generic prior, then restarts and verifies.
+        Upgrade is not a separate workflow. When a host needs a package refresh or a repair, rerun the same four commands on the same home directory; OpenClawBrain rebuilds the user layer on top of the stronger generic prior, refreshes stale installed hook/plugin state if the daemon side moved ahead, then restarts and verifies.
       </p>
       <p class="lede">
         One path for new installs. The same path for upgrades, without resetting the user's earned preferences.
@@ -145,7 +145,7 @@
         <article class="card">
           <span class="card-label">Refresh packages</span>
           <h3>Pick up the current release</h3>
-          <p class="small">The current release is <code>OpenClawBrain 0.4.38</code>. The stronger prior and shipped ongoing-learning loop travel with it, along with the install hotfix.</p>
+          <p class="small">The current release is <code>OpenClawBrain 0.4.39</code>. The stronger prior and shipped ongoing-learning loop travel with it, along with the stale-hook install-convergence fix.</p>
         </article>
         <article class="card">
           <span class="card-label">Rebase the user layer</span>
@@ -170,7 +170,7 @@ openclaw gateway restart
 openclawbrain status --openclaw-home '~/.openclaw' --detailed
 openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
       <div class="callout">
-        <strong>Upgrade behavior:</strong> existing users automatically rebuild the stronger generic prior underneath their earned preferences and keep that personal layer on top. You are refreshing the generic prior, not resetting the personal layer.
+        <strong>Upgrade behavior:</strong> existing users automatically rebuild the stronger generic prior underneath their earned preferences and keep that personal layer on top. The same lane also refreshes a stale installed hook if the daemon/runtime side was already updated. You are refreshing the generic prior, not resetting the personal layer.
       </div>
     </section>
 
@@ -185,7 +185,7 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         <article class="card">
           <span class="card-label">Plugin drift</span>
           <h3>The plugin or memory layer needs repair</h3>
-          <p class="small">Use this page when the install is present but no longer working cleanly.</p>
+          <p class="small">Use this page when the install is present but no longer working cleanly, including half-converged daemon-vs-hook upgrades.</p>
         </article>
         <article class="card">
           <span class="card-label">Post-change verify</span>

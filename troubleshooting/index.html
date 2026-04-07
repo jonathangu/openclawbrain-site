@@ -128,7 +128,7 @@
       <p class="eyebrow">OpenClawBrain troubleshooting</p>
       <h1>Something looks wrong. Keep the scope tight.</h1>
       <p class="lede">
-        The fix is almost always the same: keep the same home directory, rerun install, restart the gateway, and compare <code>status --detailed</code>. Only then decide whether proof is actually the problem.
+        The fix is almost always the same: keep the same home directory, rerun install, restart the gateway, and compare <code>status --detailed</code>. That same lane now repairs stale-hook upgrade skew too. Only then decide whether proof is actually the problem.
       </p>
       <p class="lede">
         Daemon-vs-hook skew and half-converged states surface as explicit blocks instead of silent passes. A fresh host can still show <code>STATUS warn</code> even when the runtime signals are healthy. That is a noisy proof surface, not a broken runtime.
@@ -167,7 +167,7 @@
         <article class="card">
           <span class="card-label">Daemon-vs-hook skew</span>
           <h3>Daemon running but hook not wired, or vice versa</h3>
-          <p class="small"><code>status --detailed</code> flags this explicitly. A half-converged state (one side active, the other missing) blocks with a clear message. Rerun the install and restart to bring both sides into alignment.</p>
+          <p class="small"><code>status --detailed</code> flags this explicitly. A half-converged state (one side active, the other missing) blocks with a clear message. Rerun the install and restart to bring both sides into alignment; the shipped install path now refreshes a stale installed hook when the daemon side is newer.</p>
         </article>
       </div>
       <div class="callout">
@@ -188,7 +188,7 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         <li class="card">
           <span class="card-label">1. Install</span>
           <h3>Repair the install</h3>
-          <p class="small">Rerun install to repair the plugin and memory layer.</p>
+          <p class="small">Rerun install to repair the plugin and memory layer, including stale-hook upgrade skew on the selected home.</p>
         </li>
         <li class="card">
           <span class="card-label">2. Restart</span>
