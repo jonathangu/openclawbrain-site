@@ -129,7 +129,7 @@
         Pick one OpenClaw home directory, run the install, restart the gateway, and check that the runtime loaded. Fresh homes land on the cold-start prior automatically, so new users start strong on day one.
       </p>
       <p class="lede">
-        These same four commands also work as the repair path. If something drifts — including a stale installed hook after the daemon side moved ahead — rerun them on the same home directory instead of learning a second workflow.
+        These same four commands also work as the repair path. If something drifts — including a stale installed hook after the daemon side moved ahead — rerun them on the same home directory instead of learning a second workflow. <code>status --detailed</code> gives the live read; <code>proof</code> captures the same truth durably.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="#commands">See the commands</a>
@@ -170,7 +170,7 @@ openclaw gateway restart
 openclawbrain status --openclaw-home '~/.openclaw' --detailed
 openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
       <div class="callout">
-        <strong>Version:</strong> the current release is <code>OpenClawBrain 0.4.39</code>. Fresh homes default to the cold-start prior, and the shipped background loop includes ongoing learning plus operator status/control surfaces. If the home already has learned preferences, rerunning <code>install</code> keeps them on top and rebuilds the generic prior underneath. It also refreshes a stale installed hook when the daemon/runtime side is already newer. Use <code>status --detailed</code> as the fast live check; it should report <code>surface ... converge=converged</code> before you treat the host as healthy.
+        <strong>Version:</strong> the current release is <code>OpenClawBrain 0.4.40</code>. Fresh homes default to the cold-start prior, and the shipped background loop includes ongoing learning plus unified truth/proof surfaces for bounded serving, route quality, provenance, and economics. If the home already has learned preferences, rerunning <code>install</code> keeps them on top and rebuilds the generic prior underneath. It also refreshes a stale installed hook when the daemon/runtime side is already newer. Use <code>status --detailed</code> as the fast live check; it should report <code>surface ... converge=converged</code> before you treat the host as healthy.
       </div>
     </section>
 

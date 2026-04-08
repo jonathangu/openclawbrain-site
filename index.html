@@ -6,12 +6,12 @@
   <title>OpenClawBrain | Useful memory for OpenClaw</title>
   <meta
     name="description"
-    content="OpenClawBrain gives OpenClaw a bounded memory layer, a cold-start prior for new users, and an upgrade path that keeps learned preferences on top."
+    content="OpenClawBrain gives OpenClaw a bounded memory layer, a cold-start prior for new users, and truth/proof surfaces you can verify."
   />
   <meta property="og:title" content="OpenClawBrain | Useful memory for OpenClaw" />
   <meta
     property="og:description"
-    content="OpenClawBrain helps OpenClaw remember what worked, starts new users on the cold-start prior, and preserves learned preferences on upgrade."
+    content="OpenClawBrain helps OpenClaw remember what worked, starts new users on the cold-start prior, and keeps status/proof truth aligned on upgrade."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/" />
@@ -506,7 +506,7 @@
             </div>
             <div class="story-item">
               <h3>3. Inspect everything</h3>
-              <p class="small">The code is open. You can verify the runtime loaded and check whether the memory path is active.</p>
+              <p class="small">The code is open. Status and proof show whether the runtime is loaded, bounded, and actually serving.</p>
             </div>
           </div>
         </aside>
@@ -613,15 +613,15 @@
         <strong>Honest boundary:</strong> this is a memory layer, not perfect recall. The value is that useful past work has a better chance of reaching the next run, and you can check whether that path is active.
       </div>
       <div class="callout">
-        <strong>Current evidence:</strong> the proof lane is hardened and exercised. Checked replay beats <code>no_brain</code> on real traces, and learned routing has real-trace wins. Detailed status now exposes <code>feedback</code>, <code>attrCover</code>, and daemon-vs-hook alignment; half-converged states block explicitly instead of passing silently. The exercised host shows nonzero truth. Lower cost is plausible but direct spend savings are not yet proven.
+        <strong>Current evidence:</strong> the status/proof lane is hardened and exercised. Detailed status and proof now expose one operator readout across bounded serving, route quality, provenance, economics, and daemon-vs-hook alignment. Checked replay beats <code>no_brain</code> on real traces, and learned routing has real-trace wins. Lower cost is plausible but direct spend savings are not yet proven.
       </div>
     </section>
 
     <section class="panel">
       <p class="panel-label">Release update</p>
-      <h2>Continuous learning is now part of the shipped product.</h2>
+      <h2>Unified truth and proof are now part of the shipped product.</h2>
       <p class="section-copy">
-        OpenClawBrain 0.4.39 is the current public release. It keeps the shipped ongoing-learning loop and operator controls from 0.4.37/0.4.38, and it fixes the stale-hook install-convergence seam without changing the public four-command lane.
+        OpenClawBrain 0.4.40 is the current public release. It keeps the shipped ongoing-learning loop and the fixed four-command install lane, and it adds the unified operator truth/proof surfaces for bounded serving, route quality, provenance, and economics.
       </p>
       <div class="benefit-grid">
         <article class="card">
@@ -630,9 +630,9 @@
           <p class="small">Route rows, direct supervision, and replay-gated retrain now ship together in one bounded loop.</p>
         </article>
         <article class="card">
-          <span class="card-label">Operator controls</span>
-          <h3>See cadence, pause safely</h3>
-          <p class="small">Status now exposes Graphify delta/reorg runs, retrain state, queue visibility, and pause controls.</p>
+          <span class="card-label">Operator readout</span>
+          <h3>See the live truth in one lane</h3>
+          <p class="small">Status and proof now expose bounded serving, route quality, provenance, economics, and control posture in one operator lane.</p>
         </article>
         <article class="card">
           <span class="card-label">One lane</span>
@@ -641,7 +641,7 @@
         </article>
       </div>
       <div class="callout">
-        <strong>Release note:</strong> OpenClawBrain 0.4.39 is the current public release. It is an install-convergence fix release, not a new command set.
+        <strong>Release note:</strong> OpenClawBrain 0.4.40 is the current public release. It is a truth/proof surface release, not a new command set.
       </div>
     </section>
 

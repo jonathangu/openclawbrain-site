@@ -134,7 +134,7 @@
         After install, <code>status --detailed</code> is the fast check. It tells you whether the runtime is loaded, serving, and routing. The <code>proof</code> command captures a durable bundle when you need a record you can keep.
       </p>
       <p class="lede">
-        The public story is explicit about shipped versus target-state. Teacher v3 substrate is complete, and the runtime/proof adoption path is landed through replay-gated promotion and bounded canary discipline. Anything still future work stays labeled target-state on purpose.
+        The public story is explicit about shipped versus target-state. Status and proof now share one operator readout for bounded serving, route quality, provenance, and economics. Anything still future work stays labeled target-state on purpose.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="../install/">Go to install</a>
@@ -185,8 +185,8 @@ routeFn available=yes</code></pre>
       <div class="cards">
         <article class="card">
           <span class="card-label">Release</span>
-          <h3><code>OpenClawBrain 0.4.39</code></h3>
-          <p class="small">The current public release. Internal package versions exist but are not the public story. Status and proof keep daemon-vs-hook alignment explicit, and the shipped ongoing-learning loop plus operator-visible cadence/control surfaces now ride on the fixed public install lane.</p>
+          <h3><code>OpenClawBrain 0.4.40</code></h3>
+          <p class="small">The current public release. Internal package versions exist but are not the public story. Status and proof now keep bounded serving, route quality, provenance, economics, and daemon-vs-hook alignment on one operator-visible surface, riding on the same fixed public install lane.</p>
         </article>
         <article class="card">
           <span class="card-label">Exercised host</span>
@@ -195,7 +195,7 @@ routeFn available=yes</code></pre>
         </article>
       </div>
       <div class="callout">
-        <strong>Teacher v3 truth boundary:</strong> shipped today means the substrate is complete, replay-gated promotion is live, and bounded canary discipline is part of the runtime/proof path. Target-state stays named as target-state wherever broader examples or rollout shapes are still future work.
+        <strong>Teacher v3 truth boundary:</strong> shipped today means the substrate is complete and the operator truth/proof surfaces are live. Replay-gated promotion and bounded canary discipline remain part of that path; broader examples or rollout shapes still stay labeled target-state.
       </div>
       <div class="callout">
         <strong>Fresh-host note:</strong> a fresh install may show <code>STATUS warn</code> even when the runtime signals are healthy. That is expected. Half-converged states (daemon running but hook not wired, or vice versa) block with an explicit message instead of silently passing. Use <code>status --detailed</code> as the primary check, not proof alone.
@@ -206,7 +206,7 @@ routeFn available=yes</code></pre>
       <h2>When to use each command</h2>
       <p class="section-copy">Use <code>status --detailed</code> for the fast check. Use <code>proof</code> when you need a durable record.</p>
       <ul class="list">
-        <li><code>status --detailed</code> is the fast live check. It now exposes <code>feedback</code>, <code>attrCover</code>, and daemon-vs-hook alignment alongside the four core signals. Half-converged states surface as explicit blocks rather than silent passes.</li>
+        <li><code>status --detailed</code> is the fast live check. It now exposes <code>feedback</code>, <code>attrCover</code>, bounded serving, route quality, provenance, economics, and daemon-vs-hook alignment alongside the four core signals. Half-converged states surface as explicit blocks rather than silent passes.</li>
         <li><code>proof</code> captures a durable bundle: <code>summary.md</code>, <code>verdict.json</code>, <code>steps.json</code>, logs, and runtime-load proof in one directory.</li>
         <li><code>bundle verdict: success_and_proven</code> means install, runtime, load proof, and detailed status all aligned in the captured bundle.</li>
         <li>Pack ids and counters depend on host state. The four healthy signals matter more than exact numbers.</li>
