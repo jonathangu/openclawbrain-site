@@ -128,10 +128,10 @@
       <p class="eyebrow">OpenClawBrain troubleshooting</p>
       <h1>Something looks wrong. Keep the scope tight.</h1>
       <p class="lede">
-        The fix is almost always the same: keep the same home directory, rerun install, restart the gateway, and compare <code>status --detailed</code>. That same lane now repairs stale-hook upgrade skew too. Only then decide whether proof is actually the problem.
+        The fix is almost always the same: keep the same home directory, rerun install, restart the gateway, and compare <code>status --detailed</code>.
       </p>
       <p class="lede">
-        Daemon-vs-hook skew and half-converged states surface as explicit blocks instead of silent passes. A fresh host can still show <code>STATUS warn</code> even when the runtime signals are healthy. That is a noisy proof surface, not a broken runtime.
+        If one part updated and another part did not, OpenClawBrain should tell you that directly instead of failing silently.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="../install/">Run the install commands</a>
@@ -160,14 +160,14 @@
           <p class="small">Not always an install failure. A fresh or lightly used host may not have promoted packs yet.</p>
         </article>
         <article class="card">
-          <span class="card-label">No route function</span>
+          <span class="card-label">Memory not active</span>
           <h3><code>routeFn available=yes</code> is missing</h3>
-          <p class="small">Check whether the runtime is serving a promoted pack. Compare against the <a href="../proof/">verify page</a> reference instead of assuming every host should match the exercised one.</p>
+          <p class="small">Check whether the memory layer is actually serving. Compare against the <a href="../proof/">verify page</a> reference before assuming the install is broken.</p>
         </article>
         <article class="card">
-          <span class="card-label">Daemon-vs-hook skew</span>
-          <h3>Daemon running but hook not wired, or vice versa</h3>
-          <p class="small"><code>status --detailed</code> flags this explicitly. A half-converged state (one side active, the other missing) blocks with a clear message. Rerun the install and restart to bring both sides into alignment; the shipped install path now refreshes a stale installed hook when the daemon side is newer.</p>
+          <span class="card-label">Parts out of sync</span>
+          <h3>One side updated, the other side did not</h3>
+          <p class="small"><code>status --detailed</code> should flag this clearly. Rerun install and restart so both sides come back into sync.</p>
         </article>
       </div>
       <div class="callout">
@@ -180,10 +180,10 @@
       <p class="section-copy">
         When in doubt, rerun the four commands in order. The restart is the only step without <code>--openclaw-home</code>.
       </p>
-      <pre><code>openclawbrain install --openclaw-home '~/.openclaw'
+      <pre><code>npx @openclawbrain/cli@0.4.43 openclawbrain install --openclaw-home '~/.openclaw'
 openclaw gateway restart
-openclawbrain status --openclaw-home '~/.openclaw' --detailed
-openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
+npx @openclawbrain/cli@0.4.43 openclawbrain status --openclaw-home '~/.openclaw' --detailed
+npx @openclawbrain/cli@0.4.43 openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
       <ul class="cards" style="grid-template-columns: repeat(3, minmax(0, 1fr)); list-style: none; padding-left: 0;">
         <li class="card">
           <span class="card-label">1. Install</span>

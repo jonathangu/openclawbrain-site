@@ -178,10 +178,10 @@
       <p class="eyebrow">OpenClawBrain lifecycle</p>
       <h1>Learn from the past. Serve only what helps.</h1>
       <p class="lede">
-        OpenClawBrain attaches to one OpenClaw home directory, learns from past work in the background, and serves a small useful memory slice at runtime. It does not dump raw history into the prompt or call a live LLM on every hop.
+        OpenClawBrain watches what helped before, learns in the background, and brings back only the small piece of memory that is likely to help now.
       </p>
       <p class="lede">
-        The result: your agent gets relevant context without bloated prompts. The shipped status/proof lane now exposes one operator readout for bounded serving, route quality, provenance, and economics; anything still future work is called target-state instead of being blurred together.
+        In short: less repetition, smaller prompts, and a memory layer you can actually inspect.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="#lifecycle">See the lifecycle</a>
@@ -199,23 +199,23 @@
     <section class="panel">
       <h2>Where things stand</h2>
       <p class="section-copy">
-        One release, one shipped substrate story, one honest proof lane.
+        One release, one install story, one simple way to check whether it works.
       </p>
       <div class="stats-grid">
         <article class="stat-card">
           <span class="stat-label">Current release</span>
-          <span class="stat-value">0.4.42</span>
-          <p><code>OpenClawBrain 0.4.42</code> is the current public release.</p>
+          <span class="stat-value">0.4.43</span>
+          <p><code>OpenClawBrain 0.4.43</code> is the current public release.</p>
         </article>
         <article class="stat-card">
-          <span class="stat-label">Shipped substrate</span>
-          <span class="stat-value">Substrate complete</span>
-          <p>The Teacher v3 substrate is complete. That is the shipped base the rest of the story sits on.</p>
+          <span class="stat-label">Today</span>
+          <span class="stat-value">Ready to try</span>
+          <p>You can install it, use it, and check whether it is loaded on your host.</p>
         </article>
         <article class="stat-card">
-          <span class="stat-label">Proof lane</span>
-          <span class="stat-value">Unified surfaces</span>
-          <p>Status and proof now share one operator readout for bounded serving, route quality, provenance, and economics; target-state still stays labeled until it lands.</p>
+          <span class="stat-label">Check it</span>
+          <span class="stat-value">Status + proof</span>
+          <p>Use detailed status for the fast check. Use proof when you want a saved bundle.</p>
         </article>
         <article class="stat-card">
           <span class="stat-label">Install path</span>
@@ -228,7 +228,7 @@
     <section class="panel" id="lifecycle">
       <h2>The system in one pass</h2>
       <p class="section-copy">
-        OpenClawBrain does not do one thing. It runs a loop: store the past, turn it into a graph, learn better routes in the background, promote what survives replay, then serve only the small slice that helps now.
+        OpenClawBrain follows a simple loop: remember useful past work, learn from it in the background, then bring back only the small slice that helps now.
       </p>
       <div class="flow-rail">
         <article class="flow-step">

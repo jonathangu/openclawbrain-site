@@ -126,10 +126,10 @@
       <p class="eyebrow">OpenClawBrain upgrade / repair</p>
       <h1>Same commands, existing install.</h1>
       <p class="lede">
-        Upgrade is not a separate workflow. When a host needs a package refresh or a repair, rerun the same four commands on the same home directory; OpenClawBrain rebuilds the user layer on top of the stronger generic prior, refreshes stale installed hook/plugin state if the daemon side moved ahead, then restarts and verifies.
+        Upgrade is not a separate workflow. If an install needs a refresh or repair, rerun the same four commands on the same home directory.
       </p>
       <p class="lede">
-        One path for new installs. The same path for upgrades, without resetting the user's earned preferences. After the rerun, <code>status --detailed</code> and <code>proof</code> read from the same operator truth surface.
+        That refresh keeps the user's learned preferences instead of wiping them.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="#lane">See the commands</a>
@@ -145,7 +145,7 @@
         <article class="card">
           <span class="card-label">Refresh packages</span>
           <h3>Pick up the current release</h3>
-          <p class="small">The current release is <code>OpenClawBrain 0.4.42</code>. The stronger prior and shipped ongoing-learning loop travel with it, the operator lane keeps cold-start lineage visible, and the install lane now self-heals stale nested duplicate extension surfaces too.</p>
+          <p class="small">The current release is <code>OpenClawBrain 0.4.43</code>. The important part for a newcomer is simple: rerun the same commands and keep the same home directory.</p>
         </article>
         <article class="card">
           <span class="card-label">Rebase the user layer</span>
@@ -165,12 +165,12 @@
       <p class="section-copy">
         The same commands you would use for a new install. The difference is why you are running them, not what you type.
       </p>
-      <pre><code>openclawbrain install --openclaw-home '~/.openclaw'
+      <pre><code>npx @openclawbrain/cli@0.4.43 openclawbrain install --openclaw-home '~/.openclaw'
 openclaw gateway restart
-openclawbrain status --openclaw-home '~/.openclaw' --detailed
-openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
+npx @openclawbrain/cli@0.4.43 openclawbrain status --openclaw-home '~/.openclaw' --detailed
+npx @openclawbrain/cli@0.4.43 openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
       <div class="callout">
-        <strong>Upgrade behavior:</strong> existing users automatically rebuild the stronger generic prior underneath their earned preferences and keep that personal layer on top. The same lane also refreshes a stale installed hook if the daemon/runtime side was already updated, then keeps <code>status --detailed</code> and <code>proof</code> aligned on the same operator truth surface. You are refreshing the generic prior, not resetting the personal layer.
+        <strong>Upgrade behavior:</strong> you are refreshing the shared memory setup, not resetting the user's personal preferences.
       </div>
     </section>
 
@@ -180,7 +180,7 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         <article class="card">
           <span class="card-label">Outdated packages</span>
           <h3>Your install is older than the current release</h3>
-          <p class="small">Rerun the install so the host picks up the current runtime and CLI packages, plus the updated cold-start prior.</p>
+          <p class="small">Rerun the install so the host picks up the current runtime and CLI packages.</p>
         </article>
         <article class="card">
           <span class="card-label">Plugin drift</span>

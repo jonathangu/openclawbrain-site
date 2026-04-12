@@ -131,10 +131,10 @@
       <p class="eyebrow">OpenClawBrain verify</p>
       <h1>Check that it is running and doing its job.</h1>
       <p class="lede">
-        After install, <code>status --detailed</code> is the fast check. It tells you whether the runtime is loaded, serving, and routing. The <code>proof</code> command captures a durable bundle when you need a record you can keep.
+        After install, <code>status --detailed</code> is the fast check. It tells you whether OpenClawBrain is loaded and serving on the home you chose.
       </p>
       <p class="lede">
-        The public story is explicit about shipped versus target-state. Status and proof now share one operator readout for bounded serving, route quality, provenance, and economics. Anything still future work stays labeled target-state on purpose.
+        Use <code>proof</code> only when you want a saved bundle you can keep or share later.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="../install/">Go to install</a>
@@ -165,9 +165,9 @@
           <p class="small">The runtime is serving a promoted memory pack.</p>
         </article>
         <article class="signal-card">
-          <strong>Learned route</strong>
+          <strong>Memory routing</strong>
           <span class="signal-value">routeFn available=yes</span>
-          <p class="small">The learned route function is available and active.</p>
+          <p class="small">The memory system is active.</p>
         </article>
       </div>
       <pre><code>STATUS ok
@@ -185,8 +185,8 @@ routeFn available=yes</code></pre>
       <div class="cards">
         <article class="card">
           <span class="card-label">Release</span>
-          <h3><code>OpenClawBrain 0.4.42</code></h3>
-          <p class="small">The current public release. Internal package versions exist but are not the public story. Status and proof keep bounded serving, route quality, provenance, economics, daemon-vs-hook alignment, and cold-start-rooted lineage on one operator-visible surface, and the same fixed public install lane now self-heals stale nested duplicate extension copies before converge.</p>
+          <h3><code>OpenClawBrain 0.4.43</code></h3>
+          <p class="small">The current public release. The main thing a new user needs to know is simple: install it, restart the gateway, check detailed status, then run proof if you want a saved record.</p>
         </article>
         <article class="card">
           <span class="card-label">Exercised host</span>
@@ -195,7 +195,7 @@ routeFn available=yes</code></pre>
         </article>
       </div>
       <div class="callout">
-        <strong>Teacher v3 truth boundary:</strong> shipped today means the substrate is complete and the operator truth/proof surfaces are live. Replay-gated promotion and bounded canary discipline remain part of that path; broader examples or rollout shapes still stay labeled target-state.
+        <strong>Boundary:</strong> this page tells you whether the system is loaded and working on your host. It is not a promise of perfect answers.
       </div>
       <div class="callout">
         <strong>Fresh-host note:</strong> a fresh install may show <code>STATUS warn</code> even when the runtime signals are healthy. That is expected. Half-converged states (daemon running but hook not wired, or vice versa) block with an explicit message instead of silently passing. Use <code>status --detailed</code> as the primary check, not proof alone.
@@ -206,14 +206,14 @@ routeFn available=yes</code></pre>
       <h2>When to use each command</h2>
       <p class="section-copy">Use <code>status --detailed</code> for the fast check. Use <code>proof</code> when you need a durable record.</p>
       <ul class="list">
-        <li><code>status --detailed</code> is the fast live check. It now exposes <code>feedback</code>, <code>attrCover</code>, bounded serving, route quality, provenance, economics, and daemon-vs-hook alignment alongside the four core signals. Half-converged states surface as explicit blocks rather than silent passes.</li>
+        <li><code>status --detailed</code> is the fast live check. It tells you whether the memory layer is loaded and whether the install is clean.</li>
         <li><code>proof</code> captures a durable bundle: <code>summary.md</code>, <code>verdict.json</code>, <code>steps.json</code>, logs, and runtime-load proof in one directory.</li>
         <li><code>bundle verdict: success_and_proven</code> means install, runtime, load proof, and detailed status all aligned in the captured bundle.</li>
         <li>Pack ids and counters depend on host state. The four healthy signals matter more than exact numbers.</li>
-        <li>The public worked examples on <a href="../how-it-works/">How it works</a> trace the same lifecycle: proposal, replay, bounded canary discipline, then promotion or shadow-only retention.</li>
+        <li>If status already looks healthy, proof should confirm the same story and save it as a bundle.</li>
       </ul>
       <div class="callout">
-        <strong>Current evidence:</strong> checked replay beats <code>no_brain</code> on real traces, and <code>learned_route</code> has real-trace wins. The replay set is still growing, so lower cost is plausible but direct spend savings are not yet proven.
+        <strong>What we can honestly claim today:</strong> OpenClawBrain is installable, inspectable, and working on real hosts.
       </div>
     </section>
 
@@ -226,10 +226,10 @@ routeFn available=yes</code></pre>
         <article class="card">
           <span class="card-label">Commands</span>
           <h3>Install, restart, status, proof</h3>
-          <pre><code>openclawbrain install --openclaw-home '~/.openclaw'
+          <pre><code>npx @openclawbrain/cli@0.4.43 openclawbrain install --openclaw-home '~/.openclaw'
 openclaw gateway restart
-openclawbrain status --openclaw-home '~/.openclaw' --detailed
-openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
+npx @openclawbrain/cli@0.4.43 openclawbrain status --openclaw-home '~/.openclaw' --detailed
+npx @openclawbrain/cli@0.4.43 openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         </article>
         <article class="card">
           <span class="card-label">How to read the output</span>
@@ -249,7 +249,7 @@ openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
         </a>
         <a class="link-card" href="../how-it-works/">
           <strong>How it works</strong>
-          <span>The lifecycle from learning through promotion and bounded serving.</span>
+          <span>A plain-English explanation of what the memory layer does.</span>
         </a>
         <a class="link-card" href="../troubleshooting/">
           <strong>Troubleshooting</strong>
