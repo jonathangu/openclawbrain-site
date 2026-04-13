@@ -4,15 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Start here | OpenClawBrain</title>
-  <meta
-    name="description"
-    content="Start with OpenClawBrain in four commands. Install it, restart the gateway, check status, and save proof if you want it."
-  />
+  <meta name="description" content="Install, upgrade, or repair OpenClawBrain with one simple command path." />
   <meta property="og:title" content="Start here | OpenClawBrain" />
-  <meta
-    property="og:description"
-    content="Install OpenClawBrain on one OpenClaw home directory, restart the gateway, and verify that the runtime is loaded."
-  />
+  <meta property="og:description" content="Install OpenClawBrain in four commands, then use the same path later for upgrades and repairs." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/install/" />
   <style>
@@ -26,8 +20,8 @@
       --line: rgba(168, 183, 198, 0.16);
       --accent: #8bd3ff;
       --green: #95f0c1;
-      --code: #07111b;
       --shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+      --code: #07111b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -79,21 +73,22 @@
     .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .link-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .card, .link-card { background: var(--panel-soft); border: 1px solid var(--line); border-radius: 20px; padding: 20px; }
-    code, pre code { font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.95rem; }
-    code { background: rgba(8, 17, 27, 0.82); border: 1px solid rgba(168, 183, 198, 0.12); border-radius: 6px; padding: 2px 6px; white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
-    pre {
-      background: var(--code); border: 1px solid rgba(168, 183, 198, 0.14); border-radius: 16px; margin: 16px 0; overflow-x: auto; padding: 18px;
-    }
-    pre code { background: transparent; border: 0; display: block; line-height: 1.7; padding: 0; white-space: pre; }
-    .callout {
-      background: linear-gradient(135deg, rgba(9, 25, 18, 0.96), rgba(8, 19, 29, 0.96)); border: 1px solid rgba(149, 240, 193, 0.22);
-      border-radius: 18px; color: var(--muted); margin-top: 16px; padding: 16px 18px;
-    }
-    .callout strong { color: var(--green); }
     .link-card { color: inherit; display: block; text-decoration: none; }
     .link-card strong { display: block; margin-bottom: 8px; }
     .link-card span { color: var(--muted); }
-    .link-card:hover { border-color: rgba(139, 211, 255, 0.42); text-decoration: none; }
+    .link-card:hover { border-color: rgba(139,211,255,0.42); text-decoration: none; }
+    code, pre code { font-family: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.95rem; }
+    pre {
+      background: var(--code); border: 1px solid rgba(168,183,198,0.14); border-radius: 16px;
+      margin: 16px 0; overflow-x: auto; padding: 18px;
+    }
+    pre code { background: transparent; border: 0; display: block; line-height: 1.7; padding: 0; white-space: pre; }
+    .callout {
+      background: linear-gradient(135deg, rgba(9, 25, 18, 0.96), rgba(8, 19, 29, 0.96));
+      border: 1px solid rgba(149, 240, 193, 0.22); border-radius: 18px; color: var(--muted);
+      margin-top: 16px; padding: 16px 18px;
+    }
+    .callout strong { color: var(--green); }
     .site-footer { color: var(--muted); font-size: 0.94rem; padding: 8px 4px 0; text-align: center; }
     @media (max-width: 960px) { .cards, .link-grid { grid-template-columns: 1fr; } }
     @media (max-width: 720px) {
@@ -106,114 +101,105 @@
       .panel, .hero { padding: 20px 16px; }
       .button { width: 100%; text-align: center; }
       .hero-actions { gap: 10px; }
-
       pre { overflow-x: visible; padding: 16px 14px; }
-      pre code { font-size: 0.88rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }}
+      pre code { font-size: 0.88rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
+    }
   </style>
 </head>
 <body>
   <main>
     <nav class="site-nav" aria-label="Primary">
-      <a href="./" aria-current="page">Install</a>
-      <a href="../upgrade/">Upgrade</a>
+      <a href="./" aria-current="page">Start here</a>
       <a href="../how-it-works/">How it works</a>
-      <a href="../proof/">Verify</a>
-      <a href="../troubleshooting/">Troubleshooting</a>
       <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
     </nav>
 
     <section class="panel hero">
       <p class="eyebrow">OpenClawBrain start here</p>
-      <h1>Start in four commands.</h1>
+      <h1>Install it in four commands.</h1>
       <p class="lede">
-        Pick one OpenClaw home directory, run the install, restart the gateway, and check that the runtime loaded. New installs start with a useful default memory setup automatically.
+        This is the only path a newcomer needs: install OpenClawBrain, restart the gateway, check status, and save proof if you want it.
       </p>
       <p class="lede">
-        These same four commands also work as the repair path. If something drifts — including a stale installed hook after the daemon side moved ahead — rerun them on the same home directory instead of learning a second workflow. <code>status --detailed</code> gives the live read; <code>proof</code> captures the same truth durably.
+        Use this same path later for upgrades and repairs too.
       </p>
       <div class="hero-actions">
         <a class="button button-primary" href="#commands">See the commands</a>
-        <a class="button button-secondary" href="../upgrade/">Upgrade / repair</a>
-        <a class="button button-secondary" href="../proof/">Verify it works</a>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>What install does</h2>
-      <p class="section-copy">A successful install attaches OpenClawBrain to one OpenClaw home directory, gives a new install a strong default memory setup, repairs stale plugin state when needed, and leaves the runtime ready to verify.</p>
-      <div class="cards">
-        <article class="card">
-          <span class="card-label">Fresh home</span>
-          <h3>Start with a useful default</h3>
-          <p class="small">New installs start with a strong default memory setup. No extra flag is needed.</p>
-        </article>
-        <article class="card">
-          <span class="card-label">Attach the runtime</span>
-          <h3>Connect the memory layer to OpenClaw</h3>
-          <p class="small">The install command wires up the plugin and memory layer for the selected home directory.</p>
-        </article>
-        <article class="card">
-          <span class="card-label">Ready to verify</span>
-          <h3>Restart and check status right after</h3>
-          <p class="small">Install is not the last step. Restart and detailed status confirm the runtime is actually loaded and serving.</p>
-        </article>
+        <a class="button button-secondary" href="../troubleshooting/">Need help?</a>
       </div>
     </section>
 
     <section class="panel" id="commands">
-      <h2>Install commands</h2>
-      <p class="section-copy">
-        Run these in order on the same home directory. The restart command is the only step without <code>--openclaw-home</code>.
-      </p>
-      <pre><code>npx @openclawbrain/cli@0.4.43 openclawbrain install --openclaw-home '~/.openclaw'
+      <h2>The commands</h2>
+      <pre><code>npx @openclawbrain/cli@0.4.43 openclawbrain install --openclaw-home ~/.openclaw
 openclaw gateway restart
-npx @openclawbrain/cli@0.4.43 openclawbrain status --openclaw-home '~/.openclaw' --detailed
-npx @openclawbrain/cli@0.4.43 openclawbrain proof --openclaw-home '~/.openclaw'</code></pre>
+npx @openclawbrain/cli@0.4.43 openclawbrain status --openclaw-home ~/.openclaw --detailed
+npx @openclawbrain/cli@0.4.43 openclawbrain proof --openclaw-home ~/.openclaw</code></pre>
       <div class="callout">
-        <strong>Version:</strong> the current release is <code>OpenClawBrain 0.4.43</code>. If the home already has learned preferences, rerunning <code>install</code> keeps them and refreshes the underlying shared memory setup. Use <code>status --detailed</code> as the fast live check before you treat the host as healthy.
+        <strong>Current release:</strong> OpenClawBrain 0.4.43.
       </div>
     </section>
 
     <section class="panel">
-      <h2>When to use this page</h2>
+      <h2>What good looks like</h2>
+      <div class="cards">
+        <article class="card">
+          <span class="card-label">Status</span>
+          <h3><code>STATUS ok</code></h3>
+          <p class="small">The runtime is healthy for the home you selected.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Load proof</span>
+          <h3><code>loadProof=status_probe_ready</code></h3>
+          <p class="small">OpenClawBrain is loaded, not just sitting on disk.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Clean install</span>
+          <h3><code>surface ... converge=converged</code></h3>
+          <p class="small">The install is in sync and ready to trust.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Use this same page later</h2>
       <div class="cards">
         <article class="card">
           <span class="card-label">New install</span>
-          <h3>You are installing for the first time</h3>
-          <p class="small">Start here when the home directory does not have OpenClawBrain attached yet.</p>
+          <h3>First time</h3>
+          <p class="small">Use the four commands above.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Upgrade</span>
+          <h3>Same commands</h3>
+          <p class="small">Rerun the same flow on the same home directory.</p>
         </article>
         <article class="card">
           <span class="card-label">Repair</span>
-          <h3>Something drifted on an existing install</h3>
-          <p class="small">Rerun the same four commands on the same home directory to bring it back into a clean state, including stale-hook upgrade skew.</p>
-        </article>
-        <article class="card">
-          <span class="card-label">Verify next</span>
-          <h3>You want to confirm the runtime loaded</h3>
-          <p class="small">After restart, check <code>status --detailed</code> to confirm the runtime is active.</p>
+          <h3>Same commands</h3>
+          <p class="small">If something drifted, use the same flow before doing anything clever.</p>
         </article>
       </div>
     </section>
 
     <section class="panel">
-      <h2>Go deeper</h2>
-      <p class="section-copy">Already installed? The upgrade page covers the same commands for an existing host.</p>
+      <h2>Need something else?</h2>
       <div class="link-grid">
-        <a class="link-card" href="../upgrade/">
-          <strong>Upgrade / repair</strong>
-          <span>Rerun the same commands on an existing install.</span>
-        </a>
         <a class="link-card" href="../how-it-works/">
           <strong>How it works</strong>
-          <span>The lifecycle from learning to bounded serving.</span>
+          <span>The plain-English explanation.</span>
         </a>
         <a class="link-card" href="../proof/">
           <strong>Verify</strong>
-          <span>The healthy reference and how to check your own host.</span>
+          <span>More detail on what to look for.</span>
         </a>
         <a class="link-card" href="../troubleshooting/">
           <strong>Troubleshooting</strong>
-          <span>Fast triage when status or verification do not line up.</span>
+          <span>What to do when the install still looks wrong.</span>
+        </a>
+        <a class="link-card" href="https://github.com/jonathangu/openclawbrain">
+          <strong>GitHub</strong>
+          <span>Repo, changelog, and deeper docs.</span>
         </a>
       </div>
     </section>
