@@ -201,24 +201,24 @@ routeFn available=yes</code></pre>
 
     <section class="panel">
       <h2>Fresh 2026-04-19 proof tranche</h2>
-      <p class="section-copy">The latest published proof work is bounded and specific, but it is also a real win. It fixed a reviewed must-fire lane, kept the checked restraint bundle clean, and made the proof surfaces much easier to inspect without pretending the online-proof story is finished.</p>
+      <p class="section-copy">The latest published proof work is bounded and specific, but it is also a real win. On a reviewed frozen test set, OpenClawBrain started catching the cases where memory should help, while still staying disciplined about when not to fire.</p>
       <div class="cards">
         <article class="card">
           <span class="card-label">Reviewed frozen cohort</span>
-          <h3><code>must_fire_binary_gate_v2</code> moved from <code>0 / 10</code> to <code>10 / 10</code></h3>
-          <p class="small">Lowering <code>activationThreshold</code> from <code>0.38</code> to <code>0.21</code> fixed the reviewed merged must-fire lane while the checked restraint bundle stayed clean: unnecessary activations <code>0 / 65</code>, must-not-fire failures <code>0 / 69</code>, broad-live regressions <code>0 / 403</code>.</p>
+          <h3>Reviewed “memory should help” cases moved from <code>0 / 10</code> to <code>10 / 10</code></h3>
+          <p class="small">That is the clearest current win. The same checked bundle also stayed clean on the restraint side: unnecessary activations <code>0 / 65</code>, must-not-fire failures <code>0 / 69</code>, broad-live regressions <code>0 / 403</code>.</p>
         </article>
         <article class="card">
           <span class="card-label">New inspection surface</span>
-          <h3>Route decisions and runtime modes are easier to see</h3>
-          <p class="small">The proof lane now includes route-decision summaries, compact runtime-mode tables, and pairwise learned-route deltas using the familiar <code>no_brain</code>, <code>vector_only</code>, <code>graph_prior_only</code>, and <code>learned_route</code> vocabulary.</p>
+          <h3>The product is easier to inspect</h3>
+          <p class="small">The proof lane now makes it easier to see what changed and what the system actually did, instead of burying the result in internal-only details.</p>
         </article>
       </div>
       <div class="callout">
         <strong>Teacher boundary:</strong> the new teacher/compiler lane is report-only. It packages evidence refs, replay hooks, proof linkage, and rollback linkage for review. It does not claim live teacher-driven graph mutation.
       </div>
       <div class="callout">
-        <strong>Claim boundary:</strong> this tranche strengthens promotion gates and proof packaging on checked bundles. It is not a claim that learned routing is already universally better or broadly proven online.
+        <strong>Claim boundary:</strong> this is a real measured improvement on checked bundles. It is not a claim that learned routing is already universally better or broadly proven online.
       </div>
     </section>
 
