@@ -200,6 +200,29 @@ routeFn available=yes</code></pre>
     </section>
 
     <section class="panel">
+      <h2>Fresh 2026-04-19 proof tranche</h2>
+      <p class="section-copy">The latest published proof work is bounded and specific. It adds a concrete calibration result plus stronger proof surfaces, without pretending the online-proof story is finished.</p>
+      <div class="cards">
+        <article class="card">
+          <span class="card-label">Reviewed frozen cohort</span>
+          <h3><code>must_fire_binary_gate_v2</code> moved from <code>0 / 10</code> to <code>10 / 10</code></h3>
+          <p class="small">Lowering <code>activationThreshold</code> from <code>0.38</code> to <code>0.21</code> fixed the reviewed merged must-fire lane while the checked restraint bundle stayed clean: unnecessary activations <code>0 / 65</code>, must-not-fire failures <code>0 / 69</code>, broad-live regressions <code>0 / 403</code>.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">New inspection surface</span>
+          <h3>Route decisions and runtime modes are easier to see</h3>
+          <p class="small">The proof lane now includes route-decision summaries, compact runtime-mode tables, and pairwise learned-route deltas using the familiar <code>no_brain</code>, <code>vector_only</code>, <code>graph_prior_only</code>, and <code>learned_route</code> vocabulary.</p>
+        </article>
+      </div>
+      <div class="callout">
+        <strong>Teacher boundary:</strong> the new teacher/compiler lane is report-only. It packages evidence refs, replay hooks, proof linkage, and rollback linkage for review. It does not claim live teacher-driven graph mutation.
+      </div>
+      <div class="callout">
+        <strong>Claim boundary:</strong> this tranche strengthens promotion gates and proof packaging on checked bundles. It is not a claim that learned routing is already universally better or broadly proven online.
+      </div>
+    </section>
+
+    <section class="panel">
       <h2>When to use each command</h2>
       <p class="section-copy">Use <code>status --detailed</code> for the fast check. Use <code>proof</code> when you need a durable record.</p>
       <ul class="list">

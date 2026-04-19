@@ -192,6 +192,31 @@
     </section>
 
     <section class="panel">
+      <h2>Fresh proof tranche, published with boundaries</h2>
+      <p class="section-copy">The newest public update is not a vague “it feels better” claim. It is a bounded proof tranche with one concrete calibration result, stronger proof surfaces, and an explicit line between what is checked and what is not.</p>
+      <div class="cards">
+        <article class="card">
+          <span class="card-label">Concrete result</span>
+          <h3>Calibration fixed the reviewed must-fire lane</h3>
+          <p class="small">On the reviewed frozen binary-gate v2 cohort, lowering <code>activationThreshold</code> from <code>0.38</code> to <code>0.21</code> moved merged <code>must_fire_binary_gate_v2</code> from <code>0 / 10</code> to <code>10 / 10</code> while the checked restraint bundle stayed clean.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">New proof surfaces</span>
+          <h3>More route truth is visible now</h3>
+          <p class="small">OpenClawBrain now exposes route-decision summaries, compact runtime-mode proof tables, and pairwise learned-route deltas inside the proof lane instead of hiding them behind internal-only artifacts.</p>
+        </article>
+        <article class="card">
+          <span class="card-label">Honest boundary</span>
+          <h3>Not broad online proof yet</h3>
+          <p class="small">This tranche strengthens promotion gates and proof packaging. It does not claim a broad live rollout or universal win beyond the checked bundles.</p>
+        </article>
+      </div>
+      <div class="callout">
+        <strong>Why this matters:</strong> the latest work makes silent regression harder, makes the runtime mode story easier to inspect, and opens a safe report-only teacher proposal lane without pretending teacher-driven mutation is already live.
+      </div>
+    </section>
+
+    <section class="panel">
       <h2>Start in four commands</h2>
       <p class="section-copy">If you already use OpenClaw, this is the shortest path.</p>
       <pre><code>npx @openclawbrain/cli@0.4.43 openclawbrain install --openclaw-home ~/.openclaw
