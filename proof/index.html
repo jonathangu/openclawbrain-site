@@ -188,14 +188,14 @@ routeFn available=yes</code></pre>
         <article class="card">
           <span class="card-label">Exercised host</span>
           <h3>Nonzero truth across all four signals</h3>
-          <p class="small">The exercised host shows <code>STATUS ok</code>, <code>loadProof=status_probe_ready</code>, <code>serve state=serving_active_pack</code>, and <code>routeFn available=yes</code>. Detailed status now exposes <code>feedback</code>, <code>attrCover</code>, and daemon-vs-hook alignment.</p>
+          <p class="small">The exercised host shows <code>STATUS ok</code>, proves that the memory layer is loaded, shows that it is serving, and shows that the install is in sync.</p>
         </article>
       </div>
       <div class="callout">
         <strong>Boundary:</strong> this page tells you whether the system is loaded and working on your host. It is not a promise of perfect answers.
       </div>
       <div class="callout">
-        <strong>Fresh-host note:</strong> a fresh install may show <code>STATUS warn</code> even when the runtime signals are healthy. That is expected. Half-converged states (daemon running but hook not wired, or vice versa) block with an explicit message instead of silently passing. Use <code>status --detailed</code> as the primary check, not proof alone.
+        <strong>Fresh-host note:</strong> a fresh install may show <code>STATUS warn</code> even when the runtime signals are healthy. That is expected. If one installed part updated and another did not, OpenClawBrain should say that clearly instead of silently passing. Use <code>status --detailed</code> as the primary check, not proof alone.
       </div>
     </section>
 
