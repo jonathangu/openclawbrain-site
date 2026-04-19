@@ -6,12 +6,12 @@
   <title>How OpenClawBrain Works | OpenClawBrain</title>
   <meta
     name="description"
-    content="OpenClawBrain attaches to one OpenClaw home directory, learns from past work in the background, and serves a small bounded memory slice at runtime without calling a live LLM on every hop."
+    content="OpenClawBrain learns from past work in the background and brings back only the small piece of memory that is likely to help right now."
   />
   <meta property="og:title" content="How OpenClawBrain Works | OpenClawBrain" />
   <meta
     property="og:description"
-    content="The lifecycle: attach to one home, learn from past work, promote what passes checks, and serve bounded context without raw-history overload."
+    content="The lifecycle: remember what helped before, learn from it in the background, and bring back only what helps now."
   />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://openclawbrain.ai/how-it-works/" />
@@ -186,10 +186,10 @@
         <a class="button button-secondary" href="../install/">Install</a>
       </div>
       <div class="signal-row" aria-label="At a glance">
-        <span class="signal">One home directory</span>
-        <span class="signal">Replay-gated promotion</span>
-        <span class="signal">Bounded live context</span>
-        <span class="signal">No live-LLM hops</span>
+        <span class="signal">Learns from past work</span>
+        <span class="signal">Keeps prompts smaller</span>
+        <span class="signal">Brings back only what helps</span>
+        <span class="signal">Easy to verify</span>
       </div>
     </section>
 
@@ -231,22 +231,22 @@
         <article class="flow-step">
           <span class="step-number">Step 1</span>
           <h3>Store the raw material</h3>
-          <p>It keeps transcripts, corrections, documents, tool traces, status evidence, and operator notes as durable memory instead of leaving them trapped in old chats.</p>
+          <p>It keeps useful past work, corrections, documents, and operating notes as durable memory instead of leaving them trapped in old chats.</p>
         </article>
         <article class="flow-step">
           <span class="step-number">Step 2</span>
-          <h3>Turn memory into a graph</h3>
-          <p>Nodes hold facts, corrections, examples, traces, and artifacts. Edges start simple, then become useful: override, evidence, related step, good next hop.</p>
+          <h3>Organize memory into something useful</h3>
+          <p>Instead of treating old chats like one long blob of text, OpenClawBrain organizes them so the system can find the part that actually helps.</p>
         </article>
         <article class="flow-step">
           <span class="step-number">Step 3</span>
-          <h3>Learn better routes off the hot path</h3>
-          <p>Replay, labels, and the async teacher score traversal choices in the background. Candidate packs improve there, not in the live user request.</p>
+          <h3>Learn in the background</h3>
+          <p>It compares what helped and what did not in the background, so live user requests do not turn into slow online training experiments.</p>
         </article>
         <article class="flow-step">
           <span class="step-number">Step 4</span>
-          <h3>Serve a bounded useful slice</h3>
-          <p>The runtime injects the few pieces that matter before the same mistake repeats. It does not dump the whole past into every prompt.</p>
+          <h3>Bring back only the few things that matter</h3>
+          <p>When the agent needs help, OpenClawBrain brings back a small useful slice of memory. It does not dump your whole history into every prompt.</p>
         </article>
       </div>
     </section>

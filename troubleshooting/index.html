@@ -6,7 +6,7 @@
   <title>Troubleshooting | OpenClawBrain</title>
   <meta
     name="description"
-    content="Troubleshoot OpenClawBrain when load proof, serving state, learned route, or proof verdicts do not match the healthy reference."
+    content="Troubleshoot OpenClawBrain when status, proof, or the memory layer do not match the healthy reference."
   />
   <meta property="og:title" content="Troubleshooting | OpenClawBrain" />
   <meta
@@ -158,17 +158,17 @@
         </article>
         <article class="card">
           <span class="card-label">Memory not active</span>
-          <h3><code>routeFn available=yes</code> is missing</h3>
-          <p class="small">Check whether the memory layer is actually serving. Compare against the <a href="../proof/">verify page</a> reference before assuming the install is broken.</p>
+          <h3>The memory layer does not look active</h3>
+          <p class="small">Check whether OpenClawBrain is actually serving. Compare against the <a href="../proof/">verify page</a> reference before assuming the install is broken.</p>
         </article>
         <article class="card">
           <span class="card-label">Parts out of sync</span>
           <h3>One side updated, the other side did not</h3>
-          <p class="small"><code>status --detailed</code> should flag this clearly. Rerun install and restart so both sides come back into sync.</p>
+          <p class="small"><code>status --detailed</code> should flag this clearly. Rerun install and restart so the installed pieces agree with each other again.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>The healthy reference:</strong> the exercised host shows <code>STATUS ok</code> with load proof, serving state, learned route, and daemon-vs-hook alignment. If yours does not, the next step is usually reinstall plus restart.
+        <strong>The healthy reference:</strong> the exercised host shows <code>STATUS ok</code>, proves that the memory layer is loaded, shows that it is serving, and shows that the installed pieces agree with each other. If yours does not, the next step is usually reinstall plus restart.
       </div>
     </section>
 
@@ -185,7 +185,7 @@ npx @openclawbrain/cli@0.4.44 proof --openclaw-home '~/.openclaw'</code></pre>
         <li class="card">
           <span class="card-label">1. Install</span>
           <h3>Repair the install</h3>
-          <p class="small">Rerun install to repair the plugin and memory layer, including stale-hook upgrade skew on the selected home.</p>
+          <p class="small">Rerun install to repair the plugin and memory layer on the selected home.</p>
         </li>
         <li class="card">
           <span class="card-label">2. Restart</span>
