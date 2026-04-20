@@ -187,7 +187,10 @@
         </article>
       </div>
       <div class="callout">
-        <strong>Current release:</strong> OpenClawBrain 0.4.44.
+        <strong>Current release:</strong> OpenClawBrain 0.4.45.
+      </div>
+      <div class="callout">
+        <strong>What 0.4.45 is:</strong> mostly a quality-of-life release. Plain <code>status</code> is lighter and calmer by default, while <code>status --detailed</code> stays the place for the deeper live check.
       </div>
       <div class="callout">
         <strong>Real win, not vague hype:</strong> the latest shipped update turned reviewed “memory should help here” cases from <code>0 / 10</code> to <code>10 / 10</code> without adding extra bad activations, and the proof is public so the claim is inspectable.
@@ -204,9 +207,9 @@
           <p class="small">On the reviewed frozen test set, OpenClawBrain went from catching <code>0 / 10</code> of the cases where memory should have helped to catching <code>10 / 10</code>, while the checked safety bundle stayed clean.</p>
         </article>
         <article class="card">
-          <span class="card-label">Easier to inspect</span>
-          <h3>Easier to inspect what changed</h3>
-          <p class="small">The latest release makes the result easier to inspect. Status and proof now show clearer summaries instead of hiding the important parts behind internal-only artifacts.</p>
+          <span class="card-label">Calmer default</span>
+          <h3>Better status behavior without new knobs</h3>
+          <p class="small">The current release keeps plain <code>status</code> on the cheap summary path and leaves the heavier inspection lane behind <code>--detailed</code>. You get a better default without having to learn new flags.</p>
         </article>
         <article class="card">
           <span class="card-label">Honest boundary</span>
@@ -222,10 +225,10 @@
     <section class="panel">
       <h2>Start in four commands</h2>
       <p class="section-copy">If you already use OpenClaw, this is the shortest path.</p>
-      <pre><code>npx @openclawbrain/cli@0.4.44 install --openclaw-home ~/.openclaw
+      <pre><code>npx @openclawbrain/cli@0.4.45 install --openclaw-home ~/.openclaw
 openclaw gateway restart
-npx @openclawbrain/cli@0.4.44 status --openclaw-home ~/.openclaw --detailed
-npx @openclawbrain/cli@0.4.44 proof --openclaw-home ~/.openclaw</code></pre>
+npx @openclawbrain/cli@0.4.45 status --openclaw-home ~/.openclaw --detailed
+npx @openclawbrain/cli@0.4.45 proof --openclaw-home ~/.openclaw</code></pre>
       <div class="hero-actions">
         <a class="button button-primary" href="./install/">Go to Start here</a>
         <a class="button button-secondary" href="./troubleshooting/">Need help?</a>
