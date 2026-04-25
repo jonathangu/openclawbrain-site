@@ -182,8 +182,8 @@ routeFn available=yes</code></pre>
       <div class="cards">
         <article class="card">
           <span class="card-label">Release</span>
-          <h3><code>OpenClawBrain 0.4.46</code></h3>
-          <p class="small">The current public release. It keeps the same install and proof flow, protects current-choice fidelity, broadens specificity/restraint proof, and adds the first route-level weather capability-choice lane.</p>
+          <h3><code>OpenClawBrain 0.4.47</code></h3>
+          <p class="small">The current public release. It keeps the same install and proof flow and adds explicit-preference precedence so newer user corrections supersede older conflicting preference truth.</p>
         </article>
         <article class="card">
           <span class="card-label">Exercised host</span>
@@ -201,24 +201,24 @@ routeFn available=yes</code></pre>
 
     <section class="panel">
       <h2>Latest measured improvement</h2>
-      <p class="section-copy">The latest published proof work is bounded and specific, but it is also a real win. OpenClawBrain keeps the protected current-choice lane clean, broadens specificity/restraint, keeps the operator proof clean, and adds one route-level capability-choice proof.</p>
+      <p class="section-copy">The latest published proof work is bounded and specific, but it is also a real win. OpenClawBrain now treats newer explicit preferences as replacements for older conflicting preference truth.</p>
       <div class="cards">
         <article class="card">
-          <span class="card-label">Bounded selective intervention</span>
-          <h3>Current choice <code>5 / 5</code>; broader specificity/restraint <code>12 / 12</code></h3>
-          <p class="small">That is the clearest current win. The latest checked lanes report <code>regret=0</code> and <code>harm=0</code>, and the clean one-home operator proof reports <code>success_and_proven</code>, severity <code>none</code>, warnings <code>0</code>.</p>
+          <span class="card-label">Preference precedence</span>
+          <h3>Newer explicit preferences win</h3>
+          <p class="small">The checked regression uses a real versioned preference handoff: Codex GPT-5.4 is superseded by latest Codex GPT-5.5 for current-truth retrieval.</p>
         </article>
         <article class="card">
-          <span class="card-label">Capability choice</span>
-          <h3>First weather capability route lane passes</h3>
-          <p class="small">A current weather/rain prompt chooses <code>tool_capability</code>; a weather-definition prompt chooses <code>stop_local</code>. Provider-specific <code>tool_instance</code> remains a hard negative, not a counted success.</p>
+          <span class="card-label">Operator proof</span>
+          <h3>Install flow stays the same</h3>
+          <p class="small">The package still publishes the same install, status, and proof commands. The 0.4.47 change is memory precedence, not a new install flow.</p>
         </article>
       </div>
       <div class="callout">
-        <strong>Review boundary:</strong> the weather capability-choice proof is route-level. It does not claim live weather execution end to end.
+        <strong>Review boundary:</strong> this release is about explicit preference supersession. It does not claim broad online routing superiority.
       </div>
       <div class="callout">
-        <strong>Claim boundary:</strong> this is a real measured improvement on checked bundles. It is not a claim that learned routing is already universally better or broadly proven online.
+        <strong>Claim boundary:</strong> this is a real measured correction-memory improvement on checked bundles. It is not a claim that learned routing is already universally better or broadly proven online.
       </div>
     </section>
 
@@ -246,10 +246,10 @@ routeFn available=yes</code></pre>
         <article class="card">
           <span class="card-label">Commands</span>
           <h3>Install, restart, status, proof</h3>
-          <pre><code>npx @openclawbrain/cli@0.4.46 install --openclaw-home '~/.openclaw'
+          <pre><code>npx @openclawbrain/cli@0.4.47 install --openclaw-home '~/.openclaw'
 openclaw gateway restart
-npx @openclawbrain/cli@0.4.46 status --openclaw-home '~/.openclaw' --detailed
-npx @openclawbrain/cli@0.4.46 proof --openclaw-home '~/.openclaw'</code></pre>
+npx @openclawbrain/cli@0.4.47 status --openclaw-home '~/.openclaw' --detailed
+npx @openclawbrain/cli@0.4.47 proof --openclaw-home '~/.openclaw'</code></pre>
         </article>
         <article class="card">
           <span class="card-label">How to read the output</span>
