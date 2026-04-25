@@ -187,29 +187,29 @@
         </article>
       </div>
       <div class="callout">
-        <strong>Current release:</strong> OpenClawBrain 0.4.47.
+        <strong>Current release:</strong> OpenClawBrain 0.4.48.
       </div>
       <div class="callout">
-        <strong>What 0.4.47 is:</strong> a narrow explicit-preference precedence release. Newer user corrections and preferences replace older conflicting preference truth instead of coexisting as stale current context.
+        <strong>What 0.4.48 is:</strong> a bounded routing/proof release. It strengthens cold-start prior selection, learned-route activation accounting, and a shadow-only Teacher graph-maintenance proposal lifecycle.
       </div>
       <div class="callout">
-        <strong>Real win, not vague hype:</strong> the latest shipped update proves the GPT-5.4 → latest GPT-5.5 correction handoff: the old explicit preference is marked superseded, the new one becomes current, and retrieval stops serving the stale tool choice.
+        <strong>Real win, not vague hype:</strong> the latest shipped update keeps the learned route_fn central while making cold-start and graph-maintenance evidence more measurable and honest.
       </div>
     </section>
 
     <section class="panel">
       <h2>Latest measured improvement</h2>
-      <p class="section-copy">The newest public update is a real shipped improvement, not a hand-wavy “AI got better” story. It makes explicit preference updates behave like replacements: newer corrections become the current truth and older conflicting preferences stop firing for normal current-truth queries.</p>
+      <p class="section-copy">The newest public update is a real shipped improvement, not a hand-wavy “AI got better” story. It improves first useful context and proof accounting without claiming broad live answer-quality gains.</p>
       <div class="cards">
         <article class="card">
           <span class="card-label">Concrete result</span>
-          <h3>It keeps current preference truth current</h3>
-          <p class="small">The motivating regression proves a user preference update from Codex GPT-5.4 to latest Codex GPT-5.5. The old preference is superseded; the new one is retrieved as current.</p>
+          <h3>It improves bounded routing proof</h3>
+          <p class="small">The release adds a cold-start scorecard, learned-route activation-usefulness labels, and a shadow-only graph-maintenance replay lifecycle.</p>
         </article>
         <article class="card">
           <span class="card-label">Release boundary</span>
           <h3>Narrow by design</h3>
-          <p class="small">0.4.47 does not claim a new broad online-routing win. It publishes one important memory discipline fix on top of the 0.4.46 proof release.</p>
+          <p class="small">0.4.48 does not claim broad memory, broad online answer-quality gains, fresh-home equivalence, or live graph self-editing.</p>
         </article>
         <article class="card">
           <span class="card-label">Honest boundary</span>
@@ -218,17 +218,17 @@
         </article>
       </div>
       <div class="callout">
-        <strong>Why this matters:</strong> OpenClawBrain is getting better at keeping durable preference memory honest: a correction can supersede old truth instead of merely adding more context.
+        <strong>Why this matters:</strong> OpenClawBrain is getting better at measuring when learned routing helps, when cold-start priors are enough, and when graph-maintenance proposals remain safely off-path.
       </div>
     </section>
 
     <section class="panel">
       <h2>Start in four commands</h2>
       <p class="section-copy">If you already use OpenClaw, this is the shortest path.</p>
-      <pre><code>npx @openclawbrain/cli@0.4.47 install --openclaw-home ~/.openclaw
+      <pre><code>npx @openclawbrain/cli@0.4.48 install --openclaw-home ~/.openclaw
 openclaw gateway restart
-npx @openclawbrain/cli@0.4.47 status --openclaw-home ~/.openclaw --detailed
-npx @openclawbrain/cli@0.4.47 proof --openclaw-home ~/.openclaw</code></pre>
+npx @openclawbrain/cli@0.4.48 status --openclaw-home ~/.openclaw --detailed
+npx @openclawbrain/cli@0.4.48 proof --openclaw-home ~/.openclaw</code></pre>
       <div class="hero-actions">
         <a class="button button-primary" href="./install/">Go to Start here</a>
         <a class="button button-secondary" href="./troubleshooting/">Need help?</a>
