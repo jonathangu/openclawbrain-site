@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain — Corrections That Stick</title>
+  <title>OpenClawBrain — Latency-safe memory for OpenClaw</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="An OpenClaw plugin that remembers your corrections, carries useful context across sessions, and keeps prompts smaller.">
-  <meta property="og:title" content="OpenClawBrain — Corrections That Stick">
-  <meta property="og:description" content="An OpenClaw plugin that remembers your corrections, carries useful context across sessions, and keeps prompts smaller.">
+  <meta name="description" content="A native OpenClaw plugin that distills corrections into a local memory graph, retrieves bounded context, and keeps proof and audit surfaces.">
+  <meta property="og:title" content="OpenClawBrain — Latency-safe memory for OpenClaw">
+  <meta property="og:description" content="A native OpenClaw plugin that distills corrections into a local memory graph, retrieves bounded context, and keeps proof and audit surfaces.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary">
@@ -48,8 +48,6 @@
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
     .page { max-width: 920px; margin: 0 auto; padding: 2.5rem 1.4rem 5rem; }
-
-    /* NAV */
     .site-header { margin-bottom: 2.4rem; }
     .utility-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.1rem; }
     .brand { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
@@ -61,8 +59,6 @@
       text-decoration: none; transition: border-color 140ms ease, background 140ms ease;
     }
     .utility-links a:hover { border-color: var(--border-strong); background: rgba(121, 211, 255, 0.1); text-decoration: none; }
-
-    /* HERO */
     .hero-card {
       padding: 2.5rem 2rem 2rem;
       border: 1px solid var(--border-strong); border-radius: var(--radius);
@@ -81,8 +77,6 @@
     .btn:hover { text-decoration: none; transform: translateY(-1px); }
     .btn-primary { background: linear-gradient(135deg, var(--accent), #95e4ff); color: #061018; }
     .btn-secondary { border-color: var(--border-strong); background: rgba(121, 211, 255, 0.09); color: var(--accent); }
-
-    /* CHIPS */
     .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.4rem 0 0; }
     .chip {
       display: inline-flex; align-items: center; gap: 0.35rem;
@@ -91,8 +85,6 @@
       background: rgba(10, 14, 22, 0.82);
     }
     .chip .check { color: var(--green); font-weight: 600; }
-
-    /* SECTIONS */
     .section {
       margin-bottom: 1.55rem; border: 1px solid var(--border);
       border-radius: var(--radius); padding: 1.6rem 1.5rem;
@@ -101,14 +93,12 @@
     .section h2 { margin: 0 0 0.8rem; font-size: 1.15rem; color: var(--text-bright); font-weight: 700; }
     .section h3 { margin: 1.2rem 0 0.4rem; font-size: 0.92rem; color: var(--text-bright); font-weight: 600; }
     .section p { margin: 0 0 0.7rem; }
-    .section ul { margin: 0 0 0.7rem 1.2rem; }
+    .section ul, .section ol { margin: 0 0 0.7rem 1.2rem; }
     .section li { margin-bottom: 0.3rem; }
     .section code {
       font-family: var(--mono); font-size: 0.84rem; background: var(--bg-code);
       padding: 0.12rem 0.45rem; border-radius: 5px; color: var(--accent);
     }
-
-    /* CODE BLOCK */
     .code-block {
       background: var(--bg-code); border: 1px solid var(--border);
       border-radius: 10px; padding: 1rem 1.2rem; margin: 0.8rem 0;
@@ -116,14 +106,10 @@
       color: var(--text); overflow-x: auto; white-space: pre;
     }
     .code-block .comment { color: var(--text-muted); }
-
-    /* TABLE */
     .section table { width: 100%; border-collapse: collapse; margin: 0.6rem 0; font-size: 0.85rem; }
-    .section th, .section td { padding: 0.5rem 0.7rem; border: 1px solid var(--border); text-align: left; }
+    .section th, .section td { padding: 0.5rem 0.7rem; border: 1px solid var(--border); text-align: left; vertical-align: top; }
     .section th { color: var(--text-bright); font-weight: 600; background: var(--bg-code); }
     .section td code { font-size: 0.8rem; }
-
-    /* FOOTER */
     .site-footer {
       margin-top: 3rem; padding-top: 1.2rem; border-top: 1px solid var(--border);
       font-size: 0.78rem; color: var(--text-muted); text-align: center;
@@ -141,48 +127,47 @@
       <nav class="utility-links">
         <a href="#install">Install</a>
         <a href="#how-it-works">How it works</a>
+        <a href="#verify">Verify</a>
         <a href="#safety">Safety</a>
         <a href="https://github.com/jonathangu/openclawbrain">GitHub</a>
       </nav>
     </div>
 
     <div class="hero-card">
-      <p class="eyebrow">OpenClaw plugin &middot; v0.1.1</p>
-      <h1>Stop reteaching your agent the same things.</h1>
-      <p class="lead">OpenClawBrain is an <a href="https://docs.openclaw.ai">OpenClaw</a> plugin that remembers your corrections, carries useful context across sessions, and keeps prompts smaller. It runs locally. It does not upload anything.</p>
+      <p class="eyebrow">Native OpenClaw plugin &middot; v0.2.0</p>
+      <h1>Latency-safe memory that learns from your corrections.</h1>
+      <p class="lead">OpenClawBrain is a native <a href="https://docs.openclaw.ai">OpenClaw</a> plugin that stores redacted memory nodes in local SQLite, retrieves only the few memories that matter, and keeps full proof and audit surfaces. By default it stays local; if you explicitly configure a structured JSON model endpoint, it can distill corrections and learn routes automatically.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#install">Install in 60 seconds</a>
+        <a class="btn btn-secondary" href="#verify">See the routes</a>
         <a class="btn btn-secondary" href="https://github.com/jonathangu/openclawbrain">Source code</a>
       </div>
       <div class="chips">
-        <span class="chip"><span class="check">&#10003;</span> Local only</span>
-        <span class="chip"><span class="check">&#10003;</span> Redacted storage</span>
-        <span class="chip"><span class="check">&#10003;</span> Off by default</span>
+        <span class="chip"><span class="check">&#10003;</span> Local by default</span>
+        <span class="chip"><span class="check">&#10003;</span> Bounded prompt injection</span>
+        <span class="chip"><span class="check">&#10003;</span> Inspectable routes</span>
         <span class="chip"><span class="check">&#10003;</span> Open source (MIT)</span>
       </div>
     </div>
   </header>
 
-  <!-- THE PROBLEM -->
   <section class="section">
     <h2>The problem</h2>
-    <p>You correct your OpenClaw agent. You tell it to use <code>pnpm</code> instead of <code>npm</code>. You fix a workflow. Next session, it forgets.</p>
-    <p>OpenClawBrain fixes that. It is a native OpenClaw plugin that hooks into the agent's pre-prompt build. It classifies each turn and, when it makes sense, injects bounded context from local files you control. On turns where it is not useful, it stays silent.</p>
+    <p>Agents forget the small things that matter: a correction about your build tool, a preference about how you want tests run, or a useful workflow from the last session. The usual fallback is stuffing more text into every prompt.</p>
+    <p>OpenClawBrain keeps the claim tighter. It stores redacted local memories, retrieves candidates from SQLite, and injects only a bounded slice when the turn looks like it needs help.</p>
   </section>
 
-  <!-- WHAT IT DOES -->
   <section class="section">
-    <h2>What it does</h2>
+    <h2>What v0.2 does</h2>
     <ul>
-      <li><strong>Corrections stick.</strong> You correct something once. OpenClawBrain brings it back when relevant.</li>
-      <li><strong>Context carries forward.</strong> Notes, preferences, and working context are available across sessions.</li>
-      <li><strong>Prompts stay small.</strong> Only useful context is injected, not your entire history.</li>
-      <li><strong>Stays silent when not needed.</strong> On simple direct answers, it does nothing.</li>
-      <li><strong>You can verify it.</strong> Status and proof routes show what it decided and why.</li>
+      <li><strong>Corrections can stick automatically.</strong> With the LLM path enabled, user corrections and preferences become scoped memory nodes instead of handwritten notes.</li>
+      <li><strong>Routing stays latency-safe.</strong> Most turns use cached policy plus local retrieval. Only ambiguous or high-signal turns may pay for one bounded planner call.</li>
+      <li><strong>Prompts stay bounded.</strong> Candidate retrieval is local, and only 0&ndash;5 selected memories are injected.</li>
+      <li><strong>Learning happens in the background.</strong> <code>agent_end</code>, tool observations, and async jobs update outcomes and route policy.</li>
+      <li><strong>Everything is inspectable.</strong> Status, proof, graph, learn, and search routes show what the plugin is doing.</li>
     </ul>
   </section>
 
-  <!-- INSTALL -->
   <section class="section" id="install" style="border-color: var(--border-strong); background: linear-gradient(165deg, rgba(121, 211, 255, 0.08), rgba(10, 15, 24, 0.92) 55%);">
     <h2>Install</h2>
     <p>Requires <a href="https://docs.openclaw.ai">OpenClaw</a> 2026.4.29 or later.</p>
@@ -190,82 +175,98 @@
 openclaw plugins install clawhub:openclawbrain
 openclaw plugins enable openclawbrain
 
-<span class="comment"># Configure it</span>
+<span class="comment"># Enable the v0.2 path</span>
 openclaw config set plugins.entries.openclawbrain.config.enabled true --strict-json
-openclaw config set plugins.entries.openclawbrain.config.mode '"conservative"' --strict-json
+openclaw config set plugins.entries.openclawbrain.config.mode '"balanced"' --strict-json
 openclaw config set plugins.entries.openclawbrain.hooks.allowPromptInjection true --strict-json
+openclaw config set plugins.entries.openclawbrain.hooks.allowConversationAccess true --strict-json
 openclaw config validate
-openclaw gateway restart
-
-<span class="comment"># Verify it is running</span>
-openclaw plugins inspect openclawbrain --json
-curl http://127.0.0.1:18789/plugins/openclawbrain/status</div>
-    <h3>Create your context files</h3>
-    <p>The plugin reads from local files. Create the ones that are useful to you:</p>
+openclaw gateway restart</div>
+    <h3>Optional: enable semantic distillation and route learning</h3>
+    <p>The intended default is a local OpenAI-compatible endpoint. If you leave <code>llm.enabled</code> off, the plugin still exposes proof, graph, learn, and search surfaces, but automatic correction capture is not active.</p>
+    <div class="code-block">openclaw config set plugins.entries.openclawbrain.config.llm '{
+  "enabled": true,
+  "provider": "local",
+  "baseUrl": "http://127.0.0.1:11434/v1",
+  "plannerModel": "your-local-model",
+  "feedbackModel": "your-local-model",
+  "learningModel": "your-local-model"
+}' --strict-json
+openclaw config validate
+openclaw gateway restart</div>
+    <h3>Legacy compatibility files</h3>
+    <p>If you want the older file-backed modes (<code>conservative</code> or <code>active</code>), you can still keep local activation files. They are optional in v0.2.</p>
     <div class="code-block">mkdir -p ~/.openclawbrain/activation/main
 
-<span class="comment"># Things you corrected the agent on</span>
 echo 'Use pnpm, not npm.' > ~/.openclawbrain/activation/main/corrections.md
-
-<span class="comment"># Ongoing context that helps across sessions</span>
 echo 'Working on OpenClawBrain plugin.' > ~/.openclawbrain/activation/main/context.md
-
-<span class="comment"># Hints for tool-heavy turns</span>
 echo 'Run tests before claiming something works.' > ~/.openclawbrain/activation/main/tool-guidance.md</div>
-    <p>That is it. Use your agent normally. OpenClawBrain runs in the background.</p>
   </section>
 
-  <!-- HOW IT WORKS -->
   <section class="section" id="how-it-works">
     <h2>How it works</h2>
-    <p>OpenClawBrain hooks into the agent's pre-prompt build cycle. Every turn goes through four steps:</p>
-    <ol style="margin: 0.6rem 0 0.6rem 1.2rem;">
-      <li><strong>Classify.</strong> The turn is classified: direct answer, correction follow-up, continuation, retrieval-heavy, tool-heavy, or stale memory conflict.</li>
-      <li><strong>Decide.</strong> Based on the mode, it decides whether to stay silent or inject context. Conservative mode only acts on corrections, continuations, and tool-heavy turns.</li>
-      <li><strong>Read and redact.</strong> If injecting, it reads the relevant activation files. Symlinks and oversized files are rejected. Content is redacted for emails, tokens, phone numbers, and URLs before injection.</li>
-      <li><strong>Audit.</strong> Every decision writes a local proof event. You can inspect what it did at any time.</li>
+    <ol>
+      <li><strong>Capture signals.</strong> Corrections, tool outcomes, and session-end feedback become candidates for memory or route learning.</li>
+      <li><strong>Retrieve locally.</strong> SQLite and cached policy find candidate memories for the current turn.</li>
+      <li><strong>Plan only when needed.</strong> Most turns avoid synchronous model work. Ambiguous or high-signal turns can use one bounded planner call.</li>
+      <li><strong>Inject a small slice.</strong> The prompt gets only a few selected memories, not your whole history.</li>
+      <li><strong>Learn in the background.</strong> Outcomes update freshness, usefulness, and route examples without blocking the main turn.</li>
     </ol>
     <h3>Modes</h3>
     <table>
       <thead><tr><th>Mode</th><th>Behavior</th></tr></thead>
       <tbody>
         <tr><td><code>off</code></td><td>Always stay silent.</td></tr>
-        <tr><td><code>proof-only</code></td><td>Classify and log, never inject.</td></tr>
-        <tr><td><code>conservative</code></td><td>Inject only on corrections, continuation, tool-heavy, and stale memory. Stay silent on direct answers.</td></tr>
-        <tr><td><code>active</code></td><td>Inject on more slices. More aggressive.</td></tr>
+        <tr><td><code>proof-only</code></td><td>Log route and proof events, never inject.</td></tr>
+        <tr><td><code>conservative</code></td><td>Legacy file-backed compatibility mode with narrower injection behavior.</td></tr>
+        <tr><td><code>active</code></td><td>Legacy file-backed compatibility mode with broader injection behavior.</td></tr>
+        <tr><td><code>balanced</code></td><td>The main v0.2 path: local retrieval plus bounded planner use when justified.</td></tr>
+        <tr><td><code>aggressive</code></td><td>The v0.2 path with a stronger bias toward retrieval and injection.</td></tr>
       </tbody>
     </table>
-    <h3>Routes</h3>
+  </section>
+
+  <section class="section" id="verify">
+    <h2>Verify</h2>
+    <p>The plugin ships with inspectable HTTP surfaces so you can see current state instead of guessing.</p>
+    <div class="code-block">openclaw plugins inspect openclawbrain --json
+curl http://127.0.0.1:18789/plugins/openclawbrain/status
+curl http://127.0.0.1:18789/plugins/openclawbrain/proof?limit=10
+curl 'http://127.0.0.1:18789/plugins/openclawbrain/graph?limit=10'
+curl 'http://127.0.0.1:18789/plugins/openclawbrain/learn?limit=10'
+curl 'http://127.0.0.1:18789/plugins/openclawbrain/search?query=pnpm&limit=10'</div>
     <table>
       <thead><tr><th>Endpoint</th><th>Description</th></tr></thead>
       <tbody>
-        <tr><td><code>/plugins/openclawbrain/status</code></td><td>Plugin status, config, last decision.</td></tr>
-        <tr><td><code>/plugins/openclawbrain/proof?limit=20</code></td><td>Recent proof events.</td></tr>
+        <tr><td><code>/plugins/openclawbrain/status</code></td><td>Current config, memory counts, routing stats, and latency counters.</td></tr>
+        <tr><td><code>/plugins/openclawbrain/proof?limit=20</code></td><td>Recent redacted proof and route events.</td></tr>
+        <tr><td><code>/plugins/openclawbrain/graph?limit=50</code></td><td>Redacted memory nodes and edges.</td></tr>
+        <tr><td><code>/plugins/openclawbrain/learn?limit=50</code></td><td>Route examples and active policy snapshot.</td></tr>
+        <tr><td><code>/plugins/openclawbrain/search?query=...&limit=20</code></td><td>Local memory search over SQLite and FTS.</td></tr>
       </tbody>
     </table>
   </section>
 
-  <!-- SAFETY -->
   <section class="section" id="safety">
     <h2>Safety</h2>
     <ul>
-      <li><strong>Off by default.</strong> <code>enabled</code> is <code>false</code> until you turn it on.</li>
-      <li><strong>Local only.</strong> No network calls. No data upload. No cloud service.</li>
-      <li><strong>Redacted storage.</strong> Proof events store hashes of user text, never raw text. Every proof event asserts: <code>rawTranscriptStored: false</code>, <code>rawUserTextStored: false</code>, <code>redactionApplied: true</code>.</li>
-      <li><strong>Fail-closed.</strong> If <code>rawTranscriptUpload</code> is set to <code>true</code>, the plugin shuts down entirely.</li>
-      <li><strong>Not a single point of failure.</strong> If the plugin errors, the agent runs normally without it.</li>
+      <li><strong>Off by default.</strong> <code>enabled</code> starts as <code>false</code>.</li>
+      <li><strong>Raw transcript storage is hard-disabled.</strong> <code>rawTranscriptUpload</code> and <code>storeRawTranscript</code> remain false.</li>
+      <li><strong>Redaction happens before store and before LLM.</strong> Proof and storage stay privacy-first.</li>
+      <li><strong>No network calls unless you explicitly configure an endpoint.</strong> The default intended path is local; remote models are opt-in.</li>
+      <li><strong>Fail-closed on missing permissions.</strong> The v0.2 path requires prompt injection and conversation access permissions to be explicitly granted.</li>
+      <li><strong>Plugin failure does not block the main agent.</strong> OpenClaw still runs if the plugin errors.</li>
     </ul>
   </section>
 
-  <!-- WHAT IT DOES NOT DO -->
   <section class="section">
     <h2>What it does not do</h2>
     <ul>
       <li>It is not a cloud memory service.</li>
-      <li>It is not a general intelligence layer.</li>
-      <li>It is not a replacement for OpenClaw's memory or context engine.</li>
-      <li>It does not upload raw transcripts or store raw user text.</li>
-      <li>It does not make model calls. Classification is heuristic.</li>
+      <li>It is not a replacement for OpenClaw itself.</li>
+      <li>It does not dump your full history into every prompt.</li>
+      <li>It does not require synchronous model calls on most turns.</li>
+      <li>It does not auto-distill corrections unless you configure the LLM path.</li>
     </ul>
   </section>
 
