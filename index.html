@@ -134,9 +134,9 @@
     </div>
 
     <div class="hero-card">
-      <p class="eyebrow">Native OpenClaw plugin &middot; v0.2.3</p>
+      <p class="eyebrow">Native OpenClaw plugin &middot; v0.2.4</p>
       <h1>Latency-safe memory that learns from your corrections.</h1>
-      <p class="lead">OpenClawBrain is a native <a href="https://docs.openclaw.ai">OpenClaw</a> plugin that stores redacted memory nodes in local SQLite, retrieves only the few memories that matter, and keeps full proof and audit surfaces. By default it stays local; if you explicitly configure a structured JSON model endpoint, it can distill corrections and learn routes automatically. Background capture and planner packets keep redacted user-message summaries plus hashes, not raw user-message text.</p>
+      <p class="lead">OpenClawBrain is a native <a href="https://docs.openclaw.ai">OpenClaw</a> plugin that stores redacted memory nodes in local SQLite, retrieves only the few memories that matter, and keeps full proof and audit surfaces. By default it stays local; standard practice is to connect it to local Ollama for structured JSON distillation and route learning. Background capture and planner packets keep redacted user-message summaries plus hashes, not raw user-message text.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#install">Install in 60 seconds</a>
         <a class="btn btn-secondary" href="#verify">See the routes</a>
@@ -144,7 +144,7 @@
       </div>
       <div class="chips">
         <span class="chip"><span class="check">&#10003;</span> Local by default</span>
-        <span class="chip"><span class="check">&#10003;</span> Bounded prompt injection</span>
+        <span class="chip"><span class="check">&#10003;</span> Bounded memory augmentation</span>
         <span class="chip"><span class="check">&#10003;</span> Inspectable routes</span>
         <span class="chip"><span class="check">&#10003;</span> Open source (MIT)</span>
       </div>
@@ -182,15 +182,17 @@ openclaw config set plugins.entries.openclawbrain.hooks.allowPromptInjection tru
 openclaw config set plugins.entries.openclawbrain.hooks.allowConversationAccess true --strict-json
 openclaw config validate
 openclaw gateway restart</div>
-    <h3>Optional: enable semantic distillation and route learning</h3>
-    <p>The intended default is a local OpenAI-compatible endpoint. If you leave <code>llm.enabled</code> off, the plugin still exposes proof, graph, learn, and search surfaces, but automatic correction capture is not active.</p>
-    <div class="code-block">openclaw config set plugins.entries.openclawbrain.config.llm '{
+    <h3>Standard practice: enable local Ollama distillation and route learning</h3>
+    <p>The standard path is local Ollama on <code>127.0.0.1</code>. If you leave <code>llm.enabled</code> off, the plugin still exposes proof, graph, learn, and search surfaces, but automatic correction capture is not active.</p>
+    <div class="code-block">ollama list
+
+openclaw config set plugins.entries.openclawbrain.config.llm '{
   "enabled": true,
-  "provider": "local",
   "baseUrl": "http://127.0.0.1:11434/v1",
-  "plannerModel": "your-local-model",
-  "feedbackModel": "your-local-model",
-  "learningModel": "your-local-model"
+  "routeModel": "qwen3.5:9b",
+  "plannerModel": "qwen3.5:9b",
+  "feedbackModel": "qwen3.5:9b",
+  "learningModel": "qwen3.5:9b"
 }' --strict-json
 openclaw config validate
 openclaw gateway restart</div>
@@ -253,8 +255,8 @@ curl 'http://127.0.0.1:18789/plugins/openclawbrain/search?query=pnpm&limit=10'</
       <li><strong>Off by default.</strong> <code>enabled</code> starts as <code>false</code>.</li>
       <li><strong>Raw transcript storage is hard-disabled.</strong> <code>rawTranscriptUpload</code> and <code>storeRawTranscript</code> remain false.</li>
       <li><strong>Redaction happens before store and before LLM.</strong> Proof and storage stay privacy-first.</li>
-      <li><strong>No network calls unless you explicitly configure an endpoint.</strong> The default intended path is local; remote models are opt-in.</li>
-      <li><strong>Fail-closed on missing permissions.</strong> The v0.2 path requires prompt injection and conversation access permissions to be explicitly granted.</li>
+      <li><strong>No remote credential path in the standard setup.</strong> The documented learning path is local Ollama on localhost.</li>
+      <li><strong>Fail-closed on missing permissions.</strong> The v0.2 path requires OpenClaw's prompt-augmentation and conversation-access permissions to be explicitly granted.</li>
       <li><strong>Plugin failure does not block the main agent.</strong> OpenClaw still runs if the plugin errors.</li>
     </ul>
   </section>
