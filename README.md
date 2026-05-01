@@ -1,3 +1,5 @@
 # openclawbrain.ai
 
-Source for [openclawbrain.ai](https://openclawbrain.ai). Single-page static site for the OpenClawBrain v0.2 product surface, deployed via GitHub Pages.
+Source for [openclawbrain.ai](https://openclawbrain.ai).
+
+This repo holds the public marketing site for OpenClawBrain: the homepage, install page, and proof page, deployed with GitHub Pages.
