@@ -126,7 +126,7 @@
     <section class="section">
       <h2>TL;DR</h2>
       <p>OpenClawBrain is a local memory layer for OpenClaw agents: it learns durable corrections, preferences, workflows, and context, then retrieves only the small slice that matters right now. It uses selective routing, SQLite search, bounded prompt injection, and outcome learning instead of stuffing history into every prompt.</p>
-      <p>In v0.2.15, retrieval and capture are separate decisions. Retrieval stays conservative, while aggressive capture evaluates durable instructions, corrections, workflows, routing rules, outcomes, explicit recall rules, and multi-agent scoped activation. The installed live loop is verified end to end: <strong>turn → capture audit → strict distillation/storage → SQLite/FTS retrieval → bounded prompt injection</strong>.</p>
+      <p>In v0.2.16, retrieval and capture are separate decisions. Retrieval stays conservative, while aggressive capture evaluates durable instructions, corrections, workflows, routing rules, outcomes, explicit recall rules, and multi-agent scoped activation. The installed live loop is verified end to end: <strong>turn → capture audit → strict distillation/storage → SQLite/FTS retrieval → bounded prompt injection</strong>.</p>
     </section>
 
     <section class="section">
@@ -192,7 +192,7 @@ inject a small block, or stay silent</code></pre>
 
     <section class="section">
       <h2>Latency</h2>
-      <p>The headline: v0.2.15 keeps prompt-time retrieval disciplined while moving more memory formation into audited capture and background distillation.</p>
+      <p>The headline: v0.2.16 keeps prompt-time retrieval disciplined while moving more memory formation into audited capture and background distillation.</p>
       <pre><code>retrieval: conservative and bounded
 capture: aggressive and audited
 storage: strict, scoped, local
@@ -219,11 +219,11 @@ injection: sparse and relevance-gated</code></pre>
     <section class="section">
       <h2>Inspectability</h2>
       <p>OpenClawBrain should prove what it did.</p>
-      <pre><code>openclaw plugins inspect openclawbrain --json
-curl http://127.0.0.1:18789/plugins/openclawbrain/status
-curl http://127.0.0.1:18789/plugins/openclawbrain/doctor
-curl http://127.0.0.1:18789/plugins/openclawbrain/proof?limit=10
-curl 'http://127.0.0.1:18789/plugins/openclawbrain/search?query=pnpm&amp;limit=10'</code></pre>
+      <pre><code>openclaw plugins inspect openclawbrain --runtime
+# authenticated route: /plugins/openclawbrain/status
+# authenticated route: /plugins/openclawbrain/doctor
+# authenticated route: /plugins/openclawbrain/proof?limit=10
+# authenticated route: /plugins/openclawbrain/search?query=pnpm&amp;limit=10</code></pre>
       <p>The operator should be able to answer whether the plugin is enabled, SQLite is healthy, which latency tiers are being used, which memories were injected recently, and whether those injections helped or got corrected. That is the difference between magic memory and an accountable local system.</p>
     </section>
   </div>

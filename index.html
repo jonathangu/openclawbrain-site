@@ -131,8 +131,8 @@
         <a class="btn" href="/proof/">Verify it locally</a>
       </div>
       <div class="chips">
-        <span class="chip">Current release: v0.2.15</span>
-        <span class="chip">Native OpenClaw plugin</span>
+        <span class="chip">Current release: v0.2.16</span>
+        <span class="chip">First-class OpenClaw memory plugin</span>
         <span class="chip">Local SQLite + FTS graph</span>
         <span class="chip">Aggressive capture; conservative injection</span>
       </div>
@@ -169,7 +169,7 @@ Relevant memory:
 
     <section class="section">
       <h2>What is live today</h2>
-      <p>OpenClawBrain is a real plugin today, not a concept page. The current release is <strong>v0.2.15</strong>. The core live loop now separates retrieval from aggressive capture: durable instructions, corrections, workflows, routing rules, outcomes, explicit recall rules, and multi-agent scoped activation get evaluated, while strict validators still block raw secrets and junk memory.</p>
+      <p>OpenClawBrain is a real plugin today, not a concept page. The current release is <strong>v0.2.16</strong>. It registers as OpenClaw’s first-class memory plugin, so runtime doctor/status can see the active memory backend while the OCB loop separates retrieval from aggressive capture: durable instructions, corrections, workflows, routing rules, outcomes, explicit recall rules, and multi-agent scoped activation get evaluated, while strict validators still block raw secrets and junk memory.</p>
       <p>That does not mean every edge case is done. It is best described as production-dogfood beta: the core capture/store/retrieve/inject path works, while route-learning quality, status polish, and long-term organic runtime still deserve more miles.</p>
     </section>
 
@@ -185,7 +185,7 @@ injection: sparse and relevance-gated</code></pre>
 
     <section class="section">
       <h2>Install in a minute</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain
+      <pre><code>openclaw plugins install clawhub:openclawbrain@0.2.16
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="fine">Multiple agents/profiles are supported through <code>scopes.agents</code>; each agent gets its own local activation root and memory graph.</p>

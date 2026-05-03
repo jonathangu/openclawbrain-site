@@ -123,9 +123,9 @@
 
     <section class="panel">
       <h2>Start here</h2>
-      <pre><code>openclaw plugins inspect openclawbrain --json
-curl http://127.0.0.1:18789/plugins/openclawbrain/status
-curl http://127.0.0.1:18789/plugins/openclawbrain/doctor</code></pre>
+      <pre><code>openclaw plugins inspect openclawbrain --runtime
+# authenticated route: /plugins/openclawbrain/status
+# authenticated route: /plugins/openclawbrain/doctor</code></pre>
       <p>You want to see the plugin loaded, runtime routes and hooks present, and SQLite + FTS healthy.</p>
       <p class="muted">Use <code>inspect</code> for runtime truth. A plugin list view can look like “zero plugins/routes/hooks” when it is only showing metadata snapshot fields.</p>
     </section>
@@ -155,10 +155,10 @@ Relevant memory:
 
     <section class="panel">
       <h2>Example checks</h2>
-      <pre><code>curl http://127.0.0.1:18789/plugins/openclawbrain/proof?limit=10
+      <pre><code># authenticated route: /plugins/openclawbrain/proof?limit=10
 curl 'http://127.0.0.1:18789/plugins/openclawbrain/graph?limit=10'
 curl 'http://127.0.0.1:18789/plugins/openclawbrain/learn?limit=10'
-curl 'http://127.0.0.1:18789/plugins/openclawbrain/search?query=pnpm&amp;limit=10'</code></pre>
+# authenticated route: /plugins/openclawbrain/search?query=pnpm&amp;limit=10</code></pre>
       <p>These are the surfaces that let you tell the difference between “we say it works” and “you can inspect what it is doing right now.”</p>
     </section>
 
