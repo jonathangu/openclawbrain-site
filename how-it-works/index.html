@@ -4,101 +4,29 @@
   <meta charset="utf-8">
   <title>OpenClawBrain — How it works</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="How OpenClawBrain learns from feedback: route_fn, SQLite memory graph, LLM distillation, bounded context injection, and proof surfaces.">
+  <meta name="description" content="A short product-level explanation of OpenClawBrain: local memory graph, LLM update boundary, selective routing, and bounded prompt injection.">
   <link rel="canonical" href="https://openclawbrain.ai/how-it-works/">
   <style>
-    :root {
-      --bg: #071019;
-      --panel: #0e1824;
-      --panel-2: #132131;
-      --text: #eaf2fb;
-      --muted: #a8b6c8;
-      --line: rgba(132, 179, 230, 0.22);
-      --accent: #7ed6ff;
-      --accent-2: #9ff5c0;
-      --shadow: 0 16px 40px rgba(0,0,0,0.28);
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(126,214,255,0.18), transparent 32%),
-        radial-gradient(circle at top right, rgba(159,245,192,0.12), transparent 26%),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.65;
-    }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 24px 20px 72px; }
-    .topbar, .nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
-    .brand { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
-    .navlinks { display: flex; gap: 10px; flex-wrap: wrap; }
-    .nav a, .navlinks a, .btn {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 10px 14px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      text-decoration: none;
-      background: rgba(255,255,255,0.02);
-    }
-    .hero, .section, .panel {
-      background: linear-gradient(180deg, rgba(19,33,49,0.96), rgba(14,24,36,0.96));
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-    }
-    .hero { padding: 40px 34px; margin-bottom: 18px; }
-    .section, .panel { padding: 28px; margin-top: 18px; }
-    .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; font-size: 12px; font-weight: 800; margin-bottom: 12px; }
-    h1 { font-size: clamp(34px, 5vw, 56px); line-height: 1.05; margin: 0 0 16px; }
-    h2 { margin: 0 0 10px; font-size: 28px; }
-    h3 { margin: 0 0 8px; font-size: 18px; }
-    p { margin: 0 0 14px; }
-    .lead { font-size: 20px; color: var(--muted); max-width: 780px; margin: 0 0 20px; }
-    .sublead { max-width: 780px; margin: 0 0 24px; color: var(--text); }
-    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 22px; }
-    .btn-primary { background: linear-gradient(135deg, var(--accent), #b6ebff); color: #051018; font-weight: 700; }
-    .chips { display: flex; gap: 10px; flex-wrap: wrap; }
-    .chip {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
-      color: var(--muted);
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 13px;
-    }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-    .card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 18px;
-    }
-    pre {
-      margin: 0 0 14px;
-      overflow: auto;
-      background: #08111b;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 16px;
-      color: #d8e8f8;
-      font-size: 14px;
-      line-height: 1.65;
-    }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-    blockquote { margin: 0 0 18px; padding: 14px 18px; border-left: 3px solid var(--accent-2); background: rgba(159,245,192,0.06); border-radius: 12px; }
-    table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; }
-    th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
-    ul, ol { margin: 0 0 14px; padding-left: 20px; }
-    li { margin-bottom: 8px; }
-    .fine, .muted { color: var(--muted); font-size: 14px; }
-    .footer { color: var(--muted); text-align: center; margin-top: 28px; font-size: 14px; }
-    @media (max-width: 640px) { .hero, .section, .panel { padding: 22px; } .lead { font-size: 18px; } }
+    :root { --bg:#071019; --panel:#0e1824; --panel-2:#132131; --text:#eaf2fb; --muted:#a8b6c8; --line:rgba(132,179,230,0.22); --accent:#7ed6ff; --accent-2:#9ff5c0; --shadow:0 16px 40px rgba(0,0,0,0.28); }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:radial-gradient(circle at top left,rgba(126,214,255,0.18),transparent 32%),radial-gradient(circle at top right,rgba(159,245,192,0.12),transparent 26%),var(--bg); color:var(--text); line-height:1.65; }
+    a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+    .wrap { max-width:980px; margin:0 auto; padding:24px 20px 72px; }
+    .topbar { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:20px; }
+    .brand { font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+    .navlinks { display:flex; gap:10px; flex-wrap:wrap; }
+    .navlinks a,.btn { border:1px solid var(--line); border-radius:999px; padding:10px 14px; display:inline-flex; align-items:center; gap:8px; font-size:14px; text-decoration:none; background:rgba(255,255,255,0.02); }
+    .hero,.section { background:linear-gradient(180deg,rgba(19,33,49,0.96),rgba(14,24,36,0.96)); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); }
+    .hero { padding:40px 34px; margin-bottom:18px; } .section { padding:28px; margin-top:18px; }
+    .eyebrow { color:var(--accent); text-transform:uppercase; letter-spacing:0.12em; font-size:12px; font-weight:800; margin-bottom:12px; }
+    h1 { font-size:clamp(34px,5vw,56px); line-height:1.05; margin:0 0 16px; } h2 { margin:0 0 10px; font-size:28px; } h3 { margin:0 0 8px; font-size:18px; }
+    p { margin:0 0 14px; } .lead { font-size:20px; color:var(--muted); max-width:800px; margin:0 0 20px; } .sublead { max-width:800px; margin:0 0 24px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; } .card { background:rgba(255,255,255,0.03); border:1px solid var(--line); border-radius:18px; padding:18px; }
+    pre { margin:0 0 14px; overflow:auto; background:#08111b; border:1px solid var(--line); border-radius:16px; padding:16px; color:#d8e8f8; font-size:14px; line-height:1.65; }
+    code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; } blockquote { margin:0 0 18px; padding:14px 18px; border-left:3px solid var(--accent-2); background:rgba(159,245,192,0.06); border-radius:12px; }
+    .actions { display:flex; gap:12px; flex-wrap:wrap; margin:0 0 22px; } .btn-primary { background:linear-gradient(135deg,var(--accent),#b6ebff); color:#051018; font-weight:700; }
+    .fine,.muted { color:var(--muted); font-size:14px; } ul { margin:0 0 14px; padding-left:20px; } li { margin-bottom:8px; }
+    @media (max-width:640px) { .hero,.section { padding:22px; } .lead { font-size:18px; } }
   </style>
 </head>
 <body>
@@ -106,139 +34,52 @@
     <div class="topbar">
       <div class="brand">OpenClawBrain</div>
       <div class="navlinks">
-        <a href="/">Home</a>
-        <a href="/how-it-works/">How it works</a>
-        <a href="/install/">Install</a>
-        <a href="/proof/">Proof</a>
-        <a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
+        <a href="/">Home</a><a href="/how-it-works/">How it works</a><a href="/install/">Install</a><a href="/proof/">Proof</a><a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
 
     <section class="hero">
       <div class="eyebrow">How it works</div>
-      <h1>A memory graph that stays out of the way.</h1>
-      <p class="lead">OpenClawBrain learns from ordinary feedback, stores the lesson locally, and injects it only when the current turn needs it.</p>
-      <p class="sublead">The product idea is simple. You should not have to teach your Claw the same thing twice. The code is built around that idea: route first, search locally, inject a small block, then learn from the outcome.</p>
+      <h1>Small memory, at the right time.</h1>
+      <p class="lead">OpenClawBrain is local, accountable memory for OpenClaw agents. It remembers durable corrections, preferences, workflows, and context, then retrieves only the small slice that matters for the current turn.</p>
       <blockquote><strong>LLM decides semantic meaning. Code enforces trust boundaries. SQLite stores the graph and evidence.</strong></blockquote>
     </section>
 
     <section class="section">
-      <h2>The short version</h2>
-      <p>OpenClawBrain is a native OpenClaw plugin. It hooks into the prompt build, looks at the current turn, and asks a practical question: would memory help here?</p>
-      <p>If yes, it searches local SQLite memory, ranks the candidates, and adds a compact <code>&lt;openclawbrain_context&gt;</code> block. If not, it stays quiet.</p>
-      <p>After the turn, it looks for durable feedback and updates the graph in the background.</p>
+      <h2>The loop</h2>
+      <pre><code>user turn
+ ↓
+route: should memory help?
+ ↓
+search: SQLite FTS + memory graph
+ ↓
+select: choose a tiny relevant slice
+ ↓
+inject: bounded XML context
+ ↓
+learn: update the graph after the turn</code></pre>
+      <p>Retrieval stays small. Learning can happen later.</p>
     </section>
 
     <section class="section">
-      <h2>A worked example</h2>
-      <p>You say:</p>
-      <pre><code>Actually, use pnpm in this repo.</code></pre>
-      <p>OpenClawBrain treats that as a likely correction. It redacts the turn, asks the local LLM for structured JSON, then code validates the proposal before anything is stored.</p>
-      <pre><code>{
-  "type": "correction",
-  "scope": "repo",
-  "content": "Use pnpm instead of npm in this repo",
-  "confidence": 0.94,
-  "tags": ["tests", "package-manager"]
-}</code></pre>
-      <p>Later you say:</p>
-      <pre><code>Run the tests.</code></pre>
-      <p><code>route_fn</code> recognizes a test/build turn, pulls the package-manager correction through SQLite FTS, and the selector injects a small reminder:</p>
-      <pre><code>&lt;openclawbrain_context&gt;
-Relevant memory:
-- Must follow: Use pnpm instead of npm in this repo.
-&lt;/openclawbrain_context&gt;</code></pre>
-      <p>The agent runs <code>pnpm test</code>. Afterward, OpenClawBrain records whether that memory helped, was ignored, or got corrected again.</p>
+      <h2>Why a graph</h2>
+      <p>OpenClawBrain stores memories as scoped nodes and links: corrections, preferences, workflows, context, route examples, outcomes, and superseded facts.</p>
+      <p>That helps it answer practical questions: does this apply here, is it still current, has it helped before, and which related memories should travel together?</p>
     </section>
 
     <section class="section">
-      <h2>The main code path</h2>
-      <pre><code>before_prompt_build
-  → redact current turn
-  → route-fn.ts makes a fast memory plan
-  → latency-controller.ts decides if a planner call is allowed
-  → memory-store.ts searches SQLite FTS
-  → context-selector.ts ranks and formats memories
-  → inject bounded prompt context
-
-agent_end / after_tool_call
-  → feedback-distiller.ts proposes memory updates
-  → memory-operations.ts validates and applies them
-  → learning.ts updates outcome scores
-  → route-learning.ts updates route examples and policy snapshots</code></pre>
-      <p>That separation is deliberate. Retrieval has to be fast and boring. Learning can be more thoughtful because it runs after the prompt path.</p>
+      <h2>Why the LLM boundary matters</h2>
+      <p>The LLM is used for semantic judgment. It can notice that a messy correction is actually durable feedback.</p>
+      <p>But the LLM does not write directly to memory. Code redacts, validates, scopes, dedupes, thresholds, and stores only what passes.</p>
     </section>
 
     <section class="section">
-      <h2>What gets stored</h2>
-      <p>OpenClawBrain stores distilled operational memory, not raw chat logs.</p>
-      <table>
-        <tr><th>Memory</th><th>What it means</th><th>Example</th></tr>
-        <tr><td><code>correction</code></td><td>You corrected behavior that should change next time.</td><td>Use pnpm in this repo.</td></tr>
-        <tr><td><code>preference</code></td><td>A stable way you like work or writing done.</td><td>Short, direct, natural writing.</td></tr>
-        <tr><td><code>workflow</code></td><td>A reusable way to handle a task.</td><td>Run build, test, and proof before closeout.</td></tr>
-        <tr><td><code>context</code></td><td>Background that changes future decisions.</td><td>Route Pelican work to the Pelican workspace.</td></tr>
-        <tr><td><code>route example</code></td><td>A learned pointer for when memory should participate.</td><td>Writing requests should check style memory.</td></tr>
-      </table>
-      <p>Each memory can carry scope, confidence, importance, freshness, tags, links, evidence hashes, and outcome counters. That is what turns memory from a notes file into a graph.</p>
-    </section>
-
-    <section class="section">
-      <h2>How the graph helps</h2>
-      <p>The graph keeps related lessons together without dumping everything into the model.</p>
-      <ul>
-        <li>A correction can supersede an older correction.</li>
-        <li>A repo rule can stay scoped to one repo.</li>
-        <li>A writing preference can travel with writing tasks, not build tasks.</li>
-        <li>A bad memory can decay or get pruned after poor outcomes.</li>
-      </ul>
-      <p>Search starts with SQLite FTS, then graph expansion can bring in connected memories when they are useful. The selector still has the final budget, so the prompt stays small.</p>
-    </section>
-
-    <section class="section">
-      <h2>LLM updates, with a hard boundary</h2>
-      <p>The LLM is good at semantic judgment. It can see that “make this sound like a person wrote it” is probably a writing preference, not a random complaint.</p>
-      <p>But the LLM does not write to memory directly. It returns structured JSON. Code checks the JSON, redacts content, applies scope, dedupes against existing memories, rejects weak claims, and writes to SQLite only if the proposal passes.</p>
-      <p class="fine">Default local path: Ollama through a localhost OpenAI-compatible endpoint. If the local model is down, the main agent keeps working and memory gets quieter.</p>
-    </section>
-
-    <section class="section">
-      <h2>Learned route_fn pointers</h2>
-      <p><code>route_fn</code> is the front door. It decides whether memory should participate before the system spends budget.</p>
-      <p>At first, it uses local rules and cached policy. Over time, route learning adds examples: this kind of turn usually needs repo memory; that kind usually needs writing style; this one should stay silent.</p>
-      <pre><code>turn shape: "help me write a post"
-learned pointer: check writing-style memories
-budget: small
-sync LLM call: usually no</code></pre>
-      <p>That is why the system can learn without turning every prompt into an extra planning call.</p>
-    </section>
-
-    <section class="section">
-      <h2>Latency shape</h2>
-      <table>
-        <tr><th>Tier</th><th>What happens</th><th>Blocks the turn?</th></tr>
-        <tr><td>0</td><td>Local route decision only.</td><td>No.</td></tr>
-        <tr><td>1</td><td>Cached route + SQLite retrieval.</td><td>No model call.</td></tr>
-        <tr><td>2</td><td>One bounded local planner call for ambiguous/high-signal turns.</td><td>Yes, capped.</td></tr>
-        <tr><td>3</td><td>Distillation, route learning, pruning, policy updates.</td><td>No. Background.</td></tr>
-      </table>
-      <p>The goal is not “memory at any cost.” The goal is useful memory with predictable latency.</p>
-    </section>
-
-    <section class="section">
-      <h2>Where to look in the repo</h2>
-      <table>
-        <tr><th>File</th><th>What to read it for</th></tr>
-        <tr><td><code>index.ts</code></td><td>Plugin wiring: hooks, routes, services, memory supplements.</td></tr>
-        <tr><td><code>route-fn.ts</code></td><td>The fast decision about whether memory should participate.</td></tr>
-        <tr><td><code>memory-store.ts</code></td><td>SQLite schema, FTS, graph storage, proof rows, jobs.</td></tr>
-        <tr><td><code>context-selector.ts</code></td><td>Ranking and prompt formatting.</td></tr>
-        <tr><td><code>feedback-distiller.ts</code></td><td>LLM-based feedback capture.</td></tr>
-        <tr><td><code>memory-operations.ts</code></td><td>Validation, dedupe, scoping, writes.</td></tr>
-        <tr><td><code>learning.ts</code></td><td>Outcome scoring, decay, and pruning.</td></tr>
-        <tr><td><code>route-learning.ts</code></td><td>Route examples and learned policy snapshots.</td></tr>
-      </table>
-      <p>That is the code story in one line: hooks observe, route_fn decides, SQLite retrieves, the selector injects, and background learning improves the graph.</p>
+      <h2>Learned routing pointers</h2>
+      <p>Over time, OpenClawBrain learns which kinds of turns usually need memory. A test command may need repo tooling rules. A writing task may need style preferences. A project task may need routing guidance.</p>
+      <p>The goal is not to search memory every time. The goal is to remember when it helps.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://github.com/jonathangu/openclawbrain#how-it-works" target="_blank" rel="noopener">Read the operator README</a>
+      </div>
     </section>
   </div>
 </body>

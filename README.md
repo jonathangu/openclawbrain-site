@@ -2,13 +2,18 @@
 
 Source for [openclawbrain.ai](https://openclawbrain.ai).
 
-This is the public site for OpenClawBrain: a local memory layer for OpenClaw that learns from feedback, stores an inspectable SQLite memory graph, and injects only the context that helps the current turn.
+This is the lightweight product site for OpenClawBrain. It should answer:
 
-Pages:
+- What is this?
+- Why should I care?
+- Can I trust it?
 
-- `index.html` — plain-language intro and install CTA
-- `how-it-works/` — code path, memory graph, LLM update boundary, learned route_fn pointers
-- `install/` — install, config, Ollama path, multi-agent setup, runtime checks
-- `proof/` — local verification surfaces and end-to-end proof shape
+Keep the site short and readable. GitHub is the operator/developer truth page for install, config, verification, endpoints, and debugging.
 
-The copy should stay natural and direct: specific enough to be useful, but not over-polished.
+Shared spine:
+
+> Evidence, not vibes, for agent memory.
+>
+> OpenClawBrain is local, accountable memory for OpenClaw agents. It remembers durable corrections, preferences, workflows, and context, then retrieves only the small slice that matters for the current turn.
+>
+> LLM decides semantic meaning. Code enforces trust boundaries. SQLite stores the graph and evidence.

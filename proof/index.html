@@ -4,205 +4,53 @@
   <meta charset="utf-8">
   <title>OpenClawBrain — Proof</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Verify OpenClawBrain locally: plugin load, SQLite and FTS health, proof events, graph search, learned routes, and prompt injection.">
+  <meta name="description" content="OpenClawBrain leaves proof: runtime load, SQLite health, search, graph state, route learning, and prompt injection decisions.">
   <link rel="canonical" href="https://openclawbrain.ai/proof/">
   <style>
-    :root {
-      --bg: #071019;
-      --panel: #0e1824;
-      --panel-2: #132131;
-      --text: #eaf2fb;
-      --muted: #a8b6c8;
-      --line: rgba(132, 179, 230, 0.22);
-      --accent: #7ed6ff;
-      --accent-2: #9ff5c0;
-      --shadow: 0 16px 40px rgba(0,0,0,0.28);
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(126,214,255,0.18), transparent 32%),
-        radial-gradient(circle at top right, rgba(159,245,192,0.12), transparent 26%),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.65;
-    }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 24px 20px 72px; }
-    .topbar, .nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
-    .brand { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
-    .navlinks { display: flex; gap: 10px; flex-wrap: wrap; }
-    .nav a, .navlinks a, .btn {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 10px 14px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      text-decoration: none;
-      background: rgba(255,255,255,0.02);
-    }
-    .hero, .section, .panel {
-      background: linear-gradient(180deg, rgba(19,33,49,0.96), rgba(14,24,36,0.96));
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-    }
-    .hero { padding: 40px 34px; margin-bottom: 18px; }
-    .section, .panel { padding: 28px; margin-top: 18px; }
-    .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; font-size: 12px; font-weight: 800; margin-bottom: 12px; }
-    h1 { font-size: clamp(34px, 5vw, 56px); line-height: 1.05; margin: 0 0 16px; }
-    h2 { margin: 0 0 10px; font-size: 28px; }
-    h3 { margin: 0 0 8px; font-size: 18px; }
-    p { margin: 0 0 14px; }
-    .lead { font-size: 20px; color: var(--muted); max-width: 780px; margin: 0 0 20px; }
-    .sublead { max-width: 780px; margin: 0 0 24px; color: var(--text); }
-    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 22px; }
-    .btn-primary { background: linear-gradient(135deg, var(--accent), #b6ebff); color: #051018; font-weight: 700; }
-    .chips { display: flex; gap: 10px; flex-wrap: wrap; }
-    .chip {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
-      color: var(--muted);
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 13px;
-    }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-    .card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 18px;
-    }
-    pre {
-      margin: 0 0 14px;
-      overflow: auto;
-      background: #08111b;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 16px;
-      color: #d8e8f8;
-      font-size: 14px;
-      line-height: 1.65;
-    }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-    blockquote { margin: 0 0 18px; padding: 14px 18px; border-left: 3px solid var(--accent-2); background: rgba(159,245,192,0.06); border-radius: 12px; }
-    table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; }
-    th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
-    ul, ol { margin: 0 0 14px; padding-left: 20px; }
-    li { margin-bottom: 8px; }
-    .fine, .muted { color: var(--muted); font-size: 14px; }
-    .footer { color: var(--muted); text-align: center; margin-top: 28px; font-size: 14px; }
-    @media (max-width: 640px) { .hero, .section, .panel { padding: 22px; } .lead { font-size: 18px; } }
+    :root { --bg:#071019; --panel:#0e1824; --text:#eaf2fb; --muted:#a8b6c8; --line:rgba(132,179,230,0.22); --accent:#7ed6ff; --accent-2:#9ff5c0; --shadow:0 16px 40px rgba(0,0,0,0.28); }
+    * { box-sizing:border-box; } body { margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:radial-gradient(circle at top left,rgba(126,214,255,0.18),transparent 32%),radial-gradient(circle at top right,rgba(159,245,192,0.12),transparent 26%),var(--bg); color:var(--text); line-height:1.65; }
+    a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; } .wrap { max-width:980px; margin:0 auto; padding:24px 20px 72px; }
+    .topbar { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:20px; } .brand { font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); font-weight:700; } .navlinks { display:flex; gap:10px; flex-wrap:wrap; }
+    .navlinks a,.btn { border:1px solid var(--line); border-radius:999px; padding:10px 14px; display:inline-flex; align-items:center; gap:8px; font-size:14px; text-decoration:none; background:rgba(255,255,255,0.02); }
+    .hero,.panel { background:linear-gradient(180deg,rgba(19,33,49,0.96),rgba(14,24,36,0.96)); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); } .hero { padding:40px 34px; margin-bottom:18px; } .panel { padding:28px; margin-top:18px; }
+    .eyebrow { color:var(--accent); text-transform:uppercase; letter-spacing:0.12em; font-size:12px; font-weight:800; margin-bottom:12px; } h1 { font-size:clamp(34px,5vw,56px); line-height:1.05; margin:0 0 16px; } h2 { margin:0 0 10px; font-size:28px; } h3 { margin:0 0 8px; font-size:18px; } p { margin:0 0 14px; } .lead { font-size:20px; color:var(--muted); max-width:800px; margin:0 0 20px; }
+    pre { margin:0 0 14px; overflow:auto; background:#08111b; border:1px solid var(--line); border-radius:16px; padding:16px; color:#d8e8f8; font-size:14px; line-height:1.65; } code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; } .card { background:rgba(255,255,255,0.03); border:1px solid var(--line); border-radius:18px; padding:18px; }
+    .actions { display:flex; gap:12px; flex-wrap:wrap; margin:0 0 22px; } .btn-primary { background:linear-gradient(135deg,var(--accent),#b6ebff); color:#051018; font-weight:700; } .muted,.fine { color:var(--muted); font-size:14px; }
+    @media (max-width:640px) { .hero,.panel { padding:22px; } .lead { font-size:18px; } }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="topbar">
       <div class="brand">OpenClawBrain</div>
-      <div class="navlinks">
-        <a href="/">Home</a>
-        <a href="/how-it-works/">How it works</a>
-        <a href="/install/">Install</a>
-        <a href="/proof/">Proof</a>
-        <a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
-      </div>
+      <div class="navlinks"><a href="/">Home</a><a href="/how-it-works/">How it works</a><a href="/install/">Install</a><a href="/proof/">Proof</a><a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a></div>
     </div>
 
     <section class="hero">
       <div class="eyebrow">Proof</div>
-      <h1>Don’t trust memory. Inspect it.</h1>
-      <p class="lead">A memory system should leave evidence. OpenClawBrain exposes the load state, SQLite health, proof events, graph, search, route learning, and recent injection decisions.</p>
-      <p class="sublead">The point is not to claim perfect memory. The point is to make memory visible enough that you can debug it.</p>
+      <h1>Memory should be inspectable.</h1>
+      <p class="lead">OpenClawBrain is built around proof surfaces, not vague claims. You can check whether it loaded, what it searched, what it injected, and what it learned.</p>
     </section>
 
     <section class="panel">
-      <h2>Start with runtime truth</h2>
+      <h2>Tiny proof loop</h2>
       <pre><code>openclaw plugins inspect openclawbrain --runtime
-openclaw doctor</code></pre>
-      <p>You want the plugin loaded, hooks registered, runtime routes present, and SQLite + FTS healthy.</p>
-      <p class="muted">A package can be installed without being useful. Runtime inspect tells you whether the plugin is actually alive inside the gateway.</p>
+openclaw doctor
+# /plugins/openclawbrain/proof?limit=10
+# /plugins/openclawbrain/search?query=pnpm&amp;limit=10</code></pre>
     </section>
 
     <section class="panel">
-      <h2>Useful surfaces</h2>
-      <table>
-        <tr><th>Surface</th><th>What it answers</th></tr>
-        <tr><td><code>/plugins/openclawbrain/status</code></td><td>Is memory enabled? Which mode is active? What happened recently?</td></tr>
-        <tr><td><code>/plugins/openclawbrain/doctor</code></td><td>Can the runtime open SQLite, use FTS, and write proof rows?</td></tr>
-        <tr><td><code>/plugins/openclawbrain/proof?limit=20</code></td><td>What did the plugin decide, inject, skip, store, or reject?</td></tr>
-        <tr><td><code>/plugins/openclawbrain/search?query=pnpm&amp;limit=20</code></td><td>Can local memory search find the thing you taught it?</td></tr>
-        <tr><td><code>/plugins/openclawbrain/graph?agentId=main&amp;limit=50</code></td><td>What redacted memory nodes and edges exist for this agent?</td></tr>
-        <tr><td><code>/plugins/openclawbrain/learn?limit=50</code></td><td>What route examples and learned policy snapshots exist?</td></tr>
-        <tr><td><code>/plugins/openclawbrain/audit?limit=20</code></td><td>Which capture attempts were stored, skipped, or rejected?</td></tr>
-        <tr><td><code>/plugins/openclawbrain/explain-last</code></td><td>What happened on the latest memory decision?</td></tr>
-      </table>
-      <p class="muted">HTTP plugin routes are authenticated on normal installs. Use the authenticated OpenClaw dashboard/client, or pass your gateway auth header when using curl.</p>
-    </section>
-
-    <section class="panel">
-      <h2>End-to-end proof shape</h2>
-      <p>A useful smoke test is small:</p>
-      <ol>
-        <li>Teach a correction: <code>Use pnpm instead of npm in this repo.</code></li>
-        <li>Confirm it appears in search or graph.</li>
-        <li>Ask for a test/build task.</li>
-        <li>Confirm a bounded memory block was injected.</li>
-        <li>Check proof or explain-last for the decision.</li>
-      </ol>
-      <pre><code>&lt;openclawbrain_context&gt;
-Relevant memory:
-- Must follow: Use pnpm instead of npm in this repo.
-&lt;/openclawbrain_context&gt;</code></pre>
-      <p>That is the core product claim: capture a durable lesson, retrieve it later, inject it inside budget, and leave proof behind.</p>
-    </section>
-
-    <section class="panel">
-      <h2>What good proof looks like</h2>
+      <h2>What you can inspect</h2>
       <div class="grid">
-        <div class="card">
-          <h3>Load proof</h3>
-          <p>The plugin is enabled, loaded, and registered as an OpenClaw memory plugin.</p>
-        </div>
-        <div class="card">
-          <h3>Storage proof</h3>
-          <p>SQLite opens, migrations are current, FTS works, and proof rows can be written.</p>
-        </div>
-        <div class="card">
-          <h3>Recall proof</h3>
-          <p>A known memory can be found through local search and selected for a relevant turn.</p>
-        </div>
-        <div class="card">
-          <h3>Injection proof</h3>
-          <p>The prompt receives a small, scoped memory block rather than a big transcript dump.</p>
-        </div>
-        <div class="card">
-          <h3>Learning proof</h3>
-          <p>Route examples, outcomes, and policy snapshots update as the system sees more turns.</p>
-        </div>
-        <div class="card">
-          <h3>Safety proof</h3>
-          <p>Rejected captures, redaction, scoping, and skipped injections are visible enough to debug.</p>
-        </div>
+        <div class="card"><h3>Status</h3><p>Plugin load, mode, routes, and recent runtime behavior.</p></div>
+        <div class="card"><h3>Doctor</h3><p>SQLite and FTS health under the current Node runtime.</p></div>
+        <div class="card"><h3>Proof events</h3><p>Recent route, capture, rejection, and injection decisions.</p></div>
+        <div class="card"><h3>Search and graph</h3><p>Local memory search, redacted nodes, and edges.</p></div>
       </div>
-    </section>
-
-    <section class="panel">
-      <h2>The claim, kept narrow</h2>
-      <p>OpenClawBrain does not make agents magically perfect. It does something more useful: it gives OpenClaw a local, inspectable way to remember feedback and use it at the right time.</p>
-      <ul>
-        <li>Memory stays local by default.</li>
-        <li>The LLM proposes semantic updates.</li>
-        <li>Code validates and writes.</li>
-        <li>SQLite stores the graph and evidence.</li>
-        <li>Prompt injection stays sparse and bounded.</li>
-      </ul>
-      <p>If a memory system cannot show you what it did, it is too hard to trust. OpenClawBrain is built so you can look.</p>
+      <p class="fine">The README has the full authenticated route notes and debugging path.</p>
+      <div class="actions"><a class="btn btn-primary" href="https://github.com/jonathangu/openclawbrain#inspectable-endpoints" target="_blank" rel="noopener">Read the proof guide</a></div>
     </section>
   </div>
 </body>

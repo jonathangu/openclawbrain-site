@@ -4,202 +4,50 @@
   <meta charset="utf-8">
   <title>Install OpenClawBrain</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Install OpenClawBrain, enable local memory, configure Ollama learning, and verify the plugin is live.">
+  <meta name="description" content="Quick install path for OpenClawBrain, with a tiny runtime proof loop.">
   <link rel="canonical" href="https://openclawbrain.ai/install/">
   <style>
-    :root {
-      --bg: #071019;
-      --panel: #0e1824;
-      --panel-2: #132131;
-      --text: #eaf2fb;
-      --muted: #a8b6c8;
-      --line: rgba(132, 179, 230, 0.22);
-      --accent: #7ed6ff;
-      --accent-2: #9ff5c0;
-      --shadow: 0 16px 40px rgba(0,0,0,0.28);
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(126,214,255,0.18), transparent 32%),
-        radial-gradient(circle at top right, rgba(159,245,192,0.12), transparent 26%),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.65;
-    }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 24px 20px 72px; }
-    .topbar, .nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
-    .brand { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
-    .navlinks { display: flex; gap: 10px; flex-wrap: wrap; }
-    .nav a, .navlinks a, .btn {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 10px 14px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      text-decoration: none;
-      background: rgba(255,255,255,0.02);
-    }
-    .hero, .section, .panel {
-      background: linear-gradient(180deg, rgba(19,33,49,0.96), rgba(14,24,36,0.96));
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-    }
-    .hero { padding: 40px 34px; margin-bottom: 18px; }
-    .section, .panel { padding: 28px; margin-top: 18px; }
-    .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; font-size: 12px; font-weight: 800; margin-bottom: 12px; }
-    h1 { font-size: clamp(34px, 5vw, 56px); line-height: 1.05; margin: 0 0 16px; }
-    h2 { margin: 0 0 10px; font-size: 28px; }
-    h3 { margin: 0 0 8px; font-size: 18px; }
-    p { margin: 0 0 14px; }
-    .lead { font-size: 20px; color: var(--muted); max-width: 780px; margin: 0 0 20px; }
-    .sublead { max-width: 780px; margin: 0 0 24px; color: var(--text); }
-    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 22px; }
-    .btn-primary { background: linear-gradient(135deg, var(--accent), #b6ebff); color: #051018; font-weight: 700; }
-    .chips { display: flex; gap: 10px; flex-wrap: wrap; }
-    .chip {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
-      color: var(--muted);
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 13px;
-    }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-    .card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 18px;
-    }
-    pre {
-      margin: 0 0 14px;
-      overflow: auto;
-      background: #08111b;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 16px;
-      color: #d8e8f8;
-      font-size: 14px;
-      line-height: 1.65;
-    }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-    blockquote { margin: 0 0 18px; padding: 14px 18px; border-left: 3px solid var(--accent-2); background: rgba(159,245,192,0.06); border-radius: 12px; }
-    table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; }
-    th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
-    ul, ol { margin: 0 0 14px; padding-left: 20px; }
-    li { margin-bottom: 8px; }
-    .fine, .muted { color: var(--muted); font-size: 14px; }
-    .footer { color: var(--muted); text-align: center; margin-top: 28px; font-size: 14px; }
-    @media (max-width: 640px) { .hero, .section, .panel { padding: 22px; } .lead { font-size: 18px; } }
+    :root { --bg:#071019; --panel:#0e1824; --text:#eaf2fb; --muted:#a8b6c8; --line:rgba(132,179,230,0.22); --accent:#7ed6ff; --accent-2:#9ff5c0; --shadow:0 16px 40px rgba(0,0,0,0.28); }
+    * { box-sizing:border-box; } body { margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:radial-gradient(circle at top left,rgba(126,214,255,0.18),transparent 32%),radial-gradient(circle at top right,rgba(159,245,192,0.12),transparent 26%),var(--bg); color:var(--text); line-height:1.65; }
+    a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; } .wrap { max-width:980px; margin:0 auto; padding:24px 20px 72px; }
+    .topbar { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:20px; } .brand { font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); font-weight:700; } .navlinks { display:flex; gap:10px; flex-wrap:wrap; }
+    .navlinks a,.btn { border:1px solid var(--line); border-radius:999px; padding:10px 14px; display:inline-flex; align-items:center; gap:8px; font-size:14px; text-decoration:none; background:rgba(255,255,255,0.02); }
+    .hero,.panel { background:linear-gradient(180deg,rgba(19,33,49,0.96),rgba(14,24,36,0.96)); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); } .hero { padding:40px 34px; margin-bottom:18px; } .panel { padding:28px; margin-top:18px; }
+    .eyebrow { color:var(--accent); text-transform:uppercase; letter-spacing:0.12em; font-size:12px; font-weight:800; margin-bottom:12px; } h1 { font-size:clamp(34px,5vw,56px); line-height:1.05; margin:0 0 16px; } h2 { margin:0 0 10px; font-size:28px; } p { margin:0 0 14px; } .lead { font-size:20px; color:var(--muted); max-width:800px; margin:0 0 20px; }
+    pre { margin:0 0 14px; overflow:auto; background:#08111b; border:1px solid var(--line); border-radius:16px; padding:16px; color:#d8e8f8; font-size:14px; line-height:1.65; } code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    .actions { display:flex; gap:12px; flex-wrap:wrap; margin:0 0 22px; } .btn-primary { background:linear-gradient(135deg,var(--accent),#b6ebff); color:#051018; font-weight:700; } .muted,.fine { color:var(--muted); font-size:14px; }
+    @media (max-width:640px) { .hero,.panel { padding:22px; } .lead { font-size:18px; } }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="topbar">
       <div class="brand">OpenClawBrain</div>
-      <div class="navlinks">
-        <a href="/">Home</a>
-        <a href="/how-it-works/">How it works</a>
-        <a href="/install/">Install</a>
-        <a href="/proof/">Proof</a>
-        <a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
-      </div>
+      <div class="navlinks"><a href="/">Home</a><a href="/how-it-works/">How it works</a><a href="/install/">Install</a><a href="/proof/">Proof</a><a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a></div>
     </div>
 
     <section class="hero">
       <div class="eyebrow">Install</div>
-      <h1>Install it, then prove it is live.</h1>
-      <p class="lead">OpenClawBrain is meant to be easy to try. Install the plugin, enable it, restart the gateway, and check the runtime surfaces.</p>
-      <p class="sublead">Requires OpenClaw <strong>2026.5.2</strong> or later. Current OpenClawBrain release: <strong>0.2.16</strong>.</p>
-      <div class="actions">
-        <a class="btn btn-primary" href="#quick-install">Quick install</a>
-        <a class="btn" href="/proof/">Verification commands</a>
-      </div>
+      <h1>Install in a minute.</h1>
+      <p class="lead">OpenClawBrain is local, accountable memory for OpenClaw agents. This is the short path; GitHub has the full operator guide.</p>
     </section>
 
-    <section class="panel" id="quick-install">
-      <h2>1) Install the plugin</h2>
+    <section class="panel">
+      <h2>Install</h2>
       <pre><code>openclaw plugins install clawhub:openclawbrain@0.2.16
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
-      <p class="muted">Pinned installs are easier to debug. If you want the latest release instead, use <code>clawhub:openclawbrain</code>.</p>
+      <p class="muted">Requires OpenClaw 2026.5.2 or later.</p>
     </section>
 
     <section class="panel">
-      <h2>2) Basic config</h2>
-      <p><code>balanced</code> is the recommended default. It keeps normal turns light, but still lets OpenClawBrain capture feedback and inject useful memory when the turn calls for it.</p>
-      <pre><code>openclaw config set plugins.entries.openclawbrain.config.enabled true --strict-json
-openclaw config set plugins.entries.openclawbrain.config.mode '"balanced"' --strict-json
-openclaw config set plugins.entries.openclawbrain.config.hooks.allowPromptContext true --strict-json
-openclaw config set plugins.entries.openclawbrain.config.hooks.allowConversationAccess true --strict-json
-openclaw config set plugins.entries.openclawbrain.config.hooks.allowToolObservation true --strict-json
-openclaw config validate
-openclaw gateway restart</code></pre>
-    </section>
-
-    <section class="panel">
-      <h2>3) Local LLM learning path</h2>
-      <p>The LLM path is for semantic updates: distilling feedback, judging route examples, and improving the graph. The model proposes structured JSON. Code decides what gets stored.</p>
-      <pre><code>ollama list
-
-openclaw config set plugins.entries.openclawbrain.config.llm '{
-  "enabled": true,
-  "baseUrl": "http://127.0.0.1:11434/v1",
-  "routeModel": "qwen2.5:32b-instruct",
-  "plannerModel": "qwen2.5:32b-instruct",
-  "feedbackModel": "qwen2.5:32b-instruct",
-  "learningModel": "qwen2.5:32b-instruct"
-}' --strict-json
-openclaw config validate
-openclaw gateway restart</code></pre>
-      <p class="muted">If Ollama is unavailable, the main agent should keep working. Known memories can still be searched locally; background learning gets quieter or retries later.</p>
-    </section>
-
-    <section class="panel">
-      <h2>4) Optional: scope multiple agents</h2>
-      <p>If you run multiple named agents, scope them explicitly. Each agent gets its own local activation root and memory graph.</p>
-      <pre><code>openclaw config set plugins.entries.openclawbrain.config.scopes.agents '["main","pelican","bountiful"]' --strict-json
-openclaw gateway restart</code></pre>
-      <p class="muted">Use your real agent ids. Single-agent installs can skip this.</p>
-    </section>
-
-    <section class="panel">
-      <h2>5) Check runtime truth</h2>
-      <pre><code>openclaw --version
-openclaw plugins inspect openclawbrain --runtime
-openclaw doctor</code></pre>
-      <p>You want to see the plugin loaded, hooks and routes registered, and no “No active memory plugin” warning in doctor.</p>
-      <p class="muted">Use runtime inspect for the source of truth. Plain list views can show package metadata without proving the plugin is active.</p>
-    </section>
-
-    <section class="panel">
-      <h2>6) Teach it one small thing</h2>
-      <p>Give it a durable correction:</p>
-      <pre><code>Use pnpm instead of npm in this repo.</code></pre>
-      <p>Then inspect what happened through authenticated plugin routes:</p>
-      <pre><code>/plugins/openclawbrain/proof?limit=10
-/plugins/openclawbrain/search?query=pnpm&amp;limit=10
-/plugins/openclawbrain/graph?agentId=main&amp;limit=10
-/plugins/openclawbrain/explain-last</code></pre>
-      <p>If it is working, the win should feel quiet: the next test/build turn should pick up the repo rule without you repeating it.</p>
-    </section>
-
-    <section class="panel">
-      <h2>Fallback install</h2>
-      <p>If ClawHub is rate-limited or package metadata is still settling, install the release archive directly.</p>
-      <pre><code>curl -L -o /tmp/openclawbrain-0.2.16.tgz \
-  https://github.com/jonathangu/openclawbrain/releases/download/v0.2.16/openclawbrain-0.2.16.tgz
-openclaw plugins install /tmp/openclawbrain-0.2.16.tgz --force
-openclaw plugins enable openclawbrain
-openclaw gateway restart</code></pre>
+      <h2>Tiny proof loop</h2>
+      <pre><code>openclaw plugins inspect openclawbrain --runtime
+openclaw doctor
+# /plugins/openclawbrain/proof?limit=10
+# /plugins/openclawbrain/search?query=pnpm&amp;limit=10</code></pre>
+      <p>The README covers config, Ollama, multi-agent scope, authenticated routes, and debugging.</p>
+      <div class="actions"><a class="btn btn-primary" href="https://github.com/jonathangu/openclawbrain#install" target="_blank" rel="noopener">Open the README</a></div>
     </section>
   </div>
 </body>
