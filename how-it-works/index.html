@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain: How It Works</title>
+  <title>OpenClawBrain — How it works</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A public technical explainer for OpenClawBrain: local SQLite memory, selective routing, bounded XML injection, Ollama semantics, and inspectable proof.">
+  <meta name="description" content="How OpenClawBrain learns from feedback: route_fn, SQLite memory graph, LLM distillation, bounded context injection, and proof surfaces.">
   <link rel="canonical" href="https://openclawbrain.ai/how-it-works/">
   <style>
     :root {
@@ -61,7 +61,7 @@
     p { margin: 0 0 14px; }
     .lead { font-size: 20px; color: var(--muted); max-width: 780px; margin: 0 0 20px; }
     .sublead { max-width: 780px; margin: 0 0 24px; color: var(--text); }
-    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 22px; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 22px; }
     .btn-primary { background: linear-gradient(135deg, var(--accent), #b6ebff); color: #051018; font-weight: 700; }
     .chips { display: flex; gap: 10px; flex-wrap: wrap; }
     .chip {
@@ -99,7 +99,7 @@
     .fine, .muted { color: var(--muted); font-size: 14px; }
     .footer { color: var(--muted); text-align: center; margin-top: 28px; font-size: 14px; }
     @media (max-width: 640px) { .hero, .section, .panel { padding: 22px; } .lead { font-size: 18px; } }
-</style>
+  </style>
 </head>
 <body>
   <div class="wrap">
@@ -116,115 +116,129 @@
 
     <section class="hero">
       <div class="eyebrow">How it works</div>
-      <h1>OpenClawBrain: How It Works</h1>
-      <p class="lead"><strong>Evidence, not vibes, for agent memory.</strong></p>
-      <p class="sublead">Imagine an agent that has worked with you for months — one that understands “close it out” means evidence, not vibes. OpenClawBrain makes those lessons available at the moment they matter, without turning every prompt into a giant diary.</p>
-      <p>This is the difference between magic memory and an accountable local system.</p>
-      <blockquote><strong>LLM decides semantic meaning. Code enforces trust boundaries. SQLite stores the graph and evidence.</strong><br><strong>Ollama proposes; code disposes.</strong></blockquote>
+      <h1>A memory graph that stays out of the way.</h1>
+      <p class="lead">OpenClawBrain learns from ordinary feedback, stores the lesson locally, and injects it only when the current turn needs it.</p>
+      <p class="sublead">The product idea is simple. You should not have to teach your Claw the same thing twice. The code is built around that idea: route first, search locally, inject a small block, then learn from the outcome.</p>
+      <blockquote><strong>LLM decides semantic meaning. Code enforces trust boundaries. SQLite stores the graph and evidence.</strong></blockquote>
     </section>
 
     <section class="section">
-      <h2>TL;DR</h2>
-      <p>OpenClawBrain is a local memory layer for OpenClaw agents: it learns durable corrections, preferences, workflows, and context, then retrieves only the small slice that matters right now. It uses selective routing, SQLite search, bounded prompt injection, and outcome learning instead of stuffing history into every prompt.</p>
-      <p>In v0.2.16, retrieval and capture are separate decisions. Retrieval stays conservative, while aggressive capture evaluates durable instructions, corrections, workflows, routing rules, outcomes, explicit recall rules, and multi-agent scoped activation. The installed live loop is verified end to end: <strong>turn → capture audit → strict distillation/storage → SQLite/FTS retrieval → bounded prompt injection</strong>.</p>
+      <h2>The short version</h2>
+      <p>OpenClawBrain is a native OpenClaw plugin. It hooks into the prompt build, looks at the current turn, and asks a practical question: would memory help here?</p>
+      <p>If yes, it searches local SQLite memory, ranks the candidates, and adds a compact <code>&lt;openclawbrain_context&gt;</code> block. If not, it stays quiet.</p>
+      <p>After the turn, it looks for durable feedback and updates the graph in the background.</p>
     </section>
 
     <section class="section">
-      <h2>What it is not</h2>
-      <p>It is <strong>not</strong> a vector database that blindly injects nearest-neighbor chunks. It is <strong>not</strong> raw transcript storage. It is <strong>not</strong> an always-on extra model call before every turn. It is <strong>not</strong> a remote SaaS memory service by default. And it is <strong>not</strong> a replacement for the main agent model.</p>
-      <p>It is a local reliability layer around the normal OpenClaw run: route, retrieve, inject a bounded memory block when useful, then learn whether that memory helped. In multi-agent OpenClaw homes, each scoped agent gets its own activation root and graph instead of sharing one global brain.</p>
-    </section>
-
-    <section class="section">
-      <h2>One annotated turn</h2>
-      <p>Suppose you corrected the agent earlier:</p>
+      <h2>A worked example</h2>
+      <p>You say:</p>
       <pre><code>Actually, use pnpm in this repo.</code></pre>
-      <p>OpenClawBrain distills that into a scoped correction node with type, content, scope, confidence, importance, freshness, tags, evidence hash, and outcome counters.</p>
-      <p>Later, you say:</p>
+      <p>OpenClawBrain treats that as a likely correction. It redacts the turn, asks the local LLM for structured JSON, then code validates the proposal before anything is stored.</p>
+      <pre><code>{
+  "type": "correction",
+  "scope": "repo",
+  "content": "Use pnpm instead of npm in this repo",
+  "confidence": 0.94,
+  "tags": ["tests", "package-manager"]
+}</code></pre>
+      <p>Later you say:</p>
       <pre><code>Run the tests.</code></pre>
-      <ol>
-        <li>OpenClaw emits <code>before_prompt_build</code>.</li>
-        <li>OpenClawBrain redacts the turn and <code>RouteFn</code> recognizes a build/test request.</li>
-        <li>SQLite FTS retrieves the <code>pnpm</code> correction.</li>
-        <li><code>ContextSelector</code> ranks it highly because it is both relevant and corrective.</li>
-        <li>The agent prompt receives a compact XML block.</li>
-      </ol>
+      <p><code>route_fn</code> recognizes a test/build turn, pulls the package-manager correction through SQLite FTS, and the selector injects a small reminder:</p>
       <pre><code>&lt;openclawbrain_context&gt;
 Relevant memory:
-- Must follow: Use pnpm in this repo.
+- Must follow: Use pnpm instead of npm in this repo.
 &lt;/openclawbrain_context&gt;</code></pre>
-      <p>The main agent runs <code>pnpm test</code> instead of <code>npm test</code>. After the turn, OpenClawBrain records whether the memory helped, was ignored, or led to another correction. Memory is not just retrieved; it is graded.</p>
+      <p>The agent runs <code>pnpm test</code>. Afterward, OpenClawBrain records whether that memory helped, was ignored, or got corrected again.</p>
     </section>
 
     <section class="section">
-      <h2>Retrieval mechanics</h2>
-      <p>Retrieval is a funnel, not a dump.</p>
-      <pre><code>current turn
- ↓
-RouteFn: should memory participate?
- ↓
-retrieval plan: queries, memory types, graph depth, budget
- ↓
-SQLite FTS search
- ↓
-graph expansion for connected memories
- ↓
-ContextSelector ranking
- ↓
-max-items / max-chars budget
- ↓
-inject a small block, or stay silent</code></pre>
-      <p>Corrections become “Must follow.” Preferences become “User preference.” Workflows become “Workflow.” Superseded, deleted, low-confidence, and over-budget memories stay out of the prompt. The important product behavior is restraint: most stored memories never touch a given turn.</p>
+      <h2>The main code path</h2>
+      <pre><code>before_prompt_build
+  → redact current turn
+  → route-fn.ts makes a fast memory plan
+  → latency-controller.ts decides if a planner call is allowed
+  → memory-store.ts searches SQLite FTS
+  → context-selector.ts ranks and formats memories
+  → inject bounded prompt context
+
+agent_end / after_tool_call
+  → feedback-distiller.ts proposes memory updates
+  → memory-operations.ts validates and applies them
+  → learning.ts updates outcome scores
+  → route-learning.ts updates route examples and policy snapshots</code></pre>
+      <p>That separation is deliberate. Retrieval has to be fast and boring. Learning can be more thoughtful because it runs after the prompt path.</p>
     </section>
 
     <section class="section">
-      <h2>Storage model</h2>
-      <p>OpenClawBrain stores distilled operational memory, not chat logs.</p>
+      <h2>What gets stored</h2>
+      <p>OpenClawBrain stores distilled operational memory, not raw chat logs.</p>
       <table>
-        <tr><th>Type</th><th>Meaning</th><th>Example</th></tr>
-        <tr><td><code>correction</code></td><td>User corrected previous behavior</td><td>“Use pnpm in OpenClawBrain.”</td></tr>
-        <tr><td><code>preference</code></td><td>Stable user/project preference</td><td>“Keep Telegram replies concise.”</td></tr>
-        <tr><td><code>workflow</code></td><td>Reusable way to do work</td><td>“For Bountiful Garden, coordinate through <code>@bbountiful_bot</code>.”</td></tr>
-        <tr><td><code>context</code></td><td>Background that changes future decisions</td><td>“Route Pelican work to the Pelican workspace unless Jon explicitly redirects main.”</td></tr>
+        <tr><th>Memory</th><th>What it means</th><th>Example</th></tr>
+        <tr><td><code>correction</code></td><td>You corrected behavior that should change next time.</td><td>Use pnpm in this repo.</td></tr>
+        <tr><td><code>preference</code></td><td>A stable way you like work or writing done.</td><td>Short, direct, natural writing.</td></tr>
+        <tr><td><code>workflow</code></td><td>A reusable way to handle a task.</td><td>Run build, test, and proof before closeout.</td></tr>
+        <tr><td><code>context</code></td><td>Background that changes future decisions.</td><td>Route Pelican work to the Pelican workspace.</td></tr>
+        <tr><td><code>route example</code></td><td>A learned pointer for when memory should participate.</td><td>Writing requests should check style memory.</td></tr>
       </table>
-      <p>SQLite is the durable store. FTS5 is the local text index. The graph is explicit enough to inspect, prune, supersede, and learn from.</p>
+      <p>Each memory can carry scope, confidence, importance, freshness, tags, links, evidence hashes, and outcome counters. That is what turns memory from a notes file into a graph.</p>
     </section>
 
     <section class="section">
-      <h2>Latency</h2>
-      <p>The headline: v0.2.16 keeps prompt-time retrieval disciplined while moving more memory formation into audited capture and background distillation.</p>
-      <pre><code>retrieval: conservative and bounded
-capture: aggressive and audited
-storage: strict, scoped, local
-injection: sparse and relevance-gated</code></pre>
+      <h2>How the graph helps</h2>
+      <p>The graph keeps related lessons together without dumping everything into the model.</p>
+      <ul>
+        <li>A correction can supersede an older correction.</li>
+        <li>A repo rule can stay scoped to one repo.</li>
+        <li>A writing preference can travel with writing tasks, not build tasks.</li>
+        <li>A bad memory can decay or get pruned after poor outcomes.</li>
+      </ul>
+      <p>Search starts with SQLite FTS, then graph expansion can bring in connected memories when they are useful. The selector still has the final budget, so the prompt stays small.</p>
+    </section>
+
+    <section class="section">
+      <h2>LLM updates, with a hard boundary</h2>
+      <p>The LLM is good at semantic judgment. It can see that “make this sound like a person wrote it” is probably a writing preference, not a random complaint.</p>
+      <p>But the LLM does not write to memory directly. It returns structured JSON. Code checks the JSON, redacts content, applies scope, dedupes against existing memories, rejects weak claims, and writes to SQLite only if the proposal passes.</p>
+      <p class="fine">Default local path: Ollama through a localhost OpenAI-compatible endpoint. If the local model is down, the main agent keeps working and memory gets quieter.</p>
+    </section>
+
+    <section class="section">
+      <h2>Learned route_fn pointers</h2>
+      <p><code>route_fn</code> is the front door. It decides whether memory should participate before the system spends budget.</p>
+      <p>At first, it uses local rules and cached policy. Over time, route learning adds examples: this kind of turn usually needs repo memory; that kind usually needs writing style; this one should stay silent.</p>
+      <pre><code>turn shape: "help me write a post"
+learned pointer: check writing-style memories
+budget: small
+sync LLM call: usually no</code></pre>
+      <p>That is why the system can learn without turning every prompt into an extra planning call.</p>
+    </section>
+
+    <section class="section">
+      <h2>Latency shape</h2>
       <table>
-        <tr><th>Tier</th><th>What happens</th><th>Turn-blocking model call?</th></tr>
-        <tr><td>Tier 0</td><td>local route decision only</td><td>no</td></tr>
-        <tr><td>Tier 1</td><td>cached route + SQLite retrieval</td><td>no</td></tr>
-        <tr><td>Tier 2</td><td>one bounded local planner call</td><td>yes, capped</td></tr>
-        <tr><td>Tier 3</td><td>distillation, learning, pruning, policy updates</td><td>no, background</td></tr>
+        <tr><th>Tier</th><th>What happens</th><th>Blocks the turn?</th></tr>
+        <tr><td>0</td><td>Local route decision only.</td><td>No.</td></tr>
+        <tr><td>1</td><td>Cached route + SQLite retrieval.</td><td>No model call.</td></tr>
+        <tr><td>2</td><td>One bounded local planner call for ambiguous/high-signal turns.</td><td>Yes, capped.</td></tr>
+        <tr><td>3</td><td>Distillation, route learning, pruning, policy updates.</td><td>No. Background.</td></tr>
       </table>
-      <p>Feedback distillation runs off the prompt path. The live local <code>qwen2.5:32b-instruct</code> E2E check took about 29 seconds, stored one temporary memory, injected it, and cleaned it up afterward.</p>
+      <p>The goal is not “memory at any cost.” The goal is useful memory with predictable latency.</p>
     </section>
 
     <section class="section">
-      <h2>Ollama and the trust boundary</h2>
-      <p>The default route/planner/feedback/learning model is <code>qwen2.5:32b-instruct</code>, reached through the local OpenAI-compatible endpoint <code>http://127.0.0.1:11434/v1/chat/completions</code>.</p>
-      <p>The model is used for semantic judgment: whether an ambiguous turn should retrieve memory, which candidates are relevant, whether a correction is durable enough to store, and whether an injected memory helped or caused harm.</p>
-      <p>The model does not write directly to memory. It proposes JSON. Code validates, redacts, scopes, deduplicates, thresholds, and writes. <strong>Ollama proposes; code disposes.</strong></p>
-      <h3>Degraded path: Ollama is down</h3>
-      <p>If the local model is unavailable, <code>RouteFn</code> still runs locally, SQLite FTS still retrieves known memories, bounded prompt injection can still work, and background learning can retry later. The main agent keeps working; memory gets quieter instead of becoming a single point of failure.</p>
-    </section>
-
-    <section class="section">
-      <h2>Inspectability</h2>
-      <p>OpenClawBrain should prove what it did.</p>
-      <pre><code>openclaw plugins inspect openclawbrain --runtime
-# authenticated route: /plugins/openclawbrain/status
-# authenticated route: /plugins/openclawbrain/doctor
-# authenticated route: /plugins/openclawbrain/proof?limit=10
-# authenticated route: /plugins/openclawbrain/search?query=pnpm&amp;limit=10</code></pre>
-      <p>The operator should be able to answer whether the plugin is enabled, SQLite is healthy, which latency tiers are being used, which memories were injected recently, and whether those injections helped or got corrected. That is the difference between magic memory and an accountable local system.</p>
+      <h2>Where to look in the repo</h2>
+      <table>
+        <tr><th>File</th><th>What to read it for</th></tr>
+        <tr><td><code>index.ts</code></td><td>Plugin wiring: hooks, routes, services, memory supplements.</td></tr>
+        <tr><td><code>route-fn.ts</code></td><td>The fast decision about whether memory should participate.</td></tr>
+        <tr><td><code>memory-store.ts</code></td><td>SQLite schema, FTS, graph storage, proof rows, jobs.</td></tr>
+        <tr><td><code>context-selector.ts</code></td><td>Ranking and prompt formatting.</td></tr>
+        <tr><td><code>feedback-distiller.ts</code></td><td>LLM-based feedback capture.</td></tr>
+        <tr><td><code>memory-operations.ts</code></td><td>Validation, dedupe, scoping, writes.</td></tr>
+        <tr><td><code>learning.ts</code></td><td>Outcome scoring, decay, and pruning.</td></tr>
+        <tr><td><code>route-learning.ts</code></td><td>Route examples and learned policy snapshots.</td></tr>
+      </table>
+      <p>That is the code story in one line: hooks observe, route_fn decides, SQLite retrieves, the selector injects, and background learning improves the graph.</p>
     </section>
   </div>
 </body>

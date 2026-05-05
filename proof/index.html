@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain Proof</title>
+  <title>OpenClawBrain — Proof</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Verify OpenClawBrain with plugin inspection, SQLite health checks, proof events, memory search, graph inspection, and route decisions.">
+  <meta name="description" content="Verify OpenClawBrain locally: plugin load, SQLite and FTS health, proof events, graph search, learned routes, and prompt injection.">
   <link rel="canonical" href="https://openclawbrain.ai/proof/">
   <style>
     :root {
@@ -61,7 +61,7 @@
     p { margin: 0 0 14px; }
     .lead { font-size: 20px; color: var(--muted); max-width: 780px; margin: 0 0 20px; }
     .sublead { max-width: 780px; margin: 0 0 24px; color: var(--text); }
-    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 22px; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 22px; }
     .btn-primary { background: linear-gradient(135deg, var(--accent), #b6ebff); color: #051018; font-weight: 700; }
     .chips { display: flex; gap: 10px; flex-wrap: wrap; }
     .chip {
@@ -99,7 +99,7 @@
     .fine, .muted { color: var(--muted); font-size: 14px; }
     .footer { color: var(--muted); text-align: center; margin-top: 28px; font-size: 14px; }
     @media (max-width: 640px) { .hero, .section, .panel { padding: 22px; } .lead { font-size: 18px; } }
-</style>
+  </style>
 </head>
 <body>
   <div class="wrap">
@@ -116,63 +116,93 @@
 
     <section class="hero">
       <div class="eyebrow">Proof</div>
-      <h1>Proof, not hand-waving.</h1>
-      <p class="lead">Close it out means evidence, not vibes. OpenClawBrain is built so you can inspect what it is doing instead of trusting a vague claim that an agent “has memory now.”</p>
-      <p class="sublead">These commands verify the accountable local system: plugin load, SQLite + FTS health, runtime status, proof events, graph state, local search, and learning surfaces.</p>
+      <h1>Don’t trust memory. Inspect it.</h1>
+      <p class="lead">A memory system should leave evidence. OpenClawBrain exposes the load state, SQLite health, proof events, graph, search, route learning, and recent injection decisions.</p>
+      <p class="sublead">The point is not to claim perfect memory. The point is to make memory visible enough that you can debug it.</p>
     </section>
 
     <section class="panel">
-      <h2>Start here</h2>
+      <h2>Start with runtime truth</h2>
       <pre><code>openclaw plugins inspect openclawbrain --runtime
-# authenticated route: /plugins/openclawbrain/status
-# authenticated route: /plugins/openclawbrain/doctor</code></pre>
-      <p>You want to see the plugin loaded, runtime routes and hooks present, and SQLite + FTS healthy.</p>
-      <p class="muted">Use <code>inspect</code> for runtime truth. A plugin list view can look like “zero plugins/routes/hooks” when it is only showing metadata snapshot fields.</p>
+openclaw doctor</code></pre>
+      <p>You want the plugin loaded, hooks registered, runtime routes present, and SQLite + FTS healthy.</p>
+      <p class="muted">A package can be installed without being useful. Runtime inspect tells you whether the plugin is actually alive inside the gateway.</p>
     </section>
 
     <section class="panel">
-      <h2>Inspect the runtime surfaces</h2>
+      <h2>Useful surfaces</h2>
       <table>
-        <tr><th>Endpoint</th><th>What it shows</th></tr>
-        <tr><td><code>/plugins/openclawbrain/status</code></td><td>Whether the plugin is on, how it is configured, recent decision kind, and runtime behavior.</td></tr>
-        <tr><td><code>/plugins/openclawbrain/doctor</code></td><td>Whether SQLite and FTS are healthy under the current Node runtime.</td></tr>
-        <tr><td><code>/plugins/openclawbrain/proof?limit=20</code></td><td>Recent redacted proof, route, and injection events.</td></tr>
-        <tr><td><code>/plugins/openclawbrain/graph?limit=50</code></td><td>Redacted memory nodes and memory edges.</td></tr>
-        <tr><td><code>/plugins/openclawbrain/learn?limit=50</code></td><td>Route examples and current learning state.</td></tr>
-        <tr><td><code>/plugins/openclawbrain/search?query=...&amp;limit=20</code></td><td>Local SQLite FTS memory search.</td></tr>
+        <tr><th>Surface</th><th>What it answers</th></tr>
+        <tr><td><code>/plugins/openclawbrain/status</code></td><td>Is memory enabled? Which mode is active? What happened recently?</td></tr>
+        <tr><td><code>/plugins/openclawbrain/doctor</code></td><td>Can the runtime open SQLite, use FTS, and write proof rows?</td></tr>
+        <tr><td><code>/plugins/openclawbrain/proof?limit=20</code></td><td>What did the plugin decide, inject, skip, store, or reject?</td></tr>
+        <tr><td><code>/plugins/openclawbrain/search?query=pnpm&amp;limit=20</code></td><td>Can local memory search find the thing you taught it?</td></tr>
+        <tr><td><code>/plugins/openclawbrain/graph?agentId=main&amp;limit=50</code></td><td>What redacted memory nodes and edges exist for this agent?</td></tr>
+        <tr><td><code>/plugins/openclawbrain/learn?limit=50</code></td><td>What route examples and learned policy snapshots exist?</td></tr>
+        <tr><td><code>/plugins/openclawbrain/audit?limit=20</code></td><td>Which capture attempts were stored, skipped, or rejected?</td></tr>
+        <tr><td><code>/plugins/openclawbrain/explain-last</code></td><td>What happened on the latest memory decision?</td></tr>
       </table>
+      <p class="muted">HTTP plugin routes are authenticated on normal installs. Use the authenticated OpenClaw dashboard/client, or pass your gateway auth header when using curl.</p>
     </section>
 
     <section class="panel">
       <h2>End-to-end proof shape</h2>
-      <p>The installed live loop was verified with a temporary memory: <strong>temporary correction → SQLite memory → FTS retrieval → XML prompt injection → cleanup</strong>.</p>
+      <p>A useful smoke test is small:</p>
+      <ol>
+        <li>Teach a correction: <code>Use pnpm instead of npm in this repo.</code></li>
+        <li>Confirm it appears in search or graph.</li>
+        <li>Ask for a test/build task.</li>
+        <li>Confirm a bounded memory block was injected.</li>
+        <li>Check proof or explain-last for the decision.</li>
+      </ol>
       <pre><code>&lt;openclawbrain_context&gt;
 Relevant memory:
-- Must follow: Use pnpm in this repo.
+- Must follow: Use pnpm instead of npm in this repo.
 &lt;/openclawbrain_context&gt;</code></pre>
-      <p>That is the product claim: not perfect magical memory, but an accountable local system that can capture a durable correction, retrieve it later, inject it within budget, and leave proof behind.</p>
+      <p>That is the core product claim: capture a durable lesson, retrieve it later, inject it inside budget, and leave proof behind.</p>
     </section>
 
     <section class="panel">
-      <h2>Example checks</h2>
-      <pre><code># authenticated route: /plugins/openclawbrain/proof?limit=10
-curl 'http://127.0.0.1:18789/plugins/openclawbrain/graph?limit=10'
-curl 'http://127.0.0.1:18789/plugins/openclawbrain/learn?limit=10'
-# authenticated route: /plugins/openclawbrain/search?query=pnpm&amp;limit=10</code></pre>
-      <p>These are the surfaces that let you tell the difference between “we say it works” and “you can inspect what it is doing right now.”</p>
+      <h2>What good proof looks like</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Load proof</h3>
+          <p>The plugin is enabled, loaded, and registered as an OpenClaw memory plugin.</p>
+        </div>
+        <div class="card">
+          <h3>Storage proof</h3>
+          <p>SQLite opens, migrations are current, FTS works, and proof rows can be written.</p>
+        </div>
+        <div class="card">
+          <h3>Recall proof</h3>
+          <p>A known memory can be found through local search and selected for a relevant turn.</p>
+        </div>
+        <div class="card">
+          <h3>Injection proof</h3>
+          <p>The prompt receives a small, scoped memory block rather than a big transcript dump.</p>
+        </div>
+        <div class="card">
+          <h3>Learning proof</h3>
+          <p>Route examples, outcomes, and policy snapshots update as the system sees more turns.</p>
+        </div>
+        <div class="card">
+          <h3>Safety proof</h3>
+          <p>Rejected captures, redaction, scoping, and skipped injections are visible enough to debug.</p>
+        </div>
+      </div>
     </section>
 
     <section class="panel">
-      <h2>What the product claim is</h2>
-      <p>OpenClawBrain is not claiming that every agent suddenly has perfect memory. The claim is tighter and more useful:</p>
+      <h2>The claim, kept narrow</h2>
+      <p>OpenClawBrain does not make agents magically perfect. It does something more useful: it gives OpenClaw a local, inspectable way to remember feedback and use it at the right time.</p>
       <ul>
-        <li>keep memory local</li>
-        <li>let the LLM decide semantic meaning without letting it write directly</li>
-        <li>retrieve likely candidates quickly with SQLite FTS</li>
-        <li>inject only a small useful XML block</li>
-        <li>show proof and health surfaces you can inspect</li>
+        <li>Memory stays local by default.</li>
+        <li>The LLM proposes semantic updates.</li>
+        <li>Code validates and writes.</li>
+        <li>SQLite stores the graph and evidence.</li>
+        <li>Prompt injection stays sparse and bounded.</li>
       </ul>
-      <p><strong>LLM decides semantic meaning. Code enforces trust boundaries. SQLite stores the graph and evidence.</strong></p>
+      <p>If a memory system cannot show you what it did, it is too hard to trust. OpenClawBrain is built so you can look.</p>
     </section>
   </div>
 </body>

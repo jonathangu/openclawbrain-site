@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain — Evidence, not vibes, for agent memory</title>
+  <title>OpenClawBrain — Memory for OpenClaw</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain is a local memory layer for OpenClaw agents: SQLite stores the graph and evidence, Ollama proposes, and code disposes.">
-  <meta property="og:title" content="OpenClawBrain — Evidence, not vibes, for agent memory">
-  <meta property="og:description" content="A native OpenClaw plugin for accountable local agent memory: bounded retrieval, SQLite evidence, local Ollama semantics, and proof you can inspect.">
+  <meta name="description" content="OpenClawBrain is a local memory layer for OpenClaw. It learns from feedback, keeps a SQLite memory graph, and injects the right context when it helps.">
+  <meta property="og:title" content="OpenClawBrain — Memory for OpenClaw">
+  <meta property="og:description" content="A local memory layer that helps your Claw remember feedback, learn in the background, and bring back only the context that matters.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta name="twitter:card" content="summary_large_image">
@@ -66,7 +66,7 @@
     p { margin: 0 0 14px; }
     .lead { font-size: 20px; color: var(--muted); max-width: 780px; margin: 0 0 20px; }
     .sublead { max-width: 780px; margin: 0 0 24px; color: var(--text); }
-    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 22px; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 22px; }
     .btn-primary { background: linear-gradient(135deg, var(--accent), #b6ebff); color: #051018; font-weight: 700; }
     .chips { display: flex; gap: 10px; flex-wrap: wrap; }
     .chip {
@@ -104,7 +104,7 @@
     .fine, .muted { color: var(--muted); font-size: 14px; }
     .footer { color: var(--muted); text-align: center; margin-top: 28px; font-size: 14px; }
     @media (max-width: 640px) { .hero, .section, .panel { padding: 22px; } .lead { font-size: 18px; } }
-</style>
+  </style>
 </head>
 <body>
   <div class="wrap">
@@ -121,66 +121,84 @@
 
     <section class="hero">
       <div class="eyebrow">Memory for OpenClaw</div>
-      <h1>Evidence, not vibes, for agent memory.</h1>
-      <p class="lead">OpenClawBrain helps OpenClaw agents understand that “close it out” means evidence, not vibes — and that the same correction should not have to be taught twice.</p>
-      <p class="sublead">It is the difference between magic memory and an accountable local system: selective routing, SQLite search, bounded XML prompt injection, and proof surfaces you can inspect. The spine is simple: <strong>LLM decides semantic meaning. Code enforces trust boundaries. SQLite stores the graph and evidence.</strong></p>
-      <blockquote><strong>Ollama proposes; code disposes.</strong> Local models propose structured JSON. Code validates, redacts, scopes, thresholds, and decides what gets stored or injected.</blockquote>
+      <h1>Your Claw should remember how you work.</h1>
+      <p class="lead">OpenClawBrain is a local memory layer for OpenClaw. It learns from your corrections, preferences, workflows, and repeated feedback, then brings back the right context when it matters.</p>
+      <p class="sublead">Not a giant transcript dump. Not a vague “AI memory” box. It is a small, inspectable system: a SQLite memory graph, local LLM updates, learned routing pointers, and bounded prompt injection.</p>
+      <blockquote><strong>Simple version:</strong> when you tell your Claw “don’t do that again,” OpenClawBrain is the part that helps it actually stop doing that again.</blockquote>
       <div class="actions">
-        <a class="btn btn-primary" href="/install/">Install OpenClawBrain</a>
-        <a class="btn" href="/how-it-works/">Read how it works</a>
+        <a class="btn btn-primary" href="/install/">Install it</a>
+        <a class="btn" href="/how-it-works/">See how the code works</a>
         <a class="btn" href="/proof/">Verify it locally</a>
       </div>
       <div class="chips">
         <span class="chip">Current release: v0.2.16</span>
-        <span class="chip">First-class OpenClaw memory plugin</span>
         <span class="chip">Local SQLite + FTS graph</span>
-        <span class="chip">Aggressive capture; conservative injection</span>
+        <span class="chip">LLM proposes; code checks</span>
+        <span class="chip">Sparse context injection</span>
       </div>
     </section>
 
     <section class="section">
-      <h2>What it actually does</h2>
+      <h2>What it does</h2>
       <div class="grid">
         <div class="card">
-          <h3>Remembers durable lessons</h3>
-          <p>Corrections, preferences, workflows, and context become scoped memory nodes — not raw transcript dumps.</p>
+          <h3>Remembers feedback</h3>
+          <p>Corrections, preferences, project rules, and ways you like work done become scoped memories instead of disappearing after the turn.</p>
         </div>
         <div class="card">
-          <h3>Keeps prompts small</h3>
-          <p>Most memories stay silent. When a turn needs help, OpenClawBrain retrieves and injects only the small slice that matters now.</p>
+          <h3>Learns passively</h3>
+          <p>It watches for useful signals in normal work: “use pnpm,” “keep this short,” “route Pelican work over there,” “closeout needs evidence.”</p>
         </div>
         <div class="card">
-          <h3>Shows its work</h3>
-          <p>Status, doctor, proof, graph, search, route decisions, and injection records make memory inspectable instead of mystical.</p>
+          <h3>Injects carefully</h3>
+          <p>Most memories stay out of the prompt. The code retrieves and injects only a small block when the current turn looks like it needs that memory.</p>
         </div>
       </div>
     </section>
 
     <section class="section">
-      <h2>One worked turn</h2>
-      <p>You correct the agent: <strong>“Actually, use pnpm in this repo.”</strong></p>
-      <p>OpenClawBrain distills that into a scoped correction. Later, when you say <strong>“Run the tests,”</strong> SQLite FTS retrieves the correction, ContextSelector ranks it, and the prompt receives a bounded block:</p>
-      <pre><code>&lt;openclawbrain_context&gt;
-Relevant memory:
-- Must follow: Use pnpm in this repo.
-&lt;/openclawbrain_context&gt;</code></pre>
-      <p>The agent runs <code>pnpm test</code> without you re-teaching the convention. Afterward, OpenClawBrain records whether the memory helped, failed, was ignored, or got corrected.</p>
+      <h2>The shape of the system</h2>
+      <p>OpenClawBrain sits beside the normal OpenClaw run. It does not replace the main model. It gives the model better working memory.</p>
+      <pre><code>your turn
+ ↓
+redact the packet
+ ↓
+route_fn decides whether memory should help
+ ↓
+SQLite FTS + graph search finds candidates
+ ↓
+ContextSelector chooses a small set
+ ↓
+inject bounded &lt;openclawbrain_context&gt;
+ ↓
+after the turn, feedback distillation updates the graph</code></pre>
+      <p>The important bit is the split: prompt-time work stays small, while heavier learning can happen after the turn.</p>
     </section>
 
     <section class="section">
-      <h2>What is live today</h2>
-      <p>OpenClawBrain is a real plugin today, not a concept page. The current release is <strong>v0.2.16</strong>. It registers as OpenClaw’s first-class memory plugin, so runtime doctor/status can see the active memory backend while the OCB loop separates retrieval from aggressive capture: durable instructions, corrections, workflows, routing rules, outcomes, explicit recall rules, and multi-agent scoped activation get evaluated, while strict validators still block raw secrets and junk memory.</p>
-      <p>That does not mean every edge case is done. It is best described as production-dogfood beta: the core capture/store/retrieve/inject path works, while route-learning quality, status polish, and long-term organic runtime still deserve more miles.</p>
+      <h2>Why the graph matters</h2>
+      <p>Flat memory gets messy fast. OpenClawBrain stores memories as nodes and links: corrections, preferences, workflows, context, route examples, outcomes, and superseded facts.</p>
+      <p>That lets the system answer better questions:</p>
+      <ul>
+        <li>Is this a current rule or an old correction?</li>
+        <li>Does this apply to this agent, this repo, or everywhere?</li>
+        <li>Has this memory helped before, or did it cause mistakes?</li>
+        <li>Which related memories should travel together?</li>
+      </ul>
+      <p>SQLite keeps it local and inspectable. FTS5 gives fast local search. The graph keeps memory from becoming one long note file.</p>
     </section>
 
     <section class="section">
-      <h2>Latency shape</h2>
-      <p>The current loop keeps retrieval conservative while making capture hungry: memory-worthy turns are audited and distilled off the prompt path, then only the few relevant memories are injected later.</p>
-      <pre><code>retrieval: conservative and bounded
-capture: aggressive and audited
-storage: strict, scoped, local
-injection: sparse and relevance-gated</code></pre>
-      <p class="fine">Feedback distillation can take longer because it runs off the prompt path. Audit and explain-last surfaces show whether capture was skipped, rejected, stored, or blocked by safety policy.</p>
+      <h2>How LLM updates fit in</h2>
+      <p>The local LLM is used for judgment, not unchecked authority. It can propose that a turn contains a durable correction, a preference, a workflow, or a route-learning example.</p>
+      <p>Then code decides what happens next: redact, validate JSON, check scope, dedupe, threshold, store, reject, or mark for later. That is the core trust boundary.</p>
+      <blockquote><strong>LLM decides semantic meaning. Code enforces trust boundaries. SQLite stores the graph and evidence.</strong></blockquote>
+    </section>
+
+    <section class="section">
+      <h2>Learned route_fn pointers</h2>
+      <p>Over time, OpenClawBrain learns which kinds of turns usually need memory. A test command may need repo tooling rules. A writing request may need your style preference. A Pelican task may need routing guidance.</p>
+      <p>Those learned pointers help <code>route_fn</code> decide quickly: search memory, stay silent, or spend one bounded planner call if the turn is ambiguous. The goal is simple: remember the useful thing without slowing every turn down.</p>
     </section>
 
     <section class="section">
@@ -188,15 +206,15 @@ injection: sparse and relevance-gated</code></pre>
       <pre><code>openclaw plugins install clawhub:openclawbrain@0.2.16
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
-      <p class="fine">Multiple agents/profiles are supported through <code>scopes.agents</code>; each agent gets its own local activation root and memory graph.</p>
+      <p class="fine">That is the short path. The install page has the config, Ollama path, multi-agent setup, and checks.</p>
       <div class="actions">
-        <a class="btn" href="/install/">Full install path</a>
+        <a class="btn btn-primary" href="/install/">Full install steps</a>
         <a class="btn" href="/proof/">Proof commands</a>
       </div>
     </section>
 
     <div class="footer">
-      OpenClawBrain is built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>.
+      Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. Open source on <a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>.
     </div>
   </div>
 </body>
