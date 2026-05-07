@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>OpenClawBrain — How it works</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A short product-level explanation of OpenClawBrain: local memory graph, LLM update boundary, selective routing, and bounded prompt injection.">
+  <meta name="description" content="How OpenClawBrain learns: redacted route frames, SQLite evidence, shadow replay, policy snapshots, calibrated abstention, route-policy-v3, and bounded prompt injection.">
   <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="512">
@@ -45,43 +45,119 @@
 
     <section class="hero">
       <div class="eyebrow">How it works</div>
-      <h1>Small memory, at the right time.</h1>
-      <p class="lead">OpenClawBrain is local, accountable memory for OpenClaw agents. It remembers durable corrections, preferences, workflows, and context, then retrieves only the small slice that matters for the current turn.</p>
+      <h1>The learning loop is a route function.</h1>
+      <p class="lead">OpenClawBrain is local, accountable memory for OpenClaw agents. It learns not just what to remember, but when a memory should route into the next turn.</p>
       <blockquote><strong>LLM decides semantic meaning. Code enforces trust boundaries. SQLite stores the graph and evidence.</strong></blockquote>
     </section>
 
     <section class="section">
-      <h2>The loop</h2>
+      <h2>The runtime loop</h2>
       <pre><code>user turn
  ↓
-route: should memory help?
+route-policy-v3: should memory help?
  ↓
 search: SQLite FTS + memory graph
  ↓
-select: choose a tiny relevant slice
+select: choose a tiny relevant evidence slice
  ↓
-inject: bounded XML context
+inject: bounded XML context or abstain
  ↓
-learn: update the graph after the turn</code></pre>
-      <p>Retrieval stays small. Learning can happen later.</p>
+learn: update evidence after the turn</code></pre>
+      <p>Prompt-time work stays small. Heavier teaching, replay, and policy updates happen after the turn when they can.</p>
     </section>
 
     <section class="section">
-      <h2>Why a graph</h2>
-      <p>OpenClawBrain stores memories as scoped nodes and links: corrections, preferences, workflows, context, route examples, outcomes, and superseded facts.</p>
-      <p>That helps it answer practical questions: does this apply here, is it still current, has it helped before, and which related memories should travel together?</p>
+      <h2>The learning warehouse</h2>
+      <p>OpenClawBrain stores memory and route-learning evidence as local SQLite records, not as a blob of transcript text. The important objects are small and inspectable.</p>
+      <div class="grid">
+        <div class="card"><h3>Memory nodes</h3><p>Durable corrections, preferences, workflows, project rules, and contextual facts with scope and freshness metadata.</p></div>
+        <div class="card"><h3>Route frames</h3><p>Redacted examples of when memory helped, missed, abstained, or should have routed differently.</p></div>
+        <div class="card"><h3>Shadow decisions</h3><p>Candidate policies score real turns without taking over, so promotion is based on evidence instead of hope.</p></div>
+        <div class="card"><h3>Eval cases</h3><p>Replayable cases, labels, family stats, and candidate reports keep policy updates auditable.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>What gets stored</h2>
+      <p>The warehouse is designed around evidence, not private transcript replay. Route-policy-v3 stores compact objects that explain routing behavior without making raw chat the source of truth.</p>
+      <ul>
+        <li><strong>route_frames_v3:</strong> redacted examples with routing mode, family, canonical action key, calibrated score, abstention and fallback metadata, risk flags, and evidence ids.</li>
+        <li><strong>route_shadow_decisions_v3:</strong> records of what a candidate policy would have done on live traffic while the active policy kept serving.</li>
+        <li><strong>route_calibration_examples_v3:</strong> examples used to make confidence scores meaningful instead of just high-sounding.</li>
+        <li><strong>route_eval_cases_v3 and labels:</strong> replayable cases that test useful routing, abstention, prompt noise, and safety boundaries.</li>
+        <li><strong>route_action_family_stats_v3:</strong> per-family support, cold-start state, thresholds, and observed routing quality.</li>
+        <li><strong>route_policy_candidate_reports_v3:</strong> validation, replay, activation, and rollback summaries for policy snapshots.</li>
+      </ul>
     </section>
 
     <section class="section">
       <h2>Why the LLM boundary matters</h2>
-      <p>The LLM is used for semantic judgment. It can notice that a messy correction is actually durable feedback.</p>
-      <p>But the LLM does not write directly to memory. Code redacts, validates, scopes, dedupes, thresholds, and stores only what passes.</p>
+      <p>The LLM is used for semantic judgment. It can notice that a messy correction is actually durable feedback, or that a failed route is a training example.</p>
+      <p>But the LLM does not directly own memory or production routing. Code redacts, validates, scopes, dedupes, thresholds, stores, replays, calibrates, and promotes only what passes.</p>
     </section>
 
     <section class="section">
-      <h2>Learned routing pointers</h2>
-      <p>Over time, OpenClawBrain learns which kinds of turns usually need memory. A test command may need repo tooling rules. A writing task may need style preferences. A project task may need routing guidance.</p>
-      <p>The goal is not to search memory every time. The goal is to remember when it helps.</p>
+      <h2>route-policy-v3</h2>
+      <p>The active production route brain is route-policy-v3. It is a compact learned route_fn compiled from evidence, not a vague prompt that asks the model to “remember better.”</p>
+      <pre><code>active v3 match with calibrated confidence
+  -> route memory and record proof
+
+v3 abstains or has no safe match
+  -> fall back to v2 policy
+
+v2 misses or rollback is needed
+  -> use legacy heuristics as last resort</code></pre>
+      <p>Abstention is a feature. If the system does not have enough support, it stays quiet instead of polluting the prompt.</p>
+    </section>
+
+    <section class="section">
+      <h2>How policies improve</h2>
+      <div class="grid">
+        <div class="card"><h3>1. Harvest</h3><p>Turns produce signals: corrections, accepted help, rejected memory, route misses, tool outcomes, and operator handoffs.</p></div>
+        <div class="card"><h3>2. Distill</h3><p>The teacher converts those signals into route frames with action family, scope, canonical action key, risk flags, and evidence ids.</p></div>
+        <div class="card"><h3>3. Shadow</h3><p>Candidate snapshots score traffic without serving. The system records what they would have done.</p></div>
+        <div class="card"><h3>4. Replay</h3><p>Stored eval cases measure whether the candidate improves useful routing without causing prompt noise or unsafe sync work.</p></div>
+        <div class="card"><h3>5. Calibrate</h3><p>Family-aware thresholds and confidence floors decide when a route is strong enough to serve.</p></div>
+        <div class="card"><h3>6. Promote or roll back</h3><p>Promotion creates an active v3 snapshot with lineage. Rollback keeps the previous policy path available.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Promotion gates</h2>
+      <p>OpenClawBrain 0.2.21 defaults policy-v3 updates to <code>gated_active</code>. That means the system can collect, distill, shadow, replay, and activate a validated snapshot, but each step has explicit gates.</p>
+      <div class="grid">
+        <div class="card"><h3>Validation</h3><p>Candidate snapshots must parse, match schema, avoid unsafe broad retrieval, respect sync budget limits, and carry rollback lineage.</p></div>
+        <div class="card"><h3>Support</h3><p>Cold-start action families remain under-supported until enough evidence exists; they can inform shadowing but cannot drive active routing too early.</p></div>
+        <div class="card"><h3>Calibration</h3><p>Confidence is judged by action family. A policy can be strong for repo workflow routing while still abstaining on personal preference routing.</p></div>
+        <div class="card"><h3>Cooldown</h3><p>Activation cooldowns prevent rapid policy churn. If a candidate is weaker or risky, the current active snapshot stays in place.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Failure behavior</h2>
+      <p>The runtime is intentionally conservative. If the learned route_fn cannot make a supported decision, it does less.</p>
+      <pre><code>policy snapshot missing or invalid
+  -> skip v3 and use fallback path
+
+family confidence below floor
+  -> abstain and keep prompt clean
+
+candidate shows harm in replay
+  -> do not promote
+
+active policy regresses
+  -> roll back to prior snapshot, then v2 or heuristics</code></pre>
+    </section>
+
+    <section class="section">
+      <h2>What gets injected</h2>
+      <p>Only the selected evidence slice enters the prompt. It is bounded, scoped, and formatted as operator context, not hidden transcript mass.</p>
+      <pre><code>&lt;openclawbrain_context&gt;
+Relevant memory:
+- Must follow: Use pnpm instead of npm in this repo.
+- Routing rule: Keep Telegram replies to operator summaries.
+&lt;/openclawbrain_context&gt;</code></pre>
+      <p>The rest stays local in SQLite and proof surfaces.</p>
       <div class="actions">
         <a class="btn btn-primary" href="https://github.com/jonathangu/openclawbrain#how-it-works" target="_blank" rel="noopener">Read the operator README</a>
       </div>

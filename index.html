@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <title>OpenClawBrain — Evidence, not vibes, for agent memory</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain is local, accountable memory for OpenClaw agents. It remembers durable feedback and retrieves only what matters for the current turn.">
+  <meta name="description" content="OpenClawBrain is local, accountable memory for OpenClaw agents with a learned route_fn, SQLite evidence graph, shadow replay, calibrated abstention, and bounded prompt injection.">
   <meta property="og:title" content="OpenClawBrain — Evidence, not vibes, for agent memory">
-  <meta property="og:description" content="Local, accountable memory for OpenClaw agents: durable corrections, preferences, workflows, context, and sparse prompt injection.">
+  <meta property="og:description" content="Local, accountable memory for OpenClaw agents: durable corrections, learned routing, SQLite evidence, calibrated abstention, and sparse prompt injection.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
@@ -142,8 +142,8 @@
     <section class="hero">
       <div class="eyebrow">Evidence, not vibes, for agent memory</div>
       <h1>Local, accountable memory for OpenClaw agents.</h1>
-      <p class="lead">OpenClawBrain remembers durable corrections, preferences, workflows, and context, then retrieves only the small slice that matters for the current turn.</p>
-      <p class="sublead">It helps your Claw learn from feedback without turning every prompt into a giant diary. Selective routing, SQLite search, bounded XML prompt injection, and proof surfaces keep the system useful and inspectable.</p>
+      <p class="lead">OpenClawBrain remembers durable corrections, preferences, workflows, and context, then learns when that memory should affect a future turn.</p>
+      <p class="sublead">The route-policy-v3 loop turns feedback into redacted evidence, distills candidate routing rules, tests them in shadow, calibrates confidence by action family, and serves a compact learned route_fn with abstention and rollback built in.</p>
       <blockquote><strong>LLM decides semantic meaning. Code enforces trust boundaries. SQLite stores the graph and evidence.</strong></blockquote>
       <figure class="hero-art">
         <img src="/assets/img/openclawbrain-hero.jpg" alt="OpenClawBrain constellation hero art with a luminous claw and evidence graph" width="1280" height="512" loading="eager">
@@ -155,9 +155,11 @@
         <a class="btn" href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
       </div>
       <div class="chips">
-        <span class="chip">Current release: v0.2.16</span>
+        <span class="chip">Current release: v0.2.21</span>
         <span class="chip">Local SQLite + FTS graph</span>
-        <span class="chip">LLM proposes; code checks</span>
+        <span class="chip">Learned route_fn</span>
+        <span class="chip">Shadow replay + calibration</span>
+        <span class="chip">v2/heuristic rollback</span>
         <span class="chip">Sparse context injection</span>
       </div>
     </section>
@@ -181,6 +183,55 @@
     </section>
 
     <section class="section">
+      <h2>The learning loop</h2>
+      <p>OpenClawBrain learns from normal work, but it does not let the model freely rewrite memory or routing. The model proposes meaning; deterministic code decides whether the proposal is scoped, supported, calibrated, and safe to serve.</p>
+      <pre><code>feedback and outcomes
+ ↓
+redacted route frames
+ ↓
+SQLite evidence graph
+ ↓
+shadow decisions and replay cases
+ ↓
+candidate policy snapshots
+ ↓
+calibration and promotion gates
+ ↓
+active route-policy-v3 route_fn
+ ↓
+bounded context injection or abstention</code></pre>
+      <div class="grid">
+        <div class="card">
+          <h3>Harvest</h3>
+          <p>Corrections, accept/reject signals, route misses, tool outcomes, and handoff decisions become compact evidence records instead of raw chat dumps.</p>
+        </div>
+        <div class="card">
+          <h3>Distill</h3>
+          <p>The teacher turns messy interaction into structured route frames: action family, scope, risk, evidence ids, and why memory would or would not help.</p>
+        </div>
+        <div class="card">
+          <h3>Serve</h3>
+          <p>The active v3 route_fn wins first. If confidence is too low, it abstains and falls back to v2 or heuristics rather than guessing.</p>
+        </div>
+      </div>
+      <p class="fine">The production update mode is <code>gated_active</code>: candidates can be distilled and evaluated automatically, but active serving still depends on validation, family-aware confidence floors, support thresholds, cooldowns, and rollback lineage.</p>
+    </section>
+
+    <section class="section">
+      <h2>What is actually learned</h2>
+      <p>The learned object is not a pile of memories. It is a routing policy: a small deterministic function that decides whether this kind of turn deserves memory, which action family it belongs to, and how much confidence is enough.</p>
+      <table>
+        <tr><th>Artifact</th><th>Job</th></tr>
+        <tr><td>Memory nodes</td><td>Scoped corrections, preferences, workflow rules, and context that may later be retrieved.</td></tr>
+        <tr><td>Route frames</td><td>Redacted examples describing route mode, family, canonical action key, evidence ids, calibrated score, abstention reason, and fallback behavior.</td></tr>
+        <tr><td>Shadow decisions</td><td>Candidate route policies score real turns without changing the prompt, then record would-have-routed evidence.</td></tr>
+        <tr><td>Eval cases</td><td>Replayable cases and labels used to test whether a policy improves useful routing without increasing noise or unsafe sync work.</td></tr>
+        <tr><td>Family stats</td><td>Per-action-family support counts, confidence floors, cold-start status, and promotion readiness.</td></tr>
+        <tr><td>Candidate reports</td><td>Validation, replay, activation, and rollback summaries for each policy snapshot.</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
       <h2>One worked turn</h2>
       <p>You correct the agent:</p>
       <pre><code>Actually, use pnpm in this repo.</code></pre>
@@ -194,12 +245,13 @@ Relevant memory:
 
     <section class="section">
       <h2>Proof you can inspect</h2>
-      <p>Memory should leave evidence. OpenClawBrain exposes plugin load, SQLite + FTS health, proof events, graph state, search, route learning, and recent injection decisions.</p>
+      <p>Memory should leave evidence. OpenClawBrain exposes plugin load, SQLite + FTS health, proof events, graph state, search, route learning, active policy snapshots, and recent injection decisions.</p>
       <pre><code>openclaw plugins inspect openclawbrain --runtime
 openclaw doctor
 # /plugins/openclawbrain/proof?limit=10
-# /plugins/openclawbrain/search?query=pnpm&amp;limit=10</code></pre>
-      <p class="fine">Core capture/store/retrieve/inject works today. Route-learning quality, status polish, and long-term organic runtime still need more mileage.</p>
+# /plugins/openclawbrain/search?query=pnpm&amp;limit=10
+# /plugins/openclawbrain/route-policy</code></pre>
+      <p class="fine">Current production path: route-policy-v3 first, route-policy-v2 and heuristics as fallback/rollback only, with proof surfaces for route learning and injection decisions.</p>
     </section>
 
     <section class="section">
@@ -213,7 +265,7 @@ injection: sparse and relevance-gated</code></pre>
 
     <section class="section">
       <h2>Install in a minute</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain@0.2.16
+      <pre><code>openclaw plugins install clawhub:openclawbrain@0.2.21
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="fine">The GitHub README has the operator path: config, Ollama setup, runtime verification, endpoints, and debugging surfaces.</p>
