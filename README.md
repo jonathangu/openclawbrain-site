@@ -24,3 +24,7 @@ Current public truth:
 - Production routing path: route-policy-v3 first.
 - Fallback and rollback path: route-policy-v2, then legacy heuristics.
 - Learning loop: redacted route frames, SQLite evidence, shadow decisions, replay/eval cases, calibration examples, action-family stats, candidate reports, gated promotion, and rollback lineage.
+
+Shareable summary:
+
+> OpenClawBrain is a local-first memory system for AI agents. The core idea: an agent should not just “remember everything.” It should learn when memory actually matters. OpenClawBrain turns corrections, outcomes, misses, and handoffs into local evidence, then learns a small routing policy that decides when to bring the right memory into a future turn — or abstain when it is not confident. The LLM proposes meaning; code owns validation, storage, calibration, promotion, and rollback. SQLite keeps the graph and evidence local and inspectable.
