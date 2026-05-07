@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Install OpenClawBrain</title>
+  <title>Install or upgrade OpenClawBrain</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Quick install path for OpenClawBrain 0.2.21, with route-policy-v3 learning and a tiny runtime proof loop.">
   <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
@@ -34,12 +34,12 @@
     <section class="hero">
       <div class="eyebrow">Install</div>
       <h1>Install in a minute.</h1>
-      <p class="lead">OpenClawBrain 0.2.21 ships the route-policy-v3 learning loop: learned routing, calibrated abstention, shadow replay, and local proof surfaces. This is the short path; GitHub has the full operator guide.</p>
+      <p class="lead">OpenClawBrain 0.2.21 ships the route-policy-v3 learning loop: learned routing, calibrated abstention, shadow replay, and local proof surfaces. Use the same command for a fresh install or upgrade. This is the short path; GitHub has the full operator guide.</p>
     </section>
 
     <section class="panel">
       <h2>Install</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain@0.2.21
+      <pre><code>openclaw plugins install clawhub:openclawbrain@0.2.21 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="muted">Requires OpenClaw 2026.5.2 or later.</p>

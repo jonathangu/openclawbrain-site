@@ -150,7 +150,7 @@
         <figcaption>Local memory, learned routing, and bounded context injection.</figcaption>
       </figure>
       <div class="actions">
-        <a class="btn btn-primary" href="/install/">Install in a minute</a>
+        <a class="btn btn-primary" href="/install/">Install or upgrade</a>
         <a class="btn" href="/proof/">Verify it locally</a>
         <a class="btn" href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
       </div>
@@ -171,7 +171,12 @@
 
 The core idea: an agent should not just &quot;remember everything.&quot; It should learn when memory actually matters. OpenClawBrain turns corrections, outcomes, misses, and handoffs into local evidence, then learns a small routing policy that decides when to bring the right memory into a future turn — or abstain when it is not confident.
 
-The trust boundary is the important part: the LLM proposes meaning, but code owns validation, storage, calibration, promotion, and rollback. SQLite keeps the graph and evidence local and inspectable.</code></pre>
+The trust boundary is the important part: the LLM proposes meaning, but code owns validation, storage, calibration, promotion, and rollback. SQLite keeps the graph and evidence local and inspectable.
+
+Install or upgrade if you already run OpenClaw:
+openclaw plugins install clawhub:openclawbrain@0.2.21 --force
+openclaw plugins enable openclawbrain
+openclaw gateway restart</code></pre>
     </section>
 
     <section class="section">
@@ -274,7 +279,7 @@ injection: sparse and relevance-gated</code></pre>
     </section>
 
     <section class="section">
-      <h2>Install in a minute</h2>
+      <h2>Install or upgrade</h2>
       <pre><code>openclaw plugins install clawhub:openclawbrain@0.2.21
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
