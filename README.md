@@ -21,6 +21,7 @@ Shared spine:
 Current public truth:
 
 - Current release: `0.2.21`.
+- Public live visual: `/live/` shows the redacted local runtime, SQLite graph shape, and a real useful memory-injected turn.
 - Production routing path: route-policy-v3 first.
 - Fallback and rollback path: route-policy-v2, then legacy heuristics.
 - Learning loop: redacted route frames, SQLite evidence, shadow decisions, replay/eval cases, calibration examples, action-family stats, candidate reports, gated promotion, and rollback lineage.

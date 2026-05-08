@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenClawBrain Live Visual - Local Memory in One Turn</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A public visual of the local OpenClawBrain runtime: real configuration, graph shape, and one useful memory-injected turn with private paths redacted.">
+  <meta property="og:title" content="OpenClawBrain Live Visual">
+  <meta property="og:description" content="See the local OpenClawBrain runtime, graph schema, routing loop, and a real memory-injected turn.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://openclawbrain.ai/live/">
+  <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
+  <link rel="canonical" href="https://openclawbrain.ai/live/">
+  <style>
+    :root {
+      --bg: #061017;
+      --surface: #101a22;
+      --surface-2: #15242e;
+      --surface-3: #1b2b31;
+      --text: #edf5f7;
+      --muted: #a8b8bf;
+      --line: rgba(164, 210, 220, 0.23);
+      --cyan: #78d9ff;
+      --green: #9df2b6;
+      --gold: #f4c66f;
+      --coral: #ff9b86;
+      --ink: #061017;
+      --shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(180deg, rgba(120, 217, 255, 0.08), transparent 280px),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.58;
+    }
+    a { color: var(--cyan); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 24px 20px 76px; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .brand { display: inline-flex; align-items: center; }
+    .brand img {
+      width: 178px;
+      height: auto;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.24);
+    }
+    .navlinks { display: flex; gap: 10px; flex-wrap: wrap; }
+    .navlinks a, .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.025);
+      font-size: 14px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), #b7f4ff);
+      color: var(--ink);
+      border-color: rgba(255,255,255,0.18);
+      font-weight: 800;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+      gap: 24px;
+      align-items: stretch;
+      margin-top: 12px;
+    }
+    .hero-copy {
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    .eyebrow {
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+    h1 {
+      margin: 0 0 18px;
+      font-size: clamp(36px, 6vw, 72px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    h2 { margin: 0 0 12px; font-size: 30px; line-height: 1.16; }
+    h3 { margin: 0 0 8px; font-size: 18px; line-height: 1.25; }
+    p { margin: 0 0 14px; }
+    .lead { max-width: 720px; color: var(--muted); font-size: 20px; }
+    .hero-media {
+      position: relative;
+      min-height: 500px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #071019;
+      box-shadow: var(--shadow);
+    }
+    .hero-media img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.58;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      padding: 22px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 16px;
+      background: linear-gradient(180deg, rgba(6,16,23,0.42), rgba(6,16,23,0.88));
+    }
+    .status-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .status-tile, .mini-card, .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(9, 20, 28, 0.78);
+    }
+    .status-tile { padding: 12px; min-height: 92px; }
+    .k { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .v { display: block; margin-top: 6px; font-weight: 900; font-size: 22px; }
+    .chipline { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 8px 11px;
+      font-size: 13px;
+    }
+    .diagram {
+      display: grid;
+      place-items: center;
+      min-height: 290px;
+    }
+    .diagram svg { width: 100%; height: auto; overflow: visible; }
+    .node { fill: rgba(16, 31, 40, 0.95); stroke: rgba(164,210,220,0.38); stroke-width: 1.2; }
+    .node-hot { fill: rgba(120, 217, 255, 0.22); stroke: var(--cyan); }
+    .node-warm { fill: rgba(244, 198, 111, 0.18); stroke: var(--gold); }
+    .node-good { fill: rgba(157, 242, 182, 0.18); stroke: var(--green); }
+    .edge { stroke: rgba(237,245,247,0.34); stroke-width: 1.5; fill: none; stroke-dasharray: 5 7; }
+    .svg-label { fill: var(--text); font: 700 13px Inter, system-ui, sans-serif; }
+    .svg-small { fill: var(--muted); font: 11px Inter, system-ui, sans-serif; }
+    .section {
+      margin-top: 30px;
+      padding: 30px;
+      border-top: 1px solid var(--line);
+    }
+    .section.band {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(180deg, rgba(16, 26, 34, 0.92), rgba(12, 22, 29, 0.92));
+      box-shadow: var(--shadow);
+    }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .grid.two { grid-template-columns: repeat(2, 1fr); }
+    .mini-card { padding: 16px; }
+    .mini-card strong { display: block; margin-bottom: 4px; }
+    .mini-card p { color: var(--muted); font-size: 14px; margin: 0; }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .step {
+      position: relative;
+      min-height: 128px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.035);
+    }
+    .step b { display: block; color: var(--text); margin-bottom: 8px; }
+    .step span { color: var(--muted); font-size: 13px; }
+    .step:nth-child(2) { border-color: rgba(120,217,255,0.5); }
+    .step:nth-child(4) { border-color: rgba(244,198,111,0.5); }
+    .step:nth-child(6) { border-color: rgba(157,242,182,0.5); }
+    .turn {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .bubble {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgba(255,255,255,0.035);
+    }
+    .bubble.good { border-color: rgba(157,242,182,0.42); }
+    .bubble.warn { border-color: rgba(244,198,111,0.45); }
+    pre {
+      margin: 0;
+      overflow: auto;
+      white-space: pre-wrap;
+      background: #071019;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      color: #dceef4;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 11px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { color: var(--green); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; }
+    td { color: var(--muted); }
+    .accent-cyan { color: var(--cyan); }
+    .accent-green { color: var(--green); }
+    .accent-gold { color: var(--gold); }
+    .accent-coral { color: var(--coral); }
+    .fine { color: var(--muted); font-size: 14px; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+    .footer { color: var(--muted); text-align: center; margin-top: 34px; font-size: 14px; }
+    @media (max-width: 920px) {
+      .hero, .turn { grid-template-columns: 1fr; }
+      .hero-copy, .hero-media { min-height: auto; }
+      .hero-copy { padding: 24px 0 6px; }
+      .hero-media { height: 540px; }
+      .grid, .grid.two { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 620px) {
+      .wrap { padding: 18px 14px 58px; }
+      .hero-media { height: 620px; }
+      .status-row { grid-template-columns: 1fr; }
+      .section { padding: 22px 0; }
+      .section.band { padding: 22px; }
+      .flow { grid-template-columns: 1fr; }
+      .navlinks a, .btn { padding: 9px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="/" aria-label="OpenClawBrain home"><img src="/assets/img/openclawbrain-logo.jpg" alt="OpenClawBrain" width="628" height="193"></a>
+      <div class="navlinks">
+        <a href="/">Home</a>
+        <a href="/live/">Live visual</a>
+        <a href="/how-it-works/">How it works</a>
+        <a href="/install/">Install</a>
+        <a href="/proof/">Proof</a>
+        <a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">Local runtime snapshot</div>
+          <h1>What OpenClawBrain looks like during a useful turn.</h1>
+          <p class="lead">This page uses live local runtime facts from Jonathan's OpenClawBrain install, plus one real memory-injected Telegram turn, with private paths and identifiers redacted for the public web.</p>
+          <div class="chipline" aria-label="Snapshot highlights">
+            <span class="chip">Captured: 2026-05-08 02:20 PDT</span>
+            <span class="chip">Release: 0.2.21</span>
+            <span class="chip">Mode: balanced</span>
+            <span class="chip">Policy: route-policy-v3 gated_active</span>
+            <span class="chip">Storage: local SQLite graph</span>
+          </div>
+          <div class="actions">
+            <a class="btn btn-primary" href="#turn">Inspect the turn</a>
+            <a class="btn" href="#graph">See the graph</a>
+          </div>
+        </div>
+
+        <div class="hero-media" aria-label="OpenClawBrain runtime visual">
+          <img src="/assets/img/openclawbrain-hero.jpg" alt="">
+          <div class="hero-overlay">
+            <div class="status-row">
+              <div class="status-tile"><span class="k">Plugin</span><span class="v accent-green">loaded</span></div>
+              <div class="status-tile"><span class="k">Hooks</span><span class="v accent-cyan">5</span></div>
+              <div class="status-tile"><span class="k">HTTP routes</span><span class="v accent-gold">11</span></div>
+            </div>
+            <div class="diagram">
+              <svg viewBox="0 0 640 300" role="img" aria-label="OpenClawBrain graph and routing diagram">
+                <path class="edge" d="M115 78 C180 28, 284 42, 335 95" />
+                <path class="edge" d="M335 95 C425 50, 520 72, 544 132" />
+                <path class="edge" d="M335 95 C328 168, 260 214, 178 226" />
+                <path class="edge" d="M178 226 C274 268, 434 250, 510 203" />
+                <path class="edge" d="M510 203 C536 178, 548 156, 544 132" />
+                <rect class="node node-hot" x="35" y="40" width="160" height="76" rx="8" />
+                <text class="svg-label" x="58" y="72">incoming turn</text>
+                <text class="svg-small" x="58" y="94">channel + task signals</text>
+                <rect class="node node-good" x="258" y="58" width="158" height="82" rx="8" />
+                <text class="svg-label" x="285" y="91">route_fn</text>
+                <text class="svg-small" x="283" y="114">calibrate or abstain</text>
+                <rect class="node" x="464" y="100" width="160" height="78" rx="8" />
+                <text class="svg-label" x="500" y="132">memory graph</text>
+                <text class="svg-small" x="492" y="154">nodes, edges, FTS</text>
+                <rect class="node node-warm" x="80" y="190" width="196" height="76" rx="8" />
+                <text class="svg-label" x="118" y="222">proof events</text>
+                <text class="svg-small" x="112" y="244">auditable decisions</text>
+                <rect class="node node-good" x="430" y="196" width="160" height="74" rx="8" />
+                <text class="svg-label" x="466" y="228">prompt block</text>
+                <text class="svg-small" x="462" y="250">bounded injection</text>
+              </svg>
+            </div>
+            <pre><code>real runtime:
+service=openclawbrain
+version=0.2.21
+activated=true
+rawTranscriptUpload=false
+allowRemoteLlm=false</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band" id="runtime">
+        <div class="eyebrow">Real local state</div>
+        <h2>What is running here</h2>
+        <div class="grid">
+          <div class="mini-card">
+            <strong>Runtime</strong>
+            <p>OpenClawBrain is enabled, activated, explicitly selected as the memory slot, loaded as service <code>openclawbrain</code>, and installed from the 0.2.21 archive.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Hook surface</strong>
+            <p>It observes prompt build, gateway start and stop, model call start, and model call end. That is enough to retrieve before the prompt and learn after the turn.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Privacy posture</strong>
+            <p>Raw transcript upload is disabled, remote LLM endpoints are disallowed, and sensitive recall rules require narrow scope.</p>
+          </div>
+        </div>
+        <table>
+          <tr><th>Setting</th><th>Live value</th></tr>
+          <tr><td>Release</td><td><code>openclawbrain@0.2.21</code></td></tr>
+          <tr><td>Mode</td><td><code>balanced</code></td></tr>
+          <tr><td>Scoped agents</td><td><code>main</code></td></tr>
+          <tr><td>Capture</td><td><code>aggressive</code>, immediate correction capture on, post-run workflow capture on, candidates stored</td></tr>
+          <tr><td>Routing</td><td><code>hybrid_llm_on_cache_miss</code>, max 40 candidates, max 8 injected memories, max 2500 injected chars</td></tr>
+          <tr><td>Route learning</td><td><code>route-policy-v3</code> enabled, update mode <code>gated_active</code>, calibrated confidence floor <code>0.62</code>, abstain margin <code>0.05</code></td></tr>
+          <tr><td>Local models</td><td><code>qwen2.5:32b-instruct</code> for route, planner, feedback, and learning through local Ollama-compatible endpoint</td></tr>
+        </table>
+        <p class="fine">Public redaction note: the actual activation path, install path, session identifiers, and chat identifiers are intentionally not printed here.</p>
+      </section>
+
+      <section class="section" id="graph">
+        <div class="eyebrow">Graph shape</div>
+        <h2>Yes, it saves data as a graph</h2>
+        <p>OpenClawBrain's durable surface is a local SQLite database. The graph is not marketing language: memory nodes, memory edges, full-text search, route decisions, injections, proof events, and route-policy-v3 evidence tables live together so a later turn can be explained.</p>
+        <div class="grid two">
+          <div class="mini-card">
+            <strong>Memory side</strong>
+            <p><code>memory_nodes</code> stores scoped memories. <code>memory_edges</code> connects related memories. <code>memory_search</code> provides FTS retrieval. <code>memory_injections</code> records what actually entered the prompt.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Learning side</strong>
+            <p><code>route_frames_v3</code>, <code>route_shadow_decisions_v3</code>, <code>route_calibration_examples_v3</code>, <code>route_action_family_stats_v3</code>, and <code>route_policy_candidate_reports_v3</code> turn outcome evidence into a safer router.</p>
+          </div>
+        </div>
+        <table>
+          <tr><th>Graph object</th><th>Plain-English meaning</th><th>Why it matters</th></tr>
+          <tr><td>Memory node</td><td>A durable fact, correction, preference, or workflow rule.</td><td>The agent can reuse it later without relearning it.</td></tr>
+          <tr><td>Memory edge</td><td>A relationship between nodes, such as same repo, same channel, supersedes, or supports.</td><td>The agent can follow connected context without dumping every memory.</td></tr>
+          <tr><td>Route decision</td><td>The router's choice to retrieve, inject, abstain, or fall back.</td><td>Bad memory behavior can be audited and fixed.</td></tr>
+          <tr><td>Route frame</td><td>A redacted training example for what kind of turn this was.</td><td>Route-policy-v3 learns from cases instead of vibes.</td></tr>
+          <tr><td>Calibration example</td><td>Whether a predicted route was reliable for an action family.</td><td>Confidence thresholds can be learned per family.</td></tr>
+          <tr><td>Proof event</td><td>An auditable record of capture, routing, injection, or status.</td><td>Local memory has evidence trails and rollback points.</td></tr>
+        </table>
+      </section>
+
+      <section class="section band">
+        <div class="eyebrow">Useful turn pipeline</div>
+        <h2>The turn is routed before the answer, then learned after it</h2>
+        <div class="flow" aria-label="OpenClawBrain turn pipeline">
+          <div class="step"><b>1. User turn</b><span>The channel, task, repo, risk, and wording become routing signals.</span></div>
+          <div class="step"><b>2. Candidate search</b><span>SQLite FTS and scoped graph lookup find memories that might matter.</span></div>
+          <div class="step"><b>3. Route policy</b><span>route-policy-v3 scores the action family, confidence, and injection value.</span></div>
+          <div class="step"><b>4. Abstain gate</b><span>If support is weak, OpenClawBrain stays quiet or falls back instead of guessing.</span></div>
+          <div class="step"><b>5. Prompt injection</b><span>Only a compact, relevant memory block is inserted into the next prompt.</span></div>
+          <div class="step"><b>6. Proof and learning</b><span>Outcome evidence feeds route frames, calibration, shadow replay, and candidate reports.</span></div>
+        </div>
+      </section>
+
+      <section class="section" id="turn">
+        <div class="eyebrow">Real example</div>
+        <h2>A memory-injected turn from this Telegram session</h2>
+        <p>This is the useful behavior Jonathan wanted visualized: the user asks to push and publish everything, and OpenClawBrain injects channel-specific memory that changes how the agent communicates while it works.</p>
+        <div class="turn">
+          <div class="bubble">
+            <h3>User turn</h3>
+            <pre><code>Make sure to push publish everything!</code></pre>
+          </div>
+          <div class="bubble warn">
+            <h3>Retrieved memory context</h3>
+            <pre><code>&lt;openclawbrain_context&gt;
+Relevant memory:
+- Must follow: All Telegram profiles and agents must have noisy streaming/tool progress disabled to prevent leaking internal progress and tool chatter.
+- Must follow: On Telegram, restrict messages to operator summaries (ready/not ready, blockers, actions, decisions). Do not include command details, proof data, or ledger specifics unless explicitly requested.
+&lt;/openclawbrain_context&gt;</code></pre>
+          </div>
+          <div class="bubble good">
+            <h3>Agent behavior</h3>
+            <p>The agent still does the engineering work, but the remote chat only gets concise operator updates: ready state, blocker state, actions, and decisions. Internal commands, proof rows, and noisy progress stay out of Telegram.</p>
+          </div>
+          <div class="bubble">
+            <h3>Why this is valuable</h3>
+            <p>The memory is not general trivia. It is a channel-specific operating rule that prevents accidental disclosure while preserving momentum. The right memory appears at the exact turn where it matters.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section band">
+        <div class="eyebrow">What makes it safer</div>
+        <h2>Memory only helps if the system can say no</h2>
+        <div class="grid">
+          <div class="mini-card">
+            <strong>Abstention</strong>
+            <p>If confidence is below the calibrated threshold, OpenClawBrain withholds memory instead of injecting a maybe-relevant rule.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Shadow replay</strong>
+            <p>Candidate policies can score real past turns before they are trusted to alter future prompts.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Rollback lineage</strong>
+            <p>Policy snapshots and candidate reports keep enough history to retreat from a noisy or harmful policy.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="eyebrow">Proof surface</div>
+        <h2>How to inspect the same kind of evidence locally</h2>
+        <pre><code>openclaw plugins inspect openclawbrain --runtime
+openclaw config get plugins.entries.openclawbrain
+
+# authenticated local Gateway routes expose proof, search, status,
+# graph, route policy, route learning, and recent injection surfaces</code></pre>
+        <p class="fine">The public page deliberately shows a redacted snapshot. The local machine keeps the inspectable data, including proof events, status snapshots, and route learning rows.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/proof/">Verification guide</a>
+          <a class="btn" href="/install/">Install or upgrade</a>
+          <a class="btn" href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">Source code</a>
+        </div>
+      </section>
+    </main>
+
+    <div class="footer">
+      Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. Open source on <a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>.
+    </div>
+  </div>
+</body>
+</html>
