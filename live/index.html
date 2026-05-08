@@ -274,6 +274,7 @@
       <a class="brand" href="/" aria-label="OpenClawBrain home"><img src="/assets/img/openclawbrain-logo.jpg" alt="OpenClawBrain" width="628" height="193"></a>
       <div class="navlinks">
         <a href="/">Home</a>
+        <a href="/guide/">Guide</a>
         <a href="/live/">Live visual</a>
         <a href="/how-it-works/">How it works</a>
         <a href="/install/">Install</a>
@@ -288,7 +289,7 @@
           <div class="eyebrow">Local runtime snapshot</div>
           <h1>What OpenClawBrain looks like during a useful turn.</h1>
           <p class="lead">This page uses live local runtime facts from Jonathan's OpenClawBrain install, plus one real memory-injected Telegram turn, with private paths and identifiers redacted for the public web.</p>
-          <div class="chipline" aria-label="Snapshot highlights">
+          <div class="chipline">
             <span class="chip">Captured: 2026-05-08 02:20 PDT</span>
             <span class="chip">Release: 0.2.21</span>
             <span class="chip">Mode: balanced</span>
@@ -301,7 +302,7 @@
           </div>
         </div>
 
-        <div class="hero-media" aria-label="OpenClawBrain runtime visual">
+        <div class="hero-media" role="group" aria-label="OpenClawBrain runtime visual">
           <img src="/assets/img/openclawbrain-hero.jpg" alt="">
           <div class="hero-overlay">
             <div class="status-row">
@@ -361,14 +362,18 @@ allowRemoteLlm=false</code></pre>
           </div>
         </div>
         <table>
-          <tr><th>Setting</th><th>Live value</th></tr>
-          <tr><td>Release</td><td><code>openclawbrain@0.2.21</code></td></tr>
-          <tr><td>Mode</td><td><code>balanced</code></td></tr>
-          <tr><td>Scoped agents</td><td><code>main</code></td></tr>
-          <tr><td>Capture</td><td><code>aggressive</code>, immediate correction capture on, post-run workflow capture on, candidates stored</td></tr>
-          <tr><td>Routing</td><td><code>hybrid_llm_on_cache_miss</code>, max 40 candidates, max 8 injected memories, max 2500 injected chars</td></tr>
-          <tr><td>Route learning</td><td><code>route-policy-v3</code> enabled, update mode <code>gated_active</code>, calibrated confidence floor <code>0.62</code>, abstain margin <code>0.05</code></td></tr>
-          <tr><td>Local models</td><td><code>qwen2.5:32b-instruct</code> for route, planner, feedback, and learning through local Ollama-compatible endpoint</td></tr>
+          <thead>
+            <tr><th>Setting</th><th>Live value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Release</td><td><code>openclawbrain@0.2.21</code></td></tr>
+            <tr><td>Mode</td><td><code>balanced</code></td></tr>
+            <tr><td>Scoped agents</td><td><code>main</code></td></tr>
+            <tr><td>Capture</td><td><code>aggressive</code>, immediate correction capture on, post-run workflow capture on, candidates stored</td></tr>
+            <tr><td>Routing</td><td><code>hybrid_llm_on_cache_miss</code>, max 40 candidates, max 8 injected memories, max 2500 injected chars</td></tr>
+            <tr><td>Route learning</td><td><code>route-policy-v3</code> enabled, update mode <code>gated_active</code>, calibrated confidence floor <code>0.62</code>, abstain margin <code>0.05</code></td></tr>
+            <tr><td>Local models</td><td><code>qwen2.5:32b-instruct</code> for route, planner, feedback, and learning through local Ollama-compatible endpoint</td></tr>
+          </tbody>
         </table>
         <p class="fine">Public redaction note: the actual activation path, install path, session identifiers, and chat identifiers are intentionally not printed here.</p>
       </section>
@@ -388,20 +393,24 @@ allowRemoteLlm=false</code></pre>
           </div>
         </div>
         <table>
-          <tr><th>Graph object</th><th>Plain-English meaning</th><th>Why it matters</th></tr>
-          <tr><td>Memory node</td><td>A durable fact, correction, preference, or workflow rule.</td><td>The agent can reuse it later without relearning it.</td></tr>
-          <tr><td>Memory edge</td><td>A relationship between nodes, such as same repo, same channel, supersedes, or supports.</td><td>The agent can follow connected context without dumping every memory.</td></tr>
-          <tr><td>Route decision</td><td>The router's choice to retrieve, inject, abstain, or fall back.</td><td>Bad memory behavior can be audited and fixed.</td></tr>
-          <tr><td>Route frame</td><td>A redacted training example for what kind of turn this was.</td><td>Route-policy-v3 learns from cases instead of vibes.</td></tr>
-          <tr><td>Calibration example</td><td>Whether a predicted route was reliable for an action family.</td><td>Confidence thresholds can be learned per family.</td></tr>
-          <tr><td>Proof event</td><td>An auditable record of capture, routing, injection, or status.</td><td>Local memory has evidence trails and rollback points.</td></tr>
+          <thead>
+            <tr><th>Graph object</th><th>Plain-English meaning</th><th>Why it matters</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Memory node</td><td>A durable fact, correction, preference, or workflow rule.</td><td>The agent can reuse it later without relearning it.</td></tr>
+            <tr><td>Memory edge</td><td>A relationship between nodes, such as same repo, same channel, supersedes, or supports.</td><td>The agent can follow connected context without dumping every memory.</td></tr>
+            <tr><td>Route decision</td><td>The router's choice to retrieve, inject, abstain, or fall back.</td><td>Bad memory behavior can be audited and fixed.</td></tr>
+            <tr><td>Route frame</td><td>A redacted training example for what kind of turn this was.</td><td>Route-policy-v3 learns from cases instead of vibes.</td></tr>
+            <tr><td>Calibration example</td><td>Whether a predicted route was reliable for an action family.</td><td>Confidence thresholds can be learned per family.</td></tr>
+            <tr><td>Proof event</td><td>An auditable record of capture, routing, injection, or status.</td><td>Local memory has evidence trails and rollback points.</td></tr>
+          </tbody>
         </table>
       </section>
 
       <section class="section band">
         <div class="eyebrow">Useful turn pipeline</div>
         <h2>The turn is routed before the answer, then learned after it</h2>
-        <div class="flow" aria-label="OpenClawBrain turn pipeline">
+        <div class="flow">
           <div class="step"><b>1. User turn</b><span>The channel, task, repo, risk, and wording become routing signals.</span></div>
           <div class="step"><b>2. Candidate search</b><span>SQLite FTS and scoped graph lookup find memories that might matter.</span></div>
           <div class="step"><b>3. Route policy</b><span>route-policy-v3 scores the action family, confidence, and injection value.</span></div>

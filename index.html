@@ -132,6 +132,7 @@
       <a class="brand" href="/" aria-label="OpenClawBrain home"><img src="/assets/img/openclawbrain-logo.jpg" alt="OpenClawBrain" width="628" height="193"></a>
       <div class="navlinks">
         <a href="/">Home</a>
+        <a href="/guide/">Guide</a>
         <a href="/live/">Live visual</a>
         <a href="/how-it-works/">How it works</a>
         <a href="/install/">Install</a>
@@ -151,6 +152,7 @@
         <figcaption>Local memory, learned routing, and bounded context injection.</figcaption>
       </figure>
       <div class="actions">
+        <a class="btn btn-primary" href="/guide/">Read the ultimate guide</a>
         <a class="btn btn-primary" href="/live/">See the live visual</a>
         <a class="btn btn-primary" href="/install/">Install or upgrade</a>
         <a class="btn" href="/proof/">Verify it locally</a>
@@ -238,13 +240,17 @@ bounded context injection or abstention</code></pre>
       <h2>What is actually learned</h2>
       <p>The learned object is not a pile of memories. It is a routing policy: a small deterministic function that decides whether this kind of turn deserves memory, which action family it belongs to, and how much confidence is enough.</p>
       <table>
-        <tr><th>Artifact</th><th>Job</th></tr>
-        <tr><td>Memory nodes</td><td>Scoped corrections, preferences, workflow rules, and context that may later be retrieved.</td></tr>
-        <tr><td>Route frames</td><td>Redacted examples describing route mode, family, canonical action key, evidence ids, calibrated score, abstention reason, and fallback behavior.</td></tr>
-        <tr><td>Shadow decisions</td><td>Candidate route policies score real turns without changing the prompt, then record would-have-routed evidence.</td></tr>
-        <tr><td>Eval cases</td><td>Replayable cases and labels used to test whether a policy improves useful routing without increasing noise or unsafe sync work.</td></tr>
-        <tr><td>Family stats</td><td>Per-action-family support counts, confidence floors, cold-start status, and promotion readiness.</td></tr>
-        <tr><td>Candidate reports</td><td>Validation, replay, activation, and rollback summaries for each policy snapshot.</td></tr>
+        <thead>
+          <tr><th>Artifact</th><th>Job</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Memory nodes</td><td>Scoped corrections, preferences, workflow rules, and context that may later be retrieved.</td></tr>
+          <tr><td>Route frames</td><td>Redacted examples describing route mode, family, canonical action key, evidence ids, calibrated score, abstention reason, and fallback behavior.</td></tr>
+          <tr><td>Shadow decisions</td><td>Candidate route policies score real turns without changing the prompt, then record would-have-routed evidence.</td></tr>
+          <tr><td>Eval cases</td><td>Replayable cases and labels used to test whether a policy improves useful routing without increasing noise or unsafe sync work.</td></tr>
+          <tr><td>Family stats</td><td>Per-action-family support counts, confidence floors, cold-start status, and promotion readiness.</td></tr>
+          <tr><td>Candidate reports</td><td>Validation, replay, activation, and rollback summaries for each policy snapshot.</td></tr>
+        </tbody>
       </table>
     </section>
 

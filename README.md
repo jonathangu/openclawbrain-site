@@ -21,6 +21,7 @@ Shared spine:
 Current public truth:
 
 - Current release: `0.2.21`.
+- Public ultimate guide: `/guide/` explains the architecture history, failed iterations, core route-learning loop, and AI-building lessons.
 - Public live visual: `/live/` shows the redacted local runtime, SQLite graph shape, and a real useful memory-injected turn.
 - Production routing path: route-policy-v3 first.
 - Fallback and rollback path: route-policy-v2, then legacy heuristics.

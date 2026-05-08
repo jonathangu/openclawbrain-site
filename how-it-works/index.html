@@ -39,7 +39,7 @@
     <div class="topbar">
       <a class="brand" href="/" aria-label="OpenClawBrain home"><img src="/assets/img/openclawbrain-logo.jpg" alt="OpenClawBrain" width="628" height="193"></a>
       <div class="navlinks">
-        <a href="/">Home</a><a href="/live/">Live visual</a><a href="/how-it-works/">How it works</a><a href="/install/">Install</a><a href="/proof/">Proof</a><a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
+        <a href="/">Home</a><a href="/guide/">Guide</a><a href="/live/">Live visual</a><a href="/how-it-works/">How it works</a><a href="/install/">Install</a><a href="/proof/">Proof</a><a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
 
@@ -100,13 +100,13 @@ learn: update evidence after the turn</code></pre>
       <h2>route-policy-v3</h2>
       <p>The active production route brain is route-policy-v3. It is a compact learned route_fn compiled from evidence, not a vague prompt that asks the model to “remember better.”</p>
       <pre><code>active v3 match with calibrated confidence
-  -> route memory and record proof
+  -&gt; route memory and record proof
 
 v3 abstains or has no safe match
-  -> fall back to v2 policy
+  -&gt; fall back to v2 policy
 
 v2 misses or rollback is needed
-  -> use legacy heuristics as last resort</code></pre>
+  -&gt; use legacy heuristics as last resort</code></pre>
       <p>Abstention is a feature. If the system does not have enough support, it stays quiet instead of polluting the prompt.</p>
     </section>
 
@@ -137,16 +137,16 @@ v2 misses or rollback is needed
       <h2>Failure behavior</h2>
       <p>The runtime is intentionally conservative. If the learned route_fn cannot make a supported decision, it does less.</p>
       <pre><code>policy snapshot missing or invalid
-  -> skip v3 and use fallback path
+  -&gt; skip v3 and use fallback path
 
 family confidence below floor
-  -> abstain and keep prompt clean
+  -&gt; abstain and keep prompt clean
 
 candidate shows harm in replay
-  -> do not promote
+  -&gt; do not promote
 
 active policy regresses
-  -> roll back to prior snapshot, then v2 or heuristics</code></pre>
+  -&gt; roll back to prior snapshot, then v2 or heuristics</code></pre>
     </section>
 
     <section class="section">
