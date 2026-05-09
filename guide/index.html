@@ -356,6 +356,7 @@
       <div class="navlinks">
         <a href="/">Home</a>
         <a href="/guide/">Guide</a>
+        <a href="/memory-authority/">Memory Authority</a>
         <a href="/live/">Live visual</a>
         <a href="/how-it-works/">How it works</a>
         <a href="/install/">Install</a>
@@ -369,16 +370,17 @@
         <div class="hero-copy">
           <div class="eyebrow">Ultimate guide</div>
           <h1>The learning loop behind useful agent memory.</h1>
-          <p class="lead">OpenClawBrain began as a graph-first memory idea. It became a route-first learning system: local SQLite evidence, scoped memories, shadow replay, calibrated abstention, and a compact route-policy-v3 function that decides when memory should affect a future turn.</p>
+          <p class="lead">OpenClawBrain began as a graph-first memory idea. It became a route-first learning system: local SQLite evidence, scoped memories, shadow replay, calibrated abstention, a compact route-policy-v3 function, and now a Memory Authority layer that checks whether retrieved memories can safely influence the turn.</p>
           <div class="actions">
             <a class="btn btn-primary" href="https://github.com/jonathangu/openclawbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Read Markdown source</a>
             <a class="btn" href="/live/">Open live visual</a>
-            <a class="btn" href="/install/">Install v0.2.21</a>
+            <a class="btn" href="/install/">Install v0.2.22</a>
           </div>
           <div class="chips">
             <span class="chip">Memory quality is routing first</span>
             <span class="chip">Local SQLite graph</span>
             <span class="chip">route-policy-v3</span>
+            <span class="chip">Memory Authority</span>
             <span class="chip">Proof and rollback</span>
           </div>
         </div>
@@ -387,7 +389,7 @@
           <img src="/assets/img/openclawbrain-hero.jpg" alt="OpenClawBrain luminous evidence graph hero" width="1280" height="512">
           <div class="hero-visual-inner">
             <div class="status-grid">
-              <div class="status-tile"><span class="k">Current</span><span class="v">0.2.21</span><span class="k">source tag v0.2.21</span></div>
+              <div class="status-tile"><span class="k">Current</span><span class="v">0.2.22</span><span class="k">source tag v0.2.22</span></div>
               <div class="status-tile"><span class="k">Runtime</span><span class="v">v3 first</span><span class="k">v2 rollback path</span></div>
               <div class="status-tile"><span class="k">Storage</span><span class="v">SQLite</span><span class="k">graph + evidence</span></div>
             </div>
@@ -664,9 +666,10 @@ Relevant memory:
             <div class="eyebrow">Operator truth</div>
             <h2>Current public status is deliberately narrow.</h2>
           </div>
-          <p>OpenClawBrain is published as package <code>openclawbrain</code>, version <code>0.2.21</code>, with route-policy-v3 as the production route brain. ClawHub source linking is present; scan status may still show pending while review catches up.</p>
+          <p>OpenClawBrain is published as package <code>openclawbrain</code>, version <code>0.2.22</code>, with route-policy-v3 as the production route brain and Memory Authority as the resolver between retrieval and injection. ClawHub source linking is present; scan status may still show pending while review catches up.</p>
         </div>
-        <pre class="code">openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.21 --force
+        <div class="quote"><strong>0.2.22 upgrade:</strong> relevant memory is not automatically authorized memory. The resolver can inject, weaken, verify, confirm, abstain, keep audit-only, or never use a retrieved memory.</div>
+        <pre class="code">openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.22 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart
 

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenClawBrain Memory Authority - Relevance is not authority</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="OpenClawBrain 0.2.22 separates memory relevance from memory authority with stale-memory verification, confirmation, tombstones, supersession, and proof events.">
+  <meta property="og:title" content="OpenClawBrain Memory Authority">
+  <meta property="og:description" content="A visual guide to why OpenClawBrain checks authority before injecting retrieved memories.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://openclawbrain.ai/memory-authority/">
+  <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://openclawbrain.ai/memory-authority/">
+  <style>
+    :root {
+      --bg: #061017;
+      --surface: #0f1b24;
+      --surface-2: #162630;
+      --text: #edf5f7;
+      --muted: #aabac1;
+      --line: rgba(164, 210, 220, 0.24);
+      --cyan: #78d9ff;
+      --green: #9df2b6;
+      --gold: #f4c66f;
+      --coral: #ff9b86;
+      --shadow: 0 18px 48px rgba(0, 0, 0, 0.30);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(180deg, rgba(120, 217, 255, 0.09), transparent 280px),
+        var(--bg);
+      line-height: 1.58;
+    }
+    a { color: var(--cyan); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 24px 20px 76px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+    .brand { display: inline-flex; align-items: center; }
+    .brand img { width: 178px; height: auto; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10); box-shadow: 0 8px 24px rgba(0,0,0,0.24); }
+    .navlinks { display: flex; gap: 10px; flex-wrap: wrap; }
+    .navlinks a, .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      min-height: 40px;
+      background: rgba(255,255,255,0.025);
+      color: var(--text);
+      font-size: 14px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--cyan), #b7f4ff); color: #061017; border-color: rgba(255,255,255,0.18); font-weight: 800; }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
+      gap: 28px;
+      align-items: center;
+      padding: 26px 0 34px;
+    }
+    .eyebrow { margin: 0 0 12px; color: var(--green); font-size: 13px; font-weight: 900; text-transform: uppercase; }
+    h1 { margin: 0 0 18px; font-size: 64px; line-height: 1.02; letter-spacing: 0; }
+    h2 { margin: 0 0 12px; font-size: 32px; line-height: 1.14; letter-spacing: 0; }
+    h3 { margin: 0 0 8px; font-size: 19px; line-height: 1.22; letter-spacing: 0; }
+    p { margin: 0 0 14px; }
+    .lead { max-width: 760px; color: var(--muted); font-size: 20px; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+    .hero-visual, .section, .card, .matrix-cell {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(15, 27, 36, 0.82);
+      box-shadow: var(--shadow);
+    }
+    .hero-visual { position: relative; min-height: 520px; overflow: hidden; background: #071019; }
+    .hero-visual img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.38; }
+    .hero-visual-inner { position: relative; min-height: 520px; display: grid; place-items: center; padding: 22px; background: linear-gradient(180deg, rgba(6,16,23,0.28), rgba(6,16,23,0.92)); }
+    .section { padding: 28px; margin-top: 18px; box-shadow: none; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .card { padding: 18px; box-shadow: none; background: rgba(255,255,255,0.035); }
+    .card p, .muted { color: var(--muted); }
+    .chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+    .chip { border: 1px solid var(--line); background: rgba(255,255,255,0.035); color: var(--muted); border-radius: 999px; padding: 8px 12px; font-size: 13px; }
+    pre { margin: 0 0 14px; overflow: auto; background: #08111b; border: 1px solid var(--line); border-radius: 8px; padding: 16px; color: #d8e8f8; font-size: 14px; line-height: 1.65; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; }
+    th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
+    th { color: var(--green); }
+    .matrix { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .matrix-cell { padding: 16px; box-shadow: none; }
+    .matrix-cell strong { color: var(--green); }
+    svg { max-width: 100%; height: auto; overflow: visible; }
+    .svg-node { fill: rgba(18, 35, 45, 0.94); stroke: rgba(164,210,220,0.42); stroke-width: 1.2; }
+    .svg-hot { fill: rgba(120, 217, 255, 0.18); stroke: var(--cyan); }
+    .svg-good { fill: rgba(157, 242, 182, 0.18); stroke: var(--green); }
+    .svg-warm { fill: rgba(244, 198, 111, 0.17); stroke: var(--gold); }
+    .svg-coral { fill: rgba(255, 155, 134, 0.14); stroke: var(--coral); }
+    .svg-edge { fill: none; stroke: rgba(237,245,247,0.42); stroke-width: 1.6; marker-end: url(#arrow); }
+    .svg-label { fill: var(--text); font: 800 13px Inter, system-ui, sans-serif; }
+    .svg-small { fill: var(--muted); font: 11px Inter, system-ui, sans-serif; }
+    .footer { color: var(--muted); text-align: center; margin-top: 28px; font-size: 14px; }
+    @media (max-width: 840px) { .hero { grid-template-columns: 1fr; } h1 { font-size: 44px; } .hero-visual, .hero-visual-inner { min-height: 420px; } .matrix { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="/" aria-label="OpenClawBrain home"><img src="/assets/img/openclawbrain-logo.jpg" alt="OpenClawBrain" width="628" height="193"></a>
+      <div class="navlinks">
+        <a href="/">Home</a>
+        <a href="/guide/">Guide</a>
+        <a href="/memory-authority/">Memory Authority</a>
+        <a href="/live/">Live visual</a>
+        <a href="/how-it-works/">How it works</a>
+        <a href="/install/">Install</a>
+        <a href="/proof/">Proof</a>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">OpenClawBrain 0.2.22</div>
+        <h1>Relevance is not authority.</h1>
+        <p class="lead">The new Memory Authority layer decides whether a retrieved memory is allowed to influence the current turn. A memory can match semantically and still be stale, superseded, private, too broad, tombstoned, or overridden by the user's current instruction.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/install/">Install 0.2.22</a>
+          <a class="btn" href="https://github.com/jonathangu/openclawbrain/blob/main/docs/MEMORY_STALENESS_DECAY_AND_FORGETTING.md" target="_blank" rel="noopener">Read the design note</a>
+        </div>
+        <div class="chips">
+          <span class="chip">inject</span>
+          <span class="chip">weak_context</span>
+          <span class="chip">verify_before_use</span>
+          <span class="chip">confirm_before_use</span>
+          <span class="chip">abstain</span>
+          <span class="chip">audit_only</span>
+          <span class="chip">never_use</span>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="/assets/img/openclawbrain-hero.jpg" alt="OpenClawBrain evidence graph background">
+        <div class="hero-visual-inner">
+          <svg viewBox="0 0 680 430" role="img" aria-label="Memory authority pipeline diagram">
+            <defs>
+              <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="rgba(237,245,247,0.58)"></path>
+              </marker>
+            </defs>
+            <path class="svg-edge" d="M105 95 C 180 95, 180 95, 250 95"></path>
+            <path class="svg-edge" d="M355 95 C 420 95, 420 95, 500 95"></path>
+            <path class="svg-edge" d="M585 122 C 585 180, 500 185, 455 220"></path>
+            <path class="svg-edge" d="M350 250 C 265 280, 190 285, 120 325"></path>
+            <rect class="svg-node svg-hot" x="28" y="54" width="128" height="82" rx="8"></rect>
+            <text class="svg-label" x="92" y="85" text-anchor="middle">Search</text>
+            <text class="svg-small" x="92" y="108" text-anchor="middle">relevance</text>
+            <rect class="svg-node svg-good" x="248" y="44" width="142" height="102" rx="8"></rect>
+            <text class="svg-label" x="319" y="78" text-anchor="middle">Authority</text>
+            <text class="svg-small" x="319" y="102" text-anchor="middle">validity + policy</text>
+            <rect class="svg-node svg-warm" x="500" y="54" width="132" height="82" rx="8"></rect>
+            <text class="svg-label" x="566" y="85" text-anchor="middle">Decision</text>
+            <text class="svg-small" x="566" y="108" text-anchor="middle">inject or abstain</text>
+            <rect class="svg-node" x="210" y="204" width="260" height="94" rx="8"></rect>
+            <text class="svg-label" x="340" y="238" text-anchor="middle">Proof event</text>
+            <text class="svg-small" x="340" y="263" text-anchor="middle">why used, weakened, verified, or withheld</text>
+            <rect class="svg-node svg-coral" x="34" y="302" width="172" height="78" rx="8"></rect>
+            <text class="svg-label" x="120" y="333" text-anchor="middle">Tombstone</text>
+            <text class="svg-small" x="120" y="356" text-anchor="middle">do not recapture</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>The new contract</h2>
+      <pre><code>old runtime:
+  relevant + high score =&gt; inject
+
+new runtime:
+  relevant + authorized + current + applicable + safe + non-superseded
+    =&gt; inject, weakly adapt, verify, confirm, abstain, audit-only, or never use</code></pre>
+      <p class="muted">Retrieval is allowed to over-include. Authority resolution is deliberately stricter.</p>
+    </section>
+
+    <section class="section">
+      <h2>Orthogonal memory state</h2>
+      <p>OpenClawBrain does not collapse memory state into one overloaded enum. It computes authority from independent axes.</p>
+      <div class="grid">
+        <div class="card"><h3>Retention</h3><p>stored, redacted, soft_deleted, tombstoned, hard_deleted</p></div>
+        <div class="card"><h3>Behavior</h3><p>injectable, confirm_before_use, explicit_request_only, never_use</p></div>
+        <div class="card"><h3>Time</h3><p>current, stale, expired, unknown</p></div>
+        <div class="card"><h3>Privacy</h3><p>normal, sensitive, recall_only, do_not_restore, do_not_reveal_proactively</p></div>
+        <div class="card"><h3>Validation</h3><p>user_confirm, environment_check, tool_success, document_check, never_proactive</p></div>
+        <div class="card"><h3>Graph</h3><p>superseded, contradicted, reinforced, extended, audit-only lineage</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Decision matrix</h2>
+      <div class="matrix">
+        <div class="matrix-cell"><strong>High authority, low risk</strong><p>Inject normally. Example: a current repo-scoped correction that matches this repo.</p></div>
+        <div class="matrix-cell"><strong>High authority, high risk</strong><p>Verify or confirm before acting. Example: a deployment workflow or sensitive recall rule.</p></div>
+        <div class="matrix-cell"><strong>Medium authority, material effect</strong><p>Ask, verify, or include as explicitly non-authoritative context.</p></div>
+        <div class="matrix-cell"><strong>Low authority, high risk</strong><p>Abstain. Keep the memory visible only in audit surfaces.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Concrete examples</h2>
+      <table>
+        <tr><th>Retrieved memory</th><th>Current turn</th><th>Authority decision</th></tr>
+        <tr><td>Use pnpm in this repo.</td><td>Same repo, lockfile still shows pnpm.</td><td><code>verify_before_use</code>, then use after environment check.</td></tr>
+        <tr><td>User prefers concise answers.</td><td>User asks for deep critique.</td><td><code>abstain</code>. The current instruction wins.</td></tr>
+        <tr><td>Old npm workflow.</td><td>New user correction says pnpm.</td><td>Create new revision, supersede old memory, keep audit lineage.</td></tr>
+        <tr><td>Codeword recall rule.</td><td>User says do not store it anymore.</td><td>Tombstone and redact so it is not recaptured later.</td></tr>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>What changed in 0.2.22</h2>
+      <div class="grid">
+        <div class="card"><h3>Resolver</h3><p><code>MemoryAuthorityResolver</code> sits between search and context selection.</p></div>
+        <div class="card"><h3>Schema</h3><p><code>memory_validity</code> and <code>memory_authority_events</code> make authority inspectable.</p></div>
+        <div class="card"><h3>Lineage</h3><p>Same-key changed values create supersession lineage instead of overwriting history.</p></div>
+        <div class="card"><h3>Forgetting</h3><p>Sensitive forget requests create tombstones that block quiet recapture.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Proof surfaces</h2>
+      <p>The runtime now records not only which memories matched, but why relevant memories were used, weakened, verified, confirmed, suppressed, tombstoned, superseded, or withheld.</p>
+      <pre><code># Authenticated OpenClaw routes
+/plugins/openclawbrain/graph?limit=50
+/plugins/openclawbrain/explain-last
+/plugins/openclawbrain/proof?limit=20</code></pre>
+    </section>
+
+    <div class="footer">
+      <a href="/">openclawbrain.ai</a> / <a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</body>
+</html>

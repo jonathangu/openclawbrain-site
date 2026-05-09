@@ -133,6 +133,7 @@
       <div class="navlinks">
         <a href="/">Home</a>
         <a href="/guide/">Guide</a>
+        <a href="/memory-authority/">Memory Authority</a>
         <a href="/live/">Live visual</a>
         <a href="/how-it-works/">How it works</a>
         <a href="/install/">Install</a>
@@ -145,7 +146,7 @@
       <div class="eyebrow">Evidence, not vibes, for agent memory</div>
       <h1>Local, accountable memory for OpenClaw agents.</h1>
       <p class="lead">OpenClawBrain remembers durable corrections, preferences, workflows, and context, then learns when that memory should affect a future turn.</p>
-      <p class="sublead">The route-policy-v3 loop turns feedback into redacted evidence, distills candidate routing rules, tests them in shadow, calibrates confidence by action family, and serves a compact learned route_fn with abstention and rollback built in.</p>
+      <p class="sublead">The route-policy-v3 loop decides when memory should participate. The 0.2.22 Memory Authority layer then decides whether each retrieved memory is still current, scoped, safe, and allowed to influence the turn.</p>
       <blockquote><strong>LLM decides semantic meaning. Code enforces trust boundaries. SQLite stores the graph and evidence.</strong></blockquote>
       <figure class="hero-art">
         <img src="/assets/img/openclawbrain-hero.jpg" alt="OpenClawBrain constellation hero art with a luminous claw and evidence graph" width="1280" height="512" loading="eager">
@@ -153,15 +154,17 @@
       </figure>
       <div class="actions">
         <a class="btn btn-primary" href="/guide/">Read the ultimate guide</a>
+        <a class="btn btn-primary" href="/memory-authority/">Memory Authority</a>
         <a class="btn btn-primary" href="/live/">See the live visual</a>
         <a class="btn btn-primary" href="/install/">Install or upgrade</a>
         <a class="btn" href="/proof/">Verify it locally</a>
         <a class="btn" href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
       </div>
       <div class="chips">
-        <span class="chip">Current release: v0.2.21</span>
+        <span class="chip">Current release: v0.2.22</span>
         <span class="chip">Local SQLite + FTS graph</span>
         <span class="chip">Learned route_fn</span>
+        <span class="chip">Memory Authority</span>
         <span class="chip">Shadow replay + calibration</span>
         <span class="chip">v2/heuristic rollback</span>
         <span class="chip">Sparse context injection</span>
@@ -173,12 +176,12 @@
       <p>If you are explaining it quickly, this is the spine:</p>
       <pre><code>OpenClawBrain is a local-first memory system for AI agents.
 
-The core idea: an agent should not just &quot;remember everything.&quot; It should learn when memory actually matters. OpenClawBrain turns corrections, outcomes, misses, and handoffs into local evidence, then learns a small routing policy that decides when to bring the right memory into a future turn — or abstain when it is not confident.
+The core idea: an agent should not just &quot;remember everything.&quot; It should learn when memory actually matters, then decide whether retrieved memory still has authority. OpenClawBrain turns corrections, outcomes, misses, and handoffs into local evidence, learns a small routing policy, and checks authority before memory reaches the prompt.
 
 The trust boundary is the important part: the LLM proposes meaning, but code owns validation, storage, calibration, promotion, and rollback. SQLite keeps the graph and evidence local and inspectable.
 
 Install or upgrade if you already run OpenClaw:
-openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.21 --force
+openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.22 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
     </section>
@@ -288,7 +291,7 @@ injection: sparse and relevance-gated</code></pre>
 
     <section class="section">
       <h2>Install or upgrade</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.21
+      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.22
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="fine">The GitHub README has the operator path: config, Ollama setup, runtime verification, endpoints, and debugging surfaces.</p>

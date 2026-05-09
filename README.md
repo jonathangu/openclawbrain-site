@@ -20,13 +20,15 @@ Shared spine:
 
 Current public truth:
 
-- Current release: `0.2.21`.
+- Current release: `0.2.22`.
 - Public ultimate guide: `/guide/` explains the architecture history, failed iterations, core route-learning loop, and AI-building lessons.
+- Public Memory Authority guide: `/memory-authority/` explains why relevant memory is not automatically authorized memory.
 - Public live visual: `/live/` shows the redacted local runtime, SQLite graph shape, and a real useful memory-injected turn.
 - Production routing path: route-policy-v3 first.
+- Authority path: retrieved memories can be injected, weakened, verified, confirmed, suppressed, tombstoned, or withheld before they touch the prompt.
 - Fallback and rollback path: route-policy-v2, then legacy heuristics.
 - Learning loop: redacted route frames, SQLite evidence, shadow decisions, replay/eval cases, calibration examples, action-family stats, candidate reports, gated promotion, and rollback lineage.
 
 Shareable summary:
 
-> OpenClawBrain is a local-first memory system for AI agents. The core idea: an agent should not just “remember everything.” It should learn when memory actually matters. OpenClawBrain turns corrections, outcomes, misses, and handoffs into local evidence, then learns a small routing policy that decides when to bring the right memory into a future turn — or abstain when it is not confident. The LLM proposes meaning; code owns validation, storage, calibration, promotion, and rollback. SQLite keeps the graph and evidence local and inspectable.
+> OpenClawBrain is a local-first memory system for AI agents. The core idea: an agent should not just “remember everything.” It should learn when memory actually matters, then check whether retrieved memory still has authority. OpenClawBrain turns corrections, outcomes, misses, and handoffs into local evidence, learns a small routing policy, and resolves authority before memory reaches the prompt. The LLM proposes meaning; code owns validation, storage, calibration, promotion, rollback, and forgetting. SQLite keeps the graph and evidence local and inspectable.
