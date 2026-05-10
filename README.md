@@ -12,17 +12,18 @@ Keep the site short and readable. GitHub is the operator/developer truth page fo
 
 Shared spine:
 
-> Evidence, not vibes, for agent memory.
+> Memory authority for local AI agents.
 >
-> OpenClawBrain is local, accountable memory for OpenClaw agents. It remembers durable corrections, preferences, workflows, and context, then learns when that memory should affect a future turn.
+> OpenClawBrain gives local agents continuity across projects, tools, and days. It remembers corrections, preferences, workflows, and handoffs, then checks whether each memory still deserves authority before it shapes the next turn.
 >
-> LLM decides semantic meaning. Code enforces trust boundaries. SQLite stores the graph and evidence.
+> Remember what matters. Trust the current instruction. Leave proof for every important memory decision.
 
 Current public truth:
 
 - Current release: `0.2.25`.
 - Public ultimate guide: `/guide/` explains the architecture history, failed iterations, core route-learning loop, and AI-building lessons.
 - Public Memory Authority guide: `/memory-authority/` explains why relevant memory is not automatically authorized memory.
+- Public Codex continuity tutorial: `/codex-continuity/` explains how Codex UI stays the workbench while OpenClaw/Telegram becomes the mobile operator surface.
 - Public live visual: `/live/` shows the redacted local runtime, SQLite graph shape, and a real useful memory-injected turn.
 - Production routing path: route-policy-v3 first.
 - Authority path: retrieved memories can be injected, weakened, verified, confirmed, suppressed, tombstoned, or withheld before they touch the prompt.
@@ -31,4 +32,4 @@ Current public truth:
 
 Shareable summary:
 
-> OpenClawBrain is a local-first memory system for AI agents. The core idea: an agent should not just “remember everything.” It should learn when memory actually matters, then check whether retrieved memory still has authority. OpenClawBrain turns corrections, outcomes, misses, and handoffs into local evidence, learns a small routing policy, and resolves authority before memory reaches the prompt. The LLM proposes meaning; code owns validation, storage, calibration, promotion, rollback, and forgetting. SQLite keeps the graph and evidence local and inspectable.
+> OpenClawBrain is a local-first memory system for AI agents. The core idea: an agent should not just remember more. It should know when the past is still allowed to guide the present. OpenClawBrain remembers useful corrections, preferences, workflows, and handoffs, then resolves authority before memory reaches the prompt. That makes it different from generic memory, vector notes, or transcript recall: relevance is not authority.

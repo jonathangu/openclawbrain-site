@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain Ultimate Guide - The Learning Loop Behind Agent Memory</title>
+  <title>OpenClawBrain Ultimate Guide - Memory with judgment</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A deep public guide to OpenClawBrain: what it is, how the route-policy-v3 learning loop works, why the architecture changed, and the lessons learned building local agent memory.">
+  <meta name="description" content="A deep public guide to OpenClawBrain: why useful AI memory needs continuity, authority, stale-memory judgment, proof, and quiet operator workflows.">
   <meta property="og:title" content="OpenClawBrain Ultimate Guide">
-  <meta property="og:description" content="How a graph-first memory idea became a local SQLite evidence graph, learned route_fn, calibrated abstention, and proof-first agent memory system.">
+  <meta property="og:description" content="How a graph-first memory idea became a memory authority layer for local AI agents: continuity, stale-memory judgment, proof, and quiet Codex handoffs.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://openclawbrain.ai/guide/">
   <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
@@ -357,6 +357,7 @@
         <a href="/">Home</a>
         <a href="/guide/">Guide</a>
         <a href="/memory-authority/">Memory Authority</a>
+        <a href="/codex-continuity/">Codex continuity</a>
         <a href="/live/">Live visual</a>
         <a href="/how-it-works/">How it works</a>
         <a href="/install/">Install</a>
@@ -369,18 +370,18 @@
       <section class="hero">
         <div class="hero-copy">
           <div class="eyebrow">Ultimate guide</div>
-          <h1>The learning loop behind useful agent memory.</h1>
-          <p class="lead">OpenClawBrain began as a graph-first memory idea. It became a route-first learning system: local SQLite evidence, scoped memories, shadow replay, calibrated abstention, a compact route-policy-v3 function, and now a Memory Authority layer that checks whether retrieved memories can safely influence the turn.</p>
+          <h1>Why useful agent memory is about judgment, not recall.</h1>
+          <p class="lead">OpenClawBrain began as a graph-first memory idea. The hard lesson was that retrieval is not enough. The system became a memory authority layer: local evidence, scoped memories, learned routing, stale-memory handling, and proof that explains why memory was used or kept quiet.</p>
           <div class="actions">
             <a class="btn btn-primary" href="https://github.com/jonathangu/openclawbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Read Markdown source</a>
             <a class="btn" href="/live/">Open live visual</a>
             <a class="btn" href="/install/">Install v0.2.25</a>
           </div>
           <div class="chips">
-            <span class="chip">Memory quality is routing first</span>
-            <span class="chip">Local SQLite graph</span>
-            <span class="chip">route-policy-v3</span>
+            <span class="chip">Memory quality is judgment first</span>
+            <span class="chip">Continuity across tools</span>
             <span class="chip">Memory Authority</span>
+            <span class="chip">Codex-to-Telegram handoffs</span>
             <span class="chip">Proof and rollback</span>
           </div>
         </div>
@@ -430,11 +431,11 @@
         <div class="section-head">
           <div>
             <div class="eyebrow">Core claim</div>
-            <h2>Memory quality is a routing problem before it is a storage problem.</h2>
+            <h2>Memory quality is an authority problem before it is a storage problem.</h2>
           </div>
-          <p>The graph matters. Full-text search matters. But the product behavior comes from deciding when memory should participate, what kind of memory is allowed, how much prompt budget it gets, and when silence is the correct answer.</p>
+          <p>The graph matters. Search matters. But the product behavior comes from deciding whether remembered context still has permission to guide the current turn.</p>
         </div>
-        <div class="quote">An agent should not remember everything all the time. It should learn when memory actually matters.</div>
+        <div class="quote">An agent should remember what matters, respect what changed, and know when the current user instruction beats the past.</div>
       </section>
 
       <section class="section">

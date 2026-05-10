@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Install or upgrade OpenClawBrain</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Quick install path for OpenClawBrain 0.2.25, with route-policy-v3 learning and a tiny runtime proof loop.">
+  <meta name="description" content="Install OpenClawBrain, the memory authority layer for local AI agents with continuity, stale-memory judgment, proof, and Codex-to-Telegram handoffs.">
   <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="512">
@@ -29,13 +29,14 @@
     <div class="topbar">
       <a class="brand" href="/" aria-label="OpenClawBrain home"><img src="/assets/img/openclawbrain-logo.jpg" alt="OpenClawBrain" width="628" height="193"></a>
       <div class="navlinks"><a href="/">Home</a><a href="/guide/">Guide</a>
-        <a href="/memory-authority/">Memory Authority</a><a href="/live/">Live visual</a><a href="/how-it-works/">How it works</a><a href="/install/">Install</a><a href="/proof/">Proof</a><a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a></div>
+        <a href="/memory-authority/">Memory Authority</a>
+        <a href="/codex-continuity/">Codex continuity</a><a href="/live/">Live visual</a><a href="/how-it-works/">How it works</a><a href="/install/">Install</a><a href="/proof/">Proof</a><a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a></div>
     </div>
 
     <section class="hero">
       <div class="eyebrow">Install</div>
-      <h1>Install in a minute.</h1>
-      <p class="lead">OpenClawBrain 0.2.25 ships route-policy-v3, Memory Authority, and the OpenClawBrain-owned Codex continuity bridge. Use the same command for a fresh install or upgrade. This is the short path; GitHub has the full operator guide.</p>
+      <h1>Add trustworthy memory to your local agents.</h1>
+      <p class="lead">OpenClawBrain installs as an OpenClaw plugin. It gives agents continuity, stale-memory judgment, local proof, and the Codex continuity commands without modifying OpenClaw core.</p>
     </section>
 
     <section class="panel">
@@ -52,7 +53,8 @@ openclaw gateway restart</code></pre>
 /brain codex threads
 /brain codex watch --latest
 /brain codex handoff</code></pre>
-      <p>The bridge is read-only by default, uses redacted audit/watch events, and keeps Telegram-to-Codex writes disabled unless explicitly feature-flagged later.</p>
+      <p>Use these from OpenClaw or Telegram when Codex UI is doing the deep work at the computer. The bridge is read-only by default, uses redacted audit/watch events, and keeps Telegram-to-Codex writes disabled unless explicitly feature-flagged later.</p>
+      <div class="actions"><a class="btn" href="/codex-continuity/">Read the Codex continuity tutorial</a></div>
     </section>
 
     <section class="panel">
