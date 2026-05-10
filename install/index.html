@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Install or upgrade OpenClawBrain</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Quick install path for OpenClawBrain 0.2.22, with route-policy-v3 learning and a tiny runtime proof loop.">
+  <meta name="description" content="Quick install path for OpenClawBrain 0.2.25, with route-policy-v3 learning and a tiny runtime proof loop.">
   <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="512">
@@ -35,15 +35,24 @@
     <section class="hero">
       <div class="eyebrow">Install</div>
       <h1>Install in a minute.</h1>
-      <p class="lead">OpenClawBrain 0.2.22 ships the route-policy-v3 learning loop: learned routing, calibrated abstention, shadow replay, and local proof surfaces. Use the same command for a fresh install or upgrade. This is the short path; GitHub has the full operator guide.</p>
+      <p class="lead">OpenClawBrain 0.2.25 ships route-policy-v3, Memory Authority, and the OpenClawBrain-owned Codex continuity bridge. Use the same command for a fresh install or upgrade. This is the short path; GitHub has the full operator guide.</p>
     </section>
 
     <section class="panel">
       <h2>Install</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.22 --force
+      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.25 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="muted">Requires OpenClaw 2026.5.2 or later.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Codex continuity commands</h2>
+      <pre><code>/brain codex status
+/brain codex threads
+/brain codex watch --latest
+/brain codex handoff</code></pre>
+      <p>The bridge is read-only by default, uses redacted audit/watch events, and keeps Telegram-to-Codex writes disabled unless explicitly feature-flagged later.</p>
     </section>
 
     <section class="panel">

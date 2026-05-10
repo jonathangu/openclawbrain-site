@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>OpenClawBrain Memory Authority - Relevance is not authority</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain 0.2.22 separates memory relevance from memory authority with stale-memory verification, confirmation, tombstones, supersession, and proof events.">
+  <meta name="description" content="OpenClawBrain 0.2.25 separates memory relevance from memory authority with stale-memory verification, confirmation, tombstones, supersession, and proof events.">
   <meta property="og:title" content="OpenClawBrain Memory Authority">
   <meta property="og:description" content="A visual guide to why OpenClawBrain checks authority before injecting retrieved memories.">
   <meta property="og:type" content="article">
@@ -125,11 +125,11 @@
 
     <section class="hero">
       <div>
-        <div class="eyebrow">OpenClawBrain 0.2.22</div>
+        <div class="eyebrow">OpenClawBrain 0.2.25</div>
         <h1>Relevance is not authority.</h1>
         <p class="lead">The new Memory Authority layer decides whether a retrieved memory is allowed to influence the current turn. A memory can match semantically and still be stale, superseded, private, too broad, tombstoned, or overridden by the user's current instruction.</p>
         <div class="actions">
-          <a class="btn btn-primary" href="/install/">Install 0.2.22</a>
+          <a class="btn btn-primary" href="/install/">Install 0.2.25</a>
           <a class="btn" href="https://github.com/jonathangu/openclawbrain/blob/main/docs/MEMORY_STALENESS_DECAY_AND_FORGETTING.md" target="_blank" rel="noopener">Read the design note</a>
         </div>
         <div class="chips">
@@ -221,7 +221,7 @@ new runtime:
     </section>
 
     <section class="section">
-      <h2>What changed in 0.2.22</h2>
+      <h2>What changed in 0.2.25</h2>
       <div class="grid">
         <div class="card"><h3>Resolver</h3><p><code>MemoryAuthorityResolver</code> sits between search and context selection.</p></div>
         <div class="card"><h3>Schema</h3><p><code>memory_validity</code> and <code>memory_authority_events</code> make authority inspectable.</p></div>

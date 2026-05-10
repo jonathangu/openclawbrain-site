@@ -146,7 +146,7 @@
       <div class="eyebrow">Evidence, not vibes, for agent memory</div>
       <h1>Local, accountable memory for OpenClaw agents.</h1>
       <p class="lead">OpenClawBrain remembers durable corrections, preferences, workflows, and context, then learns when that memory should affect a future turn.</p>
-      <p class="sublead">The route-policy-v3 loop decides when memory should participate. The 0.2.22 Memory Authority layer then decides whether each retrieved memory is still current, scoped, safe, and allowed to influence the turn.</p>
+      <p class="sublead">The route-policy-v3 loop decides when memory should participate. Memory Authority then decides whether each retrieved memory is still current, scoped, safe, and allowed to influence the turn. The 0.2.25 Codex continuity bridge quietly connects local Codex work to OpenClaw and Telegram without patching OpenClaw core.</p>
       <blockquote><strong>LLM decides semantic meaning. Code enforces trust boundaries. SQLite stores the graph and evidence.</strong></blockquote>
       <figure class="hero-art">
         <img src="/assets/img/openclawbrain-hero.jpg" alt="OpenClawBrain constellation hero art with a luminous claw and evidence graph" width="1280" height="512" loading="eager">
@@ -161,10 +161,11 @@
         <a class="btn" href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
       </div>
       <div class="chips">
-        <span class="chip">Current release: v0.2.22</span>
+        <span class="chip">Current release: v0.2.25</span>
         <span class="chip">Local SQLite + FTS graph</span>
         <span class="chip">Learned route_fn</span>
         <span class="chip">Memory Authority</span>
+        <span class="chip">Codex continuity bridge</span>
         <span class="chip">Shadow replay + calibration</span>
         <span class="chip">v2/heuristic rollback</span>
         <span class="chip">Sparse context injection</span>
@@ -176,12 +177,12 @@
       <p>If you are explaining it quickly, this is the spine:</p>
       <pre><code>OpenClawBrain is a local-first memory system for AI agents.
 
-The core idea: an agent should not just &quot;remember everything.&quot; It should learn when memory actually matters, then decide whether retrieved memory still has authority. OpenClawBrain turns corrections, outcomes, misses, and handoffs into local evidence, learns a small routing policy, and checks authority before memory reaches the prompt.
+The core idea: an agent should not just &quot;remember everything.&quot; It should learn when memory actually matters, then decide whether retrieved memory still has authority. OpenClawBrain turns corrections, outcomes, misses, and handoffs into local evidence, learns a small routing policy, checks authority before memory reaches the prompt, and exposes a quiet Codex continuity bridge for status, watches, and handoffs.
 
 The trust boundary is the important part: the LLM proposes meaning, but code owns validation, storage, calibration, promotion, and rollback. SQLite keeps the graph and evidence local and inspectable.
 
 Install or upgrade if you already run OpenClaw:
-openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.22 --force
+openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.25 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
     </section>
@@ -200,6 +201,10 @@ openclaw gateway restart</code></pre>
         <div class="card">
           <h3>Injects carefully</h3>
           <p>Most memories stay silent. When memory helps, OpenClawBrain injects a small bounded block instead of a transcript dump.</p>
+        </div>
+        <div class="card">
+          <h3>Bridges Codex</h3>
+          <p>OpenClawBrain can show Codex status, recent threads, watched completion/failure/blocker events, and evidence-separated handoff briefs through the OpenClaw/Telegram operator surface.</p>
         </div>
       </div>
     </section>
@@ -281,6 +286,16 @@ openclaw doctor
     </section>
 
     <section class="section">
+      <h2>Codex continuity bridge</h2>
+      <p>Jonathan uses Codex UI as the high-bandwidth coding workbench and OpenClaw/Telegram as the mobile operator surface. OpenClawBrain now owns the bridge between them while OpenClaw stays stock and upgradeable.</p>
+      <pre><code>/brain codex status
+/brain codex threads
+/brain codex watch --latest
+/brain codex handoff</code></pre>
+      <p>The public-safe bridge reads local Codex state in read-only mode, labels fallback state as stale, stores only redacted watch/audit events, and keeps Telegram-to-Codex writes disabled by default.</p>
+    </section>
+
+    <section class="section">
       <h2>Latency shape</h2>
       <p>Prompt-time retrieval stays small. Heavier feedback distillation and route learning happen after the turn when they can.</p>
       <pre><code>retrieval: conservative and bounded
@@ -291,7 +306,7 @@ injection: sparse and relevance-gated</code></pre>
 
     <section class="section">
       <h2>Install or upgrade</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.22
+      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.25
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="fine">The GitHub README has the operator path: config, Ollama setup, runtime verification, endpoints, and debugging surfaces.</p>

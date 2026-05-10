@@ -20,7 +20,7 @@ Shared spine:
 
 Current public truth:
 
-- Current release: `0.2.22`.
+- Current release: `0.2.25`.
 - Public ultimate guide: `/guide/` explains the architecture history, failed iterations, core route-learning loop, and AI-building lessons.
 - Public Memory Authority guide: `/memory-authority/` explains why relevant memory is not automatically authorized memory.
 - Public live visual: `/live/` shows the redacted local runtime, SQLite graph shape, and a real useful memory-injected turn.
