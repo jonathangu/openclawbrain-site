@@ -313,9 +313,13 @@ openclaw doctor
       <p>Jonathan uses Codex UI as the high-bandwidth coding workbench and OpenClaw/Telegram as the mobile operator surface. OpenClawBrain owns the continuity layer between them while OpenClaw stays stock and upgradeable.</p>
       <pre><code>/brain codex status
 /brain codex threads
+/brain codex threads openclawbrain
 /brain codex watch --latest
-/brain codex handoff</code></pre>
+/brain codex watch &lt;thread-id&gt;
+/brain codex handoff
+/brain codex handoff &lt;thread-id&gt;</code></pre>
       <p>The bridge reads local Codex state in read-only mode, labels fallback state as stale, stores only redacted watch/audit events, and keeps Telegram-to-Codex writes disabled by default. Telegram gets operator summaries, not a noisy second coding UI.</p>
+      <p>Use <strong>status</strong> for a quick pulse, <strong>threads</strong> to find the right Codex goal, <strong>watch</strong> to get one useful completion/blocker/failure notification, and <strong>handoff</strong> when you are walking back to the computer and need the clean next-action brief.</p>
       <div class="actions">
         <a class="btn btn-primary" href="/codex-continuity/">Open the tutorial</a>
       </div>

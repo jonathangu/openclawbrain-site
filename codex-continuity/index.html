@@ -72,7 +72,7 @@
     <section class="hero">
       <div class="eyebrow">Codex continuity tutorial</div>
       <h1>Codex does the deep work. Telegram keeps you connected.</h1>
-      <p class="lead">OpenClawBrain turns OpenClaw into a mobile operator layer around Codex UI. Codex stays the high-bandwidth workbench at the computer; OpenClaw and Telegram give you quiet status, watched completion, blockers, failures, and handoff briefs while you are away.</p>
+      <p class="lead">OpenClawBrain turns OpenClaw into a mobile operator layer around Codex UI. Codex stays the high-bandwidth workbench at the computer; OpenClaw and Telegram give you quiet status, progress checks, watched completion, blockers, failures, and handoff briefs while you are away.</p>
       <blockquote><strong>Telegram is not a second coding UI. It is the operator surface.</strong></blockquote>
       <div class="actions">
         <a class="btn btn-primary" href="/install/">Install OpenClawBrain</a>
@@ -101,18 +101,46 @@
     </section>
 
     <section class="section">
-      <h2>Try the operator commands</h2>
+      <h2>Text these to your OpenClaw agent</h2>
       <p>These commands are intentionally small. They are for awareness and handoff, not noisy coding telemetry.</p>
       <pre><code>/brain codex status
 /brain codex threads
+/brain codex threads openclawbrain
 /brain codex watch --latest
-/brain codex handoff</code></pre>
+/brain codex watch &lt;thread-id&gt;
+/brain codex handoff
+/brain codex handoff &lt;thread-id&gt;</code></pre>
       <div class="grid">
-        <div class="card"><h3>Status</h3><p>See whether Codex has recent active work, what repository or thread is relevant, and whether the bridge is using live app-server state or stale fallback state.</p></div>
-        <div class="card"><h3>Threads</h3><p>List recent Codex threads and goals without streaming every tool call or intermediate thought.</p></div>
-        <div class="card"><h3>Watch</h3><p>Ask OpenClawBrain to notify Telegram when a selected Codex thread completes, fails, hits a blocker, needs approval, or hits auth trouble.</p></div>
-        <div class="card"><h3>Handoff</h3><p>Generate a brief that separates observed facts, Codex-reported claims, evidence, blockers, and next actions.</p></div>
+        <div class="card"><h3>Status pulse</h3><p><code>/brain codex status</code> answers: source, visible thread count, active goal count, watch count, latest thread, current goal status, and whether writes are disabled.</p></div>
+        <div class="card"><h3>Find the right work</h3><p><code>/brain codex threads</code> lists recent threads. Add a filter like <code>openclawbrain</code>, <code>publish</code>, or <code>resume</code> to find the relevant goal faster.</p></div>
+        <div class="card"><h3>Watch while away</h3><p><code>/brain codex watch --latest</code> watches the latest visible Codex thread. Use <code>/brain codex watch &lt;thread-id&gt;</code> when you want a specific thread.</p></div>
+        <div class="card"><h3>Return-to-computer brief</h3><p><code>/brain codex handoff</code> gives observed facts, Codex-reported claims, evidence, and next actions. Add a thread id for a specific handoff.</p></div>
       </div>
+    </section>
+
+    <section class="section">
+      <h2>Cool progress-check workflows</h2>
+      <div class="grid">
+        <div class="card"><h3>Leaving the computer</h3><p>Text <code>/brain codex watch --latest</code>. OpenClawBrain will stay quiet unless Codex completes, fails, blocks, needs approval, or hits auth trouble.</p></div>
+        <div class="card"><h3>Checking from your phone</h3><p>Text <code>/brain codex status</code> for the fast pulse: what Codex appears to be working on and whether the bridge is reading fresh state or stale-labeled fallback.</p></div>
+        <div class="card"><h3>Finding a buried goal</h3><p>Text <code>/brain codex threads memory</code> or <code>/brain codex threads decagon</code> to filter recent Codex threads by title, workspace, or visible goal objective.</p></div>
+        <div class="card"><h3>Walking back to the machine</h3><p>Text <code>/brain codex handoff</code>. The brief tells you what is observed, what Codex merely claimed, what evidence exists, and what to do next.</p></div>
+        <div class="card"><h3>When a notification arrives</h3><p>A watch notification should mean a terminal or attention-worthy event happened: completion, failure, blocker, approval-needed, or auth-failure.</p></div>
+        <div class="card"><h3>Testing the safety rail</h3><p><code>/brain codex goal ...</code> and <code>/brain codex steer ...</code> refuse by default. That is intentional until Telegram-to-Codex writes are explicitly enabled with guardrails.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>How to read the reply</h2>
+      <table>
+        <tr><th>Line in the reply</th><th>What it means</th></tr>
+        <tr><td><code>app_server</code></td><td>The bridge is reading a live host-provided Codex surface.</td></tr>
+        <tr><td><code>sqlite_fallback</code></td><td>The bridge is reading local Codex state in read-only fallback mode.</td></tr>
+        <tr><td><code>read-only/stale-labeled</code></td><td>Treat the status as awareness, not proof. Ask for a handoff or verify in Codex UI before acting.</td></tr>
+        <tr><td><code>active goals</code></td><td>How many visible threads appear to have goal state that is still in progress.</td></tr>
+        <tr><td><code>watches</code></td><td>How many explicit Telegram notifications are armed.</td></tr>
+        <tr><td><code>Writes: disabled</code></td><td>Telegram can inspect/watch/handoff, but it will not remote-control Codex by default.</td></tr>
+      </table>
     </section>
 
     <section class="section">
@@ -120,7 +148,7 @@
       <p>The bridge is deliberately quiet. A phone notification should mean something changed, something finished, or a decision is needed.</p>
       <table>
         <tr><th>Notify</th><th>Stay quiet</th></tr>
-        <tr><td>Goal completed</td><td>Routine tool progress</td></tr>
+        <tr><td>Watched goal completed</td><td>Routine tool progress</td></tr>
         <tr><td>Failure or auth blocker</td><td>Raw command output</td></tr>
         <tr><td>Explicit watched blocker</td><td>Full diffs or transcripts</td></tr>
         <tr><td>Approval needed</td><td>Speculative agent chatter</td></tr>

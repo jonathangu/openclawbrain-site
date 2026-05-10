@@ -24,6 +24,7 @@ Current public truth:
 - Public ultimate guide: `/guide/` explains the architecture history, failed iterations, core route-learning loop, and AI-building lessons.
 - Public Memory Authority guide: `/memory-authority/` explains why relevant memory is not automatically authorized memory.
 - Public Codex continuity tutorial: `/codex-continuity/` explains how Codex UI stays the workbench while OpenClaw/Telegram becomes the mobile operator surface.
+- Telegram command spine: `/brain codex status`, `/brain codex threads [filter]`, `/brain codex watch --latest`, `/brain codex watch <thread-id>`, `/brain codex handoff`, and `/brain codex handoff <thread-id>`.
 - Public live visual: `/live/` shows the redacted local runtime, SQLite graph shape, and a real useful memory-injected turn.
 - Production routing path: route-policy-v3 first.
 - Authority path: retrieved memories can be injected, weakened, verified, confirmed, suppressed, tombstoned, or withheld before they touch the prompt.
