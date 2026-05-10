@@ -20,7 +20,7 @@ Shared spine:
 
 Current public truth:
 
-- Current release: `0.2.26`.
+- Current release: `0.2.27`.
 - Public ultimate guide: `/guide/` explains the architecture history, failed iterations, core route-learning loop, and AI-building lessons.
 - Public Memory Authority guide: `/memory-authority/` explains why relevant memory is not automatically authorized memory.
 - Public Codex continuity tutorial: `/codex-continuity/` explains how Codex UI stays the workbench while OpenClaw/Telegram becomes the mobile operator surface.
