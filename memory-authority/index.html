@@ -116,6 +116,7 @@
         <a href="/">Home</a>
         <a href="/guide/">Guide</a>
         <a href="/memory-authority/">Memory Authority</a>
+        <a href="/graph-maintenance/">Graph maintenance</a>
         <a href="/codex-continuity/">Codex continuity</a>
         <a href="/live/">Live visual</a>
         <a href="/how-it-works/">How it works</a>
@@ -131,7 +132,7 @@
         <p class="lead">OpenClawBrain's Memory Authority layer decides whether a remembered thing still deserves to guide the agent right now. A memory can match your request and still be stale, superseded, private, too broad, tombstoned, or overridden by what you just asked for.</p>
         <p>That is the core difference from generic memory: OpenClawBrain does not blindly obey the past. It can use memory, weaken it, verify it, ask about it, keep it in audit only, or refuse to use it.</p>
         <div class="actions">
-          <a class="btn btn-primary" href="/install/">Install 0.2.27</a>
+          <a class="btn btn-primary" href="/install/">Install 0.2.28</a>
           <a class="btn" href="https://github.com/jonathangu/openclawbrain/blob/main/docs/MEMORY_STALENESS_DECAY_AND_FORGETTING.md" target="_blank" rel="noopener">Read the design note</a>
         </div>
         <div class="chips">
@@ -223,12 +224,16 @@ new runtime:
     </section>
 
     <section class="section">
-      <h2>What changed in 0.2.27</h2>
+      <h2>What changed by 0.2.28</h2>
       <div class="grid">
         <div class="card"><h3>Resolver</h3><p><code>MemoryAuthorityResolver</code> sits between search and context selection.</p></div>
         <div class="card"><h3>Schema</h3><p><code>memory_validity</code> and <code>memory_authority_events</code> make authority inspectable.</p></div>
         <div class="card"><h3>Lineage</h3><p>Same-key changed values create supersession lineage instead of overwriting history.</p></div>
         <div class="card"><h3>Forgetting</h3><p>Sensitive forget requests create tombstones that block quiet recapture.</p></div>
+        <div class="card"><h3>Graph maintenance</h3><p>The 0.2.28 release adds dry-run graph health proposals, duplicate cleanup, stale-memory review, safer edge retirement, and tombstone-aware recapture checks.</p></div>
+      </div>
+      <div class="actions">
+        <a class="btn btn-primary" href="/graph-maintenance/">Read graph maintenance</a>
       </div>
     </section>
 
@@ -237,6 +242,8 @@ new runtime:
       <p>The runtime now records not only which memories matched, but why relevant memories were used, weakened, verified, confirmed, suppressed, tombstoned, superseded, or withheld.</p>
       <pre><code># Authenticated OpenClaw routes
 /plugins/openclawbrain/graph?limit=50
+/plugins/openclawbrain/graph/health
+/plugins/openclawbrain/graph/dry-run
 /plugins/openclawbrain/explain-last
 /plugins/openclawbrain/proof?limit=20</code></pre>
     </section>

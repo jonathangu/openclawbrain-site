@@ -134,6 +134,7 @@
         <a href="/">Home</a>
         <a href="/guide/">Guide</a>
         <a href="/memory-authority/">Memory Authority</a>
+        <a href="/graph-maintenance/">Graph maintenance</a>
         <a href="/codex-continuity/">Codex continuity</a>
         <a href="/live/">Live visual</a>
         <a href="/how-it-works/">How it works</a>
@@ -156,6 +157,7 @@
       <div class="actions">
         <a class="btn btn-primary" href="/guide/">Read the ultimate guide</a>
         <a class="btn btn-primary" href="/memory-authority/">Why memory authority matters</a>
+        <a class="btn btn-primary" href="/graph-maintenance/">Memory graph maintenance</a>
         <a class="btn btn-primary" href="/codex-continuity/">Codex continuity tutorial</a>
         <a class="btn btn-primary" href="/live/">See a real turn</a>
         <a class="btn btn-primary" href="/install/">Install or upgrade</a>
@@ -163,10 +165,11 @@
         <a class="btn" href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
       </div>
       <div class="chips">
-        <span class="chip">Current release: v0.2.27</span>
+        <span class="chip">Current release: v0.2.28</span>
         <span class="chip">Continuity across tools</span>
         <span class="chip">Stale-memory judgment</span>
         <span class="chip">Memory Authority</span>
+        <span class="chip">Graph Maintenance</span>
         <span class="chip">Local proof</span>
         <span class="chip">Codex-to-Telegram handoffs</span>
         <span class="chip">Privacy-aware forgetting</span>
@@ -186,7 +189,7 @@ OpenClawBrain remembers useful corrections, preferences, workflows, and handoffs
 That makes it different from generic memory, vector notes, or transcript recall: relevance is not authority.
 
 Install or upgrade if you already run OpenClaw:
-openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.27 --force
+openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.28 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
     </section>
@@ -201,6 +204,10 @@ openclaw gateway restart</code></pre>
         <div class="card">
           <h3>Uses memory with judgment</h3>
           <p>Old memories do not become permanent commands. They can be verified, weakened, confirmed, superseded, tombstoned, or ignored.</p>
+        </div>
+        <div class="card">
+          <h3>Maintains the graph</h3>
+          <p>Duplicate nodes, stale high-authority memories, bad edges, scoped exceptions, and tombstone recapture risks are surfaced as auditable proposals.</p>
         </div>
         <div class="card">
           <h3>Stays quiet when it should</h3>
@@ -298,6 +305,20 @@ Relevant memory:
     </section>
 
     <section class="section">
+      <h2>Memory graph maintenance</h2>
+      <p>OpenClawBrain now has a separate graph-maintenance layer. Memory Authority decides whether a memory can influence this turn. Graph Maintenance curates how the graph evolves after many turns, corrections, and outcomes.</p>
+      <pre><code>/brain graph health
+/brain graph dry-run
+/brain graph proposals
+/brain graph explain &lt;proposal-id&gt;
+/brain graph apply &lt;proposal-id&gt;</code></pre>
+      <p>It is conservative on purpose: dry-run first, review-gated semantic changes, privacy-safe tombstones, lineage for merges, and redacted proof for every applied mutation.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="/graph-maintenance/">Read the article</a>
+      </div>
+    </section>
+
+    <section class="section">
       <h2>Proof you can inspect</h2>
       <p>Memory should leave evidence. OpenClawBrain exposes plugin load, SQLite + FTS health, proof events, graph state, search, route learning, active policy snapshots, and recent injection decisions.</p>
       <pre><code>openclaw plugins inspect openclawbrain --runtime
@@ -336,7 +357,7 @@ injection: sparse and relevance-gated</code></pre>
 
     <section class="section">
       <h2>Install or upgrade</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.27
+      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.28
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="fine">The GitHub README has the operator path: config, Ollama setup, runtime verification, endpoints, and debugging surfaces.</p>

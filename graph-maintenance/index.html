@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>OpenClawBrain - Memory Graph Maintenance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="OpenClawBrain maintains what local AI agents remember with safer graph edges, duplicate cleanup, stale-memory checks, scoped exceptions, privacy-safe forgetting, and local proof.">
+  <meta property="og:title" content="OpenClawBrain Memory Graph Maintenance">
+  <meta property="og:description" content="OpenClawBrain does not just remember more. It maintains what agents remember.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://openclawbrain.ai/graph-maintenance/">
+  <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="512">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
+  <link rel="canonical" href="https://openclawbrain.ai/graph-maintenance/">
+  <style>
+    :root { --bg:#071019; --panel:#0e1824; --panel-2:#132131; --text:#eaf2fb; --muted:#a8b6c8; --line:rgba(132,179,230,0.22); --accent:#7ed6ff; --accent-2:#9ff5c0; --shadow:0 16px 40px rgba(0,0,0,0.28); }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:radial-gradient(circle at top left,rgba(126,214,255,0.18),transparent 32%),radial-gradient(circle at top right,rgba(159,245,192,0.12),transparent 26%),var(--bg); color:var(--text); line-height:1.65; }
+    a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+    .wrap { max-width:980px; margin:0 auto; padding:24px 20px 72px; }
+    .topbar { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:20px; }
+    .brand { display:inline-flex; align-items:center; color:var(--text); text-decoration:none; }
+    .brand:hover { text-decoration:none; opacity:0.92; }
+    .brand img { width:178px; height:auto; border-radius:999px; border:1px solid rgba(255,255,255,0.08); box-shadow:0 8px 24px rgba(0,0,0,0.22); }
+    .navlinks { display:flex; gap:10px; flex-wrap:wrap; }
+    .navlinks a,.btn { border:1px solid var(--line); border-radius:999px; padding:10px 14px; display:inline-flex; align-items:center; gap:8px; font-size:14px; text-decoration:none; background:rgba(255,255,255,0.02); }
+    .hero,.section { background:linear-gradient(180deg,rgba(19,33,49,0.96),rgba(14,24,36,0.96)); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); }
+    .hero { padding:40px 34px; margin-bottom:18px; }
+    .section { padding:28px; margin-top:18px; }
+    .eyebrow { color:var(--accent); text-transform:uppercase; letter-spacing:0.12em; font-size:12px; font-weight:800; margin-bottom:12px; }
+    h1 { font-size:clamp(34px,5vw,56px); line-height:1.05; margin:0 0 16px; }
+    h2 { margin:0 0 10px; font-size:28px; }
+    h3 { margin:0 0 8px; font-size:18px; }
+    p { margin:0 0 14px; }
+    .lead { font-size:20px; color:var(--muted); max-width:820px; margin:0 0 20px; }
+    .actions { display:flex; gap:12px; flex-wrap:wrap; margin:0 0 22px; }
+    .btn-primary { background:linear-gradient(135deg,var(--accent),#b6ebff); color:#051018; font-weight:700; }
+    .chips { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
+    .chip { border:1px solid var(--line); background:rgba(255,255,255,0.03); color:var(--muted); border-radius:999px; padding:8px 12px; font-size:13px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+    .card { background:rgba(255,255,255,0.03); border:1px solid var(--line); border-radius:18px; padding:18px; }
+    pre { margin:0 0 14px; overflow:auto; background:#08111b; border:1px solid var(--line); border-radius:16px; padding:16px; color:#d8e8f8; font-size:14px; line-height:1.65; }
+    code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+    table { width:100%; border-collapse:collapse; margin:10px 0 16px; }
+    th,td { border:1px solid var(--line); padding:10px 12px; text-align:left; vertical-align:top; }
+    blockquote { margin:0 0 18px; padding:14px 18px; border-left:3px solid var(--accent-2); background:rgba(159,245,192,0.06); border-radius:12px; }
+    .fine,.muted { color:var(--muted); font-size:14px; }
+    .footer { color:var(--muted); text-align:center; margin-top:28px; font-size:14px; }
+    @media (max-width:640px) { .hero,.section { padding:22px; } .lead { font-size:18px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <a class="brand" href="/" aria-label="OpenClawBrain home"><img src="/assets/img/openclawbrain-logo.jpg" alt="OpenClawBrain" width="628" height="193"></a>
+      <div class="navlinks">
+        <a href="/">Home</a>
+        <a href="/guide/">Guide</a>
+        <a href="/memory-authority/">Memory Authority</a>
+        <a href="/graph-maintenance/">Graph maintenance</a>
+        <a href="/codex-continuity/">Codex continuity</a>
+        <a href="/live/">Live visual</a>
+        <a href="/how-it-works/">How it works</a>
+        <a href="/install/">Install</a>
+        <a href="/proof/">Proof</a>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="eyebrow">Memory graph maintenance</div>
+      <h1>Memory that cleans up after itself.</h1>
+      <p class="lead">OpenClawBrain does not just help agents remember more. It helps them maintain what they remember: fewer duplicate memories, safer graph edges, scoped exceptions, stale-memory review, privacy-safe forgetting, and proof for every change.</p>
+      <blockquote><strong>Memory Authority decides what can influence this turn. Graph Maintenance curates how the memory graph evolves over time.</strong></blockquote>
+      <div class="actions">
+        <a class="btn btn-primary" href="/install/">Install v0.2.28</a>
+        <a class="btn" href="/memory-authority/">Memory Authority</a>
+        <a class="btn" href="/proof/">Proof</a>
+      </div>
+      <div class="chips">
+        <span class="chip">dry-run first</span>
+        <span class="chip">review-gated semantics</span>
+        <span class="chip">no raw telemetry</span>
+        <span class="chip">tombstone-safe</span>
+        <span class="chip">local lineage</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Why this matters</h2>
+      <p>Agent memory gets messy. The same correction may be captured twice. An old workflow may stop matching the repo. A broad preference can conflict with a narrow task. A deleted memory can still leave unsafe edges behind.</p>
+      <p>Generic memory systems usually optimize for recall. OpenClawBrain optimizes for trustworthy continuity: remember useful things, but keep the graph healthy enough that old context does not silently overpower the present.</p>
+    </section>
+
+    <section class="section">
+      <h2>The two jobs</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Memory Authority</h3>
+          <p>Runs during a turn. It asks whether a retrieved memory is current, scoped, safe, non-superseded, private enough, and compatible with what the user just asked.</p>
+        </div>
+        <div class="card">
+          <h3>Graph Maintenance</h3>
+          <p>Runs after many turns. It proposes cleanup, lineage, edge repair, stale-memory review, scoped exceptions, and tombstone recapture blocking.</p>
+        </div>
+      </div>
+      <p class="fine">The safety line is strict: graph connectivity is not authority. A maintenance proposal can provide features and proof, but Memory Authority still recomputes turn-level use.</p>
+    </section>
+
+    <section class="section">
+      <h2>What gets maintained</h2>
+      <div class="grid">
+        <div class="card"><h3>Duplicate memories</h3><p>Exact duplicates can be consolidated into a canonical node while retaining lineage and proof.</p></div>
+        <div class="card"><h3>Bad edges</h3><p>Edges to missing, deleted, or tombstoned nodes can be retired instead of polluting retrieval.</p></div>
+        <div class="card"><h3>Stale authority</h3><p>Old high-authority memories are flagged for review before they keep steering future work.</p></div>
+        <div class="card"><h3>Scoped exceptions</h3><p>Broad defaults and narrow instructions stay separate, so "be concise" does not erase "go deep for this critique."</p></div>
+        <div class="card"><h3>Tombstones</h3><p>Forgetting blocks recapture without exposing the forgotten content in proposals, logs, or proof.</p></div>
+        <div class="card"><h3>Feedback signals</h3><p>Route outcomes create weak, bounded observations. Repeated retrieval is not treated as repeated truth confirmation.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>The operator workflow</h2>
+      <p>You can inspect and curate the graph from OpenClaw or Telegram with the new <code>/brain graph</code> commands.</p>
+      <pre><code>/brain graph health
+/brain graph dry-run
+/brain graph proposals
+/brain graph explain &lt;proposal-id&gt;
+/brain graph apply &lt;proposal-id&gt;
+/brain graph reject &lt;proposal-id&gt;
+/brain graph stale
+/brain graph clusters
+/brain graph tombstones</code></pre>
+      <p>Low-risk deterministic repairs can be applied. Semantic merges, stale high-authority changes, privacy-sensitive proposals, and scoped exceptions require review.</p>
+    </section>
+
+    <section class="section">
+      <h2>Public-safe proof</h2>
+      <p>Every mutation is proposal-driven and leaves a redacted trace: run record, proposal record, preconditions, lineage row, edge observation, and proof event. That means the graph can improve without becoming mysterious.</p>
+      <pre><code>GET /plugins/openclawbrain/graph/health
+GET /plugins/openclawbrain/graph/dry-run
+GET /plugins/openclawbrain/graph/proposals
+POST /plugins/openclawbrain/graph/apply</code></pre>
+      <p class="fine">Apply-time checks reject stale proposals. Tombstoned and hard-deleted content cannot be revived by merge, split, summarization, proof, proposal, or LLM distillation.</p>
+    </section>
+
+    <section class="section">
+      <h2>The product difference</h2>
+      <table>
+        <tr><th>Generic memory</th><th>OpenClawBrain</th></tr>
+        <tr><td>Stores or retrieves old context.</td><td>Governs memory as evidence with provenance, scope, validity, correction, forgetting, and proof.</td></tr>
+        <tr><td>Can get noisier as it remembers more.</td><td>Proposes cleanup so the graph becomes smaller, safer, and more useful.</td></tr>
+        <tr><td>Treats associations as helpful by default.</td><td>Separates behavioral association from truth, authority, and privacy.</td></tr>
+        <tr><td>May forget by deleting only the visible note.</td><td>Uses tombstones to block unsafe recapture without preserving sensitive content.</td></tr>
+      </table>
+    </section>
+
+    <div class="footer">
+      <a href="/">openclawbrain.ai</a> / <a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</body>
+</html>

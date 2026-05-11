@@ -357,6 +357,7 @@
         <a href="/">Home</a>
         <a href="/guide/">Guide</a>
         <a href="/memory-authority/">Memory Authority</a>
+        <a href="/graph-maintenance/">Graph maintenance</a>
         <a href="/codex-continuity/">Codex continuity</a>
         <a href="/live/">Live visual</a>
         <a href="/how-it-works/">How it works</a>
@@ -375,7 +376,7 @@
           <div class="actions">
             <a class="btn btn-primary" href="https://github.com/jonathangu/openclawbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Read Markdown source</a>
             <a class="btn" href="/live/">Open live visual</a>
-            <a class="btn" href="/install/">Install v0.2.27</a>
+            <a class="btn" href="/install/">Install v0.2.28</a>
           </div>
           <div class="chips">
             <span class="chip">Memory quality is judgment first</span>
@@ -390,7 +391,7 @@
           <img src="/assets/img/openclawbrain-hero.jpg" alt="OpenClawBrain luminous evidence graph hero" width="1280" height="512">
           <div class="hero-visual-inner">
             <div class="status-grid">
-              <div class="status-tile"><span class="k">Current</span><span class="v">0.2.27</span><span class="k">source tag v0.2.27</span></div>
+              <div class="status-tile"><span class="k">Current</span><span class="v">0.2.28</span><span class="k">source tag v0.2.28</span></div>
               <div class="status-tile"><span class="k">Runtime</span><span class="v">v3 first</span><span class="k">v2 rollback path</span></div>
               <div class="status-tile"><span class="k">Storage</span><span class="v">SQLite</span><span class="k">graph + evidence</span></div>
             </div>
@@ -667,16 +668,21 @@ Relevant memory:
             <div class="eyebrow">Operator truth</div>
             <h2>Current public status is deliberately narrow.</h2>
           </div>
-          <p>OpenClawBrain is published as package <code>openclawbrain</code>, version <code>0.2.27</code>, with route-policy-v3 as the production route brain, Memory Authority as the resolver between retrieval and injection, and an OpenClawBrain-owned Codex continuity bridge for status, watches, and handoffs. ClawHub source linking is present; scan status may still show pending while review catches up.</p>
+          <p>OpenClawBrain is published as package <code>openclawbrain</code>, version <code>0.2.28</code>, with route-policy-v3 as the production route brain, Memory Authority as the resolver between retrieval and injection, Memory Graph Maintenance as the long-term curator, and an OpenClawBrain-owned Codex continuity bridge for status, watches, and handoffs.</p>
         </div>
-        <div class="quote"><strong>0.2.27 upgrade:</strong> relevant memory is not automatically authorized memory, and Codex continuity stays quiet by default. The resolver can inject, weaken, verify, confirm, abstain, keep audit-only, or never use a retrieved memory; the bridge can report Codex status, watched terminal events, and evidence-separated handoff briefs without modifying OpenClaw core.</div>
-        <pre class="code">openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.27 --force
+        <div class="quote"><strong>0.2.28 upgrade:</strong> relevant memory is not automatically authorized memory, and remembered graphs should not get messier forever. The authority resolver decides turn-level use; graph maintenance proposes duplicate cleanup, stale-memory review, safe edge retirement, scoped exceptions, tombstone recapture blocking, and redacted proof without modifying OpenClaw core.</div>
+        <pre class="code">openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.28 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart
 
 openclaw plugins inspect openclawbrain --runtime
-openclaw doctor</pre>
+openclaw doctor
+
+/brain graph health
+/brain graph dry-run
+/brain graph proposals</pre>
         <div class="actions">
+          <a class="btn btn-primary" href="/graph-maintenance/">Read graph maintenance</a>
           <a class="btn btn-primary" href="/proof/">Verify proof surfaces</a>
           <a class="btn" href="https://github.com/jonathangu/openclawbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Markdown source</a>
         </div>
