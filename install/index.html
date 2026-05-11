@@ -42,7 +42,7 @@
 
     <section class="panel">
       <h2>Install</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.28 --force
+      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.29 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="muted">Requires OpenClaw 2026.5.2 or later.</p>
@@ -58,6 +58,7 @@ openclaw gateway restart</code></pre>
 /brain codex handoff
 /brain codex handoff &lt;thread-id&gt;</code></pre>
       <p>Use these from OpenClaw or Telegram when Codex UI is doing the deep work at the computer. Status gives the pulse, threads finds the right goal, watch sends one useful completion/blocker/failure notification, and handoff gives a return-to-computer brief.</p>
+      <p>Memory Graph Maintenance runs automatically after install: passive health/proposal cycles start in the background, and only deterministic low-risk repairs can apply without review.</p>
       <p>The bridge is read-only by default, uses redacted audit/watch events, and keeps Telegram-to-Codex writes disabled unless explicitly feature-flagged later.</p>
       <div class="actions"><a class="btn" href="/codex-continuity/">Read the Codex continuity tutorial</a></div>
     </section>

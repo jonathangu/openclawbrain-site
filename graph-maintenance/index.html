@@ -72,10 +72,10 @@
     <section class="hero">
       <div class="eyebrow">Memory graph maintenance</div>
       <h1>Memory that cleans up after itself.</h1>
-      <p class="lead">OpenClawBrain does not just help agents remember more. It helps them maintain what they remember: fewer duplicate memories, safer graph edges, scoped exceptions, stale-memory review, privacy-safe forgetting, and proof for every change.</p>
+      <p class="lead">OpenClawBrain does not just help agents remember more. It runs passive graph maintenance so agents maintain what they remember: fewer duplicate memories, safer graph edges, scoped exceptions, stale-memory review, privacy-safe forgetting, and proof for every change.</p>
       <blockquote><strong>Memory Authority decides what can influence this turn. Graph Maintenance curates how the memory graph evolves over time.</strong></blockquote>
       <div class="actions">
-        <a class="btn btn-primary" href="/install/">Install v0.2.28</a>
+        <a class="btn btn-primary" href="/install/">Install v0.2.29</a>
         <a class="btn" href="/memory-authority/">Memory Authority</a>
         <a class="btn" href="/proof/">Proof</a>
       </div>
@@ -103,7 +103,7 @@
         </div>
         <div class="card">
           <h3>Graph Maintenance</h3>
-          <p>Runs after many turns. It proposes cleanup, lineage, edge repair, stale-memory review, scoped exceptions, and tombstone recapture blocking.</p>
+          <p>Runs in the background after many turns. It proposes cleanup, lineage, edge repair, stale-memory review, scoped exceptions, and tombstone recapture blocking, while safe auto-apply stays limited to deterministic low-risk repairs.</p>
         </div>
       </div>
       <p class="fine">The safety line is strict: graph connectivity is not authority. A maintenance proposal can provide features and proof, but Memory Authority still recomputes turn-level use.</p>
