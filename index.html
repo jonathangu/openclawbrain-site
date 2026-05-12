@@ -165,7 +165,7 @@
         <a class="btn" href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
       </div>
       <div class="chips">
-        <span class="chip">Current release: v0.2.30</span>
+        <span class="chip">Current release: v0.2.31</span>
         <span class="chip">Continuity across tools</span>
         <span class="chip">Stale-memory judgment</span>
         <span class="chip">Memory Authority</span>
@@ -189,7 +189,7 @@ OpenClawBrain remembers useful corrections, preferences, workflows, and handoffs
 That makes it different from generic memory, vector notes, or transcript recall: relevance is not authority.
 
 Install or upgrade if you already run OpenClaw:
-openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.30 --force
+openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.31 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
     </section>
@@ -339,9 +339,10 @@ openclaw doctor
 /brain codex bind &lt;thread-id&gt;
 /brain codex tail --bound
 /brain codex reply Please continue and tell me when tests pass.
+/brain codex steer Please stop after this test run and report blockers.
 /brain codex handoff --bound</code></pre>
-      <p>The bridge reads local Codex state, follows thread rollout files for direct message copy, stores only bridge-local cursors/audit events, and can send trusted local replies through Codex app-server. Telegram gets operator text and selected assistant replies, not a noisy second coding UI.</p>
-      <p>Use <strong>status</strong> for a quick pulse, <strong>threads</strong> to find the right Codex goal, <strong>last/messages</strong> to copy what Codex just said, <strong>tail</strong> to forward new completed assistant replies, <strong>reply</strong> to send a bound-thread instruction, and <strong>handoff</strong> when you are walking back to the computer.</p>
+      <p>The bridge reads local Codex state, follows thread rollout files for direct message copy, stores only bridge-local cursors/audit events, and can send trusted replies or active-turn steering through Codex app-server. Telegram gets operator text and selected assistant replies, not a noisy second coding UI.</p>
+      <p>Use <strong>status</strong> for a quick pulse, <strong>threads</strong> to find the right Codex goal, <strong>last/messages</strong> to copy what Codex just said, <strong>tail</strong> to forward new completed assistant replies, <strong>reply</strong> to send a bound-thread instruction, <strong>steer</strong> to redirect in-progress work, and <strong>handoff</strong> when you are walking back to the computer.</p>
       <div class="actions">
         <a class="btn btn-primary" href="/codex-continuity/">Open the tutorial</a>
       </div>
@@ -358,7 +359,7 @@ injection: sparse and relevance-gated</code></pre>
 
     <section class="section">
       <h2>Install or upgrade</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.30
+      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.31
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="fine">The GitHub README has the operator path: config, Ollama setup, runtime verification, endpoints, and debugging surfaces.</p>
