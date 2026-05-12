@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain — Codex continuity tutorial</title>
+  <title>OpenClawBrain — Codex from Telegram</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Use OpenClawBrain as the continuity layer between Codex UI at the computer and OpenClaw agents reachable from Telegram.">
-  <meta property="og:title" content="OpenClawBrain Codex continuity tutorial">
-  <meta property="og:description" content="Codex UI is the high-bandwidth workbench. OpenClaw and Telegram are the mobile operator surface. OpenClawBrain decides what matters.">
+  <meta name="description" content="OpenClawBrain lets you check Codex progress, read recent Codex replies, follow a thread, and send safe bound-thread nudges from Telegram.">
+  <meta property="og:title" content="OpenClawBrain Codex from Telegram">
+  <meta property="og:description" content="Codex UI stays the deep workbench. OpenClawBrain gives you a quiet Telegram operator layer for progress, replies, nudges, and handoffs.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/codex-continuity/">
   <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
@@ -39,6 +39,9 @@
     .actions { display:flex; gap:12px; flex-wrap:wrap; margin:0 0 22px; }
     .btn-primary { background:linear-gradient(135deg,var(--accent),#b6ebff); color:#051018; font-weight:700; }
     .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+    .example { display:grid; grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr); gap:18px; align-items:start; }
+    .example + .example { margin-top:18px; padding-top:18px; border-top:1px solid var(--line); }
+    .step { color:var(--accent-2); font-size:13px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px; }
     .card { background:rgba(255,255,255,0.03); border:1px solid var(--line); border-radius:18px; padding:18px; }
     .chips { display:flex; gap:10px; flex-wrap:wrap; }
     .chip { border:1px solid var(--line); background:rgba(255,255,255,0.03); color:var(--muted); border-radius:999px; padding:8px 12px; font-size:13px; }
@@ -49,6 +52,7 @@
     blockquote { margin:0 0 18px; padding:14px 18px; border-left:3px solid var(--accent-2); background:rgba(159,245,192,0.06); border-radius:12px; }
     .fine,.muted { color:var(--muted); font-size:14px; }
     .footer { color:var(--muted); text-align:center; margin-top:28px; font-size:14px; }
+    @media (max-width:720px) { .example { grid-template-columns:1fr; } }
     @media (max-width:640px) { .hero,.section { padding:22px; } .lead { font-size:18px; } }
   </style>
 </head>
@@ -71,120 +75,121 @@
     </div>
 
     <section class="hero">
-      <div class="eyebrow">Codex continuity tutorial</div>
-      <h1>Codex does the deep work. Telegram keeps you connected.</h1>
-      <p class="lead">OpenClawBrain turns OpenClaw into a mobile operator layer around Codex UI. Codex stays the high-bandwidth workbench at the computer; OpenClaw and Telegram give you quiet status, progress checks, watched completion, blockers, failures, and handoff briefs while you are away.</p>
-      <blockquote><strong>Telegram is not a second coding UI. It is the operator surface.</strong></blockquote>
+      <div class="eyebrow">Codex from Telegram</div>
+      <h1>Keep Codex moving when you leave the computer.</h1>
+      <p class="lead">Codex UI is still where the serious coding happens. OpenClawBrain gives you the missing mobile layer: ask what Codex is doing, read the latest reply, follow one thread, and send a safe nudge from Telegram.</p>
+      <blockquote><strong>The point is not more notifications. The point is knowing when to look, when to wait, and when to give Codex one clear instruction.</strong></blockquote>
       <div class="actions">
         <a class="btn btn-primary" href="/install/">Install OpenClawBrain</a>
-        <a class="btn" href="/memory-authority/">Why authority matters</a>
+        <a class="btn" href="#examples">See the examples</a>
       </div>
       <div class="chips">
-        <span class="chip">Direct message copy</span>
-        <span class="chip">No OpenClaw core patch</span>
-        <span class="chip">Watched replies</span>
-        <span class="chip">Handoff briefs</span>
-        <span class="chip">Trusted local replies</span>
+        <span class="chip">What is Codex doing?</span>
+        <span class="chip">What did Codex just say?</span>
+        <span class="chip">Tell me when it replies</span>
+        <span class="chip">Send this nudge</span>
+        <span class="chip">Brief me before I sit down</span>
       </div>
     </section>
 
     <section class="section">
-      <h2>The workflow</h2>
-      <p>Jonathan now does much of his deep coding in Codex UI. That works beautifully when he is physically at the machine, but it is awkward from a phone. OpenClaw agents already live on the same computer and can be reached through Telegram.</p>
-      <p>OpenClawBrain connects those worlds. It reads local Codex state, follows each thread's rollout file, copies recent message text directly, and sends only operator-grade updates through OpenClaw.</p>
-      <table>
-        <tr><th>Surface</th><th>Role</th></tr>
-        <tr><td>Codex UI</td><td>High-bandwidth workbench for goals, edits, tests, commits, and deep local context.</td></tr>
-        <tr><td>OpenClaw</td><td>Always-reachable local operator on the same machine as Codex.</td></tr>
-        <tr><td>Telegram</td><td>Low-bandwidth mobile control surface for status, recent messages, watches, and concise replies.</td></tr>
-        <tr><td>OpenClawBrain</td><td>Memory and authority layer that decides what context matters, what should stay quiet, and which thread is safe to write into.</td></tr>
-      </table>
+      <h2>Why this is useful</h2>
+      <p>Sometimes Codex is running tests, fixing a bug, or waiting on a decision while you are away from the machine. Without a bridge, you either stay at the computer or lose the thread.</p>
+      <p>OpenClawBrain keeps the loop small and useful. Telegram becomes a calm operator channel, not a second IDE.</p>
+      <div class="grid">
+        <div class="card"><h3>Check progress</h3><p>See what Codex appears to be working on, how many threads are visible, and whether anything needs attention.</p></div>
+        <div class="card"><h3>Read the latest reply</h3><p>Copy the actual Codex message text into Telegram. No extra LLM summary, no waiting for another model.</p></div>
+        <div class="card"><h3>Follow one thread</h3><p>Tell OpenClawBrain which Codex thread matters and receive only completed assistant replies or attention-worthy events.</p></div>
+        <div class="card"><h3>Send a safe nudge</h3><p>Reply into a bound Codex thread from Telegram when the next instruction is obvious and low risk.</p></div>
+      </div>
     </section>
 
-    <section class="section">
-      <h2>Text these to your OpenClaw agent</h2>
-      <p>These commands are intentionally small. They are for awareness and handoff, not noisy coding telemetry.</p>
-      <pre><code>/brain codex status
-/brain codex threads
-/brain codex threads openclawbrain
-/brain codex last --latest
-/brain codex messages &lt;thread-id&gt; --limit 5
+    <section class="section" id="examples">
+      <h2>Clear examples</h2>
+
+      <div class="example">
+        <div>
+          <div class="step">Example 1</div>
+          <h3>Check what Codex is doing</h3>
+          <p>You are on your phone and want a quick pulse without opening the computer.</p>
+        </div>
+        <div>
+          <pre><code>/brain codex status</code></pre>
+          <p class="muted">You get a short operator summary: visible threads, active work, watched items, and the latest thread.</p>
+        </div>
+      </div>
+
+      <div class="example">
+        <div>
+          <div class="step">Example 2</div>
+          <h3>Read the last thing Codex said</h3>
+          <p>You missed the final answer and want the exact text in Telegram.</p>
+        </div>
+        <div>
+          <pre><code>/brain codex last --latest</code></pre>
+          <p class="muted">OpenClawBrain copies the completed Codex message directly from local rollout records. It does not summarize it through another LLM.</p>
+        </div>
+      </div>
+
+      <div class="example">
+        <div>
+          <div class="step">Example 3</div>
+          <h3>Follow one Codex thread while away</h3>
+          <p>You know which thread matters and want only useful updates.</p>
+        </div>
+        <div>
+          <pre><code>/brain codex threads openclawbrain
 /brain codex bind &lt;thread-id&gt;
-/brain codex tail --bound
-/brain codex reply Please continue with the parser tests.
-/brain codex handoff
-/brain codex handoff &lt;thread-id&gt;</code></pre>
-      <div class="grid">
-        <div class="card"><h3>Status pulse</h3><p><code>/brain codex status</code> answers: source, visible thread count, active goal count, watch count, latest thread, current goal status, and whether trusted writes are enabled.</p></div>
-        <div class="card"><h3>Find the right work</h3><p><code>/brain codex threads</code> lists recent threads. Add a filter like <code>openclawbrain</code>, <code>publish</code>, or <code>resume</code> to find the relevant goal faster.</p></div>
-        <div class="card"><h3>Read exactly what Codex said</h3><p><code>/brain codex last &lt;thread-id&gt;</code> and <code>/brain codex messages</code> copy final Codex message text directly from rollout records. No LLM summary is used.</p></div>
-        <div class="card"><h3>Watch while away</h3><p><code>/brain codex tail &lt;thread-id&gt;</code> forwards new completed assistant replies. <code>/brain codex watch</code> still handles completion, failure, blocker, approval-needed, and auth-failure signals.</p></div>
-        <div class="card"><h3>Reply to a bound thread</h3><p><code>/brain codex bind &lt;thread-id&gt;</code> makes the target exact. Then <code>/brain codex reply ...</code> sends a trusted local instruction through Codex app-server.</p></div>
-        <div class="card"><h3>Return-to-computer brief</h3><p><code>/brain codex handoff</code> gives observed facts, Codex-reported claims, evidence, and next actions. Add a thread id for a specific handoff.</p></div>
+/brain codex tail --bound</code></pre>
+          <p class="muted">New completed assistant replies are forwarded. Routine tool chatter stays quiet.</p>
+        </div>
       </div>
-    </section>
 
-    <section class="section">
-      <h2>Cool progress-check workflows</h2>
-      <div class="grid">
-        <div class="card"><h3>Leaving the computer</h3><p>Text <code>/brain codex tail --latest</code> if you want new assistant replies, or <code>/brain codex watch --latest</code> if you only want terminal events and blockers.</p></div>
-        <div class="card"><h3>Checking from your phone</h3><p>Text <code>/brain codex status</code> for the fast pulse: what Codex appears to be working on and whether the bridge is reading fresh state or stale-labeled fallback.</p></div>
-        <div class="card"><h3>Finding a buried goal</h3><p>Text <code>/brain codex threads memory</code> or <code>/brain codex threads decagon</code> to filter recent Codex threads by title, workspace, or visible goal objective.</p></div>
-        <div class="card"><h3>Walking back to the machine</h3><p>Text <code>/brain codex handoff</code>. The brief tells you what is observed, what Codex merely claimed, what evidence exists, and what to do next.</p></div>
-        <div class="card"><h3>When a notification arrives</h3><p>A watch notification should mean a terminal or attention-worthy event happened: completion, failure, blocker, approval-needed, or auth-failure.</p></div>
-        <div class="card"><h3>Testing the safety rail</h3><p><code>/brain codex goal ...</code> and <code>/brain codex steer ...</code> still refuse. The supported write path is exact-thread or bound-thread <code>reply</code>/<code>send</code>.</p></div>
+      <div class="example">
+        <div>
+          <div class="step">Example 4</div>
+          <h3>Send Codex a small instruction</h3>
+          <p>Codex is in the right thread and you want to nudge it without walking back to the machine.</p>
+        </div>
+        <div>
+          <pre><code>/brain codex reply Please continue and tell me when tests pass.</code></pre>
+          <p class="muted">Replies go only to the bound thread. OpenClawBrain refuses fuzzy or latest-thread writes because wrong-thread writes would destroy trust.</p>
+        </div>
       </div>
-    </section>
 
-    <section class="section">
-      <h2>How to read the reply</h2>
-      <table>
-        <tr><th>Line in the reply</th><th>What it means</th></tr>
-        <tr><td><code>app_server</code></td><td>The bridge is reading a live host-provided Codex surface.</td></tr>
-        <tr><td><code>sqlite_fallback</code></td><td>The bridge is reading local Codex state in read-only fallback mode.</td></tr>
-        <tr><td><code>read-only/stale-labeled</code></td><td>Treat the status as awareness, not proof. Ask for a handoff or verify in Codex UI before acting.</td></tr>
-        <tr><td><code>active goals</code></td><td>How many visible threads appear to have goal state that is still in progress.</td></tr>
-        <tr><td><code>watches</code></td><td>How many explicit Telegram notifications are armed.</td></tr>
-        <tr><td><code>Writes: feature-flagged</code></td><td>Public installs are safe by default. Jonathan's local trusted profiles enable bound or exact-thread replies with repo allowlists.</td></tr>
-      </table>
-    </section>
-
-    <section class="section">
-      <h2>What gets sent to Telegram</h2>
-      <p>The bridge is deliberately quiet. A phone notification should mean something changed, something finished, or a decision is needed.</p>
-      <table>
-        <tr><th>Notify</th><th>Stay quiet</th></tr>
-        <tr><td>Watched goal completed</td><td>Routine tool progress</td></tr>
-        <tr><td>New completed assistant reply when tailing</td><td>Streaming deltas and reasoning/tool chatter</td></tr>
-        <tr><td>Failure or auth blocker</td><td>Raw command output</td></tr>
-        <tr><td>Explicit watched blocker</td><td>Full diffs or transcripts</td></tr>
-        <tr><td>Approval needed</td><td>Speculative agent chatter</td></tr>
-        <tr><td>Handoff requested</td><td>Unredacted local paths or secrets</td></tr>
-      </table>
+      <div class="example">
+        <div>
+          <div class="step">Example 5</div>
+          <h3>Get a return-to-computer brief</h3>
+          <p>You are about to sit back down and want the current state without rereading the whole thread.</p>
+        </div>
+        <div>
+          <pre><code>/brain codex handoff --bound</code></pre>
+          <p class="muted">The brief separates observed facts from Codex-reported claims, so you know what was actually seen versus what still needs verification.</p>
+        </div>
+      </div>
     </section>
 
     <section class="section">
       <h2>Why OpenClawBrain belongs in the middle</h2>
-      <p>This is not just a notification bridge. The hard part is deciding which local state has authority in the current user context.</p>
+      <p>This is more than a notification pipe. The hard part is deciding what matters enough to send, what should stay quiet, and which thread is safe to write into.</p>
       <div class="grid">
-        <div class="card"><h3>Continuity</h3><p>It remembers that Codex UI is the deep workbench and Telegram is the low-bandwidth operator surface.</p></div>
-        <div class="card"><h3>Authority</h3><p>It can treat an old workflow, preference, or handoff as useful history without letting it silently override the current instruction.</p></div>
-        <div class="card"><h3>Boundaries</h3><p>It stores redacted watch and audit events, not durable raw Codex telemetry.</p></div>
-        <div class="card"><h3>Upgradeability</h3><p>The bridge is OpenClawBrain-owned, so Jonathan's personal OpenClaw checkout can stay stock and update with upstream.</p></div>
+        <div class="card"><h3>Quiet by default</h3><p>Telegram gets completed replies, blockers, failures, approvals, and handoffs. It does not get every internal twitch.</p></div>
+        <div class="card"><h3>Exact when it should be</h3><p>Recent-message copy is direct transport from Codex records, not an AI summary of an AI answer.</p></div>
+        <div class="card"><h3>Safe when it writes</h3><p>A reply goes to an exact or bound thread. No <code>--latest</code> writes, no random target guessing.</p></div>
+        <div class="card"><h3>Stock OpenClaw</h3><p>The bridge lives in OpenClawBrain, so OpenClaw core can stay clean and upgradeable.</p></div>
       </div>
     </section>
 
     <section class="section">
-      <h2>Safety defaults</h2>
-      <p>Public defaults are conservative, but the real local workflow is enabled for trusted profiles: exact or bound thread, trusted sender, write allowlist, high-risk refusal, idempotent outbound audit, and Codex app-server write semantics.</p>
-      <pre><code>default posture:
-  read local Codex state
-  copy recent message text directly when asked
-  forward watched completed assistant replies
-  store redacted audit/watch events
-  never write through SQLite
-  never patch OpenClaw core
-  refuse --latest writes and high-risk Telegram requests by default</code></pre>
+      <h2>What it will not do</h2>
+      <p>The bridge is useful because it is restrained.</p>
+      <div class="grid">
+        <div class="card"><h3>No noisy mirror</h3><p>Telegram is not a full Codex UI and does not stream every tool call or hidden internal event.</p></div>
+        <div class="card"><h3>No database writes</h3><p>OpenClawBrain reads Codex state and sends replies through Codex app-server. It never edits Codex SQLite or rollout files.</p></div>
+        <div class="card"><h3>No wrong-thread shortcuts</h3><p>Read commands can use latest. Write commands must be exact or bound.</p></div>
+        <div class="card"><h3>No durable raw telemetry</h3><p>OpenClawBrain stores bridge-local cursors and redacted audit events, not raw Codex transcripts as permanent memory.</p></div>
+      </div>
     </section>
 
     <section class="section">
@@ -192,7 +197,7 @@
       <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.30 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
-      <p class="fine">After install, ask from Telegram or OpenClaw: <code>/brain codex status</code>. The bridge should answer with a quiet operator summary, not a stream of Codex internals.</p>
+      <p class="fine">After install, start with <code>/brain codex status</code>. That single command tells you whether the bridge is seeing Codex and gives you the next useful thing to ask.</p>
     </section>
 
     <div class="footer">
