@@ -42,7 +42,7 @@
 
     <section class="panel">
       <h2>Install</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.32 --force
+      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.33 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="muted">Requires OpenClaw 2026.5.2 or later.</p>
@@ -56,10 +56,12 @@ openclaw gateway restart</code></pre>
 /brain codex messages --latest --limit 5
 /brain codex bind &lt;thread-id&gt;
 /brain codex tail --bound
-/brain codex reply Please continue and tell me when tests pass.
-/brain codex steer Please stop after this test run and report blockers.
+/brain codex note The failure looks like the auth mock.
+/brain codex act --with-notes Please fix only the focused test.
+/brain codex steer --bound Stop after this test run and report blockers.
+/brain codex detach
 /brain codex handoff --bound</code></pre>
-      <p>Use these from OpenClaw or Telegram when Codex UI is doing the deep work at the computer. Status gives the pulse, threads finds the right goal, last/messages copy what Codex just said, tail forwards selected assistant replies, reply sends a trusted bound-thread instruction, steer redirects an active turn, and handoff gives a return-to-computer brief.</p>
+      <p>Use these from OpenClaw or Telegram when Codex UI is doing the deep work at the computer. Status gives the pulse, threads finds the right goal, last/messages copy what Codex just said, tail follows briefly, note adds passive context, act sends a real instruction, steer redirects an active turn, detach stops forwarding, and handoff gives a return-to-computer brief.</p>
       <p>Memory Graph Maintenance runs automatically after install: passive health/proposal cycles start in the background, and only deterministic low-risk repairs can apply without review.</p>
       <p>The public bridge is safe by default. Trusted local profiles can enable Telegram-to-Codex writes and steering with exact binding, trusted senders, write allowlists, and high-risk refusal.</p>
       <div class="actions"><a class="btn" href="/codex-continuity/">Read the Codex continuity tutorial</a></div>

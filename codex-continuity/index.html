@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>OpenClawBrain — Codex from Telegram</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain lets you check Codex progress, read recent Codex replies, follow a thread, send safe bound-thread nudges, and steer active work from Telegram.">
+  <meta name="description" content="OpenClawBrain lets you check Codex progress, read recent replies, follow a thread briefly, attach passive notes, send explicit actions, steer active work, and detach from Telegram.">
   <meta property="og:title" content="OpenClawBrain Codex from Telegram">
   <meta property="og:description" content="Codex UI stays the deep workbench. OpenClawBrain gives you a quiet Telegram operator layer for progress, replies, steering, and handoffs.">
   <meta property="og:type" content="website">
@@ -77,7 +77,7 @@
     <section class="hero">
       <div class="eyebrow">Codex from Telegram</div>
       <h1>Keep Codex moving when you leave the computer.</h1>
-      <p class="lead">Codex UI is still where the serious coding happens. OpenClawBrain gives you the missing mobile layer: ask what Codex is doing, read the latest reply, follow one thread, send a safe nudge, and steer active work from Telegram.</p>
+      <p class="lead">Codex UI is still where the serious coding happens. OpenClawBrain gives you the missing mobile layer: observe progress, follow one thread briefly, attach a passive note, send an explicit action, steer active work, and detach when Telegram should go quiet.</p>
       <blockquote><strong>The point is not more notifications. The point is knowing when to look, when to wait, and when to give Codex one clear instruction at the right moment.</strong></blockquote>
       <div class="actions">
         <a class="btn btn-primary" href="/install/">Install OpenClawBrain</a>
@@ -87,8 +87,10 @@
         <span class="chip">What is Codex doing?</span>
         <span class="chip">What did Codex just say?</span>
         <span class="chip">Tell me when it replies</span>
-        <span class="chip">Send this nudge</span>
+        <span class="chip">Attach a passive note</span>
+        <span class="chip">Send an explicit action</span>
         <span class="chip">Steer active work</span>
+        <span class="chip">Detach cleanly</span>
         <span class="chip">Brief me before I sit down</span>
       </div>
     </section>
@@ -100,8 +102,8 @@
       <div class="grid">
         <div class="card"><h3>Check progress</h3><p>See what Codex appears to be working on, how many threads are visible, and whether anything needs attention.</p></div>
         <div class="card"><h3>Read the latest reply</h3><p>Copy the actual Codex message text into Telegram. No extra LLM summary, no waiting for another model.</p></div>
-        <div class="card"><h3>Follow one thread</h3><p>Tell OpenClawBrain which Codex thread matters and receive only completed assistant replies or attention-worthy events.</p></div>
-        <div class="card"><h3>Send or steer</h3><p>Reply into an idle bound thread, or steer an active turn when Codex is already working and needs a course correction.</p></div>
+        <div class="card"><h3>Follow one thread</h3><p>Tell OpenClawBrain which Codex thread matters and receive only completed assistant replies or attention-worthy events for a short window.</p></div>
+        <div class="card"><h3>Note, act, steer</h3><p>Attach passive context without starting Codex, send an explicit action when you want work to happen, or steer an active turn.</p></div>
       </div>
     </section>
 
@@ -116,7 +118,7 @@
         </div>
         <div>
           <pre><code>/brain codex status</code></pre>
-          <p class="muted">You get a short operator summary: visible threads, active work, watched items, and the latest thread.</p>
+          <p class="muted">You get a short operator summary: visible threads, active work, watched items, app-server readiness, and the latest thread.</p>
         </div>
       </div>
 
@@ -142,37 +144,49 @@
           <pre><code>/brain codex threads openclawbrain
 /brain codex bind &lt;thread-id&gt;
 /brain codex tail --bound</code></pre>
-          <p class="muted">New completed assistant replies are forwarded. Routine tool chatter stays quiet.</p>
+          <p class="muted">New completed assistant replies are forwarded for a short window. Routine tool chatter stays quiet. Use <code>/brain codex detach</code> to stop.</p>
         </div>
       </div>
 
       <div class="example">
         <div>
           <div class="step">Example 4</div>
-          <h3>Send Codex a small instruction</h3>
-          <p>Codex is in the right thread and you want to nudge it without walking back to the machine.</p>
+          <h3>Attach a passive note</h3>
+          <p>You want to add context for the handoff, but you do not want Codex to start editing or running tools.</p>
         </div>
         <div>
-          <pre><code>/brain codex reply Please continue and tell me when tests pass.</code></pre>
-          <p class="muted">Replies go only to the bound thread. OpenClawBrain refuses fuzzy or latest-thread writes because wrong-thread writes would destroy trust.</p>
+          <pre><code>/brain codex note The failure looks like an auth mock issue, not a UI issue.</code></pre>
+          <p class="muted">Notes stay in OpenClawBrain's local bridge state. They do not call Codex app-server and do not start a turn.</p>
         </div>
       </div>
 
       <div class="example">
         <div>
           <div class="step">Example 5</div>
-          <h3>Steer active work</h3>
-          <p>Codex is currently working, and you want to redirect the active turn without starting a new one.</p>
+          <h3>Ask Codex to act</h3>
+          <p>Codex is in the right thread and you want a real instruction to run.</p>
         </div>
         <div>
-          <pre><code>/brain codex steer Please stop after this test run and report the exact failing assertion.</code></pre>
-          <p class="muted">Steer only works for an exact or bound thread with an in-progress Codex turn. If the thread is idle, use <code>/brain codex reply</code> instead.</p>
+          <pre><code>/brain codex act --with-notes Please fix only the focused test.</code></pre>
+          <p class="muted">Actions may edit files, run tools, or request approvals under Codex's normal sandbox. OpenClawBrain refuses fuzzy or latest-thread writes.</p>
         </div>
       </div>
 
       <div class="example">
         <div>
           <div class="step">Example 6</div>
+          <h3>Steer active work</h3>
+          <p>Codex is currently working, and you want to redirect the active turn without starting a new one.</p>
+        </div>
+        <div>
+          <pre><code>/brain codex steer --bound Please stop after this test run and report the exact failing assertion.</code></pre>
+          <p class="muted">Steer only works for an exact or bound thread with an in-progress Codex turn. If the thread is idle, use <code>/brain codex act</code> instead.</p>
+        </div>
+      </div>
+
+      <div class="example">
+        <div>
+          <div class="step">Example 7</div>
           <h3>Get a return-to-computer brief</h3>
           <p>You are about to sit back down and want the current state without rereading the whole thread.</p>
         </div>
@@ -181,15 +195,27 @@
           <p class="muted">The brief separates observed facts from Codex-reported claims, so you know what was actually seen versus what still needs verification.</p>
         </div>
       </div>
+
+      <div class="example">
+        <div>
+          <div class="step">Example 8</div>
+          <h3>Detach when Telegram should go quiet</h3>
+          <p>You are done operating from your phone, or a tail got too noisy.</p>
+        </div>
+        <div>
+          <pre><code>/brain codex detach</code></pre>
+          <p class="muted">Detach removes the chat binding and pauses matching active watches in one move.</p>
+        </div>
+      </div>
     </section>
 
     <section class="section">
       <h2>Why OpenClawBrain belongs in the middle</h2>
       <p>This is more than a notification pipe. The hard part is deciding what matters enough to send, what should stay quiet, and which thread is safe to write into.</p>
       <div class="grid">
-        <div class="card"><h3>Quiet by default</h3><p>Telegram gets completed replies, blockers, failures, approvals, and handoffs. It does not get every internal twitch.</p></div>
+        <div class="card"><h3>Quiet by default</h3><p>Plain watches send blockers, failures, approvals, and completions. Assistant-message tailing is explicit.</p></div>
         <div class="card"><h3>Exact when it should be</h3><p>Recent-message copy is direct transport from Codex records, not an AI summary of an AI answer.</p></div>
-        <div class="card"><h3>Safe when it writes</h3><p>A reply or steer goes to an exact or bound thread. No <code>--latest</code> writes, no random target guessing.</p></div>
+        <div class="card"><h3>Intent is explicit</h3><p><code>note</code> is passive. <code>act</code> starts real work. <code>steer</code> redirects live work. <code>detach</code> stops the bridge.</p></div>
         <div class="card"><h3>Stock OpenClaw</h3><p>The bridge lives in OpenClawBrain, so OpenClaw core can stay clean and upgradeable.</p></div>
       </div>
     </section>
@@ -207,7 +233,7 @@
 
     <section class="section">
       <h2>Install or upgrade</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.32 --force
+      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.33 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="fine">After install, start with <code>/brain codex status</code>. That single command tells you whether the bridge is seeing Codex and gives you the next useful thing to ask.</p>
