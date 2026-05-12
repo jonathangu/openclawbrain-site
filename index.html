@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>OpenClawBrain — Memory authority for local AI agents</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain is the memory authority layer for local AI agents: continuity across projects, judgment about stale memory, local proof, and quiet Codex-to-Telegram handoffs.">
+  <meta name="description" content="OpenClawBrain is the memory authority layer for local AI agents: continuity across projects, judgment about stale memory, local proof, graph maintenance, and a Codex-to-Telegram thread bridge.">
   <meta property="og:title" content="OpenClawBrain — Memory authority for local AI agents">
   <meta property="og:description" content="Give local AI agents continuity, judgment, and trustworthy memory that knows when to help, when to ask, and when to stay quiet.">
   <meta property="og:type" content="website">
@@ -165,13 +165,13 @@
         <a class="btn" href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
       </div>
       <div class="chips">
-        <span class="chip">Current release: v0.2.29</span>
+        <span class="chip">Current release: v0.2.30</span>
         <span class="chip">Continuity across tools</span>
         <span class="chip">Stale-memory judgment</span>
         <span class="chip">Memory Authority</span>
         <span class="chip">Graph Maintenance</span>
         <span class="chip">Local proof</span>
-        <span class="chip">Codex-to-Telegram handoffs</span>
+        <span class="chip">Codex-to-Telegram thread bridge</span>
         <span class="chip">Privacy-aware forgetting</span>
         <span class="chip">Quiet by default</span>
       </div>
@@ -189,7 +189,7 @@ OpenClawBrain remembers useful corrections, preferences, workflows, and handoffs
 That makes it different from generic memory, vector notes, or transcript recall: relevance is not authority.
 
 Install or upgrade if you already run OpenClaw:
-openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.29 --force
+openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.30 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
     </section>
@@ -215,7 +215,7 @@ openclaw gateway restart</code></pre>
         </div>
         <div class="card">
           <h3>Bridges Codex to Telegram</h3>
-          <p>Codex UI stays the deep workbench. OpenClaw and Telegram become the mobile operator surface for status, watches, blockers, and handoffs.</p>
+          <p>Codex UI stays the deep workbench. OpenClaw and Telegram become the mobile operator surface for recent messages, watches, blockers, handoffs, and trusted replies.</p>
         </div>
       </div>
     </section>
@@ -275,7 +275,7 @@ bounded context injection or abstention</code></pre>
     <section class="section">
       <h2>Codex continuity: the workflow this enables</h2>
       <p>Jonathan now uses Codex UI as the high-bandwidth coding workbench. That is where deep edits, tests, and commits happen. But Codex UI is tied to the computer, while OpenClaw agents are reachable through Telegram from a phone.</p>
-      <p>OpenClawBrain turns that into a practical workflow: Codex does the deep work, OpenClaw stays reachable, and Telegram gets only the operator signals that matter.</p>
+      <p>OpenClawBrain turns that into a practical workflow: Codex does the deep work, OpenClaw stays reachable, and Telegram gets the exact recent messages, watched replies, blockers, and handoff signals that matter.</p>
       <table>
         <thead>
           <tr><th>Surface</th><th>Job</th></tr>
@@ -283,8 +283,8 @@ bounded context injection or abstention</code></pre>
         <tbody>
           <tr><td>Codex UI</td><td>The focused workbench for code, diffs, tests, goals, and local execution.</td></tr>
           <tr><td>OpenClaw</td><td>The local host and operator that can be reached while the computer keeps working.</td></tr>
-          <tr><td>Telegram</td><td>The mobile command surface for status, completion, failure, blocker, and handoff summaries.</td></tr>
-          <tr><td>OpenClawBrain</td><td>The continuity layer that decides which Codex state matters and what should stay quiet.</td></tr>
+          <tr><td>Telegram</td><td>The mobile command surface for status, latest messages, watched replies, failures, blockers, handoffs, and trusted replies.</td></tr>
+          <tr><td>OpenClawBrain</td><td>The continuity layer that decides which Codex state matters, what should stay quiet, and which thread is safe to write into.</td></tr>
         </tbody>
       </table>
       <div class="actions">
@@ -334,13 +334,14 @@ openclaw doctor
       <p>Jonathan uses Codex UI as the high-bandwidth coding workbench and OpenClaw/Telegram as the mobile operator surface. OpenClawBrain owns the continuity layer between them while OpenClaw stays stock and upgradeable.</p>
       <pre><code>/brain codex status
 /brain codex threads
-/brain codex threads openclawbrain
-/brain codex watch --latest
-/brain codex watch &lt;thread-id&gt;
-/brain codex handoff
-/brain codex handoff &lt;thread-id&gt;</code></pre>
-      <p>The bridge reads local Codex state in read-only mode, labels fallback state as stale, stores only redacted watch/audit events, and keeps Telegram-to-Codex writes disabled by default. Telegram gets operator summaries, not a noisy second coding UI.</p>
-      <p>Use <strong>status</strong> for a quick pulse, <strong>threads</strong> to find the right Codex goal, <strong>watch</strong> to get one useful completion/blocker/failure notification, and <strong>handoff</strong> when you are walking back to the computer and need the clean next-action brief.</p>
+/brain codex last --latest
+/brain codex messages --latest --limit 5
+/brain codex bind &lt;thread-id&gt;
+/brain codex tail --bound
+/brain codex reply Please continue and tell me when tests pass.
+/brain codex handoff --bound</code></pre>
+      <p>The bridge reads local Codex state, follows thread rollout files for direct message copy, stores only bridge-local cursors/audit events, and can send trusted local replies through Codex app-server. Telegram gets operator text and selected assistant replies, not a noisy second coding UI.</p>
+      <p>Use <strong>status</strong> for a quick pulse, <strong>threads</strong> to find the right Codex goal, <strong>last/messages</strong> to copy what Codex just said, <strong>tail</strong> to forward new completed assistant replies, <strong>reply</strong> to send a bound-thread instruction, and <strong>handoff</strong> when you are walking back to the computer.</p>
       <div class="actions">
         <a class="btn btn-primary" href="/codex-continuity/">Open the tutorial</a>
       </div>
@@ -357,7 +358,7 @@ injection: sparse and relevance-gated</code></pre>
 
     <section class="section">
       <h2>Install or upgrade</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.29
+      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.30
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="fine">The GitHub README has the operator path: config, Ollama setup, runtime verification, endpoints, and debugging surfaces.</p>

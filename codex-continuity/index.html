@@ -80,24 +80,24 @@
         <a class="btn" href="/memory-authority/">Why authority matters</a>
       </div>
       <div class="chips">
-        <span class="chip">Read-only by default</span>
+        <span class="chip">Direct message copy</span>
         <span class="chip">No OpenClaw core patch</span>
-        <span class="chip">Redacted watch events</span>
+        <span class="chip">Watched replies</span>
         <span class="chip">Handoff briefs</span>
-        <span class="chip">Telegram writes disabled</span>
+        <span class="chip">Trusted local replies</span>
       </div>
     </section>
 
     <section class="section">
       <h2>The workflow</h2>
       <p>Jonathan now does much of his deep coding in Codex UI. That works beautifully when he is physically at the machine, but it is awkward from a phone. OpenClaw agents already live on the same computer and can be reached through Telegram.</p>
-      <p>OpenClawBrain connects those worlds. It reads local Codex state, decides what is worth surfacing, and sends only operator-grade summaries through OpenClaw.</p>
+      <p>OpenClawBrain connects those worlds. It reads local Codex state, follows each thread's rollout file, copies recent message text directly, and sends only operator-grade updates through OpenClaw.</p>
       <table>
         <tr><th>Surface</th><th>Role</th></tr>
         <tr><td>Codex UI</td><td>High-bandwidth workbench for goals, edits, tests, commits, and deep local context.</td></tr>
         <tr><td>OpenClaw</td><td>Always-reachable local operator on the same machine as Codex.</td></tr>
-        <tr><td>Telegram</td><td>Low-bandwidth mobile control surface for status and decisions.</td></tr>
-        <tr><td>OpenClawBrain</td><td>Memory and authority layer that decides what context matters and what should stay quiet.</td></tr>
+        <tr><td>Telegram</td><td>Low-bandwidth mobile control surface for status, recent messages, watches, and concise replies.</td></tr>
+        <tr><td>OpenClawBrain</td><td>Memory and authority layer that decides what context matters, what should stay quiet, and which thread is safe to write into.</td></tr>
       </table>
     </section>
 
@@ -107,14 +107,19 @@
       <pre><code>/brain codex status
 /brain codex threads
 /brain codex threads openclawbrain
-/brain codex watch --latest
-/brain codex watch &lt;thread-id&gt;
+/brain codex last --latest
+/brain codex messages &lt;thread-id&gt; --limit 5
+/brain codex bind &lt;thread-id&gt;
+/brain codex tail --bound
+/brain codex reply Please continue with the parser tests.
 /brain codex handoff
 /brain codex handoff &lt;thread-id&gt;</code></pre>
       <div class="grid">
-        <div class="card"><h3>Status pulse</h3><p><code>/brain codex status</code> answers: source, visible thread count, active goal count, watch count, latest thread, current goal status, and whether writes are disabled.</p></div>
+        <div class="card"><h3>Status pulse</h3><p><code>/brain codex status</code> answers: source, visible thread count, active goal count, watch count, latest thread, current goal status, and whether trusted writes are enabled.</p></div>
         <div class="card"><h3>Find the right work</h3><p><code>/brain codex threads</code> lists recent threads. Add a filter like <code>openclawbrain</code>, <code>publish</code>, or <code>resume</code> to find the relevant goal faster.</p></div>
-        <div class="card"><h3>Watch while away</h3><p><code>/brain codex watch --latest</code> watches the latest visible Codex thread. Use <code>/brain codex watch &lt;thread-id&gt;</code> when you want a specific thread.</p></div>
+        <div class="card"><h3>Read exactly what Codex said</h3><p><code>/brain codex last &lt;thread-id&gt;</code> and <code>/brain codex messages</code> copy final Codex message text directly from rollout records. No LLM summary is used.</p></div>
+        <div class="card"><h3>Watch while away</h3><p><code>/brain codex tail &lt;thread-id&gt;</code> forwards new completed assistant replies. <code>/brain codex watch</code> still handles completion, failure, blocker, approval-needed, and auth-failure signals.</p></div>
+        <div class="card"><h3>Reply to a bound thread</h3><p><code>/brain codex bind &lt;thread-id&gt;</code> makes the target exact. Then <code>/brain codex reply ...</code> sends a trusted local instruction through Codex app-server.</p></div>
         <div class="card"><h3>Return-to-computer brief</h3><p><code>/brain codex handoff</code> gives observed facts, Codex-reported claims, evidence, and next actions. Add a thread id for a specific handoff.</p></div>
       </div>
     </section>
@@ -122,12 +127,12 @@
     <section class="section">
       <h2>Cool progress-check workflows</h2>
       <div class="grid">
-        <div class="card"><h3>Leaving the computer</h3><p>Text <code>/brain codex watch --latest</code>. OpenClawBrain will stay quiet unless Codex completes, fails, blocks, needs approval, or hits auth trouble.</p></div>
+        <div class="card"><h3>Leaving the computer</h3><p>Text <code>/brain codex tail --latest</code> if you want new assistant replies, or <code>/brain codex watch --latest</code> if you only want terminal events and blockers.</p></div>
         <div class="card"><h3>Checking from your phone</h3><p>Text <code>/brain codex status</code> for the fast pulse: what Codex appears to be working on and whether the bridge is reading fresh state or stale-labeled fallback.</p></div>
         <div class="card"><h3>Finding a buried goal</h3><p>Text <code>/brain codex threads memory</code> or <code>/brain codex threads decagon</code> to filter recent Codex threads by title, workspace, or visible goal objective.</p></div>
         <div class="card"><h3>Walking back to the machine</h3><p>Text <code>/brain codex handoff</code>. The brief tells you what is observed, what Codex merely claimed, what evidence exists, and what to do next.</p></div>
         <div class="card"><h3>When a notification arrives</h3><p>A watch notification should mean a terminal or attention-worthy event happened: completion, failure, blocker, approval-needed, or auth-failure.</p></div>
-        <div class="card"><h3>Testing the safety rail</h3><p><code>/brain codex goal ...</code> and <code>/brain codex steer ...</code> refuse by default. That is intentional until Telegram-to-Codex writes are explicitly enabled with guardrails.</p></div>
+        <div class="card"><h3>Testing the safety rail</h3><p><code>/brain codex goal ...</code> and <code>/brain codex steer ...</code> still refuse. The supported write path is exact-thread or bound-thread <code>reply</code>/<code>send</code>.</p></div>
       </div>
     </section>
 
@@ -140,7 +145,7 @@
         <tr><td><code>read-only/stale-labeled</code></td><td>Treat the status as awareness, not proof. Ask for a handoff or verify in Codex UI before acting.</td></tr>
         <tr><td><code>active goals</code></td><td>How many visible threads appear to have goal state that is still in progress.</td></tr>
         <tr><td><code>watches</code></td><td>How many explicit Telegram notifications are armed.</td></tr>
-        <tr><td><code>Writes: disabled</code></td><td>Telegram can inspect/watch/handoff, but it will not remote-control Codex by default.</td></tr>
+        <tr><td><code>Writes: feature-flagged</code></td><td>Public installs are safe by default. Jonathan's local trusted profiles enable bound or exact-thread replies with repo allowlists.</td></tr>
       </table>
     </section>
 
@@ -150,6 +155,7 @@
       <table>
         <tr><th>Notify</th><th>Stay quiet</th></tr>
         <tr><td>Watched goal completed</td><td>Routine tool progress</td></tr>
+        <tr><td>New completed assistant reply when tailing</td><td>Streaming deltas and reasoning/tool chatter</td></tr>
         <tr><td>Failure or auth blocker</td><td>Raw command output</td></tr>
         <tr><td>Explicit watched blocker</td><td>Full diffs or transcripts</td></tr>
         <tr><td>Approval needed</td><td>Speculative agent chatter</td></tr>
@@ -170,19 +176,20 @@
 
     <section class="section">
       <h2>Safety defaults</h2>
-      <p>Read-only status, threads, watches, and handoffs are the default. Telegram-to-Codex write control stays disabled unless explicitly feature-flagged later with trusted sender checks, repo allowlists, risk classification, and confirmation.</p>
+      <p>Public defaults are conservative, but the real local workflow is enabled for trusted profiles: exact or bound thread, trusted sender, write allowlist, high-risk refusal, idempotent outbound audit, and Codex app-server write semantics.</p>
       <pre><code>default posture:
   read local Codex state
-  summarize only meaningful terminal events
+  copy recent message text directly when asked
+  forward watched completed assistant replies
   store redacted audit/watch events
   never write through SQLite
   never patch OpenClaw core
-  keep Telegram-to-Codex writes disabled</code></pre>
+  refuse --latest writes and high-risk Telegram requests by default</code></pre>
     </section>
 
     <section class="section">
       <h2>Install or upgrade</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.29 --force
+      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.30 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="fine">After install, ask from Telegram or OpenClaw: <code>/brain codex status</code>. The bridge should answer with a quiet operator summary, not a stream of Codex internals.</p>

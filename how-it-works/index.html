@@ -131,7 +131,7 @@ v2 misses or rollback is needed
 
     <section class="section">
       <h2>Promotion gates</h2>
-      <p>OpenClawBrain 0.2.29 defaults policy-v3 updates to <code>gated_active</code>. That means the system can collect, distill, shadow, replay, and activate a validated snapshot, but each step has explicit gates.</p>
+      <p>OpenClawBrain 0.2.30 defaults policy-v3 updates to <code>gated_active</code>. That means the system can collect, distill, shadow, replay, and activate a validated snapshot, but each step has explicit gates.</p>
       <div class="grid">
         <div class="card"><h3>Validation</h3><p>Candidate snapshots must parse, match schema, avoid unsafe broad retrieval, respect sync budget limits, and carry rollback lineage.</p></div>
         <div class="card"><h3>Support</h3><p>Cold-start action families remain under-supported until enough evidence exists; they can inform shadowing but cannot drive active routing too early.</p></div>

@@ -42,7 +42,7 @@
 
     <section class="panel">
       <h2>Install</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.29 --force
+      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.30 --force
 openclaw plugins enable openclawbrain
 openclaw gateway restart</code></pre>
       <p class="muted">Requires OpenClaw 2026.5.2 or later.</p>
@@ -52,14 +52,15 @@ openclaw gateway restart</code></pre>
       <h2>Codex continuity commands</h2>
       <pre><code>/brain codex status
 /brain codex threads
-/brain codex threads openclawbrain
-/brain codex watch --latest
-/brain codex watch &lt;thread-id&gt;
-/brain codex handoff
-/brain codex handoff &lt;thread-id&gt;</code></pre>
-      <p>Use these from OpenClaw or Telegram when Codex UI is doing the deep work at the computer. Status gives the pulse, threads finds the right goal, watch sends one useful completion/blocker/failure notification, and handoff gives a return-to-computer brief.</p>
+/brain codex last --latest
+/brain codex messages --latest --limit 5
+/brain codex bind &lt;thread-id&gt;
+/brain codex tail --bound
+/brain codex reply Please continue and tell me when tests pass.
+/brain codex handoff --bound</code></pre>
+      <p>Use these from OpenClaw or Telegram when Codex UI is doing the deep work at the computer. Status gives the pulse, threads finds the right goal, last/messages copy what Codex just said, tail forwards selected assistant replies, reply sends a trusted bound-thread instruction, and handoff gives a return-to-computer brief.</p>
       <p>Memory Graph Maintenance runs automatically after install: passive health/proposal cycles start in the background, and only deterministic low-risk repairs can apply without review.</p>
-      <p>The bridge is read-only by default, uses redacted audit/watch events, and keeps Telegram-to-Codex writes disabled unless explicitly feature-flagged later.</p>
+      <p>The public bridge is safe by default. Trusted local profiles can enable Telegram-to-Codex writes with exact binding, trusted senders, write allowlists, and high-risk refusal.</p>
       <div class="actions"><a class="btn" href="/codex-continuity/">Read the Codex continuity tutorial</a></div>
     </section>
 
