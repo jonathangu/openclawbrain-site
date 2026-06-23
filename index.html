@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain — Memory authority for local AI agents</title>
+  <title>ocbrain: Lightweight Shared Memory for Local Agents</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="OpenClawBrain is the memory authority layer for local AI agents: continuity across projects, judgment about stale memory, local proof, graph maintenance, and a Codex-to-Telegram thread bridge.">
-  <meta property="og:title" content="OpenClawBrain — Memory authority for local AI agents">
-  <meta property="og:description" content="Give local AI agents continuity, judgment, and trustworthy memory that knows when to help, when to ask, and when to stay quiet.">
+  <meta name="description" content="ocbrain is a lightweight shared-memory layer for Codex, Claude, and OpenClaw: source-backed history, MCP retrieval, feedback logging, and proposal-first learning.">
+  <meta property="og:title" content="ocbrain: Lightweight Shared Memory for Local Agents">
+  <meta property="og:description" content="Shared local memory for Codex, Claude, and OpenClaw through a conservative MCP runtime.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
@@ -22,7 +22,7 @@
       --panel-2: #132131;
       --text: #eaf2fb;
       --muted: #a8b6c8;
-      --line: rgba(132, 179, 230, 0.22);
+      --line: rgba(132, 179, 230, 0.24);
       --accent: #7ed6ff;
       --accent-2: #9ff5c0;
       --shadow: 0 16px 40px rgba(0,0,0,0.28);
@@ -41,13 +41,8 @@
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
     .wrap { max-width: 980px; margin: 0 auto; padding: 24px 20px 72px; }
-    .topbar, .nav { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      color: var(--text);
-      text-decoration: none;
-    }
+    .topbar { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
+    .brand { display: inline-flex; align-items: center; color: var(--text); text-decoration: none; }
     .brand:hover { text-decoration: none; opacity: 0.92; }
     .brand img {
       width: 178px;
@@ -57,7 +52,7 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.22);
     }
     .navlinks { display: flex; gap: 10px; flex-wrap: wrap; }
-    .nav a, .navlinks a, .btn {
+    .navlinks a, .btn {
       border: 1px solid var(--line);
       border-radius: 999px;
       padding: 10px 14px;
@@ -68,18 +63,18 @@
       text-decoration: none;
       background: rgba(255,255,255,0.02);
     }
-    .hero, .section, .panel {
+    .hero, .section {
       background: linear-gradient(180deg, rgba(19,33,49,0.96), rgba(14,24,36,0.96));
       border: 1px solid var(--line);
       border-radius: 22px;
       box-shadow: var(--shadow);
     }
     .hero { padding: 40px 34px; margin-bottom: 18px; }
-    .section, .panel { padding: 28px; margin-top: 18px; }
+    .section { padding: 28px; margin-top: 18px; }
     .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; font-size: 12px; font-weight: 800; margin-bottom: 12px; }
-    h1 { font-size: clamp(34px, 5vw, 56px); line-height: 1.05; margin: 0 0 16px; }
-    h2 { margin: 0 0 10px; font-size: 28px; }
-    h3 { margin: 0 0 8px; font-size: 18px; }
+    h1 { font-size: clamp(34px, 5vw, 56px); line-height: 1.05; margin: 0 0 16px; letter-spacing: 0; }
+    h2 { margin: 0 0 10px; font-size: 28px; letter-spacing: 0; }
+    h3 { margin: 0 0 8px; font-size: 18px; letter-spacing: 0; }
     p { margin: 0 0 14px; }
     .lead { font-size: 20px; color: var(--muted); max-width: 800px; margin: 0 0 20px; }
     .sublead { max-width: 800px; margin: 0 0 24px; color: var(--text); }
@@ -100,6 +95,7 @@
       border: 1px solid var(--line);
       border-radius: 18px;
       padding: 18px;
+      min-height: 150px;
     }
     pre {
       margin: 0 0 14px;
@@ -117,262 +113,108 @@
     .hero-art { margin: 0 0 22px; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: #08111b; }
     .hero-art img { display: block; width: 100%; height: auto; }
     .hero-art figcaption { padding: 10px 14px; color: var(--muted); font-size: 13px; }
-    table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; }
-    th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
-    ul, ol { margin: 0 0 14px; padding-left: 20px; }
-    li { margin-bottom: 8px; }
     .fine, .muted { color: var(--muted); font-size: 14px; }
     .footer { color: var(--muted); text-align: center; margin-top: 28px; font-size: 14px; }
-    @media (max-width: 640px) { .hero, .section, .panel { padding: 22px; } .lead { font-size: 18px; } }
+    @media (max-width: 640px) {
+      .hero, .section { padding: 22px; }
+      .lead { font-size: 18px; }
+      .btn { width: 100%; justify-content: center; }
+      .navlinks { width: 100%; }
+      .navlinks a { flex: 1 1 auto; justify-content: center; }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="topbar">
-      <a class="brand" href="/" aria-label="OpenClawBrain home"><img src="/assets/img/openclawbrain-logo.jpg" alt="OpenClawBrain" width="628" height="193"></a>
+      <a class="brand" href="/" aria-label="ocbrain home"><img src="/assets/img/openclawbrain-logo.jpg" alt="ocbrain" width="628" height="193"></a>
       <div class="navlinks">
-        <a href="/">Home</a>
-        <a href="/guide/">Guide</a>
-        <a href="/memory-authority/">Memory Authority</a>
-        <a href="/graph-maintenance/">Graph maintenance</a>
-        <a href="/codex-continuity/">Codex continuity</a>
-        <a href="/live/">Live visual</a>
-        <a href="/how-it-works/">How it works</a>
-        <a href="/install/">Install</a>
-        <a href="/proof/">Proof</a>
-        <a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
+        <a href="#install">Install</a>
+        <a href="#runtime">Runtime</a>
+        <a href="/proof/">Legacy proof</a>
+        <a href="/paper/">Legacy paper</a>
+        <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
 
     <section class="hero">
-      <div class="eyebrow">Memory authority for local AI agents</div>
-      <h1>Your AI should feel like it was actually there yesterday.</h1>
-      <p class="lead">OpenClawBrain gives local agents continuity across projects, tools, and days. It remembers corrections, preferences, workflows, and handoffs, then checks whether each memory still deserves authority before it shapes the next turn.</p>
-      <p class="sublead">Most memory systems stop at retrieval: find something similar and hope it helps. OpenClawBrain adds judgment. A memory can be relevant and still be stale, superseded, private, too broad, or overridden by what you just asked for.</p>
-      <blockquote><strong>Remember what matters. Trust the current instruction. Leave proof for every important memory decision.</strong></blockquote>
+      <div class="eyebrow">Lightweight shared memory for local agents</div>
+      <h1>ocbrain gives Codex, Claude, and OpenClaw one source-backed memory layer.</h1>
+      <p class="lead">The lightweight ocbrain runtime ingests historical OpenClaw, Codex, Claude, workspace, and task artifacts into a local SQLite ledger. It serves compact context through MCP, records whether returned memories helped, and keeps durable memory/wiki/skill/policy writes behind proposal gates.</p>
+      <p class="sublead">The domain openclawbrain.ai now points at the smaller installed ocbrain path: shared local knowledge first, visible evidence, conservative mutation, and no silent rewriting of skills or policy.</p>
+      <blockquote><strong>Do not make each agent remember alone. Give them one evidence-backed memory layer and a feedback loop.</strong></blockquote>
       <figure class="hero-art">
-        <img src="/assets/img/openclawbrain-hero.jpg" alt="OpenClawBrain constellation hero art with a luminous claw and evidence graph" width="1280" height="512" loading="eager">
-        <figcaption>Continuity, judgment, and local proof for agents that work across real projects.</figcaption>
+        <img src="/assets/img/openclawbrain-hero.jpg" alt="Evidence graph hero art for shared agent memory" width="1280" height="512" loading="eager">
+        <figcaption>Source-backed memory and feedback for agents that work across real local projects.</figcaption>
       </figure>
       <div class="actions">
-        <a class="btn btn-primary" href="/guide/">Read the ultimate guide</a>
-        <a class="btn btn-primary" href="/memory-authority/">Why memory authority matters</a>
-        <a class="btn btn-primary" href="/graph-maintenance/">Memory graph maintenance</a>
-        <a class="btn btn-primary" href="/codex-continuity/">Codex continuity tutorial</a>
-        <a class="btn btn-primary" href="/live/">See a real turn</a>
-        <a class="btn btn-primary" href="/install/">Install or upgrade</a>
-        <a class="btn" href="/proof/">Verify it locally</a>
-        <a class="btn" href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">Get ocbrain</a>
+        <a class="btn" href="#install">Install locally</a>
+        <a class="btn" href="#runtime">Runtime tools</a>
       </div>
       <div class="chips">
-        <span class="chip">Current release: v0.2.33</span>
-        <span class="chip">Continuity across tools</span>
-        <span class="chip">Stale-memory judgment</span>
-        <span class="chip">Memory Authority</span>
-        <span class="chip">Graph Maintenance</span>
-        <span class="chip">Local proof</span>
-        <span class="chip">Codex-to-Telegram thread bridge</span>
-        <span class="chip">Privacy-aware forgetting</span>
-        <span class="chip">Quiet by default</span>
+        <span class="chip">Codex</span>
+        <span class="chip">Claude Code</span>
+        <span class="chip">OpenClaw</span>
+        <span class="chip">MCP</span>
+        <span class="chip">SQLite evidence ledger</span>
+        <span class="chip">retrieval feedback</span>
+        <span class="chip">proposal-first writes</span>
       </div>
     </section>
 
     <section class="section">
-      <h2>The short version</h2>
-      <p>If you are explaining OpenClawBrain to someone who has used AI assistants, start here:</p>
-      <pre><code>OpenClawBrain is a local-first memory system for AI agents.
-
-The core idea: an agent should not just remember more. It should know when the past is still allowed to guide the present.
-
-OpenClawBrain remembers useful corrections, preferences, workflows, and handoffs. Before any memory reaches the prompt, it checks whether that memory is current, scoped, safe, non-superseded, and compatible with the user's current instruction.
-
-That makes it different from generic memory, vector notes, or transcript recall: relevance is not authority.
-
-Install or upgrade if you already run OpenClaw:
-openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.33 --force
-openclaw plugins enable openclawbrain
-openclaw gateway restart</code></pre>
+      <h2>Current installed shape</h2>
+      <p>ocbrain is installed on Jonathan's Mac mini as a local MCP server for Codex, Claude Code, and OpenClaw. The default server is read-mostly: search, digest, get, and feedback are exposed; write-capable proposal tools stay hidden unless explicitly launched with write mode.</p>
+      <pre><code>/Users/guclaw/.openclaw/workspace/ocbrain/scripts/ocbrain-mcp</code></pre>
+      <p class="fine">No unattended cron or heartbeat loop is enabled by this install. Durable writes remain proposal-first.</p>
     </section>
 
-    <section class="section">
-      <h2>What it does</h2>
+    <section class="section" id="runtime">
+      <h2>Runtime tools</h2>
       <div class="grid">
         <div class="card">
-          <h3>Carries context forward</h3>
-          <p>Project rules, workflow corrections, communication preferences, and handoff notes survive beyond a single chat window.</p>
+          <h3>brain.search</h3>
+          <p>Search source-backed OpenClaw, Codex, Claude, task, and workspace history without making each runtime keep a separate memory silo.</p>
         </div>
         <div class="card">
-          <h3>Uses memory with judgment</h3>
-          <p>Old memories do not become permanent commands. They can be verified, weakened, confirmed, superseded, tombstoned, or ignored.</p>
+          <h3>brain.digest</h3>
+          <p>Expose ledger counts and state so memory quality is inspectable instead of vibes-based.</p>
         </div>
         <div class="card">
-          <h3>Maintains the graph</h3>
-          <p>Duplicate nodes, stale high-authority memories, bad edges, scoped exceptions, and tombstone recapture risks are surfaced as auditable proposals.</p>
+          <h3>brain.get</h3>
+          <p>Retrieve reviewed candidates with scope and draft/private controls, instead of injecting raw transcripts blindly.</p>
         </div>
         <div class="card">
-          <h3>Stays quiet when it should</h3>
-          <p>Most memories stay out of the prompt. If the system is unsure, the better answer is often to ask, verify, or abstain.</p>
-        </div>
-        <div class="card">
-          <h3>Bridges Codex to Telegram</h3>
-          <p>Codex UI stays the deep workbench. OpenClaw and Telegram become the mobile operator surface for recent messages, watches, blockers, handoffs, and trusted replies.</p>
+          <h3>brain.feedback</h3>
+          <p>Record helpful, used, ignored, irrelevant, or harmful outcomes against a retrieval-use id.</p>
         </div>
       </div>
     </section>
 
-    <section class="section">
-      <h2>Why it stands apart</h2>
-      <p>The next hard problem for AI memory is not storing more notes. It is deciding whether a remembered thing still has the right to influence behavior.</p>
-      <table>
-        <thead>
-          <tr><th>Generic memory</th><th>OpenClawBrain</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Retrieves semantically similar memories.</td><td>Separates relevance from authority before memory touches the prompt.</td></tr>
-          <tr><td>Treats preferences like permanent instructions.</td><td>Treats soft preferences as defaults that current instructions can override.</td></tr>
-          <tr><td>Stores transcript-like context or vector notes.</td><td>Stores scoped memories, authority decisions, tombstones, and proof events locally.</td></tr>
-          <tr><td>May silently reuse stale guidance.</td><td>Can verify, ask, weaken, abstain, or mark a memory audit-only.</td></tr>
-          <tr><td>Optimizes for recall.</td><td>Optimizes for trustworthy continuity.</td></tr>
-        </tbody>
-      </table>
+    <section class="section" id="install">
+      <h2>Quick start</h2>
+      <pre><code>git clone https://github.com/jonathangu/ocbrain.git
+cd ocbrain
+/opt/homebrew/bin/python3.13 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+ocbrain --db data/ocbrain.sqlite mcp</code></pre>
+      <p class="fine">Runtime docs: <a href="https://github.com/jonathangu/ocbrain/blob/main/docs/RUNTIME_INTEGRATION.md" target="_blank" rel="noopener">docs/RUNTIME_INTEGRATION.md</a>.</p>
     </section>
 
     <section class="section">
-      <h2>The learning loop underneath</h2>
-      <p>Under the simple product promise is an evidence loop. The model can interpret messy human feedback, but code owns validation, storage, promotion, rollback, and forgetting.</p>
-      <pre><code>feedback and outcomes
- ↓
-redacted route frames
- ↓
-SQLite evidence graph
- ↓
-shadow decisions and replay cases
- ↓
-candidate policy snapshots
- ↓
-calibration and promotion gates
- ↓
-active route-policy-v3 route_fn
- ↓
-bounded context injection or abstention</code></pre>
-      <div class="grid">
-        <div class="card">
-          <h3>Harvest</h3>
-          <p>Corrections, accept/reject signals, route misses, tool outcomes, and handoff decisions become compact evidence records instead of raw chat dumps.</p>
-        </div>
-        <div class="card">
-          <h3>Distill</h3>
-          <p>The teacher turns messy interaction into structured route frames: action family, scope, risk, evidence ids, and why memory would or would not help.</p>
-        </div>
-        <div class="card">
-          <h3>Serve</h3>
-          <p>The active v3 route_fn wins first. If confidence is too low, it abstains and falls back to v2 or heuristics rather than guessing.</p>
-        </div>
-      </div>
-      <p class="fine">The production update mode is <code>gated_active</code>: candidates can be distilled and evaluated automatically, but active serving still depends on validation, family-aware confidence floors, support thresholds, cooldowns, and rollback lineage.</p>
-    </section>
-
-    <section class="section">
-      <h2>Codex continuity: the workflow this enables</h2>
-      <p>Jonathan now uses Codex UI as the high-bandwidth coding workbench. That is where deep edits, tests, and commits happen. But Codex UI is tied to the computer, while OpenClaw agents are reachable through Telegram from a phone.</p>
-      <p>OpenClawBrain turns that into a practical workflow: Codex does the deep work, OpenClaw stays reachable, and Telegram gets the exact recent messages, watched replies, blockers, and handoff signals that matter.</p>
-      <table>
-        <thead>
-          <tr><th>Surface</th><th>Job</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Codex UI</td><td>The focused workbench for code, diffs, tests, goals, and local execution.</td></tr>
-          <tr><td>OpenClaw</td><td>The local host and operator that can be reached while the computer keeps working.</td></tr>
-          <tr><td>Telegram</td><td>The mobile command surface for status, latest messages, watched replies, failures, blockers, handoffs, and trusted replies.</td></tr>
-          <tr><td>OpenClawBrain</td><td>The continuity layer that decides which Codex state matters, what should stay quiet, and which thread is safe to write into.</td></tr>
-        </tbody>
-      </table>
+      <h2>What happened to OpenClawBrain?</h2>
+      <p>The older OpenClawBrain paper, proof pages, and guide pages remain available as legacy research and product background. The live product front door is now the smaller ocbrain runtime: local first, source-backed, installed through MCP, and conservative about learning.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="/codex-continuity/">Read the tutorial</a>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>One worked turn</h2>
-      <p>You correct the agent:</p>
-      <pre><code>Actually, use pnpm in this repo.</code></pre>
-      <p>OpenClawBrain distills that into a scoped correction. Later, when you say <strong>“Run the tests,”</strong> it retrieves the correction and adds a small context block:</p>
-      <pre><code>&lt;openclawbrain_context&gt;
-Relevant memory:
-- Must follow: Use pnpm instead of npm in this repo.
-&lt;/openclawbrain_context&gt;</code></pre>
-      <p>The agent runs <code>pnpm test</code> without you re-teaching the repo convention.</p>
-    </section>
-
-    <section class="section">
-      <h2>Memory graph maintenance</h2>
-      <p>OpenClawBrain now has a separate graph-maintenance layer. Memory Authority decides whether a memory can influence this turn. Graph Maintenance runs passively in the background, curating how the graph evolves after many turns, corrections, and outcomes.</p>
-      <pre><code>/brain graph health
-/brain graph dry-run
-/brain graph proposals
-/brain graph explain &lt;proposal-id&gt;
-/brain graph apply &lt;proposal-id&gt;</code></pre>
-      <p>It is conservative on purpose: every automatic cycle records dry-run/proposal history, only deterministic low-risk repairs can apply by themselves, and semantic, authority, scope, privacy, and tombstone changes stay review-gated.</p>
-      <div class="actions">
-        <a class="btn btn-primary" href="/graph-maintenance/">Read the article</a>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Proof you can inspect</h2>
-      <p>Memory should leave evidence. OpenClawBrain exposes plugin load, SQLite + FTS health, proof events, graph state, search, route learning, active policy snapshots, and recent injection decisions.</p>
-      <pre><code>openclaw plugins inspect openclawbrain --runtime
-openclaw doctor
-# /plugins/openclawbrain/proof?limit=10
-# /plugins/openclawbrain/search?query=pnpm&amp;limit=10
-# /plugins/openclawbrain/route-policy</code></pre>
-      <p class="fine">Current production path: route-policy-v3 first, route-policy-v2 and heuristics as fallback/rollback only, with proof surfaces for route learning and injection decisions.</p>
-    </section>
-
-    <section class="section">
-      <h2>Codex continuity bridge</h2>
-      <p>Jonathan uses Codex UI as the high-bandwidth coding workbench and OpenClaw/Telegram as the mobile operator surface. OpenClawBrain owns the continuity layer between them while OpenClaw stays stock and upgradeable.</p>
-      <pre><code>/brain codex status
-/brain codex threads
-/brain codex last --latest
-/brain codex messages --latest --limit 5
-/brain codex bind &lt;thread-id&gt;
-/brain codex tail --bound
-/brain codex note The failure looks like the auth mock.
-/brain codex act --with-notes Please fix only the focused test.
-/brain codex steer --bound Stop after this test run and report blockers.
-/brain codex detach
-/brain codex handoff --bound</code></pre>
-      <p>The bridge reads local Codex state, follows thread rollout files for direct message copy, stores only bridge-local cursors/audit events, and can attach passive notes, send explicit trusted actions, or steer active work through Codex app-server. Telegram gets operator text and selected assistant replies, not a noisy second coding UI.</p>
-      <p>Use <strong>status</strong> for a quick pulse, <strong>threads</strong> to find the right Codex goal, <strong>last/messages</strong> to copy what Codex just said, <strong>tail</strong> to follow briefly, <strong>note</strong> for passive context, <strong>act</strong> when Codex should do work, <strong>steer</strong> to redirect in-progress work, <strong>detach</strong> to stop forwarding, and <strong>handoff</strong> when you are walking back to the computer.</p>
-      <div class="actions">
-        <a class="btn btn-primary" href="/codex-continuity/">Open the tutorial</a>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Latency shape</h2>
-      <p>Prompt-time retrieval stays small. Heavier feedback distillation and route learning happen after the turn when they can.</p>
-      <pre><code>retrieval: conservative and bounded
-capture: audited
-storage: strict, scoped, local
-injection: sparse and relevance-gated</code></pre>
-    </section>
-
-    <section class="section">
-      <h2>Install or upgrade</h2>
-      <pre><code>openclaw plugins install clawhub:openclawbrain<span>@</span>0.2.33
-openclaw plugins enable openclawbrain
-openclaw gateway restart</code></pre>
-      <p class="fine">The GitHub README has the operator path: config, Ollama setup, runtime verification, endpoints, and debugging surfaces.</p>
-      <div class="actions">
-        <a class="btn btn-primary" href="/install/">Full install steps</a>
-        <a class="btn" href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">Read the README</a>
+        <a class="btn" href="/proof/">Legacy proof</a>
+        <a class="btn" href="/paper/">Legacy paper</a>
+        <a class="btn" href="https://jonathangu.com/ocbrain/" target="_blank" rel="noopener">Jonathan project notes</a>
       </div>
     </section>
 
     <div class="footer">
-      Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. Open source on <a href="https://github.com/jonathangu/openclawbrain" target="_blank" rel="noopener">GitHub</a>.
+      Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. Source on <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a>.
     </div>
   </div>
 </body>
