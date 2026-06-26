@@ -132,7 +132,7 @@
         <a href="#install">Install</a>
         <a href="#runtime">Runtime</a>
         <a href="/proof/">Legacy proof</a>
-        <a href="/paper/">Legacy paper</a>
+        <a href="/jonathan-gu-2016-reinforcement-learning-paper.pdf">Legacy paper (PDF)</a>
         <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
@@ -192,6 +192,39 @@
       </div>
     </section>
 
+    <section class="section">
+      <h2>What ocbrain is, and why you can trust it</h2>
+      <p>ocbrain is a local, source-backed consolidation brain for coding agents. Immutable <strong>evidence</strong> goes in; a controlled compiler turns that evidence into current <strong>knowledge</strong>; and <code>memory</code> is a read-only view over that knowledge. Nothing durable is invented in the dark — every belief traces back to something that actually happened.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>Evidence before belief</h3>
+          <p>Raw history is captured as immutable evidence first. Knowledge is never written ahead of the evidence that justifies it.</p>
+        </div>
+        <div class="card">
+          <h3>Knowledge is compiled</h3>
+          <p>Beliefs are compiled from evidence, lifecycle-managed, and linked back to the evidence they came from — so any claim can be traced and re-checked.</p>
+        </div>
+        <div class="card">
+          <h3>Read-first at runtime</h3>
+          <p>Runtime consumption is read-first and source-backed. Agents retrieve reviewed, attributed knowledge rather than injecting raw transcripts.</p>
+        </div>
+        <div class="card">
+          <h3>Human gate for risk</h3>
+          <p>Executable, prescriptive, or high-risk knowledge is proposal-first: it requires an explicit human gate before it becomes durable.</p>
+        </div>
+      </div>
+      <p class="fine">Safety stance: ocbrain is a librarian and compiler with a security desk, not an autopilot.</p>
+      <div class="chips">
+        <span class="chip">Not an autopilot</span>
+        <span class="chip">No loop-runner</span>
+        <span class="chip">No scheduler</span>
+        <span class="chip">No skill-installer</span>
+        <span class="chip">Never widens privacy scope</span>
+        <span class="chip">External content is data, not instructions</span>
+        <span class="chip">Supersedes &amp; archives, never deletes history</span>
+      </div>
+    </section>
+
     <section class="section" id="install">
       <h2>Quick start</h2>
       <pre><code>git clone https://github.com/jonathangu/ocbrain.git
@@ -208,7 +241,7 @@ ocbrain --db data/ocbrain.sqlite mcp</code></pre>
       <p>The older OpenClawBrain paper, proof pages, and guide pages remain available as legacy research and product background. The live product front door is now the smaller ocbrain runtime: local first, source-backed, installed through MCP, and conservative about learning.</p>
       <div class="actions">
         <a class="btn" href="/proof/">Legacy proof</a>
-        <a class="btn" href="/paper/">Legacy paper</a>
+        <a class="btn" href="/jonathan-gu-2016-reinforcement-learning-paper.pdf">Legacy paper (PDF)</a>
         <a class="btn" href="https://jonathangu.com/ocbrain/" target="_blank" rel="noopener">Jonathan project notes</a>
       </div>
     </section>
