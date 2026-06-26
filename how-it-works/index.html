@@ -2,174 +2,186 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>OpenClawBrain — How it works</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="How OpenClawBrain gives local AI agents continuity and judgment: remember useful context, check authority, use only what helps, and leave proof.">
-  <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="512">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
-  <link rel="canonical" href="https://openclawbrain.ai/how-it-works/">
-  <style>
-    :root { --bg:#071019; --panel:#0e1824; --panel-2:#132131; --text:#eaf2fb; --muted:#a8b6c8; --line:rgba(132,179,230,0.22); --accent:#7ed6ff; --accent-2:#9ff5c0; --shadow:0 16px 40px rgba(0,0,0,0.28); }
-    * { box-sizing:border-box; }
-    body { margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:radial-gradient(circle at top left,rgba(126,214,255,0.18),transparent 32%),radial-gradient(circle at top right,rgba(159,245,192,0.12),transparent 26%),var(--bg); color:var(--text); line-height:1.65; }
-    a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
-    .wrap { max-width:980px; margin:0 auto; padding:24px 20px 72px; }
-    .topbar { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:20px; }
-    .brand { display:inline-flex; align-items:center; color:var(--text); text-decoration:none; } .brand:hover { text-decoration:none; opacity:0.92; } .brand img { width:178px; height:auto; border-radius:999px; border:1px solid rgba(255,255,255,0.08); box-shadow:0 8px 24px rgba(0,0,0,0.22); }
-    .navlinks { display:flex; gap:10px; flex-wrap:wrap; }
-    .navlinks a,.btn { border:1px solid var(--line); border-radius:999px; padding:10px 14px; display:inline-flex; align-items:center; gap:8px; font-size:14px; text-decoration:none; background:rgba(255,255,255,0.02); }
-    .hero,.section { background:linear-gradient(180deg,rgba(19,33,49,0.96),rgba(14,24,36,0.96)); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); }
-    .hero { padding:40px 34px; margin-bottom:18px; } .section { padding:28px; margin-top:18px; }
-    .eyebrow { color:var(--accent); text-transform:uppercase; letter-spacing:0.12em; font-size:12px; font-weight:800; margin-bottom:12px; }
-    h1 { font-size:clamp(34px,5vw,56px); line-height:1.05; margin:0 0 16px; } h2 { margin:0 0 10px; font-size:28px; } h3 { margin:0 0 8px; font-size:18px; }
-    p { margin:0 0 14px; } .lead { font-size:20px; color:var(--muted); max-width:800px; margin:0 0 20px; } .sublead { max-width:800px; margin:0 0 24px; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; } .card { background:rgba(255,255,255,0.03); border:1px solid var(--line); border-radius:18px; padding:18px; }
-    pre { margin:0 0 14px; overflow:auto; background:#08111b; border:1px solid var(--line); border-radius:16px; padding:16px; color:#d8e8f8; font-size:14px; line-height:1.65; }
-    code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; } blockquote { margin:0 0 18px; padding:14px 18px; border-left:3px solid var(--accent-2); background:rgba(159,245,192,0.06); border-radius:12px; }
-    .actions { display:flex; gap:12px; flex-wrap:wrap; margin:0 0 22px; } .btn-primary { background:linear-gradient(135deg,var(--accent),#b6ebff); color:#051018; font-weight:700; }
-    .fine,.muted { color:var(--muted); font-size:14px; } ul { margin:0 0 14px; padding-left:20px; } li { margin-bottom:8px; }
-    @media (max-width:640px) { .hero,.section { padding:22px; } .lead { font-size:18px; } }
-  </style>
+  <title>How ocbrain works · ocbrain</title>
+  <meta name="description" content="How ocbrain works: immutable evidence in, a controlled compiler produces current knowledge, and a read-only memory view is what agents consume — a local SQLite evidence-to-knowledge ledger.">
+  <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
-<div style="background:#0b1320;border-bottom:1px solid rgba(132,179,230,0.24);padding:9px 16px;text-align:center;font-family:Inter,system-ui,-apple-system,sans-serif;font-size:13.5px;line-height:1.5;color:#a8b6c8;">This page documents the earlier <strong>OpenClawBrain</strong> design, kept as background. The current product is <strong style="color:#7ed6ff;">ocbrain</strong> &mdash; <a href="/" style="color:#7ed6ff;text-decoration:none;">overview</a> &middot; <a href="https://github.com/jonathangu/ocbrain" style="color:#7ed6ff;text-decoration:none;">GitHub</a></div>
-  <div class="wrap">
-    <div class="topbar">
-      <a class="brand" href="/" aria-label="OpenClawBrain home"><img src="/assets/img/openclawbrain-logo.jpg" alt="OpenClawBrain" width="628" height="193"></a>
-      <div class="navlinks">
-        <a href="/">Home</a><a href="/guide/">Guide</a>
-        <a href="/memory-authority/">Memory Authority</a>
-        <a href="/graph-maintenance/">Graph maintenance</a>
-        <a href="/codex-continuity/">Codex continuity</a><a href="/live/">Live visual</a><a href="/how-it-works/">How it works</a><a href="/install/">Install</a><a href="/proof/">Proof</a><a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a>
-      </div>
+<div class="wrap">
+  <div class="topbar">
+    <a class="brand" href="/" aria-label="ocbrain home"><img src="/assets/img/openclawbrain-logo.jpg" alt="ocbrain" width="628" height="193"></a>
+    <div class="navlinks">
+      <a href="/how-it-works/">How it works</a>
+      <a href="/install/">Install</a>
+      <a href="/proof/">Safe &amp; inspectable</a>
+      <a href="/guide/">Guide</a>
+      <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a>
     </div>
-
-    <section class="hero">
-      <div class="eyebrow">How it works</div>
-      <h1>Remember what matters. Check whether it still applies.</h1>
-      <p class="lead">OpenClawBrain gives agents a simple habit: carry useful context forward, but do not let old memory silently overpower the current user, current project, or current environment.</p>
-      <blockquote><strong>Plain English: find candidate memory, decide whether it has authority, use a tiny helpful slice, then leave proof.</strong></blockquote>
-    </section>
-
-    <section class="section">
-      <h2>The runtime loop</h2>
-      <p>The top-level behavior is intentionally small. The agent should not feel like it is dragging a giant notes file into every turn.</p>
-      <pre><code>user turn
- ↓
-route-policy-v3: should memory help?
- ↓
-search: SQLite FTS + memory graph
- ↓
-authority: current, scoped, safe, non-superseded?
- ↓
-select: choose a tiny relevant evidence slice
- ↓
-inject: bounded XML context or abstain
- ↓
-learn: update evidence after the turn</code></pre>
-      <p>Prompt-time work stays small. Heavier teaching, replay, and policy updates happen after the turn when they can.</p>
-    </section>
-
-    <section class="section">
-      <h2>The learning warehouse</h2>
-      <p>OpenClawBrain stores memory and route-learning evidence as local SQLite records, not as a blob of transcript text. The important objects are small and inspectable.</p>
-      <div class="grid">
-        <div class="card"><h3>Memory nodes</h3><p>Durable corrections, preferences, workflows, project rules, and contextual facts with scope and freshness metadata.</p></div>
-        <div class="card"><h3>Authority rows</h3><p>Validity state and authority events explain why relevant memories were injected, weakened, verified, confirmed, suppressed, or withheld.</p></div>
-        <div class="card"><h3>Route frames</h3><p>Redacted examples of when memory helped, missed, abstained, or should have routed differently.</p></div>
-        <div class="card"><h3>Shadow decisions</h3><p>Candidate policies score real turns without taking over, so promotion is based on evidence instead of hope.</p></div>
-        <div class="card"><h3>Eval cases</h3><p>Replayable cases, labels, family stats, and candidate reports keep policy updates auditable.</p></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>What gets stored</h2>
-      <p>The warehouse is designed around evidence, not private transcript replay. Route-policy-v3 stores compact objects that explain routing behavior without making raw chat the source of truth.</p>
-      <ul>
-        <li><strong>route_frames_v3:</strong> redacted examples with routing mode, family, canonical action key, calibrated score, abstention and fallback metadata, risk flags, and evidence ids.</li>
-        <li><strong>route_shadow_decisions_v3:</strong> records of what a candidate policy would have done on live traffic while the active policy kept serving.</li>
-        <li><strong>route_calibration_examples_v3:</strong> examples used to make confidence scores meaningful instead of just high-sounding.</li>
-        <li><strong>route_eval_cases_v3 and labels:</strong> replayable cases that test useful routing, abstention, prompt noise, and safety boundaries.</li>
-        <li><strong>route_action_family_stats_v3:</strong> per-family support, cold-start state, thresholds, and observed routing quality.</li>
-        <li><strong>route_policy_candidate_reports_v3:</strong> validation, replay, activation, and rollback summaries for policy snapshots.</li>
-      </ul>
-    </section>
-
-    <section class="section">
-      <h2>Why the LLM boundary matters</h2>
-      <p>The LLM is used for semantic judgment. It can notice that a messy correction is actually durable feedback, or that a failed route is a training example.</p>
-      <p>But the LLM does not directly own memory or production routing. Code redacts, validates, scopes, dedupes, thresholds, stores, replays, calibrates, and promotes only what passes.</p>
-    </section>
-
-    <section class="section">
-      <h2>route-policy-v3</h2>
-      <p>The active production route brain is route-policy-v3. It is a compact learned route_fn compiled from evidence, not a vague prompt that asks the model to “remember better.”</p>
-      <pre><code>active v3 match with calibrated confidence
-  -&gt; route memory and record proof
-
-v3 abstains or has no safe match
-  -&gt; fall back to v2 policy
-
-v2 misses or rollback is needed
-  -&gt; use legacy heuristics as last resort</code></pre>
-      <p>Abstention is a feature. If the system does not have enough support, it stays quiet instead of polluting the prompt.</p>
-    </section>
-
-    <section class="section">
-      <h2>How policies improve</h2>
-      <div class="grid">
-        <div class="card"><h3>1. Harvest</h3><p>Turns produce signals: corrections, accepted help, rejected memory, route misses, tool outcomes, and operator handoffs.</p></div>
-        <div class="card"><h3>2. Distill</h3><p>The teacher converts those signals into route frames with action family, scope, canonical action key, risk flags, and evidence ids.</p></div>
-        <div class="card"><h3>3. Shadow</h3><p>Candidate snapshots score traffic without serving. The system records what they would have done.</p></div>
-        <div class="card"><h3>4. Replay</h3><p>Stored eval cases measure whether the candidate improves useful routing without causing prompt noise or unsafe sync work.</p></div>
-        <div class="card"><h3>5. Calibrate</h3><p>Family-aware thresholds and confidence floors decide when a route is strong enough to serve.</p></div>
-        <div class="card"><h3>6. Promote or roll back</h3><p>Promotion creates an active v3 snapshot with lineage. Rollback keeps the previous policy path available.</p></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Promotion gates</h2>
-      <p>OpenClawBrain 0.2.33 defaults policy-v3 updates to <code>gated_active</code>. That means the system can collect, distill, shadow, replay, and activate a validated snapshot, but each step has explicit gates.</p>
-      <div class="grid">
-        <div class="card"><h3>Validation</h3><p>Candidate snapshots must parse, match schema, avoid unsafe broad retrieval, respect sync budget limits, and carry rollback lineage.</p></div>
-        <div class="card"><h3>Support</h3><p>Cold-start action families remain under-supported until enough evidence exists; they can inform shadowing but cannot drive active routing too early.</p></div>
-        <div class="card"><h3>Calibration</h3><p>Confidence is judged by action family. A policy can be strong for repo workflow routing while still abstaining on personal preference routing.</p></div>
-        <div class="card"><h3>Cooldown</h3><p>Activation cooldowns prevent rapid policy churn. If a candidate is weaker or risky, the current active snapshot stays in place.</p></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Failure behavior</h2>
-      <p>The runtime is intentionally conservative. If the learned route_fn cannot make a supported decision, it does less.</p>
-      <pre><code>policy snapshot missing or invalid
-  -&gt; skip v3 and use fallback path
-
-family confidence below floor
-  -&gt; abstain and keep prompt clean
-
-candidate shows harm in replay
-  -&gt; do not promote
-
-active policy regresses
-  -&gt; roll back to prior snapshot, then v2 or heuristics</code></pre>
-    </section>
-
-    <section class="section">
-      <h2>What gets injected</h2>
-      <p>Only the selected evidence slice enters the prompt. It is bounded, scoped, and formatted as operator context, not hidden transcript mass.</p>
-      <pre><code>&lt;openclawbrain_context&gt;
-Relevant memory:
-- Must follow: Use pnpm instead of npm in this repo.
-- Routing rule: Keep Telegram replies to operator summaries.
-&lt;/openclawbrain_context&gt;</code></pre>
-      <p>The rest stays local in SQLite and proof surfaces.</p>
-      <div class="actions">
-        <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain#core-model" target="_blank" rel="noopener">Read the operator README</a>
-      </div>
-    </section>
   </div>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">How it works</p>
+      <h1>One source-backed memory for your agents</h1>
+      <p class="lead">ocbrain turns scattered agent history into one source-backed memory. The pipeline is simple: immutable <strong>evidence</strong> goes in, a controlled compiler produces current <strong>knowledge</strong>, and a read-only <strong>memory</strong> view is what agents consume.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="/install/">Install ocbrain</a>
+        <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+      <div class="chips">
+        <span class="chip">Evidence in</span>
+        <span class="chip">Compiled knowledge</span>
+        <span class="chip">Read-only memory view</span>
+        <span class="chip">Local SQLite ledger</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>The pipeline</h2>
+      <p class="sublead">Three stages, one direction. Nothing skips a step, and history is never overwritten.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>1 · Evidence in</h3>
+          <p>Immutable, append-only, hash-pinned records of what happened or was observed. The durable substrate everything else is built on.</p>
+        </div>
+        <div class="card">
+          <h3>2 · Compiled knowledge</h3>
+          <p>A controlled compiler reads evidence and produces the current belief — facts, docs, and capabilities, each linked back to its evidence.</p>
+        </div>
+        <div class="card">
+          <h3>3 · Memory view</h3>
+          <p>A read-only SQLite view over current injectable knowledge. It is what agents consume; they never write into it.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Evidence in</h2>
+      <p>Evidence is <strong>immutable, append-only, and hash-pinned</strong> — a record of what happened or was observed. It is never edited in place. Examples include closeouts, correction events, loop iterations, verifier outputs, and liveness tripwires.</p>
+      <p>Each evidence record carries a fixed set of key fields:</p>
+      <div class="chips">
+        <span class="chip">claim</span>
+        <span class="chip">source</span>
+        <span class="chip">content_hash</span>
+        <span class="chip">project</span>
+        <span class="chip">privacy_scope</span>
+        <span class="chip">verifier_status</span>
+        <span class="chip">occurred_at</span>
+      </div>
+      <p class="fine muted">Append-only means corrections are added as new evidence — the original record stays exactly as it was written.</p>
+    </section>
+
+    <section class="section">
+      <h2>Compiled knowledge</h2>
+      <p>Knowledge is the <strong>current belief</strong>, not raw memory. The compiler produces three types of knowledge, and every piece links back to the evidence that justifies it.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>value</h3>
+          <p>Facts and metrics — the concrete, queryable truths the brain currently holds.</p>
+        </div>
+        <div class="card">
+          <h3>doc</h3>
+          <p>Readable wiki and procedure pages — the prose an agent or human reads.</p>
+        </div>
+        <div class="card">
+          <h3>capability</h3>
+          <p>Executable or loadable skills and procedures the brain can hand to an agent.</p>
+        </div>
+      </div>
+      <p>Knowledge links back to evidence through typed relations:</p>
+      <div class="chips">
+        <span class="chip">supports</span>
+        <span class="chip">contradicts</span>
+        <span class="chip">derived_from</span>
+        <span class="chip">supersedes</span>
+      </div>
+      <blockquote>A current belief with no evidence is not a valid shape. Knowledge must always trace back to something that happened.</blockquote>
+    </section>
+
+    <section class="section">
+      <h2>Lifecycle</h2>
+      <p>Knowledge moves through a fixed set of statuses. Gates between them are either automatic or require a human. Crucially, we <strong>supersede or archive — we never overwrite history in place</strong>.</p>
+      <pre><code>candidate  ->  current  ->  superseded  ->  stale  ->  archived
+                      (gates: auto or human)</code></pre>
+      <p class="fine muted">When a belief changes, the old version is superseded or archived and the new one becomes current. The trail of what was once believed remains intact.</p>
+    </section>
+
+    <section class="section">
+      <h2>Memory is a view</h2>
+      <p>The memory projection is a <strong>read-only SQLite VIEW</strong> over current injectable knowledge. Agents never write into it — it simply reflects compiled knowledge.</p>
+      <pre><code>-- memory is a projection, not a store
+CREATE VIEW memory AS
+  SELECT * FROM knowledge
+  WHERE status = 'current'
+    AND injectable = 1;</code></pre>
+      <p>Because memory is derived, there is no separate truth to keep in sync. Update the knowledge, and the view follows.</p>
+    </section>
+
+    <section class="section">
+      <h2>Privacy only tightens</h2>
+      <p>Every record carries a scope. From least to most restrictive:</p>
+      <div class="chips">
+        <span class="chip">private</span>
+        <span class="chip">workspace</span>
+        <span class="chip">project</span>
+        <span class="chip">public</span>
+      </div>
+      <p>Derived knowledge takes the <strong>most restrictive scope</strong> of its linked evidence. A public doc that links private evidence becomes private. Scope is never widened.</p>
+      <blockquote>A public page can be pulled down to private by what it depends on — but private contents can never leak up into a broader scope.</blockquote>
+    </section>
+
+    <section class="section">
+      <h2>One brain across runtimes</h2>
+      <p>Codex, Claude Code, and OpenClaw consult the same brain. The contract for an agent is the same regardless of runtime:</p>
+      <div class="grid">
+        <div class="card">
+          <h3>Digest first</h3>
+          <p>Call <span class="code">brain.digest</span> before non-trivial work to pull in current, relevant knowledge.</p>
+        </div>
+        <div class="card">
+          <h3>Emit evidence</h3>
+          <p>Record important outcomes as evidence so the brain can compile from them later.</p>
+        </div>
+        <div class="card">
+          <h3>Context is data</h3>
+          <p>Treat retrieved context as data, not orders. The agent decides; the brain informs.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Mental model</h2>
+      <p>If it helps, picture ocbrain as a small library with five desks:</p>
+      <div class="grid">
+        <div class="card">
+          <h3>The librarian</h3>
+          <p>Accepts source-backed evidence and files it away, untouched.</p>
+        </div>
+        <div class="card">
+          <h3>The compiler</h3>
+          <p>Reads the evidence and produces the current knowledge on the shelves.</p>
+        </div>
+        <div class="card">
+          <h3>The circulation desk</h3>
+          <p>Logs what was served and whether it actually helped.</p>
+        </div>
+        <div class="card">
+          <h3>The archivist</h3>
+          <p>Supersedes and archives — never erases the record.</p>
+        </div>
+        <div class="card">
+          <h3>The security desk</h3>
+          <p>Holds executable or prescriptive content until a human signs off.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Read the Ultimate Guide</a>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer">Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. Open source on <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://github.com/jonathangu/ocbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Ultimate Guide</a></div>
+</div>
 </body>
 </html>
