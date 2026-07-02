@@ -61,7 +61,7 @@
 
     <section class="section">
       <h2>Current installed shape</h2>
-      <p>ocbrain is installed on Jonathan's Mac mini as a local MCP server for Codex, Claude Code, and OpenClaw. The default server is read-mostly: search, digest, get, and feedback are exposed; write-capable proposal tools stay hidden unless explicitly launched with write mode.</p>
+      <p>ocbrain is installed on Jonathan's Mac mini as a local MCP server for Codex, Claude Code, and OpenClaw. The default server is read-first: search, preview, egress preview, teacher request, digest, get, and feedback are exposed; write-capable tools stay hidden unless explicitly launched with <code>--allow-writes</code>.</p>
       <pre><code>/Users/guclaw/.openclaw/workspace/ocbrain/scripts/ocbrain-mcp</code></pre>
       <p class="fine">No unattended cron or heartbeat loop is enabled by this install. Durable writes remain proposal-first.</p>
     </section>
@@ -78,6 +78,18 @@
           <p>Expose ledger counts and state so memory quality is inspectable instead of vibes-based.</p>
         </div>
         <div class="card">
+          <h3>brain.preview</h3>
+          <p>Show what a scoped retrieval packet would include, exclude, and contradict before relying on it.</p>
+        </div>
+        <div class="card">
+          <h3>brain.egress_preview</h3>
+          <p>Show what would leave scope before any local-model, hosted-teacher, or export payload is assembled.</p>
+        </div>
+        <div class="card">
+          <h3>brain.teacher_request</h3>
+          <p>Package hosted-eligible, redacted evidence for review; it records the audit and never dispatches a hosted call.</p>
+        </div>
+        <div class="card">
           <h3>brain.get</h3>
           <p>Retrieve reviewed candidates with scope and draft/private controls, instead of injecting raw transcripts blindly.</p>
         </div>
@@ -86,6 +98,12 @@
           <p>Record helpful, used, ignored, irrelevant, or harmful outcomes against a retrieval-use id.</p>
         </div>
       </div>
+      <p class="fine">With <code>--allow-writes</code>, the server additionally exposes write-gated <code>brain.ingest</code>, <code>brain.proposals</code>, <code>brain.forget</code>, <code>brain.propose</code>, and <code>brain.mark_stale</code>. Writes stay proposal-first.</p>
+    </section>
+
+    <section class="section">
+      <h2>Harvest and sharing</h2>
+      <p><code>import-history</code> harvests your existing OpenClaw, Codex, and Claude Code transcript stores into the ledger as private-by-default, redacted evidence — see <a href="/install/#harvest">harvest your existing history</a>. <code>export-bundle</code> / <code>import-bundle</code> move a redacted, hash-verified bundle file between machines by AirDrop or USB, with no network code — see <a href="/install/#share">share a brain between Macs</a>.</p>
     </section>
 
     <section class="section">

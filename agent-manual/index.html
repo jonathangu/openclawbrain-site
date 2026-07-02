@@ -149,6 +149,7 @@
         <li>Confidential, personal, client, and project-specific material must not leak into unrelated tasks or hosted egress.</li>
         <li>Cross-scope search is exceptional. Use it only when the user asks for broad history or when a narrow search clearly misses needed context.</li>
         <li>Promotion from scoped fact to global doctrine requires evidence and explicit human approval.</li>
+        <li>Harvested transcript history (<code>import-history</code>) arrives as scoped evidence: per-file session scope, confidential visibility, and <code>local_only</code> egress by default. Retrieve it with the matching session context; do not expect it in broad searches or hosted egress.</li>
       </ul>
     </section>
 
@@ -170,6 +171,7 @@
         <li>Allowed by default: digest, search, preview, get, egress preview, retrieval feedback.</li>
         <li>Allowed only with explicit write mode: scoped evidence ingest, forget/tombstone, and correction decisions.</li>
         <li>Requires human approval: hosted teacher calls, hosted egress, promotion to global doctrine, prescriptive policy, executable workflow, skill installation, package release, and destructive data deletion.</li>
+        <li>Brain bundles exist (<code>export-bundle</code> / <code>import-bundle</code>) but are human CLI actions for moving a brain between machines. Agents never export or import bundles.</li>
       </ul>
     </section>
 

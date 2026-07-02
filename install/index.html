@@ -99,15 +99,18 @@ args = []</code></pre>
           <h3>Read-first (default)</h3>
           <p class="muted">The server exposes only read tools:</p>
           <div class="chips">
-            <span class="chip">search</span>
-            <span class="chip">digest</span>
-            <span class="chip">get</span>
-            <span class="chip">feedback</span>
+            <span class="chip">brain.search</span>
+            <span class="chip">brain.preview</span>
+            <span class="chip">brain.egress_preview</span>
+            <span class="chip">brain.teacher_request</span>
+            <span class="chip">brain.digest</span>
+            <span class="chip">brain.get</span>
+            <span class="chip">brain.feedback</span>
           </div>
         </div>
         <div class="card">
           <h3>With <code>--allow-writes</code></h3>
-          <p class="muted">Launch with <code>--allow-writes</code> to additionally expose proposal / mark-stale and approval feedback for human-gated curation.</p>
+          <p class="muted">Launch with <code>--allow-writes</code> to additionally expose <code>brain.ingest</code>, <code>brain.proposals</code>, <code>brain.forget</code>, <code>brain.propose</code>, and <code>brain.mark_stale</code> for human-gated curation.</p>
           <pre><code>ocbrain --db data/ocbrain.sqlite \
   mcp --allow-writes</code></pre>
         </div>
@@ -122,22 +125,92 @@ args = []</code></pre>
       <p class="fine">A successful <code>digest</code> returns the scoped current memory for the database you pointed at.</p>
     </section>
 
+    <section class="section" id="harvest">
+      <h2>Harvest your existing history</h2>
+      <p><code>import-history</code> catalogs local runtime transcript stores &mdash; OpenClaw, Codex, and Claude Code session trees &mdash; as immutable evidence plus current <code>doc</code> knowledge. Preview with <code>--dry-run</code> first, then import:</p>
+      <pre><code># Preview: scans and redacts without touching the DB
+ocbrain --pretty import-history --dry-run \
+  ~/.codex/sessions ~/.claude/projects ~/.openclaw/agents
+
+# Import, and append scoped events into the event core
+ocbrain import-history --event-core \
+  ~/.codex/sessions ~/.claude/projects ~/.openclaw/agents</code></pre>
+      <ul>
+        <li><strong>Private by default.</strong> Harvested items land with <code>--privacy-scope private</code>; you must pass <code>--privacy-scope workspace|project|public</code> explicitly to widen.</li>
+        <li><strong>Credential-like files are skipped.</strong> Directory sweeps skip hidden dotfiles and dot-directories, plus filenames such as <code>.env*</code>, <code>*.pem</code>, <code>*.key</code>, <code>credentials.json</code>, and <code>secrets.json</code>. Skips are reported, never silently dropped, and <code>--dry-run</code> also reports any probable secret leaks the redactor flags.</li>
+        <li><strong><code>--event-core</code> feeds the gated pipeline.</strong> Each imported file appends one scoped <code>evidence_recorded</code> event (per-file session scope, confidential, <code>local_only</code> egress). <code>event-dream</code> then batches that evidence into pending proposals, and <code>event-proposals</code> / <code>event-decide</code> gate them into current beliefs.</li>
+      </ul>
+    </section>
+
+    <section class="section" id="share">
+      <h2>Share a brain between Macs</h2>
+      <p>Sharing is an explicit, human-initiated CLI action with <strong>no network code</strong>: <code>export-bundle</code> writes one plain JSON file, you move that file however you like (AirDrop, USB stick, iCloud Drive), and the recipient inspects the plan before importing.</p>
+      <pre><code># On your machine: export shareable evidence to one bundle file
+ocbrain export-bundle \
+  --output brain-bundle.json \
+  --scope-type project --scope-id project:bountiful \
+  --label jon-brain
+
+# Move brain-bundle.json to the other Mac (AirDrop, USB, iCloud Drive).
+
+# On the other Mac: inspect the full import plan first, then import
+ocbrain --pretty import-bundle brain-bundle.json --dry-run
+ocbrain import-bundle brain-bundle.json</code></pre>
+      <ul>
+        <li>Export redacts every evidence body and runs the <code>human_export</code> egress gate. <code>local_only</code> items are skipped and reported, and any <code>prohibited</code> evidence in the selection makes the export refuse outright &mdash; no bundle file is written.</li>
+        <li>The bundle carries a tamper-evident <code>payload_hash</code>; import verifies it and refuses modified bundles. Already-present evidence is deduped, and every export records an egress audit row.</li>
+        <li>Import appends scoped evidence only &mdash; never beliefs. The recipient compiles beliefs locally through the gated <code>event-dream</code> &rarr; <code>event-proposals</code> &rarr; <code>event-decide</code> flow, and imported evidence can never silently re-egress from the recipient's machine.</li>
+      </ul>
+    </section>
+
     <section class="section">
       <h2>CLI surface</h2>
-      <p class="muted">The ocbrain CLI exposes these subcommands:</p>
+      <p class="muted">The ocbrain CLI exposes these subcommands, grouped by what they touch:</p>
+      <h3>Core ledger</h3>
       <div class="chips">
         <span class="chip">init</span>
         <span class="chip">evidence</span>
         <span class="chip">value</span>
         <span class="chip">knowledge</span>
         <span class="chip">search</span>
+        <span class="chip">preview</span>
         <span class="chip">digest</span>
+      </div>
+      <h3>Event core</h3>
+      <div class="chips">
+        <span class="chip">event-ingest</span>
+        <span class="chip">event-compile</span>
+        <span class="chip">event-correct</span>
+        <span class="chip">event-forget</span>
+        <span class="chip">event-dream</span>
+        <span class="chip">event-proposals</span>
+        <span class="chip">event-decide</span>
+        <span class="chip">event-digest</span>
+        <span class="chip">egress-preview</span>
+        <span class="chip">event-teacher-request</span>
+        <span class="chip">event-backfill</span>
+      </div>
+      <h3>Harvest</h3>
+      <div class="chips">
+        <span class="chip">import-memory</span>
+        <span class="chip">import-history</span>
+      </div>
+      <h3>Sharing</h3>
+      <div class="chips">
+        <span class="chip">export-bundle</span>
+        <span class="chip">import-bundle</span>
+      </div>
+      <h3>Maintenance &amp; loops</h3>
+      <div class="chips">
         <span class="chip">loop-ingest</span>
         <span class="chip">propose</span>
         <span class="chip">mark-stale</span>
         <span class="chip">prune</span>
         <span class="chip">heal</span>
         <span class="chip">liveness-check</span>
+      </div>
+      <h3>MCP</h3>
+      <div class="chips">
         <span class="chip">mcp</span>
       </div>
     </section>

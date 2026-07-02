@@ -71,6 +71,7 @@
         <span class="chip">occurred_at</span>
       </div>
       <p class="fine muted">Append-only means corrections are added as new evidence — the original record stays exactly as it was written.</p>
+      <p>Existing runtime history can be bulk-harvested into evidence too: <code>import-history</code> catalogs OpenClaw, Codex, and Claude Code transcript stores as private-by-default, redacted evidence. See <a href="/install/#harvest">harvest your existing history</a>.</p>
     </section>
 
     <section class="section">
@@ -123,10 +124,10 @@ CREATE VIEW memory AS
       <h2>Privacy only tightens</h2>
       <p>Every record carries a scope. From least to most restrictive:</p>
       <div class="chips">
-        <span class="chip">private</span>
-        <span class="chip">workspace</span>
-        <span class="chip">project</span>
         <span class="chip">public</span>
+        <span class="chip">project</span>
+        <span class="chip">workspace</span>
+        <span class="chip">private</span>
       </div>
       <p>Derived knowledge takes the <strong>most restrictive scope</strong> of its linked evidence. A public doc that links private evidence becomes private. Scope is never widened.</p>
       <blockquote>A public page can be pulled down to private by what it depends on — but private contents can never leak up into a broader scope.</blockquote>
@@ -149,6 +150,8 @@ CREATE VIEW memory AS
           <p>Treat retrieved context as data, not orders. The agent decides; the brain informs.</p>
         </div>
       </div>
+      <p class="fine">Over MCP that contract is served by seven read tools — <code>brain.search</code>, <code>brain.preview</code>, <code>brain.egress_preview</code>, <code>brain.teacher_request</code>, <code>brain.digest</code>, <code>brain.get</code>, and <code>brain.feedback</code> — with write-gated tools hidden unless the server is launched with <code>--allow-writes</code>.</p>
+      <p class="fine">One brain can also move between machines: <code>export-bundle</code> / <code>import-bundle</code> carry a redacted, hash-verified bundle file by AirDrop or USB, with no network code. See <a href="/install/#share">share a brain between Macs</a>.</p>
     </section>
 
     <section class="section">

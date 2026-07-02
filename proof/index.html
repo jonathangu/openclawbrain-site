@@ -43,16 +43,20 @@
       <p>The tools an agent gets by default are all read-only. They retrieve and report; they never change durable memory.</p>
       <div class="grid">
         <div class="card"><h3>brain.search</h3><p>Find source-backed context relevant to the current turn. Read-only.</p></div>
+        <div class="card"><h3>brain.preview</h3><p>Show what a scoped retrieval packet would include, exclude, and contradict. Read-only.</p></div>
+        <div class="card"><h3>brain.egress_preview</h3><p>Show what would leave scope before any local-model, hosted-teacher, or export payload is assembled. Read-only.</p></div>
+        <div class="card"><h3>brain.teacher_request</h3><p>Package hosted-eligible, redacted evidence for review; it records the audit and never dispatches a hosted call.</p></div>
         <div class="card"><h3>brain.digest</h3><p>Report counts and state so memory quality is auditable. Read-only.</p></div>
         <div class="card"><h3>brain.get</h3><p>Fetch a specific record and trace it back to its evidence. Read-only.</p></div>
         <div class="card"><h3>brain.feedback</h3><p>Record whether served memory was helpful, used, ignored, irrelevant, or harmful. Read-only with respect to durable knowledge.</p></div>
       </div>
       <p class="muted">Write-capable tools are <strong>hidden unless the server is launched with <code>--allow-writes</code></strong>:</p>
       <pre><code># Default launch: read-only surface only
-ocbrain serve
+ocbrain --db data/ocbrain.sqlite mcp
 
-# Opt in to write-capable tools (brain.propose, brain.mark_stale)
-ocbrain serve --allow-writes</code></pre>
+# Opt in to write-capable tools (brain.ingest, brain.proposals,
+# brain.forget, brain.propose, brain.mark_stale)
+ocbrain --db data/ocbrain.sqlite mcp --allow-writes</code></pre>
       <p>Even with writes enabled, those tools stage candidates for review. They do not silently make knowledge current.</p>
     </section>
 

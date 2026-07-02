@@ -51,6 +51,12 @@ promotion to global doctrine, prescriptive policy, executable workflow, skill
 installation, package release, and destructive deletion require explicit human
 approval.
 
+Harvested transcript history (import-history) arrives as scoped evidence:
+per-file session scope, confidential visibility, local_only egress by default.
+Retrieve it with the matching session context. Brain bundles exist
+(export-bundle / import-bundle) but are human CLI actions for moving a brain
+between machines; agents never export or import bundles.
+
 Scope rules:
 
 - Project scope is the default for project work.
