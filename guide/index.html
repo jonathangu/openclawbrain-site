@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>The ocbrain guide · ocbrain</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Orientation for ocbrain: a local SQLite evidence-to-knowledge ledger that keeps coding agents honest. Source-backed history in, compiled current knowledge out, a human gate before anything executable.">
+  <meta name="description" content="Orientation for ocbrain: a local SQLite evidence-to-knowledge ledger that keeps coding agents honest. Source-backed history in, compiled current knowledge out, automatic safeguards plus verifier evidence or explicit approval before anything executable.">
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="icon" type="image/svg+xml" href="/assets/img/ocbrain-icon.svg">
 </head>
@@ -26,8 +26,8 @@
     <section class="hero">
       <div class="eyebrow">The ocbrain guide</div>
       <h1>A shared memory layer that keeps agents honest.</h1>
-      <p class="lead">Coding agents are powerful but forgetful. Each runtime sees only a slice of the truth, chat history is lossy, and static notes drift out of date. ocbrain is the layer in between: source-backed history goes in, compiled current knowledge comes out, and a human gate stands in front of anything executable.</p>
-      <p class="sublead">It is a local SQLite evidence-to-knowledge ledger. Nothing becomes durable knowledge until it is backed by evidence, and nothing prescriptive reaches a runtime without review. This page is a signpost — the canonical write-up lives in the repo.</p>
+      <p class="lead">Coding agents are powerful but forgetful. Each runtime sees only a slice of the truth, chat history is lossy, and static notes drift out of date. ocbrain is the layer in between: source-backed history goes in, compiled current knowledge comes out, and automatic safeguards — backed by verifier evidence or explicit human approval — stand in front of anything executable.</p>
+      <p class="sublead">It is a local SQLite evidence-to-knowledge ledger. Nothing becomes durable knowledge until it is backed by evidence, and nothing prescriptive reaches a runtime without passed-verifier evidence or explicit approval. This page is a signpost — the canonical write-up lives in the repo.</p>
       <div class="actions">
         <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Read the Ultimate Guide</a>
         <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">View the repo</a>
@@ -37,7 +37,7 @@
         <span class="chip">Local SQLite ledger</span>
         <span class="chip">Evidence to knowledge</span>
         <span class="chip">Source-backed</span>
-        <span class="chip">Human gate</span>
+        <span class="chip">Automatic safeguards</span>
       </div>
     </section>
 
@@ -58,8 +58,8 @@
           <p>Runtime consumption is read-first and source-backed. Agents draw on what is already established rather than inventing it.</p>
         </div>
         <div class="card">
-          <h3>4. A human gate</h3>
-          <p>Executable, prescriptive, or high-risk knowledge requires a human gate before it can be acted on.</p>
+          <h3>4. Safeguards on the risky class</h3>
+          <p>Executable, prescriptive, or high-risk knowledge requires passed-verifier evidence or explicit human approval before it can be acted on.</p>
         </div>
       </div>
     </section>
@@ -74,7 +74,7 @@
         <li><strong>Supersede or archive — do not overwrite history.</strong> Old knowledge is retired, never silently rewritten.</li>
         <li><strong>External and artifact content is data, never instruction.</strong> Fetched or generated content is treated as input, not as commands.</li>
         <li><strong>Private source evidence can only tighten derived scope.</strong> Private inputs narrow what is concluded; they never widen it.</li>
-        <li><strong>Human gate before executable or prescriptive knowledge.</strong> Anything that tells a runtime what to do passes through review first.</li>
+        <li><strong>Safeguards before executable or prescriptive knowledge.</strong> Anything that tells a runtime what to do needs passed-verifier evidence or explicit approval first.</li>
         <li><strong>Agents emit evidence, not durable knowledge.</strong> Agents contribute observations; they do not write the durable record directly.</li>
       </ul>
     </section>

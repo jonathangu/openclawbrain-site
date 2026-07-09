@@ -43,7 +43,7 @@
 
     <section class="section">
       <h2>Why gates were replaced</h2>
-      <p>v0.1 staged every risky belief as a candidate and waited for a human to promote it. That was safe, but it didn't scale: the brain grew only as fast as someone reviewed a queue, and a queue that gets busy gets skipped. v0.2 keeps the safety property — nothing dangerous becomes injectable silently — but enforces it with invariants that run on every write, every 30 minutes, whether or not anyone is watching.</p>
+      <p>v0.1 staged every risky belief as a candidate and waited for a human to promote it. That was safe, but it didn't scale: the brain grew only as fast as someone reviewed a queue, and a queue that gets busy gets skipped. v0.2 keeps the safety property — nothing dangerous becomes injectable silently — but enforces it with invariants that run on every write, on a 15-minute light and hourly heavy cadence, whether or not anyone is watching.</p>
       <blockquote><strong>Gates don't scale. Invariants do.</strong> The goal was never "a human in the loop" for its own sake — it was "risky content can't reach the prompt unchecked." A fixed set of automatic checks delivers that continuously.</blockquote>
     </section>
 
@@ -95,7 +95,7 @@
       <div class="grid">
         <div class="card"><h3>Not an agent</h3><p>It does not take actions on your behalf or in the world.</p></div>
         <div class="card"><h3>Not a loop-runner</h3><p>It observes loops and emits liveness evidence; it never executes them.</p></div>
-        <div class="card"><h3>Not a task scheduler</h3><p>Its own 30-minute cadence maintains memory. It does not enqueue your work.</p></div>
+        <div class="card"><h3>Not a task scheduler</h3><p>Its own 15-minute light and hourly heavy cadence maintains memory. It does not enqueue your work.</p></div>
         <div class="card"><h3>Not a skill installer</h3><p>It compiles knowledge about skills; it does not install or activate them.</p></div>
       </div>
     </section>

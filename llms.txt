@@ -5,7 +5,7 @@ Claude Code, OpenClaw, and compatible coding agents. It stores evidence in
 SQLite, compiles current knowledge from evidence, auto-labels that knowledge
 good/bad from its own outcomes, promotes only the trustworthy parts into an
 injectable memory view, and mines local fine-tuning datasets. As of v0.2 it runs
-a 30-minute autopilot that replaces the old human approval queue with automatic
+an autopilot (15-minute light passes, hourly heavy passes) that replaces the old human approval queue with automatic
 safeguards (injection scan, provenance no-clobber, secret scrub, privacy ratchet,
 tripwire quarantine). It records retrieval usefulness, which drives promotion.
 

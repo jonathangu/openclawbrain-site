@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>How ocbrain works · v0.2 architecture</title>
-  <meta name="description" content="The ocbrain v0.2 architecture: a local, self-improving knowledge brain for AI agents. Evidence in, knowledge compiled, good/bad auto-labeled, safe memory promoted, fine-tune datasets built — all on one machine, every 30 minutes, with automatic safeguards instead of human gates.">
+  <meta name="description" content="The ocbrain v0.2 architecture: a local, self-improving knowledge brain for AI agents. Evidence in, knowledge compiled, good/bad auto-labeled, safe memory promoted, fine-tune datasets built — all on one machine, on a 15-minute light and hourly heavy cadence, with automatic safeguards instead of human gates.">
   <meta property="og:title" content="How ocbrain works · v0.2 architecture">
   <meta property="og:description" content="A local, self-improving knowledge brain for AI agents. Evidence → knowledge → labels → injectable memory → datasets, all on one machine with automatic safeguards.">
   <meta property="og:type" content="article">
@@ -55,7 +55,7 @@
     <section class="hero">
       <p class="eyebrow">How it works · v0.2</p>
       <h1>A local knowledge brain that improves itself while you work.</h1>
-      <p class="lead">ocbrain reads the history your AI agents already produce, compiles it into source-backed knowledge, decides what worked and what didn't, promotes only the trustworthy parts into an injectable memory, and quietly builds a fine-tuning dataset from your own decisions. It runs every 30 minutes on your machine. Nothing leaves it.</p>
+      <p class="lead">ocbrain reads the history your AI agents already produce, compiles it into source-backed knowledge, decides what worked and what didn't, promotes only the trustworthy parts into an injectable memory, and quietly builds a fine-tuning dataset from your own decisions. It runs on a 15-minute light and hourly heavy cadence on your machine. Nothing leaves it.</p>
       <div class="actions">
         <a class="btn btn-primary" href="/install/">Install ocbrain</a>
         <a class="btn" href="/proof/">Safe &amp; inspectable</a>
@@ -79,7 +79,7 @@
       <div class="kv">
         <span class="chip">Human approval queue &rarr; <span class="tag">automatic safeguards</span></span>
         <span class="chip">Manual promotion &rarr; <span class="tag">scored auto-promotion</span></span>
-        <span class="chip">Read-mostly server &rarr; <span class="tag">autonomous 30-min loop</span></span>
+        <span class="chip">Read-mostly server &rarr; <span class="tag">autonomous 15-min / hourly loop</span></span>
       </div>
     </section>
 
@@ -251,7 +251,7 @@ CREATE VIEW memory AS
 
     <section class="section">
       <h2>The autopilot loop</h2>
-      <p>All of this runs as one idempotent, single-instance state machine — <strong>fourteen stages, every 30 minutes</strong>, scheduled locally. Any stage can be killed and safely re-run; watermarks, stable ids, and uniqueness constraints mean nothing is double-counted and no committed progress is lost.</p>
+      <p>All of this runs as one idempotent, single-instance state machine — <strong>fourteen stages, on a 15-minute light and hourly heavy cadence</strong>, scheduled locally. Any stage can be killed and safely re-run; watermarks, stable ids, and uniqueness constraints mean nothing is double-counted and no committed progress is lost.</p>
       <ol class="stagelist">
         <li><span class="n"></span><div><h4>Lock</h4><p>Single-instance file lock. A slow run never collides with the next tick — the second invocation just exits.</p></div></li>
         <li><span class="n"></span><div><h4>Snapshot</h4><p>A daily rotated copy of the database before anything is touched. Snapshot or migrate failing aborts the whole run.</p></div></li>
