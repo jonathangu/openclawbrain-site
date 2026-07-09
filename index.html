@@ -36,7 +36,7 @@
       <div class="eyebrow">A local, self-improving knowledge brain for AI agents</div>
       <h1>ocbrain compiles what your agents did into memory they can trust.</h1>
       <p class="lead">ocbrain ingests the history your OpenClaw, Codex, and Claude agents already produce into a local SQLite ledger, compiles it into source-backed knowledge, decides what worked and what misled, and promotes only the trustworthy parts into an injectable memory — while quietly building a fine-tuning dataset from your own decisions.</p>
-      <p class="sublead">As of v0.2 it runs itself: an autopilot on a 15-minute light and hourly heavy cadence replaces the old human approval queue with automatic safeguards — injection scanning, provenance no-clobber, secret scrubbing, a privacy ratchet, and tripwire quarantine. Nothing durable becomes injectable unchecked, and nothing leaves the machine.</p>
+      <p class="sublead">As of v0.2 it runs itself: an autopilot on a 15-minute light and hourly heavy cadence replaces the old human approval queue with automatic safeguards — injection scanning, provenance no-clobber, secret scrubbing, a privacy ratchet, tripwire quarantine, and a hash-chained audit trail. Nothing durable becomes injectable unchecked, and nothing leaves the machine.</p>
       <blockquote><strong>Don't make each agent remember alone, and don't make a human approve every memory. Give them one evidence-backed brain that labels its own work and guards itself.</strong></blockquote>
       <figure class="hero-art">
         <img src="/assets/img/openclawbrain-hero.jpg" alt="Evidence graph hero art for shared agent memory" width="1280" height="512" loading="eager">
@@ -64,7 +64,7 @@
       <h2>Current installed shape</h2>
       <p>ocbrain runs as a local MCP server for Codex, Claude Code, and OpenClaw, plus an autopilot — 15-minute light passes, hourly heavy passes — that harvests history, compiles knowledge, auto-labels outcomes, promotes trustworthy memory, and mines datasets. All three runtimes read the same brain; retrieval feedback flows back and drives the next promotion cycle.</p>
       <pre><code>~/.../ocbrain/scripts/ocbrain-mcp</code></pre>
-      <p class="fine">The autopilot is idempotent and single-instance. Write paths are ungated but pass automatic safeguards — injection scan, no-clobber, secret scrub, privacy ratchet, tripwire quarantine — so nothing risky becomes injectable unchecked. <a href="/how-it-works/">See the full pipeline &rarr;</a></p>
+      <p class="fine">The autopilot is idempotent and single-instance. Write paths are ungated but pass automatic safeguards — injection scan, no-clobber, secret scrub, privacy ratchet, tripwire quarantine, hash-chained audit — so nothing risky becomes injectable unchecked. <a href="/how-it-works/">See the full pipeline &rarr;</a></p>
     </section>
 
     <section class="section" id="runtime">
@@ -107,7 +107,7 @@
         </div>
         <div class="card">
           <h3>Safeguards, not gates</h3>
-          <p>Automatic invariants replace the human approval queue: injection scan, provenance no-clobber, secret scrub, privacy ratchet, tripwire quarantine.</p>
+          <p>Automatic invariants replace the human approval queue: injection scan, provenance no-clobber, secret scrub, privacy ratchet, tripwire quarantine, hash-chained audit.</p>
         </div>
       </div>
       <p class="fine">Safety stance: ocbrain learns autonomously, but it does not act in the world — a self-guarding librarian and compiler, not an agent. <a href="/proof/">Safe &amp; inspectable &rarr;</a></p>

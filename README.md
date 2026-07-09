@@ -1,36 +1,29 @@
 # openclawbrain.ai
 
-Source for [openclawbrain.ai](https://openclawbrain.ai).
+Source for [openclawbrain.ai](https://openclawbrain.ai) — the public explainer site for **ocbrain**, a local, self-improving knowledge brain for AI agents.
 
-This is the lightweight product site for OpenClawBrain. It should answer:
+This is a static site. It should answer:
 
-- What is this?
-- Why should I care?
-- Can I trust it?
+- What is ocbrain?
+- Why should I trust it?
+- How does it actually work?
 
-Keep the site short and readable. GitHub is the operator/developer truth page for install, config, verification, endpoints, and debugging.
+The site itself has no runtime logic and does not run ocbrain. It's a set of static HTML pages describing the project — the evidence-to-knowledge pipeline, the automatic safeguards, and the promotion rules — for anyone deciding whether to install it.
 
-Shared spine:
+## Pages
 
-> Memory authority for local AI agents.
->
-> OpenClawBrain gives local agents continuity across projects, tools, and days. It remembers corrections, preferences, workflows, and handoffs, then checks whether each memory still deserves authority before it shapes the next turn.
->
-> Remember what matters. Trust the current instruction. Leave proof for every important memory decision.
+- `/` — overview and current installed shape
+- `/how-it-works/` — the evidence-to-knowledge-to-memory pipeline and the autopilot loop
+- `/proof/` — the automatic safeguards and what ocbrain does not do
+- `/agent-manual/` — orientation for an agent using ocbrain's MCP tools
+- `/guide/` — a longer walkthrough of the data model and design
+- `/install/` — install instructions
 
-Current public truth:
+## Deploy
 
-- Current release: `0.2.33`.
-- Public ultimate guide: `/guide/` explains the architecture history, failed iterations, core route-learning loop, and AI-building lessons.
-- Public Memory Authority guide: `/memory-authority/` explains why relevant memory is not automatically authorized memory.
-- Public Codex continuity tutorial: `/codex-continuity/` explains how Codex UI stays the workbench while OpenClaw/Telegram becomes the mobile operator surface.
-- Telegram command spine: `/brain codex status`, `/brain codex doctor`, `/brain codex threads [filter]`, `/brain codex last`, `/brain codex messages`, `/brain codex bind`, `/brain codex tail`, `/brain codex note`, `/brain codex act`, `/brain codex steer`, `/brain codex detach`, `/brain codex watches`, `/brain codex unwatch`, and `/brain codex handoff`.
-- Public live visual: `/live/` shows the redacted local runtime, SQLite graph shape, and a real useful memory-injected turn.
-- Production routing path: route-policy-v3 first.
-- Authority path: retrieved memories can be injected, weakened, verified, confirmed, suppressed, tombstoned, or withheld before they touch the prompt.
-- Fallback and rollback path: route-policy-v2, then legacy heuristics.
-- Learning loop: redacted route frames, SQLite evidence, shadow decisions, replay/eval cases, calibration examples, action-family stats, candidate reports, gated promotion, and rollback lineage.
+Static site, deployed via Cloudflare on push to `main`. No build step.
 
-Shareable summary:
+## Code and technical detail
 
-> OpenClawBrain is a local-first memory system for AI agents. The core idea: an agent should not just remember more. It should know when the past is still allowed to guide the present. OpenClawBrain remembers useful corrections, preferences, workflows, and handoffs, then resolves authority before memory reaches the prompt. That makes it different from generic memory, vector notes, or transcript recall: relevance is not authority.
+- Code and README: [github.com/jonathangu/ocbrain](https://github.com/jonathangu/ocbrain)
+- Architecture reference: `docs/ARCHITECTURE.md` in that repo

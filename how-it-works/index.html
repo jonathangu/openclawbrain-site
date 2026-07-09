@@ -74,7 +74,7 @@
     <section class="section">
       <h2>What changed in v0.2</h2>
       <p>v0.1 was a careful librarian: it filed evidence and compiled knowledge, but a human had to approve anything durable. That gate was the bottleneck — the brain could only grow as fast as someone clicked "approve."</p>
-      <p>v0.2 removes the human approval queue entirely and replaces it with <strong>automatic safeguards</strong>. Instead of a person deciding what is safe to remember, the brain runs every write through the same invariants a good reviewer would enforce — provenance no-clobber, injection scanning, secret scrubbing, a privacy ratchet, and tripwire quarantine — and only the clean, corroborated results reach the memory an agent actually sees.</p>
+      <p>v0.2 removes the human approval queue entirely and replaces it with <strong>automatic safeguards</strong>. Instead of a person deciding what is safe to remember, the brain runs every write through the same invariants a good reviewer would enforce — provenance no-clobber, injection scanning, secret scrubbing, a privacy ratchet, tripwire quarantine, and a hash-chained audit trail — and only the clean, corroborated results reach the memory an agent actually sees.</p>
       <blockquote><strong>The design bet:</strong> a fixed set of mechanical safeguards, applied to every write, is safer <em>and</em> faster than a human queue that gets skipped when it's busy. Gates don't scale. Invariants do.</blockquote>
       <div class="kv">
         <span class="chip">Human approval queue &rarr; <span class="tag">automatic safeguards</span></span>
@@ -126,7 +126,7 @@
           <line x1="554" y1="68" x2="597" y2="68" stroke="#7ed6ff" stroke-width="2" marker-end="url(#arw)"></line>
           <line x1="751" y1="68" x2="790" y2="68" stroke="#9ff5c0" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arw)"></line>
           <!-- safeguards band -->
-          <text x="477" y="122" text-anchor="middle" fill="#a8b6c8" font-size="12" font-weight="600">every arrow passes automatic safeguards · injection-scan · no-clobber · secret-scrub · privacy ratchet · quarantine</text>
+          <text x="477" y="122" text-anchor="middle" fill="#a8b6c8" font-size="12" font-weight="600">every arrow passes automatic safeguards · injection-scan · no-clobber · secret-scrub · privacy ratchet · quarantine · hash-chain</text>
         </g>
       </svg>
 
@@ -261,8 +261,10 @@ CREATE VIEW memory AS
         <li><span class="n"></span><div><h4>Review</h4><p>Post-turn review of settled sessions — task successes, error recoveries, corrections, novel workflows become candidate knowledge and signals.</p></div></li>
         <li><span class="n"></span><div><h4>Compile</h4><p>Turn undecided proposals into knowledge, rebuilding the projection once at the end.</p></div></li>
         <li><span class="n"></span><div><h4>Auto-label</h4><p>Mine signals, attribute them to knowledge, fold into labels, optionally consult the judge, fold again.</p></div></li>
+        <li><span class="n"></span><div><h4>Embed</h4><p>Compute embeddings for newly compiled knowledge so it can be found by similarity search.</p></div></li>
         <li><span class="n"></span><div><h4>Tripwires</h4><p>Run the tripwire registry and auto-quarantine anything that fires.</p></div></li>
         <li><span class="n"></span><div><h4>Promote</h4><p>Re-score, promote the trustworthy rows into memory, demote what slipped, enforce the budget.</p></div></li>
+        <li><span class="n"></span><div><h4>Excerpt-render</h4><p>Render the promoted rows into the excerpt form the injectable memory actually serves.</p></div></li>
         <li><span class="n"></span><div><h4>Maintain</h4><p>Prune stale knowledge and heal conflicts, emitting supersession signals as it goes.</p></div></li>
         <li><span class="n"></span><div><h4>Dataset-mine</h4><p>Mine SFT, DPO, and persona examples from newly settled history, time-budgeted.</p></div></li>
         <li><span class="n"></span><div><h4>Dataset-export</h4><p>Deterministically write the JSONL corpora and manifest — skipping the write if nothing changed.</p></div></li>
