@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>ocbrain: Lightweight Shared Memory for Local Agents</title>
+  <title>ocbrain: A Local, Self-Improving Knowledge Brain for AI Agents</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="ocbrain is a lightweight shared-memory layer for Codex, Claude, and OpenClaw: source-backed history, MCP retrieval, feedback logging, and proposal-first learning.">
-  <meta property="og:title" content="ocbrain: Lightweight Shared Memory for Local Agents">
-  <meta property="og:description" content="Shared local memory for Codex, Claude, and OpenClaw through a conservative MCP runtime.">
+  <meta name="description" content="ocbrain is a local, self-improving knowledge brain for Codex, Claude, and OpenClaw: it compiles your agents' history into source-backed memory, auto-labels what worked, promotes only the trustworthy parts, and builds fine-tuning datasets — all on one machine.">
+  <meta property="og:title" content="ocbrain: A Local, Self-Improving Knowledge Brain for AI Agents">
+  <meta property="og:description" content="Compiles agent history into source-backed memory, auto-labels good/bad, promotes only trustworthy knowledge, and builds fine-tune datasets — locally, with automatic safeguards.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
@@ -33,11 +33,11 @@
     </div>
 
     <section class="hero">
-      <div class="eyebrow">Lightweight shared memory for local agents</div>
-      <h1>ocbrain gives Codex, Claude, and OpenClaw one source-backed memory layer.</h1>
-      <p class="lead">The lightweight ocbrain runtime ingests historical OpenClaw, Codex, Claude, workspace, and task artifacts into a local SQLite ledger. It serves compact context through MCP, records whether returned memories helped, and keeps durable memory/wiki/skill/policy writes behind proposal gates.</p>
-      <p class="sublead">The domain openclawbrain.ai now points at the smaller installed ocbrain path: shared local knowledge first, visible evidence, conservative mutation, and no silent rewriting of skills or policy.</p>
-      <blockquote><strong>Do not make each agent remember alone. Give them one evidence-backed memory layer and a feedback loop.</strong></blockquote>
+      <div class="eyebrow">A local, self-improving knowledge brain for AI agents</div>
+      <h1>ocbrain compiles what your agents did into memory they can trust.</h1>
+      <p class="lead">ocbrain ingests the history your OpenClaw, Codex, and Claude agents already produce into a local SQLite ledger, compiles it into source-backed knowledge, decides what worked and what misled, and promotes only the trustworthy parts into an injectable memory — while quietly building a fine-tuning dataset from your own decisions.</p>
+      <p class="sublead">As of v0.2 it runs itself: a 30-minute autopilot replaces the old human approval queue with automatic safeguards — injection scanning, provenance no-clobber, secret scrubbing, a privacy ratchet, and tripwire quarantine. Nothing durable becomes injectable unchecked, and nothing leaves the machine.</p>
+      <blockquote><strong>Don't make each agent remember alone, and don't make a human approve every memory. Give them one evidence-backed brain that labels its own work and guards itself.</strong></blockquote>
       <figure class="hero-art">
         <img src="/assets/img/openclawbrain-hero.jpg" alt="Evidence graph hero art for shared agent memory" width="1280" height="512" loading="eager">
         <figcaption>Source-backed memory and feedback for agents that work across real local projects.</figcaption>
@@ -54,16 +54,17 @@
         <span class="chip">OpenClaw</span>
         <span class="chip">MCP</span>
         <span class="chip">SQLite evidence ledger</span>
-        <span class="chip">retrieval feedback</span>
-        <span class="chip">proposal-first writes</span>
+        <span class="chip">auto-labeled good/bad</span>
+        <span class="chip">30-min autopilot</span>
+        <span class="chip">fine-tune datasets</span>
       </div>
     </section>
 
     <section class="section">
       <h2>Current installed shape</h2>
-      <p>ocbrain is installed on Jonathan's Mac mini as a local MCP server for Codex, Claude Code, and OpenClaw. The default server is read-mostly: search, digest, get, and feedback are exposed; write-capable proposal tools stay hidden unless explicitly launched with write mode.</p>
-      <pre><code>/Users/guclaw/.openclaw/workspace/ocbrain/scripts/ocbrain-mcp</code></pre>
-      <p class="fine">No unattended cron or heartbeat loop is enabled by this install. Durable writes remain proposal-first.</p>
+      <p>ocbrain runs as a local MCP server for Codex, Claude Code, and OpenClaw, plus a 30-minute autopilot that harvests history, compiles knowledge, auto-labels outcomes, promotes trustworthy memory, and mines datasets. All three runtimes read the same brain; retrieval feedback flows back and drives the next promotion cycle.</p>
+      <pre><code>~/.../ocbrain/scripts/ocbrain-mcp</code></pre>
+      <p class="fine">The autopilot is idempotent and single-instance. Write paths are ungated but pass automatic safeguards — injection scan, no-clobber, secret scrub, privacy ratchet, tripwire quarantine — so nothing risky becomes injectable unchecked. <a href="/how-it-works/">See the full pipeline &rarr;</a></p>
     </section>
 
     <section class="section" id="runtime">
@@ -90,34 +91,34 @@
 
     <section class="section">
       <h2>What ocbrain is, and why you can trust it</h2>
-      <p>ocbrain is a local, source-backed consolidation brain for coding agents. Immutable <strong>evidence</strong> goes in; a controlled compiler turns that evidence into current <strong>knowledge</strong>; and <code>memory</code> is a read-only view over that knowledge. Nothing durable is invented in the dark — every belief traces back to something that actually happened.</p>
+      <p>ocbrain is a local, source-backed knowledge brain for coding agents. Immutable <strong>evidence</strong> goes in; a compiler turns it into current <strong>knowledge</strong>; the brain labels that knowledge good or bad from its own outcomes; and <code>memory</code> is a read-only view over only the trustworthy parts. Nothing durable is invented in the dark — every belief traces back to something that actually happened.</p>
       <div class="grid">
         <div class="card">
           <h3>Evidence before belief</h3>
           <p>Raw history is captured as immutable evidence first. Knowledge is never written ahead of the evidence that justifies it.</p>
         </div>
         <div class="card">
-          <h3>Knowledge is compiled</h3>
-          <p>Beliefs are compiled from evidence, lifecycle-managed, and linked back to the evidence they came from — so any claim can be traced and re-checked.</p>
+          <h3>Labels its own work</h3>
+          <p>A 19-signal taxonomy reads corrections, tests, deploys, and retrieval outcomes to decide which knowledge earned trust — with time decay and confidence.</p>
         </div>
         <div class="card">
-          <h3>Read-first at runtime</h3>
-          <p>Runtime consumption is read-first and source-backed. Agents retrieve reviewed, attributed knowledge rather than injecting raw transcripts.</p>
+          <h3>Promotes only the good</h3>
+          <p>Memory is scored, budget-bounded, and injection-clean. A label flip to bad, or a tripwire, demotes a row immediately.</p>
         </div>
         <div class="card">
-          <h3>Human gate for risk</h3>
-          <p>Executable, prescriptive, or high-risk knowledge is proposal-first: it requires an explicit human gate before it becomes durable.</p>
+          <h3>Safeguards, not gates</h3>
+          <p>Automatic invariants replace the human approval queue: injection scan, provenance no-clobber, secret scrub, privacy ratchet, tripwire quarantine.</p>
         </div>
       </div>
-      <p class="fine">Safety stance: ocbrain is a librarian and compiler with a security desk, not an autopilot.</p>
+      <p class="fine">Safety stance: ocbrain learns autonomously, but it does not act in the world — a self-guarding librarian and compiler, not an agent. <a href="/proof/">Safe &amp; inspectable &rarr;</a></p>
       <div class="chips">
-        <span class="chip">Not an autopilot</span>
+        <span class="chip">Autonomous, not an actor</span>
         <span class="chip">No loop-runner</span>
-        <span class="chip">No scheduler</span>
         <span class="chip">No skill-installer</span>
         <span class="chip">Never widens privacy scope</span>
         <span class="chip">External content is data, not instructions</span>
         <span class="chip">Supersedes &amp; archives, never deletes history</span>
+        <span class="chip">Datasets never leave the machine</span>
       </div>
     </section>
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Safe &amp; inspectable · ocbrain</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Why ocbrain is trustworthy and how to verify it: a read-first MCP surface, a human gate for risky knowledge, evidence-backed beliefs, and honest maintenance.">
+  <meta name="description" content="Why ocbrain v0.2 is trustworthy without a human approval queue: automatic safeguards on every write — injection scanning, provenance no-clobber, secret scrubbing, a privacy ratchet, tripwire quarantine, and a dataset that never leaves the machine.">
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="icon" type="image/svg+xml" href="/assets/img/ocbrain-icon.svg">
 </head>
@@ -17,6 +17,7 @@
       <a href="/install/">Install</a>
       <a href="/proof/">Safe &amp; inspectable</a>
       <a href="/guide/">Guide</a>
+      <a href="/agent-manual/">Agent manual</a>
       <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a>
     </div>
   </div>
@@ -24,72 +25,102 @@
   <main>
     <section class="hero">
       <div class="eyebrow">Safe &amp; inspectable</div>
-      <h1>Agents consult a brain. Humans decide what it remembers.</h1>
-      <p class="lead">ocbrain's core idea is <strong>not</strong> "agents run themselves." It is that agents consult a source-backed brain, emit evidence, and let a controlled compiler decide what becomes memory. Everything risky is human-gated.</p>
+      <h1>No approval queue. Automatic safeguards instead.</h1>
+      <p class="lead">ocbrain v0.2 runs unattended, so trust can't depend on someone clicking "approve." Every write passes the same fixed invariants a careful reviewer would enforce — and only clean, corroborated results reach the memory an agent sees. The safeguards are mechanical, always-on, and leave a trail.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="#human-gate">How the human gate works</a>
+        <a class="btn btn-primary" href="#safeguards">The safeguards</a>
         <a class="btn" href="#inspectable">How to verify it</a>
       </div>
       <div class="chips">
-        <span class="chip">Read-first by default</span>
-        <span class="chip">Proposal-first review</span>
-        <span class="chip">Evidence-backed beliefs</span>
-        <span class="chip">Local SQLite ledger</span>
+        <span class="chip">Injection-scanned</span>
+        <span class="chip">Provenance no-clobber</span>
+        <span class="chip">Secret-scrubbed</span>
+        <span class="chip">Privacy ratchet</span>
+        <span class="chip">Tripwire quarantine</span>
+        <span class="chip">Local-only datasets</span>
       </div>
     </section>
 
     <section class="section">
-      <h2>Read-first MCP surface</h2>
-      <p>The tools an agent gets by default are all read-only. They retrieve and report; they never change durable memory.</p>
-      <div class="grid">
-        <div class="card"><h3>brain.search</h3><p>Find source-backed context relevant to the current turn. Read-only.</p></div>
-        <div class="card"><h3>brain.digest</h3><p>Report counts and state so memory quality is auditable. Read-only.</p></div>
-        <div class="card"><h3>brain.get</h3><p>Fetch a specific record and trace it back to its evidence. Read-only.</p></div>
-        <div class="card"><h3>brain.feedback</h3><p>Record whether served memory was helpful, used, ignored, irrelevant, or harmful. Read-only with respect to durable knowledge.</p></div>
-      </div>
-      <p class="muted">Write-capable tools are <strong>hidden unless the server is launched with <code>--allow-writes</code></strong>:</p>
-      <pre><code># Default launch: read-only surface only
-ocbrain serve
-
-# Opt in to write-capable tools (brain.propose, brain.mark_stale)
-ocbrain serve --allow-writes</code></pre>
-      <p>Even with writes enabled, those tools stage candidates for review. They do not silently make knowledge current.</p>
+      <h2>Why gates were replaced</h2>
+      <p>v0.1 staged every risky belief as a candidate and waited for a human to promote it. That was safe, but it didn't scale: the brain grew only as fast as someone reviewed a queue, and a queue that gets busy gets skipped. v0.2 keeps the safety property — nothing dangerous becomes injectable silently — but enforces it with invariants that run on every write, every 30 minutes, whether or not anyone is watching.</p>
+      <blockquote><strong>Gates don't scale. Invariants do.</strong> The goal was never "a human in the loop" for its own sake — it was "risky content can't reach the prompt unchecked." A fixed set of automatic checks delivers that continuously.</blockquote>
     </section>
 
-    <section class="section" id="human-gate">
-      <h2>The human gate</h2>
-      <p>Capability, prescriptive, and high-risk knowledge is never adopted automatically. It is staged as a <strong>candidate</strong> and requires a human to approve it through proposal-first review.</p>
-      <blockquote><strong>Nothing executable or loadable becomes current silently.</strong> A proposal sits as a candidate until a person reviews it and promotes it &mdash; or leaves it staged.</blockquote>
+    <section class="section" id="safeguards">
+      <h2>The safeguards</h2>
+      <p>These run on the write path itself, so there is no unguarded way in.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>Injection scanning</h3>
+          <p>Harvested third-party text is scanned for prompt-injection patterns — role hijacks, "ignore previous," exfiltration links, hidden characters, encoded blobs — at the evidence layer, at write time, and again before anything is rendered into a prompt. External content is data, never instruction.</p>
+        </div>
+        <div class="card">
+          <h3>Provenance no-clobber</h3>
+          <p>An automatic write can never overwrite a human-authored row. If it tries, the write is refused and logged as an audit breadcrumb. The first writer wins; later passes add evidence, not authorship.</p>
+        </div>
+        <div class="card">
+          <h3>Secret scrubbing</h3>
+          <p>Bodies are scanned for credential and key patterns. A row that looks like it leaked a secret is quarantined out of memory, and secrets are stripped before any body is ever considered for the optional judge or written to a dataset.</p>
+        </div>
+        <div class="card">
+          <h3>Privacy ratchet</h3>
+          <p>Scope only tightens. Derived knowledge inherits the most restrictive scope of its sources; <code>private</code> can never widen to a broader audience through derivation. This one-way rule is what makes unattended operation safe.</p>
+        </div>
+        <div class="card">
+          <h3>Tripwire quarantine</h3>
+          <p>Injection, secret leaks, repeated harmful feedback, hard corrections, belief thrash, or unverified risky content each trip a wire that pulls the row out of memory instantly — a status change, not a queue.</p>
+        </div>
+        <div class="card">
+          <h3>Hash-chained audit</h3>
+          <p>Decisions, quarantines, and refusals are appended to a tamper-evident event log. Nothing is hard-deleted; the record of what the brain did — and declined to do — stays intact.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="risky">
+      <h2>The risky class still gets a higher bar</h2>
+      <p>Removing the human queue did not flatten the risk model. Executable, prescriptive, and high-risk knowledge is held to a stricter promotion rule than an ordinary fact.</p>
+      <blockquote><strong>Nothing executable or prescriptive becomes injectable on vibes.</strong> That class must carry passed-verifier evidence or an explicit human approval signal before it can ever reach <code>inject = 1</code> — the automatic replacement for the old human gate, aimed at exactly the dangerous class. If it serves without either, a tripwire quarantines it.</blockquote>
       <div class="chips">
-        <span class="chip">Capability &rarr; staged</span>
-        <span class="chip">Prescriptive &rarr; staged</span>
-        <span class="chip">High-risk &rarr; staged</span>
-        <span class="chip">Human approves to promote</span>
+        <span class="chip">Capability &rarr; needs verification or approval</span>
+        <span class="chip">Prescriptive &rarr; needs verification or approval</span>
+        <span class="chip">Unverified + serving &rarr; quarantined</span>
       </div>
     </section>
 
     <section class="section">
-      <h2>What ocbrain is NOT</h2>
-      <p>ocbrain is a local SQLite evidence&rarr;knowledge ledger. It does not take actions on your behalf.</p>
+      <h2>What ocbrain still is NOT</h2>
+      <p>Autonomy is about how the brain <em>learns</em>, not about taking actions in the world. ocbrain compiles knowledge; it does not act for you.</p>
       <div class="grid">
-        <div class="card"><h3>Not an autopilot</h3><p>It does not act for the agent or the user.</p></div>
-        <div class="card"><h3>Not a loop-runner</h3><p>It does not execute loops.</p></div>
-        <div class="card"><h3>Not a task scheduler</h3><p>It does not enqueue or time work.</p></div>
-        <div class="card"><h3>Not a skill installer</h3><p>It does not install or activate skills.</p></div>
-        <div class="card"><h3>Not a policy applier</h3><p>It does not enforce or apply policies.</p></div>
-        <div class="card"><h3>It can OBSERVE loops</h3><p>It emits liveness tripwire evidence when a loop looks starved &mdash; without running or enqueueing anything.</p></div>
+        <div class="card"><h3>Not an agent</h3><p>It does not take actions on your behalf or in the world.</p></div>
+        <div class="card"><h3>Not a loop-runner</h3><p>It observes loops and emits liveness evidence; it never executes them.</p></div>
+        <div class="card"><h3>Not a task scheduler</h3><p>Its own 30-minute cadence maintains memory. It does not enqueue your work.</p></div>
+        <div class="card"><h3>Not a skill installer</h3><p>It compiles knowledge about skills; it does not install or activate them.</p></div>
       </div>
+    </section>
+
+    <section class="section">
+      <h2>The dataset never leaves the machine</h2>
+      <p>v0.2 compiles fine-tuning datasets from your own history. That makes the egress guarantee load-bearing, so it is enforced in code, not policy:</p>
+      <ul>
+        <li><strong>There is no hosted export path.</strong> Datasets are written to a local directory; the export target class is local-only by construction.</li>
+        <li><strong><code>private</code>-scope rows never export</strong> — regardless of any flag.</li>
+        <li><strong>Every example is scrubbed</strong> for secret residue, high-entropy blobs, injected-memory leakage, and prompt-injection before it is stored.</li>
+        <li><strong>The optional judge is the only outward call, and it is fenced:</strong> off unless a key is present, knowledge rows only, <code>private</code> dropped, bodies redacted, budget-capped, and every batch writes an egress-audit row.</li>
+      </ul>
     </section>
 
     <section class="section" id="inspectable">
       <h2>Inspectable by design</h2>
-      <p>Memory quality is auditable instead of vibes-based. You can always ask why ocbrain believes something.</p>
+      <p>Memory quality stays auditable, not vibes-based. You can always ask why ocbrain believes something — and see what it quarantined.</p>
       <ul>
         <li><strong>Every current belief links back to its supporting evidence.</strong> There are no unsourced facts.</li>
-        <li><strong><code>brain.digest</code> exposes counts and state</strong> so the health of the ledger is visible at a glance.</li>
-        <li><strong>Retrieval feedback is recorded</strong> &mdash; whether served memory was helpful, used, ignored, irrelevant, or harmful.</li>
+        <li><strong>Every label carries a confidence</strong> and the signals that produced it.</li>
+        <li><strong>Every autopilot run is recorded</strong> — per-stage results, quarantines, and refusals — in a run ledger.</li>
+        <li><strong>Retrieval feedback is recorded</strong> and drives the next promotion cycle.</li>
       </ul>
-      <pre><code># See the state of memory: counts, states, evidence coverage
+      <pre><code># See the state of memory: counts, labels, quarantines, coverage
 brain.digest
 
 # Trace any current belief back to the evidence behind it
@@ -97,31 +128,11 @@ brain.get &lt;id&gt;</code></pre>
     </section>
 
     <section class="section">
-      <h2>Maintenance keeps it honest</h2>
-      <p>Upkeep is conservative and leaves a trail. It never hard-deletes.</p>
-      <div class="grid">
-        <div class="card"><h3>prune</h3><p>Marks stale knowledge that is unreferenced, or served but never useful. <strong>Useful feedback protects a row</strong>, and nothing is hard-deleted.</p></div>
-        <div class="card"><h3>heal</h3><p>Resolves conflicting current values by superseding the lower-confidence rows and writing correction evidence.</p></div>
-        <div class="card"><h3>liveness-check</h3><p>Writes tripwire evidence for silent loops &mdash; as an observer, never a scheduler.</p></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Privacy</h2>
-      <p>Scope only ever gets tighter, never looser.</p>
-      <ul>
-        <li><strong>Derived knowledge can only tighten scope</strong> to the most restrictive linked source.</li>
-        <li><strong>Private evidence never gets promoted to a broader audience.</strong></li>
-      </ul>
-      <p class="fine">Because beliefs inherit the most restrictive scope of their sources, a private source can never leak into a wider audience through derivation.</p>
-    </section>
-
-    <section class="section">
       <h2>Read the full design</h2>
-      <p>The Ultimate Guide covers the data model, the MCP surface, the human gate, and the maintenance passes in detail.</p>
+      <p>The Ultimate Guide covers the data model, the signal taxonomy, the safeguards, the promotion rules, and the dataset factory in detail.</p>
       <div class="actions">
         <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Read the Ultimate Guide</a>
-        <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn" href="/how-it-works/">How it works</a>
       </div>
     </section>
   </main>
