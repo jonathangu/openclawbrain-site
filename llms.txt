@@ -5,7 +5,7 @@ Claude Code, OpenClaw, and compatible agents. It records immutable evidence,
 compiles current knowledge, labels outcomes, promotes a bounded injectable
 memory view, and mines local SFT, DPO, and persona datasets.
 
-Current public release: v0.3.1 under Apache-2.0.
+Current public release: v0.3.2 under Apache-2.0.
 
 Primary pages:
 
@@ -57,6 +57,13 @@ Safety and evaluation:
   quarantine, and audit history.
 - The local dataset grader rejects non-loopback endpoints before reading an
   example. The repository has no hosted dataset export path.
+- The local blind judge must pass a separate, complete human-label file with
+  named provenance. Machine-authored winners embedded in cases are ignored;
+  calibration-only mode does not open blind pairs. The dated human gate passed
+  7/8 at an unchanged 80% threshold, and the one disagreement remains visible.
+- Dataset preparation runs outside SQLite writer transactions. Dated v0.3.2
+  stress runs measured maximum writer holds of 1.128 ms across 200 large
+  persona examples and 0.863 ms across a 200-tool-turn review session.
 - The second fine-tune pilot reused the first pilot's twenty prompts,
   references, rubric, held-out hashes, and blind randomization exactly. It
   improved from 2 preferences to 7 while the reference still won 13, so it

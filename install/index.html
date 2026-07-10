@@ -66,7 +66,7 @@ openclaw mcp add ocbrain --command "$LAUNCHER"</code></pre>
       <div class="grid">
         <div class="card"><h3>ChatGPT and Codex</h3><p>The ChatGPT desktop app's Codex mode reads the user Codex MCP configuration. Its conversation rollouts continue under <code>~/.codex/sessions</code>, which ocbrain can harvest alongside standalone Codex work.</p></div>
         <div class="card"><h3>Claude Code</h3><p><code>--scope user</code> makes the launcher available across projects. Authenticate Claude Code separately with <code>claude auth login --claudeai</code> when the subscription session is not already active.</p></div>
-        <div class="card"><h3>OpenClaw</h3><p>The current <code>openclaw mcp add</code> command probes the stdio server before saving it under <code>mcp.servers</code>. Use <code>reload</code> after a source upgrade so cached runtimes are disposed cleanly.</p></div>
+        <div class="card"><h3>OpenClaw</h3><p>The current <code>openclaw mcp add</code> command probes the stdio server before saving it under <code>mcp.servers</code>. If OpenClaw should host Claude, also run <code>openclaw models auth login --provider anthropic --method cli --set-default</code>; standalone Claude login does not create OpenClaw's auth profile. Use <code>reload</code> after a source upgrade.</p></div>
       </div>
     </section>
 
@@ -76,6 +76,7 @@ openclaw mcp add ocbrain --command "$LAUNCHER"</code></pre>
       <pre><code>codex mcp get ocbrain
 claude mcp list
 openclaw config validate
+openclaw doctor --lint --json
 openclaw mcp doctor ocbrain
 openclaw mcp probe ocbrain</code></pre>
 
