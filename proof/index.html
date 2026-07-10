@@ -40,7 +40,7 @@
       <h2>Environment-verified snapshot · 2026-07-09</h2>
       <p>This is the acceptance state on one machine on one date. The version numbers are evidence about that run, not a promise that these will always be the latest releases.</p>
       <div class="grid">
-        <div class="card"><h3>Source gate</h3><p>469 tests passed. Ruff, compileall, <code>git diff --check</code>, the tracked-tree privacy scan, and the outgoing-range privacy scan passed.</p></div>
+        <div class="card"><h3>Source gate</h3><p>477 tests passed. Ruff, compileall, <code>git diff --check</code>, the tracked-tree privacy scan, and the outgoing-range privacy scan passed.</p></div>
         <div class="card"><h3>Codex and ChatGPT</h3><p>Codex CLI 0.144.1 used the ChatGPT-backed login, called <code>brain.search</code>, recorded <code>brain.feedback</code>, and completed the exact acceptance response. ChatGPT desktop build 26.707.31123 shared the migrated Codex session store.</p></div>
         <div class="card"><h3>OpenClaw</h3><p>OpenClaw 2026.6.11 ran loopback-only with a reachable gateway. Its MCP doctor and live probe passed, and a gateway-backed model completed a recorded search-to-feedback cycle.</p></div>
         <div class="card"><h3>Claude Code</h3><p>Claude Code 2.1.206 authenticated through Claude.ai, reported ocbrain connected, and a real Sonnet turn called <code>brain.search</code> successfully during an active heavy writer window.</p></div>
@@ -51,7 +51,9 @@
       <h2>The lock-window result matters.</h2>
       <p>A previous implementation let retrieval-audit logging turn a successful read into <code>database is locked</code>. The current path separates the two outcomes. Search still returns scoped context, while the response says <code>retrieval_use_status=database_busy</code> and omits the feedback handle.</p>
       <p>The Claude acceptance hit that exact condition. Claude used the successful read and did not retry merely to manufacture an audit id. That is a passed concurrency behavior. It is not a recorded Claude feedback result, and the documentation does not present it as one.</p>
-      <p>The v0.3.0 audit also found the cause of the long window: one dataset transaction stayed open across 3,712.6 seconds of parsing, and autolabel kept signal writes open across FTS searches. Dataset work now commits after fifty mutations or two seconds, autolabel releases SQLite before each expensive attribution query, and both report writer wait and hold time. After the live writer exited, a safe checkpoint reduced the WAL from 625,436,632 bytes to zero.</p>
+      <p>The release audit found four forms of the same mistake: one dataset transaction stayed open across 3,712.6 seconds of parsing, autolabel kept signal writes open across FTS searches, review held its first write while the lazy iterator parsed later transcripts, and hosted judge/embedding calls waited on TLS after writing their audits. v0.3.1 bounds all four paths and keeps network I/O outside SQLite transactions. After the live writer exited, a safe checkpoint reduced the WAL from 625,436,632 bytes to zero.</p>
+      <p>The passive stall watcher follows the same boundary: deadman evidence commits before optional Telegram paging, and delivery state is recorded afterward.</p>
+      <p>Live v0.3.1 probes matched the regression tests. Review allowed 39 of 40 writer attempts, with one 250 ms sample landing on a commit and a maximum per-session upper bound of 0.347 seconds. Tripwires and promotion each allowed 40 of 40; promotion's maximum measured writer hold was 0.019 seconds and its stage time fell from 75.35 to 10.56 seconds.</p>
     </section>
 
     <section class="section" id="safeguards">

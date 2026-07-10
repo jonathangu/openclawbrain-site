@@ -267,10 +267,10 @@ CREATE VIEW memory AS
         <li><span class="n"></span><div><h4>Migrate</h4><p>Additive-only schema migration — new columns and tables, never a destructive rebuild.</p></div></li>
         <li><span class="n"></span><div><h4>Harvest</h4><p>Fingerprint-gated import of new history into evidence rows.</p></div></li>
         <li><span class="n"></span><div><h4>Injection-scan</h4><p>Scan new third-party evidence before it can reach anything injectable.</p></div></li>
-        <li><span class="n"></span><div><h4>Review</h4><p>Post-turn review of settled sessions — task successes, error recoveries, corrections, novel workflows become candidate knowledge and signals.</p></div></li>
+        <li><span class="n"></span><div><h4>Review</h4><p>Post-turn review of settled sessions, committing each complete session before the lazy iterator parses the next transcript.</p></div></li>
         <li><span class="n"></span><div><h4>Compile</h4><p>Turn undecided proposals into knowledge, rebuilding the projection once at the end.</p></div></li>
-        <li><span class="n"></span><div><h4>Auto-label</h4><p>Mine signals, release the writer before expensive attribution, fold into labels, optionally consult the judge, fold again.</p></div></li>
-        <li><span class="n"></span><div><h4>Embed</h4><p>Compute embeddings for newly compiled knowledge so it can be found by similarity search.</p></div></li>
+        <li><span class="n"></span><div><h4>Auto-label</h4><p>Mine signals, release the writer before expensive attribution and hosted judging, fold into labels, then fold again.</p></div></li>
+        <li><span class="n"></span><div><h4>Embed</h4><p>Commit the egress audit, release SQLite for network I/O, then store each completed vector batch.</p></div></li>
         <li><span class="n"></span><div><h4>Tripwires</h4><p>Run the tripwire registry and auto-quarantine anything that fires.</p></div></li>
         <li><span class="n"></span><div><h4>Promote</h4><p>Re-score, promote the trustworthy rows into memory, demote what slipped, enforce the budget.</p></div></li>
         <li><span class="n"></span><div><h4>Excerpt-render</h4><p>Render the promoted rows into the excerpt form the injectable memory actually serves.</p></div></li>

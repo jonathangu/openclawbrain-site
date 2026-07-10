@@ -5,7 +5,7 @@ Claude Code, OpenClaw, and compatible agents. It records immutable evidence,
 compiles current knowledge, labels outcomes, promotes a bounded injectable
 memory view, and mines local SFT, DPO, and persona datasets.
 
-Current public release: v0.3.0 under Apache-2.0.
+Current public release: v0.3.1 under Apache-2.0.
 
 Primary pages:
 
