@@ -14,8 +14,8 @@ proof, and agent contract support that job without crowding the front door.
   upgrade without replacing the database.
 - `/how-it-works/` — evidence, knowledge, labels, memory, datasets, and the
   light/heavy autopilot.
-- `/proof/` — dated source/runtime evidence, the failed first model-quality
-  result, safeguards, and open risks.
+- `/proof/` — dated source/runtime evidence, both honest model-quality results,
+  safeguards, and open risks.
 - `/agent-manual/` — the current MCP operating contract.
 - `/guide/` — the plain-language argument for the architecture.
 - `/` — the product front door and route into those pages.

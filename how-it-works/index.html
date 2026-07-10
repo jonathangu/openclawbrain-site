@@ -254,6 +254,7 @@ CREATE VIEW memory AS
       <h2>Grade locally, and build the evaluation before training</h2>
       <p>Mining examples is not the same as earning a training corpus. <code>dataset-grade</code> applies a different local rubric to SFT, DPO, and persona rows, rejects non-loopback endpoints before reading an example, and records the model, prompt version, progress, and normalized grade.</p>
       <p>The pilot reserves at least twenty graded persona prompts, writes their references and voice rubric, and removes their content hashes from every training stream. Only after that frozen evaluation exists does it write the training pack. Candidate responses are randomized against the references, the rater never reads the A/B key, and scoring is the one step that unblinds the result.</p>
+      <p>A later pilot can reuse those files byte-for-byte while changing only the training corpus. Before its local judge opens a blind pair, the judge must also pass a separate calibration set. That keeps a better training run from quietly moving either the test or the evaluator.</p>
       <p class="fine muted">That order matters. It keeps a training run from quietly changing the test it is supposed to pass.</p>
     </section>
 
@@ -268,13 +269,13 @@ CREATE VIEW memory AS
         <li><span class="n"></span><div><h4>Injection-scan</h4><p>Scan new third-party evidence before it can reach anything injectable.</p></div></li>
         <li><span class="n"></span><div><h4>Review</h4><p>Post-turn review of settled sessions — task successes, error recoveries, corrections, novel workflows become candidate knowledge and signals.</p></div></li>
         <li><span class="n"></span><div><h4>Compile</h4><p>Turn undecided proposals into knowledge, rebuilding the projection once at the end.</p></div></li>
-        <li><span class="n"></span><div><h4>Auto-label</h4><p>Mine signals, attribute them to knowledge, fold into labels, optionally consult the judge, fold again.</p></div></li>
+        <li><span class="n"></span><div><h4>Auto-label</h4><p>Mine signals, release the writer before expensive attribution, fold into labels, optionally consult the judge, fold again.</p></div></li>
         <li><span class="n"></span><div><h4>Embed</h4><p>Compute embeddings for newly compiled knowledge so it can be found by similarity search.</p></div></li>
         <li><span class="n"></span><div><h4>Tripwires</h4><p>Run the tripwire registry and auto-quarantine anything that fires.</p></div></li>
         <li><span class="n"></span><div><h4>Promote</h4><p>Re-score, promote the trustworthy rows into memory, demote what slipped, enforce the budget.</p></div></li>
         <li><span class="n"></span><div><h4>Excerpt-render</h4><p>Render the promoted rows into the excerpt form the injectable memory actually serves.</p></div></li>
         <li><span class="n"></span><div><h4>Maintain</h4><p>Prune stale knowledge and heal conflicts, emitting supersession signals as it goes.</p></div></li>
-        <li><span class="n"></span><div><h4>Dataset-mine</h4><p>Mine SFT, DPO, and persona examples from newly settled history, time-budgeted.</p></div></li>
+        <li><span class="n"></span><div><h4>Dataset-mine</h4><p>Mine SFT, DPO, and persona examples from newly settled history in bounded, measured writer batches.</p></div></li>
         <li><span class="n"></span><div><h4>Dataset-export</h4><p>Deterministically write the JSONL corpora and manifest — skipping the write if nothing changed.</p></div></li>
         <li><span class="n"></span><div><h4>Finalize</h4><p>Record the run in a ledger — per-stage results or errors — and release the lock.</p></div></li>
       </ol>

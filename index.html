@@ -45,6 +45,7 @@
           <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">Browse the source</a>
         </div>
         <div class="chips">
+          <span class="chip">v0.3.0 · Apache-2.0</span>
           <span class="chip">ChatGPT / Codex</span>
           <span class="chip">Claude Code</span>
           <span class="chip">OpenClaw</span>
@@ -94,13 +95,13 @@
       <section class="section">
         <h2>The dataset is the long game.</h2>
         <p>The same evidence compiles into three local streams: successful exchanges for SFT, corrections for DPO, and verified first-party writing for persona and voice. A local grader can score those streams, and the pilot workflow freezes a blind voice evaluation before it writes training files.</p>
-        <blockquote><strong>The first pilot proved the pipeline and failed the model-quality bar.</strong> In the dated July 9 evaluation, the tuned candidate was preferred in 2 of 20 decided comparisons. That is useful evidence: the corpus and recipe need to improve before the model deserves a stronger claim.</blockquote>
+        <blockquote><strong>The second pilot improved and still failed the model-quality bar.</strong> It reused the first pilot's twenty prompts, references, rubric, held-out hashes, and blind randomization exactly. After eleven canonical first-party examples were added locally, the candidate improved from 2 preferences to 7; the reference still won 13.</blockquote>
         <p>The corpus, references, candidates, blind key, ratings, and adapter stay in the gitignored local dataset tree. There is no hosted dataset export path.</p>
       </section>
 
       <section class="section">
         <h2>Current proof, dated instead of implied.</h2>
-        <p>On 2026-07-09, the source gate passed 459 tests, Ruff, compileall, diff checks, and public-safety scans. Real OpenClaw and Codex turns completed search-to-feedback cycles. A real Claude Code turn searched successfully during the scheduled heavy writer window and followed the safe no-retry contract when no audit handle was available.</p>
+        <p>On 2026-07-09, the v0.3.0 source gate passed 469 tests, Ruff, compileall, diff checks, and public-safety scans. The Apache-2.0 release also bounded dataset and autolabel writer transactions, then safely checkpointed a 625 MB WAL after the live writer exited.</p>
         <p>Those are snapshots, not timeless promises. The proof page separates code gates, runtime acceptance, and model quality so a green result in one lane cannot stand in for another.</p>
         <div class="actions">
           <a class="btn btn-primary" href="/proof/">See what passed and what did not</a>

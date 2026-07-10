@@ -5,6 +5,8 @@ Claude Code, OpenClaw, and compatible agents. It records immutable evidence,
 compiles current knowledge, labels outcomes, promotes a bounded injectable
 memory view, and mines local SFT, DPO, and persona datasets.
 
+Current public release: v0.3.0 under Apache-2.0.
+
 Primary pages:
 
 - Install and upgrade: https://openclawbrain.ai/install/
@@ -55,8 +57,9 @@ Safety and evaluation:
   quarantine, and audit history.
 - The local dataset grader rejects non-loopback endpoints before reading an
   example. The repository has no hosted dataset export path.
-- The first fine-tune pilot built its blind evaluation before training. It
-  completed the pipeline and failed the model-quality bar: 2 preferences in 20
-  decided comparisons on 2026-07-09.
+- The second fine-tune pilot reused the first pilot's twenty prompts,
+  references, rubric, held-out hashes, and blind randomization exactly. It
+  improved from 2 preferences to 7 while the reference still won 13, so it
+  remains a model-quality failure.
 - A passed verifier is a pass. A tie is a tie. A completed pipeline is not a
   successful model unless the predeclared evaluation also passes.

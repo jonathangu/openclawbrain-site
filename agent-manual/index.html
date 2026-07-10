@@ -106,8 +106,8 @@
     </section>
 
     <section class="section" id="busy">
-      <h2>Long writer windows are a normal operating condition.</h2>
-      <p>The scheduled heavy profile can own SQLite's write window while an agent is reading. Contextual search remains available. When the retrieval audit cannot be recorded, the response returns:</p>
+      <h2>Writer contention is recoverable, not invisible.</h2>
+      <p>v0.3.0 bounds the known dataset and autolabel transactions, but SQLite still has one writer. Contextual search remains available when a scheduled write briefly wins the slot. If the retrieval audit cannot be recorded, the response returns:</p>
       <pre><code>{
   "retrieval_use_id": null,
   "retrieval_use_status": "database_busy"
