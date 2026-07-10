@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Safe &amp; inspectable · ocbrain</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Why ocbrain v0.2 is trustworthy without a human approval queue: automatic safeguards on every write — injection scanning, provenance no-clobber, secret scrubbing, a privacy ratchet, tripwire quarantine, a hash-chained audit trail, and a dataset that never leaves the machine.">
+  <title>Proof, limits, and safeguards · ocbrain</title>
+  <meta name="description" content="Dated ocbrain evidence: source gates, real ChatGPT/Codex, Claude Code, and OpenClaw tool use, automatic safeguards, the first fine-tune result, and the risks that remain.">
+  <link rel="canonical" href="https://openclawbrain.ai/proof/">
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="icon" type="image/svg+xml" href="/assets/img/ocbrain-icon.svg">
 </head>
@@ -13,9 +14,9 @@
   <div class="topbar">
     <a class="brand" href="/" aria-label="ocbrain home"><img src="/assets/img/ocbrain-logo.svg" alt="ocbrain" width="268" height="84"></a>
     <div class="navlinks">
+      <a href="/install/">Install &amp; upgrade</a>
       <a href="/how-it-works/">How it works</a>
-      <a href="/install/">Install</a>
-      <a href="/proof/">Safe &amp; inspectable</a>
+      <a href="/proof/">Proof</a>
       <a href="/guide/">Guide</a>
       <a href="/agent-manual/">Agent manual</a>
       <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a>
@@ -24,120 +25,93 @@
 
   <main>
     <section class="hero">
-      <div class="eyebrow">Safe &amp; inspectable</div>
-      <h1>No approval queue. Automatic safeguards instead.</h1>
-      <p class="lead">ocbrain v0.2 runs unattended, so trust can't depend on someone clicking "approve." Every write passes the same fixed invariants a careful reviewer would enforce — and only clean, corroborated results reach the memory an agent sees. The safeguards are mechanical, always-on, and leave a trail.</p>
+      <div class="eyebrow">Evidence, not vibes</div>
+      <h1>What passed, what failed, and what is still only a bet.</h1>
+      <p class="lead">Trust does not come from calling a system autonomous or safe. It comes from naming the claim, running the verifier, keeping the failed result, and dating the snapshot so nobody mistakes it for a permanent guarantee.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="#safeguards">The safeguards</a>
-        <a class="btn" href="#inspectable">How to verify it</a>
+        <a class="btn btn-primary" href="#snapshot">July 9 snapshot</a>
+        <a class="btn" href="#safeguards">Safeguards</a>
+        <a class="btn" href="#pilot">Fine-tune pilot</a>
+        <a class="btn" href="#risks">Open risks</a>
       </div>
-      <div class="chips">
-        <span class="chip">Injection-scanned</span>
-        <span class="chip">Provenance no-clobber</span>
-        <span class="chip">Secret-scrubbed</span>
-        <span class="chip">Privacy ratchet</span>
-        <span class="chip">Tripwire quarantine</span>
-        <span class="chip">Local-only datasets</span>
+    </section>
+
+    <section class="section" id="snapshot">
+      <h2>Environment-verified snapshot · 2026-07-09</h2>
+      <p>This is the acceptance state on one machine on one date. The version numbers are evidence about that run, not a promise that these will always be the latest releases.</p>
+      <div class="grid">
+        <div class="card"><h3>Source gate</h3><p>459 tests passed. Ruff, compileall, <code>git diff --check</code>, the tracked-tree privacy scan, and the outgoing-range privacy scan passed.</p></div>
+        <div class="card"><h3>Codex and ChatGPT</h3><p>Codex CLI 0.144.1 used the ChatGPT-backed login, called <code>brain.search</code>, recorded <code>brain.feedback</code>, and completed the exact acceptance response. ChatGPT desktop build 26.707.31123 shared the migrated Codex session store.</p></div>
+        <div class="card"><h3>OpenClaw</h3><p>OpenClaw 2026.6.11 ran loopback-only with a reachable gateway. Its MCP doctor and live probe passed, and a gateway-backed model completed a recorded search-to-feedback cycle.</p></div>
+        <div class="card"><h3>Claude Code</h3><p>Claude Code 2.1.206 authenticated through Claude.ai, reported ocbrain connected, and a real Sonnet turn called <code>brain.search</code> successfully during an active heavy writer window.</p></div>
       </div>
     </section>
 
     <section class="section">
-      <h2>Why gates were replaced</h2>
-      <p>v0.1 staged every risky belief as a candidate and waited for a human to promote it. That was safe, but it didn't scale: the brain grew only as fast as someone reviewed a queue, and a queue that gets busy gets skipped. v0.2 keeps the safety property — nothing dangerous becomes injectable silently — but enforces it with invariants that run on every write, on a 15-minute light and hourly heavy cadence, whether or not anyone is watching.</p>
-      <blockquote><strong>Gates don't scale. Invariants do.</strong> The goal was never "a human in the loop" for its own sake — it was "risky content can't reach the prompt unchecked." A fixed set of automatic checks delivers that continuously.</blockquote>
+      <h2>The lock-window result matters.</h2>
+      <p>A previous implementation let retrieval-audit logging turn a successful read into <code>database is locked</code>. The current path separates the two outcomes. Search still returns scoped context, while the response says <code>retrieval_use_status=database_busy</code> and omits the feedback handle.</p>
+      <p>The Claude acceptance hit that exact condition. Claude used the successful read and did not retry merely to manufacture an audit id. That is a passed concurrency behavior. It is not a recorded Claude feedback result, and the documentation does not present it as one.</p>
     </section>
 
     <section class="section" id="safeguards">
-      <h2>The safeguards</h2>
-      <p>These run on the write path itself, so there is no unguarded way in.</p>
+      <h2>Six safeguards stand in front of injectable memory.</h2>
       <div class="grid">
-        <div class="card">
-          <h3>Injection scanning</h3>
-          <p>Harvested third-party text is scanned for prompt-injection patterns — role hijacks, "ignore previous," exfiltration links, hidden characters, encoded blobs — at the evidence layer, at write time, and again before anything is rendered into a prompt. External content is data, never instruction.</p>
-        </div>
-        <div class="card">
-          <h3>Provenance no-clobber</h3>
-          <p>An automatic write can never overwrite a human-authored row. If it tries, the write is refused and logged as an audit breadcrumb. The first writer wins; later passes add evidence, not authorship.</p>
-        </div>
-        <div class="card">
-          <h3>Secret scrubbing</h3>
-          <p>Bodies are scanned for credential and key patterns. A row that looks like it leaked a secret is quarantined out of memory, and secrets are stripped before any body is ever considered for the optional judge or written to a dataset.</p>
-        </div>
-        <div class="card">
-          <h3>Privacy ratchet</h3>
-          <p>Scope only tightens. Derived knowledge inherits the most restrictive scope of its sources; <code>private</code> can never widen to a broader audience through derivation. This one-way rule is what makes unattended operation safe.</p>
-        </div>
-        <div class="card">
-          <h3>Tripwire quarantine</h3>
-          <p>Injection, secret leaks, repeated harmful feedback, hard corrections, belief thrash, or unverified risky content each trip a wire that pulls the row out of memory instantly — a status change, not a queue.</p>
-        </div>
-        <div class="card">
-          <h3>Hash-chained audit</h3>
-          <p>Decisions, quarantines, and refusals are appended to a tamper-evident event log. Nothing is hard-deleted; the record of what the brain did — and declined to do — stays intact.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="risky">
-      <h2>The risky class still gets a higher bar</h2>
-      <p>Removing the human queue did not flatten the risk model. Executable, prescriptive, and high-risk knowledge is held to a stricter promotion rule than an ordinary fact.</p>
-      <blockquote><strong>Nothing executable or prescriptive becomes injectable on vibes.</strong> That class must carry passed-verifier evidence or an explicit human approval signal before it can ever reach <code>inject = 1</code> — the automatic replacement for the old human gate, aimed at exactly the dangerous class. If it serves without either, a tripwire quarantines it.</blockquote>
-      <div class="chips">
-        <span class="chip">Capability &rarr; needs verification or approval</span>
-        <span class="chip">Prescriptive &rarr; needs verification or approval</span>
-        <span class="chip">Unverified + serving &rarr; quarantined</span>
+        <div class="card"><h3>Injection scanning</h3><p>Third-party evidence is scanned before it can reach the injectable class. A hit moves the row out of memory.</p></div>
+        <div class="card"><h3>Provenance no-clobber</h3><p>An automatic write cannot silently replace stronger first-party or human-authored provenance.</p></div>
+        <div class="card"><h3>Secret scrubbing</h3><p>Credential-like bodies are quarantined. Dataset and optional judge paths redact before they package text.</p></div>
+        <div class="card"><h3>Privacy ratchet</h3><p>Derived scope can only become more restrictive. Private evidence never widens into a public or global result.</p></div>
+        <div class="card"><h3>Tripwire quarantine</h3><p>Injection, secret residue, harmful-feedback spikes, hard corrections, belief thrash, and unverified risky content can remove a row immediately.</p></div>
+        <div class="card"><h3>Hash-chained audit</h3><p>Evidence, decisions, corrections, retrieval outcomes, and runs leave a history that can be inspected instead of overwritten.</p></div>
       </div>
     </section>
 
     <section class="section">
-      <h2>What ocbrain still is NOT</h2>
-      <p>Autonomy is about how the brain <em>learns</em>, not about taking actions in the world. ocbrain compiles knowledge; it does not act for you.</p>
-      <div class="grid">
-        <div class="card"><h3>Not an agent</h3><p>It does not take actions on your behalf or in the world.</p></div>
-        <div class="card"><h3>Not a loop-runner</h3><p>It observes loops and emits liveness evidence; it never executes them.</p></div>
-        <div class="card"><h3>Not a task scheduler</h3><p>Its own 15-minute light and hourly heavy cadence maintains memory. It does not enqueue your work.</p></div>
-        <div class="card"><h3>Not a skill installer</h3><p>It compiles knowledge about skills; it does not install or activate them.</p></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>The dataset never leaves the machine</h2>
-      <p>v0.2 compiles fine-tuning datasets from your own history. That makes the egress guarantee load-bearing, so it is enforced in code, not policy:</p>
+      <h2>The autonomy boundary is narrow on purpose.</h2>
+      <p>ocbrain may harvest local history, compile knowledge, label outcomes, quarantine risky rows, promote memory, render bounded excerpts, and build local datasets. It does not get general authority from doing those jobs.</p>
       <ul>
-        <li><strong>There is no hosted export path.</strong> Datasets are written to a local directory; the export target class is local-only by construction.</li>
-        <li><strong><code>private</code>-scope rows never export</strong> — regardless of any flag.</li>
-        <li><strong>Every example is scrubbed</strong> for secret residue, high-entropy blobs, injected-memory leakage, and prompt-injection before it is stored.</li>
-        <li><strong>The optional judge is the only outward call, and it is fenced:</strong> off unless a key is present, knowledge rows only, <code>private</code> dropped, bodies redacted, budget-capped, and every batch writes an egress-audit row.</li>
+        <li>It does not enqueue or execute agent work.</li>
+        <li>It does not install skills or ship packages.</li>
+        <li>It does not send a hosted-teacher request merely because a preview passed.</li>
+        <li>It does not export the training corpus to a hosted endpoint.</li>
+        <li>It does not destructively delete the evidence ledger as ordinary maintenance.</li>
       </ul>
     </section>
 
-    <section class="section" id="inspectable">
-      <h2>Inspectable by design</h2>
-      <p>Memory quality stays auditable, not vibes-based. You can always ask why ocbrain believes something — and see what it quarantined.</p>
-      <ul>
-        <li><strong>Every current belief links back to its supporting evidence.</strong> There are no unsourced facts.</li>
-        <li><strong>Every label carries a confidence</strong> and the signals that produced it.</li>
-        <li><strong>Every autopilot run is recorded</strong> — per-stage results, quarantines, and refusals — in a run ledger.</li>
-        <li><strong>Retrieval feedback is recorded</strong> and drives the next promotion cycle.</li>
-      </ul>
-      <pre><code># See the state of memory: counts, labels, quarantines, coverage
-brain.digest
+    <section class="section" id="pilot">
+      <h2>The first fine-tune was a pipeline pass and a model-quality fail.</h2>
+      <p>The blind evaluation existed before the training files. Twenty graded persona prompts and their references were held out, and their content hashes were removed from every training stream. The base model and trainer revision were pinned before the run.</p>
+      <p>The corrected 25-step local QLoRA run completed. Training loss ended at 2.218, and validation loss moved from 6.594 before training to 4.592. The adapter loaded and generated all twenty candidates.</p>
+      <blockquote><strong>The tuned candidate was preferred in 2 of 20 decided comparisons.</strong> Mean voice fidelity was 2.25 for the candidate and 4.60 for the reference. That fails the voice bar. It also tells us what to improve while the corpus is still cheap to change.</blockquote>
+      <p>The useful conclusion is not that fine-tuning works. The useful conclusion is that the evaluation can reject a weak model before anyone starts believing its style is Jonathan's.</p>
+    </section>
 
-# Trace any current belief back to the evidence behind it
-brain.get &lt;id&gt;</code></pre>
+    <section class="section" id="risks">
+      <h2>What could still be wrong.</h2>
+      <ul>
+        <li><strong>Judge echo chamber.</strong> A grader can reward its own stylistic preferences unless it is calibrated against independent human decisions.</li>
+        <li><strong>Long writer windows.</strong> Reads now degrade safely, but the architecture still has one SQLite writer and needs continued concurrency hardening.</li>
+        <li><strong>Retrieval quality.</strong> A healthy MCP call does not prove the returned context was the best context. A labeled retrieval evaluation harness is still needed.</li>
+        <li><strong>Single-machine fragility.</strong> The corpus has no automatic off-machine backup because a backup widens the privacy surface. That remains an operator decision.</li>
+        <li><strong>Operator configuration.</strong> OpenClaw SecretRef migration and the enabled Policy plugin's policy are separate security choices. The ocbrain source cannot choose them honestly on the operator's behalf.</li>
+      </ul>
     </section>
 
     <section class="section">
-      <h2>Read the full design</h2>
-      <p>The Ultimate Guide covers the data model, the signal taxonomy, the safeguards, the promotion rules, and the dataset factory in detail.</p>
+      <h2>Reproduce the source gate.</h2>
+      <pre><code>PYTHONPATH=. uv run --with pytest --with ruff --with-editable . pytest -q
+PYTHONPATH=. uv run --with pytest --with ruff --with-editable . ruff check .
+uv run --with-editable . python -m compileall src tests
+git diff --check
+uv run --with-editable . ocbrain public-safety-check</code></pre>
+      <p>Runtime proof commands and the model-driven acceptance prompt are in the <a href="/install/#verify">install guide</a>. The current architecture and pilot contract live with the source.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Read the Ultimate Guide</a>
-        <a class="btn" href="/how-it-works/">How it works</a>
+        <a class="btn btn-primary" href="/how-it-works/">Read the architecture</a>
+        <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">Inspect the repository</a>
       </div>
     </section>
   </main>
 
-  <div class="footer">Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. Open source on <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://github.com/jonathangu/ocbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Ultimate Guide</a></div>
+  <div class="footer">Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. Dated proof, explicit limits, and source you can inspect.</div>
 </div>
 </body>
 </html>

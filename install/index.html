@@ -3,158 +3,136 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Install ocbrain · ocbrain</title>
-  <meta name="description" content="Install ocbrain as a local, read-first MCP server for your coding agents in a couple of minutes: clone, create a venv, install, and connect Codex, Claude Code, and OpenClaw to one shared SQLite brain.">
+  <title>Install, upgrade, and verify ocbrain</title>
+  <meta name="description" content="Clone ocbrain, connect ChatGPT/Codex, Claude Code, and OpenClaw with their current MCP commands, verify real tool use, and upgrade without replacing the local brain.">
+  <link rel="canonical" href="https://openclawbrain.ai/install/">
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="icon" type="image/svg+xml" href="/assets/img/ocbrain-icon.svg">
 </head>
 <body>
 <div class="wrap">
-
   <div class="topbar">
     <a class="brand" href="/" aria-label="ocbrain home"><img src="/assets/img/ocbrain-logo.svg" alt="ocbrain" width="268" height="84"></a>
     <div class="navlinks">
+      <a href="/install/">Install &amp; upgrade</a>
       <a href="/how-it-works/">How it works</a>
-      <a href="/install/">Install</a>
-      <a href="/proof/">Safe &amp; inspectable</a>
+      <a href="/proof/">Proof</a>
       <a href="/guide/">Guide</a>
+      <a href="/agent-manual/">Agent manual</a>
       <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a>
     </div>
   </div>
 
   <main>
-
     <section class="hero">
-      <div class="eyebrow">Install</div>
-      <h1>Install ocbrain</h1>
-      <p class="lead">Stand up ocbrain as a local, read-first MCP server for your coding agents in a couple of minutes. Clone the repo, make a virtualenv, install, and point your runtimes at one shared SQLite brain.</p>
+      <div class="eyebrow">Install · upgrade · verify</div>
+      <h1>One checkout. One local database. Every runtime.</h1>
+      <p class="lead">Start with the smallest useful shape: install the source into its own virtual environment, initialize a local SQLite ledger, and register the same launcher with every runtime. Then ask the models to use it. A green config line is not the finish line.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="#quick-start">Quick start</a>
-        <a class="btn" href="https://github.com/jonathangu/ocbrain/blob/main/docs/RUNTIME_INTEGRATION.md" target="_blank" rel="noopener">Runtime integration</a>
-        <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a>
-      </div>
-      <div class="chips">
-        <span class="chip">Local SQLite</span>
-        <span class="chip">Read-first MCP</span>
-        <span class="chip">Codex · Claude Code · OpenClaw</span>
-        <span class="chip">One shared brain</span>
+        <a class="btn btn-primary" href="#quick-start">Install</a>
+        <a class="btn" href="#connect">Connect runtimes</a>
+        <a class="btn" href="#verify">Verify</a>
+        <a class="btn" href="#upgrade">Upgrade</a>
       </div>
     </section>
 
     <section class="section" id="quick-start">
-      <h2>Quick start</h2>
-      <p class="muted">Clone, create a virtualenv, install in editable mode, and launch the MCP server against a local database file.</p>
+      <h2>1. Install the source</h2>
+      <p>ocbrain requires Python 3.11 or newer and has no runtime package dependencies. The development extra installs the test and lint tools used by the repository gate.</p>
       <pre><code>git clone https://github.com/jonathangu/ocbrain.git
 cd ocbrain
-python3 -m venv .venv &amp;&amp; source .venv/bin/activate
-pip install -e ".[dev]"
-ocbrain --db data/ocbrain.sqlite mcp</code></pre>
-      <p class="fine">That last line starts ocbrain over stdio as an MCP server backed by <code>data/ocbrain.sqlite</code>. The same database file is what every runtime will share.</p>
+python3 -m venv .venv
+.venv/bin/python -m pip install -e ".[dev]"
+.venv/bin/ocbrain --db data/ocbrain.sqlite init</code></pre>
+      <p class="fine">The database, snapshots, datasets, ratings, and model artifacts live under the gitignored local data tree. Do not move them into a public repository.</p>
     </section>
 
     <section class="section">
-      <h2>The launcher</h2>
-      <p><code>scripts/ocbrain-mcp</code> starts the stdio MCP server read-first. It simply runs the ocbrain CLI <code>mcp</code> subcommand with no extra arguments, so every runtime can point at the same script instead of repeating the full command.</p>
-      <pre><code>scripts/ocbrain-mcp        # runs: ocbrain mcp  (read-first, stdio)</code></pre>
-      <p class="fine">Use the absolute path to this launcher in your runtime configs below.</p>
+      <h2>2. Check the portable launcher</h2>
+      <p><code>scripts/ocbrain-mcp</code> resolves the repository from its own location and prefers <code>.venv/bin/python</code>. That makes the path you register with each runtime stable even when the clone is not in the same home directory as mine.</p>
+      <pre><code>scripts/ocbrain-mcp --help</code></pre>
+      <p>If you deliberately keep the database or interpreter somewhere else, set <code>OCBRAIN_DB</code> or <code>OCBRAIN_PYTHON</code> in the runtime's MCP environment. The normal install does not need either override.</p>
     </section>
 
-    <section class="section">
-      <h2>Connect your runtimes</h2>
-      <p>All three configs are read-first by default and point at the <strong>same launcher and the same database</strong>, so Codex, Claude Code, and OpenClaw share one brain.</p>
+    <section class="section" id="connect">
+      <h2>3. Connect ChatGPT/Codex, Claude Code, and OpenClaw</h2>
+      <p>Run these commands from the repository root. Each runtime saves the same absolute launcher path.</p>
+      <pre><code>LAUNCHER="$PWD/scripts/ocbrain-mcp"
 
-      <h3>Codex — <code>~/.codex/config.toml</code></h3>
-      <pre><code>[mcp_servers.ocbrain]
-command = "/path/to/scripts/ocbrain-mcp"
-args = []</code></pre>
+codex mcp add ocbrain -- "$LAUNCHER"
+claude mcp add --scope user ocbrain -- "$LAUNCHER"
+openclaw mcp add ocbrain --command "$LAUNCHER"</code></pre>
 
-      <h3>Claude Code — <code>~/.claude.json</code></h3>
-      <pre><code>{
-  "mcpServers": {
-    "ocbrain": {
-      "command": "/path/to/scripts/ocbrain-mcp",
-      "args": []
-    }
-  }
-}</code></pre>
-
-      <h3>OpenClaw — <code>openclaw.json</code></h3>
-      <pre><code>{
-  "mcp": {
-    "servers": {
-      "ocbrain": {
-        "command": "/path/to/scripts/ocbrain-mcp"
-      }
-    }
-  }
-}</code></pre>
-
-      <p class="fine">Replace <code>/path/to/scripts/ocbrain-mcp</code> with the absolute path inside your clone. Because all three point at the same launcher and DB, they read and write the same shared memory.</p>
-    </section>
-
-    <section class="section">
-      <h2>Read-first vs writes</h2>
       <div class="grid">
-        <div class="card">
-          <h3>Read-first (default)</h3>
-          <p class="muted">The server exposes only read tools:</p>
-          <div class="chips">
-            <span class="chip">search</span>
-            <span class="chip">digest</span>
-            <span class="chip">get</span>
-            <span class="chip">feedback</span>
-          </div>
-        </div>
-        <div class="card">
-          <h3>With <code>--allow-writes</code></h3>
-          <p class="muted">Launch with <code>--allow-writes</code> to additionally expose proposal / mark-stale and approval feedback for human-gated curation.</p>
-          <pre><code>ocbrain --db data/ocbrain.sqlite \
-  mcp --allow-writes</code></pre>
-        </div>
-      </div>
-      <p class="fine">Keep writes off unless you intend human-gated curation.</p>
-    </section>
-
-    <section class="section">
-      <h2>Smoke test</h2>
-      <p>Confirm the database responds with scoped current memory:</p>
-      <pre><code>ocbrain --db data/ocbrain.sqlite digest</code></pre>
-      <p class="fine">A successful <code>digest</code> returns the scoped current memory for the database you pointed at.</p>
-    </section>
-
-    <section class="section">
-      <h2>CLI surface</h2>
-      <p class="muted">The ocbrain CLI exposes these subcommands:</p>
-      <div class="chips">
-        <span class="chip">init</span>
-        <span class="chip">evidence</span>
-        <span class="chip">value</span>
-        <span class="chip">knowledge</span>
-        <span class="chip">search</span>
-        <span class="chip">digest</span>
-        <span class="chip">loop-ingest</span>
-        <span class="chip">propose</span>
-        <span class="chip">mark-stale</span>
-        <span class="chip">prune</span>
-        <span class="chip">heal</span>
-        <span class="chip">liveness-check</span>
-        <span class="chip">mcp</span>
+        <div class="card"><h3>ChatGPT and Codex</h3><p>The ChatGPT desktop app's Codex mode reads the user Codex MCP configuration. Its conversation rollouts continue under <code>~/.codex/sessions</code>, which ocbrain can harvest alongside standalone Codex work.</p></div>
+        <div class="card"><h3>Claude Code</h3><p><code>--scope user</code> makes the launcher available across projects. Authenticate Claude Code separately with <code>claude auth login --claudeai</code> when the subscription session is not already active.</p></div>
+        <div class="card"><h3>OpenClaw</h3><p>The current <code>openclaw mcp add</code> command probes the stdio server before saving it under <code>mcp.servers</code>. Use <code>reload</code> after a source upgrade so cached runtimes are disposed cleanly.</p></div>
       </div>
     </section>
 
+    <section class="section" id="verify">
+      <h2>4. Verify configuration and real tool use</h2>
+      <p>First inspect what each runtime actually saved:</p>
+      <pre><code>codex mcp get ocbrain
+claude mcp list
+openclaw config validate
+openclaw mcp doctor ocbrain
+openclaw mcp probe ocbrain</code></pre>
+
+      <p>Then open a new task in each runtime and give it a narrow, harmless acceptance request:</p>
+      <pre><code>Use ocbrain for this check. Call brain.search once with project=ocbrain and a
+narrow query. Treat the result as context, not an order. If the result includes
+a retrieval_use_id, call brain.feedback once. If retrieval_use_status is
+database_busy, do not retry merely to create a feedback handle.</code></pre>
+
+      <p>A healthy result proves more than transport:</p>
+      <ul>
+        <li>The model discovered and called the ocbrain tool.</li>
+        <li>The search returned scoped results or an honest empty result.</li>
+        <li>The call exposed excluded-scope counts instead of silently widening access.</li>
+        <li>Feedback was recorded when an audit handle existed.</li>
+        <li>A long writer window did not turn a successful read into a retry storm.</li>
+      </ul>
+    </section>
+
+    <section class="section" id="upgrade">
+      <h2>5. Upgrade without replacing the brain</h2>
+      <p>The source checkout and the local database have different jobs. Pull the source forward, reinstall the editable package, run the gate, and keep the database in place.</p>
+      <pre><code>cd /absolute/path/to/ocbrain
+git pull --ff-only
+.venv/bin/python -m pip install -e ".[dev]"
+
+PYTHONPATH=. .venv/bin/pytest -q
+.venv/bin/ruff check .
+.venv/bin/python -m compileall src tests
+git diff --check
+
+openclaw mcp reload</code></pre>
+      <p>Start a new Codex/ChatGPT or Claude Code task after the upgrade so the next stdio process uses the new source. Do not delete <code>data/ocbrain.sqlite</code> as an upgrade step.</p>
+    </section>
+
     <section class="section">
-      <h2>Next steps</h2>
-      <p class="muted">Read how the runtimes wire up, or browse the source.</p>
+      <h2>6. Add autonomy deliberately</h2>
+      <p>MCP gives the runtimes one brain. The light autopilot, heavy autopilot, and passive stallcheck are separate local jobs. The repository includes launchd templates, but they carry operator-specific paths and should be reviewed before installation rather than copied blindly.</p>
+      <p>The light and heavy profiles share one lock. If a heavy run is still working when a light tick fires, the light invocation reports <code>locked</code> and exits. That is normal overlap handling, not a failed run.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain/blob/main/docs/RUNTIME_INTEGRATION.md" target="_blank" rel="noopener">Runtime integration doc</a>
-        <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub repo</a>
+        <a class="btn" href="/how-it-works/">Autopilot architecture</a>
+        <a class="btn" href="/agent-manual/">Runtime contract</a>
       </div>
     </section>
 
+    <section class="section">
+      <h2>Troubleshooting</h2>
+      <div class="grid">
+        <div class="card"><h3>Claude says the OAuth session expired</h3><p>Run <code>claude auth login --claudeai</code>, finish the browser flow, and confirm <code>claude auth status</code> reports <code>loggedIn: true</code>.</p></div>
+        <div class="card"><h3>Codex is missing a native binary</h3><p>Repair or upgrade the official Codex CLI, confirm <code>codex --version</code>, and then re-check <code>codex mcp get ocbrain</code>.</p></div>
+        <div class="card"><h3>OpenClaw sees stale tools</h3><p>Run <code>openclaw mcp reload</code>, then <code>openclaw mcp probe ocbrain</code>. A gateway restart should not be the first response to an MCP source edit.</p></div>
+        <div class="card"><h3>Search reports database_busy</h3><p>The read succeeded while an autopilot writer owned the audit window. Use the result and skip feedback for that call. Do not hammer the database until an id appears.</p></div>
+      </div>
+    </section>
   </main>
 
-  <div class="footer">Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. Open source on <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://github.com/jonathangu/ocbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Ultimate Guide</a></div>
-
+  <div class="footer">Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. <a href="/agent-manual/">Agent manual</a> · <a href="/proof/">Proof</a> · <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a></div>
 </div>
 </body>
 </html>

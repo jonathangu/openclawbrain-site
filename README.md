@@ -1,29 +1,45 @@
 # openclawbrain.ai
 
-Source for [openclawbrain.ai](https://openclawbrain.ai) — the public explainer site for **ocbrain**, a local, self-improving knowledge brain for AI agents.
+Source for [openclawbrain.ai](https://openclawbrain.ai), the canonical public
+operator and product documentation for
+[ocbrain](https://github.com/jonathangu/ocbrain).
 
-This is a static site. It should answer:
-
-- What is ocbrain?
-- Why should I trust it?
-- How does it actually work?
-
-The site itself has no runtime logic and does not run ocbrain. It's a set of static HTML pages describing the project — the evidence-to-knowledge pipeline, the automatic safeguards, and the promotion rules — for anyone deciding whether to install it.
+The site's first job is practical: help someone install, upgrade, and verify one
+local brain across ChatGPT/Codex, Claude Code, and OpenClaw. The explanation,
+proof, and agent contract support that job without crowding the front door.
 
 ## Pages
 
-- `/` — overview and current installed shape
-- `/how-it-works/` — the evidence-to-knowledge-to-memory pipeline and the autopilot loop
-- `/proof/` — the automatic safeguards and what ocbrain does not do
-- `/agent-manual/` — orientation for an agent using ocbrain's MCP tools
-- `/guide/` — a longer walkthrough of the data model and design
-- `/install/` — install instructions
+- `/install/` — install, connect every runtime, verify real tool use, and
+  upgrade without replacing the database.
+- `/how-it-works/` — evidence, knowledge, labels, memory, datasets, and the
+  light/heavy autopilot.
+- `/proof/` — dated source/runtime evidence, the failed first model-quality
+  result, safeguards, and open risks.
+- `/agent-manual/` — the current MCP operating contract.
+- `/guide/` — the plain-language argument for the architecture.
+- `/` — the product front door and route into those pages.
 
-## Deploy
+## Editorial contract
 
-Static site, deployed via Cloudflare on push to `main`. No build step.
+- Open with the idea already moving. Do not add scene-setting or autobiography.
+- Use full sentences with visible reasoning and short landings where they help.
+- Prefer clarity over compression.
+- Use bullets for genuine enumeration and keep tables small enough to read on a
+  phone.
+- Date volatile numbers.
+- Distinguish a unique win from a tie, a pipeline pass from a model pass, and a
+  configured integration from a model-driven tool-use proof.
+- Keep install, upgrade, and verify first on this domain.
 
-## Code and technical detail
+## Development and deploy
 
-- Code and README: [github.com/jonathangu/ocbrain](https://github.com/jonathangu/ocbrain)
-- Architecture reference: `docs/ARCHITECTURE.md` in that repo
+The site is static HTML and CSS with no build step. Serve it locally from the
+repository root:
+
+```bash
+python3 -m http.server 8000
+```
+
+Cloudflare deploys the production site from `main`. Validate the HTML, internal
+links, responsive layout, and live URLs before calling a change published.

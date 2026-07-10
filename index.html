@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>ocbrain: A Local, Self-Improving Knowledge Brain for AI Agents</title>
+  <title>ocbrain · One brain for ChatGPT/Codex, Claude Code, and OpenClaw</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="ocbrain is a local, self-improving knowledge brain for Codex, Claude, and OpenClaw: it compiles your agents' history into source-backed memory, auto-labels what worked, promotes only the trustworthy parts, and builds fine-tuning datasets — all on one machine.">
-  <meta property="og:title" content="ocbrain: A Local, Self-Improving Knowledge Brain for AI Agents">
-  <meta property="og:description" content="Compiles agent history into source-backed memory, auto-labels good/bad, promotes only trustworthy knowledge, and builds fine-tune datasets — locally, with automatic safeguards.">
+  <meta name="description" content="Install ocbrain, connect ChatGPT/Codex, Claude Code, and OpenClaw to one local source-backed memory, and verify the result instead of trusting a green config line.">
+  <meta property="og:title" content="ocbrain · One local brain for your agents">
+  <meta property="og:description" content="Source-backed memory, scoped retrieval, automatic safeguards, and local fine-tuning datasets across ChatGPT/Codex, Claude Code, and OpenClaw.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
@@ -23,122 +23,97 @@
     <div class="topbar">
       <a class="brand" href="/" aria-label="ocbrain home"><img src="/assets/img/ocbrain-logo.svg" alt="ocbrain" width="268" height="84"></a>
       <div class="navlinks">
+        <a href="/install/">Install &amp; upgrade</a>
         <a href="/how-it-works/">How it works</a>
-        <a href="/install/">Install</a>
-        <a href="/proof/">Safe &amp; inspectable</a>
+        <a href="/proof/">Proof</a>
         <a href="/guide/">Guide</a>
         <a href="/agent-manual/">Agent manual</a>
         <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
 
-    <section class="hero">
-      <div class="eyebrow">A local, self-improving knowledge brain for AI agents</div>
-      <h1>ocbrain compiles what your agents did into memory they can trust.</h1>
-      <p class="lead">ocbrain ingests the history your OpenClaw, Codex, and Claude agents already produce into a local SQLite ledger, compiles it into source-backed knowledge, decides what worked and what misled, and promotes only the trustworthy parts into an injectable memory — while quietly building a fine-tuning dataset from your own decisions.</p>
-      <p class="sublead">As of v0.2 it runs itself: an autopilot on a 15-minute light and hourly heavy cadence replaces the old human approval queue with automatic safeguards — injection scanning, provenance no-clobber, secret scrubbing, a privacy ratchet, tripwire quarantine, and a hash-chained audit trail. Nothing durable becomes injectable unchecked, and nothing leaves the machine.</p>
-      <blockquote><strong>Don't make each agent remember alone, and don't make a human approve every memory. Give them one evidence-backed brain that labels its own work and guards itself.</strong></blockquote>
-      <figure class="hero-art">
-        <img src="/assets/img/openclawbrain-hero.jpg" alt="Evidence graph hero art for shared agent memory" width="1280" height="512" loading="eager">
-        <figcaption>Source-backed memory and feedback for agents that work across real local projects.</figcaption>
-      </figure>
-      <div class="actions">
-        <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">Get ocbrain</a>
-        <a class="btn" href="#install">Install locally</a>
-        <a class="btn" href="#runtime">Runtime tools</a>
-        <a class="btn" href="/agent-manual/">Agent manual</a>
-      </div>
-      <div class="chips">
-        <span class="chip">Codex</span>
-        <span class="chip">Claude Code</span>
-        <span class="chip">OpenClaw</span>
-        <span class="chip">MCP</span>
-        <span class="chip">SQLite evidence ledger</span>
-        <span class="chip">auto-labeled good/bad</span>
-        <span class="chip">15-min / hourly autopilot</span>
-        <span class="chip">fine-tune datasets</span>
-      </div>
-    </section>
+    <main>
+      <section class="hero">
+        <div class="eyebrow">One local brain for the agents you already use</div>
+        <h1>Let ChatGPT, Codex, Claude Code, and OpenClaw remember together.</h1>
+        <p class="lead">The thing I keep coming back to is that agent memory should not be another confident summary with no source behind it. ocbrain reads the histories these runtimes already produce, compiles them into scoped knowledge, and serves only the parts that have earned trust.</p>
+        <p class="sublead">The store is local SQLite. Evidence stays attached to belief. Corrections, tests, tool results, and retrieval feedback change what the brain promotes. The training corpus stays on the machine, so the same history can improve memory now and a personal model later.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/install/">Install and verify</a>
+          <a class="btn" href="/how-it-works/">See the pipeline</a>
+          <a class="btn" href="/proof/">Read the proof</a>
+          <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">Browse the source</a>
+        </div>
+        <div class="chips">
+          <span class="chip">ChatGPT / Codex</span>
+          <span class="chip">Claude Code</span>
+          <span class="chip">OpenClaw</span>
+          <span class="chip">MCP</span>
+          <span class="chip">Local SQLite</span>
+          <span class="chip">Scoped retrieval</span>
+          <span class="chip">Local training corpus</span>
+        </div>
+        <figure class="hero-art">
+          <img src="/assets/img/openclawbrain-hero.jpg" alt="A source-backed memory graph shared by several agent runtimes" width="1280" height="512" loading="eager">
+          <figcaption>One evidence ledger, several runtime lenses, and a memory view that can always point back to its source.</figcaption>
+        </figure>
+      </section>
 
-    <section class="section">
-      <h2>Current installed shape</h2>
-      <p>ocbrain runs as a local MCP server for Codex, Claude Code, and OpenClaw, plus an autopilot — 15-minute light passes, hourly heavy passes — that harvests history, compiles knowledge, auto-labels outcomes, promotes trustworthy memory, and mines datasets. All three runtimes read the same brain; retrieval feedback flows back and drives the next promotion cycle.</p>
-      <pre><code>~/.../ocbrain/scripts/ocbrain-mcp</code></pre>
-      <p class="fine">The autopilot is idempotent and single-instance. Write paths are ungated but pass automatic safeguards — injection scan, no-clobber, secret scrub, privacy ratchet, tripwire quarantine, hash-chained audit — so nothing risky becomes injectable unchecked. <a href="/how-it-works/">See the full pipeline &rarr;</a></p>
-    </section>
+      <section class="section">
+        <h2>Install first. Then make the proof real.</h2>
+        <p>A good memory system is not installed when three config files look plausible. It is installed when each runtime can call the same MCP server, retrieve scoped context, and record whether that context helped. The install guide now uses the current runtime CLIs and ends with those checks.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/install/#quick-start">Clone and install</a>
+          <a class="btn" href="/install/#connect">Connect every runtime</a>
+          <a class="btn" href="/install/#verify">Verify tool use</a>
+          <a class="btn" href="/install/#upgrade">Upgrade safely</a>
+        </div>
+      </section>
 
-    <section class="section" id="runtime">
-      <h2>Runtime tools</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>brain.search</h3>
-          <p>Search source-backed OpenClaw, Codex, Claude, task, and workspace history without making each runtime keep a separate memory silo.</p>
+      <section class="section">
+        <h2>One brain does not mean one undifferentiated memory pool.</h2>
+        <p>Every retrieval carries the narrowest context the runtime knows: project, repo, task, client, runtime, and session. That context is a lens over one ledger. Stable doctrine can travel; confidential or project-specific evidence does not.</p>
+        <div class="grid">
+          <div class="card"><h3>Evidence is immutable</h3><p>History enters as hash-pinned evidence. The current belief can change without rewriting what happened.</p></div>
+          <div class="card"><h3>Knowledge is compiled</h3><p>Signals from corrections, verifiers, outcomes, and retrieval use decide what remains current.</p></div>
+          <div class="card"><h3>Memory is a view</h3><p>Agents see a bounded view over current injectable knowledge, not a second store that can drift.</p></div>
+          <div class="card"><h3>Scope only tightens</h3><p>A derived object inherits the most restrictive linked source scope. Private evidence cannot make a public belief.</p></div>
         </div>
-        <div class="card">
-          <h3>brain.digest</h3>
-          <p>Expose ledger counts and state so memory quality is inspectable instead of vibes-based.</p>
-        </div>
-        <div class="card">
-          <h3>brain.get</h3>
-          <p>Retrieve reviewed candidates with scope and draft/private controls, instead of injecting raw transcripts blindly.</p>
-        </div>
-        <div class="card">
-          <h3>brain.feedback</h3>
-          <p>Record helpful, used, ignored, irrelevant, or harmful outcomes against a retrieval-use id.</p>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section">
-      <h2>What ocbrain is, and why you can trust it</h2>
-      <p>ocbrain is a local, source-backed knowledge brain for coding agents. Immutable <strong>evidence</strong> goes in; a compiler turns it into current <strong>knowledge</strong>; the brain labels that knowledge good or bad from its own outcomes; and <code>memory</code> is a read-only view over only the trustworthy parts. Nothing durable is invented in the dark — every belief traces back to something that actually happened.</p>
-      <div class="grid">
-        <div class="card">
-          <h3>Evidence before belief</h3>
-          <p>Raw history is captured as immutable evidence first. Knowledge is never written ahead of the evidence that justifies it.</p>
+      <section class="section">
+        <h2>The system maintains itself, but it does not act in the world.</h2>
+        <p>The light profile keeps recent knowledge labeled, embedded, checked, promoted, and rendered. The heavy profile adds snapshots, history harvest, compilation, maintenance, and dataset work. Both share one lock, so an overlap exits cleanly instead of double-running.</p>
+        <p>That autonomy belongs to memory maintenance. ocbrain does not enqueue agent work, install skills, ship packages, send hosted requests, or delete private data on its own.</p>
+        <div class="actions">
+          <a class="btn" href="/how-it-works/">Walk through the full loop</a>
+          <a class="btn" href="/agent-manual/">Give an agent the contract</a>
         </div>
-        <div class="card">
-          <h3>Labels its own work</h3>
-          <p>A 19-signal taxonomy reads corrections, tests, deploys, and retrieval outcomes to decide which knowledge earned trust — with time decay and confidence.</p>
-        </div>
-        <div class="card">
-          <h3>Promotes only the good</h3>
-          <p>Memory is scored, budget-bounded, and injection-clean. A label flip to bad, or a tripwire, demotes a row immediately.</p>
-        </div>
-        <div class="card">
-          <h3>Safeguards, not gates</h3>
-          <p>Automatic invariants replace the human approval queue: injection scan, provenance no-clobber, secret scrub, privacy ratchet, tripwire quarantine, hash-chained audit.</p>
-        </div>
-      </div>
-      <p class="fine">Safety stance: ocbrain learns autonomously, but it does not act in the world — a self-guarding librarian and compiler, not an agent. <a href="/proof/">Safe &amp; inspectable &rarr;</a></p>
-      <div class="chips">
-        <span class="chip">Autonomous, not an actor</span>
-        <span class="chip">No loop-runner</span>
-        <span class="chip">No skill-installer</span>
-        <span class="chip">Never widens privacy scope</span>
-        <span class="chip">External content is data, not instructions</span>
-        <span class="chip">Supersedes &amp; archives, never deletes history</span>
-        <span class="chip">Datasets never leave the machine</span>
-      </div>
-    </section>
+      </section>
 
-    <section class="section" id="install">
-      <h2>Quick start</h2>
-      <pre><code>git clone https://github.com/jonathangu/ocbrain.git
-cd ocbrain
-/opt/homebrew/bin/python3.13 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
-ocbrain --db data/ocbrain.sqlite mcp</code></pre>
-      <p class="fine">Runtime docs: <a href="https://github.com/jonathangu/ocbrain/blob/main/docs/RUNTIME_INTEGRATION.md" target="_blank" rel="noopener">docs/RUNTIME_INTEGRATION.md</a>. Agent-readable manual: <a href="/agent-manual/">openclawbrain.ai/agent-manual/</a>.</p>
-    </section>
+      <section class="section">
+        <h2>The dataset is the long game.</h2>
+        <p>The same evidence compiles into three local streams: successful exchanges for SFT, corrections for DPO, and verified first-party writing for persona and voice. A local grader can score those streams, and the pilot workflow freezes a blind voice evaluation before it writes training files.</p>
+        <blockquote><strong>The first pilot proved the pipeline and failed the model-quality bar.</strong> In the dated July 9 evaluation, the tuned candidate was preferred in 2 of 20 decided comparisons. That is useful evidence: the corpus and recipe need to improve before the model deserves a stronger claim.</blockquote>
+        <p>The corpus, references, candidates, blind key, ratings, and adapter stay in the gitignored local dataset tree. There is no hosted dataset export path.</p>
+      </section>
 
-    <section class="section">
-      <h2>Formerly OpenClawBrain</h2>
-      <p>This project began as OpenClawBrain and has since been renamed and refocused into the smaller ocbrain runtime: local first, source-backed, installed through MCP, and conservative about learning. If you're curious about the early research, the original <a href="/jonathan-gu-2016-reinforcement-learning-paper.pdf">2016 reinforcement learning paper (PDF)</a> is still here.</p>
-    </section>
+      <section class="section">
+        <h2>Current proof, dated instead of implied.</h2>
+        <p>On 2026-07-09, the source gate passed 459 tests, Ruff, compileall, diff checks, and public-safety scans. Real OpenClaw and Codex turns completed search-to-feedback cycles. A real Claude Code turn searched successfully during the scheduled heavy writer window and followed the safe no-retry contract when no audit handle was available.</p>
+        <p>Those are snapshots, not timeless promises. The proof page separates code gates, runtime acceptance, and model quality so a green result in one lane cannot stand in for another.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/proof/">See what passed and what did not</a>
+        </div>
+      </section>
 
-    <div class="footer">Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. Open source on <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://github.com/jonathangu/ocbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Ultimate Guide</a> &middot; <a href="/agent-manual/">Agent manual</a> &middot; <a href="/llms.txt">llms.txt</a></div>
+      <section class="section">
+        <h2>Formerly OpenClawBrain.</h2>
+        <p>The project began as OpenClawBrain and became the smaller ocbrain runtime: local first, source-backed, shared through MCP, and conservative about what earns memory. The domain stayed because the question stayed the same. How should an agent remember without turning arbitrary text into truth?</p>
+      </section>
+    </main>
+
+    <div class="footer">Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. <a href="/install/">Install</a> · <a href="/proof/">Proof</a> · <a href="/agent-manual/">Agent manual</a> · <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a> · <a href="/llms.txt">llms.txt</a></div>
   </div>
 </body>
 </html>

@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>The ocbrain guide · ocbrain</title>
+  <title>The ocbrain guide</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Orientation for ocbrain: a local SQLite evidence-to-knowledge ledger that keeps coding agents honest. Source-backed history in, compiled current knowledge out, automatic safeguards plus verifier evidence or explicit approval before anything executable.">
+  <meta name="description" content="A plain-language guide to ocbrain: why one local evidence ledger is better than separate agent memories, how trust compounds, and why evaluation comes before fine-tuning.">
+  <link rel="canonical" href="https://openclawbrain.ai/guide/">
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="icon" type="image/svg+xml" href="/assets/img/ocbrain-icon.svg">
 </head>
@@ -13,9 +14,9 @@
   <div class="topbar">
     <a class="brand" href="/" aria-label="ocbrain home"><img src="/assets/img/ocbrain-logo.svg" alt="ocbrain" width="268" height="84"></a>
     <div class="navlinks">
+      <a href="/install/">Install &amp; upgrade</a>
       <a href="/how-it-works/">How it works</a>
-      <a href="/install/">Install</a>
-      <a href="/proof/">Safe &amp; inspectable</a>
+      <a href="/proof/">Proof</a>
       <a href="/guide/">Guide</a>
       <a href="/agent-manual/">Agent manual</a>
       <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a>
@@ -24,74 +25,70 @@
 
   <main>
     <section class="hero">
-      <div class="eyebrow">The ocbrain guide</div>
-      <h1>A shared memory layer that keeps agents honest.</h1>
-      <p class="lead">Coding agents are powerful but forgetful. Each runtime sees only a slice of the truth, chat history is lossy, and static notes drift out of date. ocbrain is the layer in between: source-backed history goes in, compiled current knowledge comes out, and automatic safeguards — backed by verifier evidence or explicit human approval — stand in front of anything executable.</p>
-      <p class="sublead">It is a local SQLite evidence-to-knowledge ledger. Nothing becomes durable knowledge until it is backed by evidence, and nothing prescriptive reaches a runtime without passed-verifier evidence or explicit approval. This page is a signpost — the canonical write-up lives in the repo.</p>
+      <div class="eyebrow">The guide</div>
+      <h1>Memory should make an agent more accountable, not merely more certain.</h1>
+      <p class="lead">The hard part is not storing more text. Chat logs already do that. The hard part is deciding what deserves to survive, keeping the source attached, changing a belief when the evidence changes, and preventing one project's private context from becoming another project's instruction.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Read the Ultimate Guide</a>
-        <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">View the repo</a>
-        <a class="btn" href="/agent-manual/">Agent manual</a>
-      </div>
-      <div class="chips">
-        <span class="chip">Local SQLite ledger</span>
-        <span class="chip">Evidence to knowledge</span>
-        <span class="chip">Source-backed</span>
-        <span class="chip">Automatic safeguards</span>
+        <a class="btn btn-primary" href="/install/">Install and verify</a>
+        <a class="btn" href="/how-it-works/">Technical walkthrough</a>
+        <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">Architecture source</a>
       </div>
     </section>
 
     <section class="section">
-      <h2>The contract</h2>
-      <p class="muted">Four commitments that hold across every runtime that reads from or writes to the brain.</p>
+      <h2>The shape starts simple.</h2>
+      <p>Every runtime already leaves a trail: ChatGPT/Codex rollouts, Claude Code projects, OpenClaw sessions, commits, verifier output, and the user's corrections. ocbrain does not ask those runtimes to build separate memories. It brings their evidence into one local ledger and lets context decide which part of that ledger is visible.</p>
+      <p>That distinction matters. One brain gives the system a shared history. Scope keeps shared history from becoming shared leakage.</p>
+    </section>
+
+    <section class="section">
+      <h2>Five movements turn history into something useful.</h2>
       <div class="grid">
-        <div class="card">
-          <h3>1. Evidence before belief</h3>
-          <p>Claims enter as evidence first. Nothing is treated as true on assertion alone — there is always a source behind it.</p>
-        </div>
-        <div class="card">
-          <h3>2. Knowledge is compiled</h3>
-          <p>Current knowledge is compiled from evidence, lifecycle-managed over time, and linked back to the evidence it came from.</p>
-        </div>
-        <div class="card">
-          <h3>3. Read-first consumption</h3>
-          <p>Runtime consumption is read-first and source-backed. Agents draw on what is already established rather than inventing it.</p>
-        </div>
-        <div class="card">
-          <h3>4. Safeguards on the risky class</h3>
-          <p>Executable, prescriptive, or high-risk knowledge requires passed-verifier evidence or explicit human approval before it can be acted on.</p>
-        </div>
+        <div class="card"><h3>1. Evidence</h3><p>Record what happened without pretending it is already a durable truth.</p></div>
+        <div class="card"><h3>2. Knowledge</h3><p>Compile a current belief and keep the links to every source that supports or contradicts it.</p></div>
+        <div class="card"><h3>3. Labels</h3><p>Use corrections, tests, deployments, task outcomes, and retrieval feedback to decide what worked.</p></div>
+        <div class="card"><h3>4. Memory</h3><p>Promote a bounded, injectable view of current knowledge that passed the applicable safeguards.</p></div>
+        <div class="card"><h3>5. Datasets</h3><p>Mine successful exchanges, corrections, and first-party voice into local SFT, DPO, and persona streams.</p></div>
       </div>
+      <p>The order is important. An agent never gets to skip evidence and write a belief because the sentence sounds right.</p>
     </section>
 
     <section class="section">
-      <h2>Principles</h2>
-      <p class="muted">The rules the ledger enforces, in plain terms.</p>
+      <h2>Trust comes from the feedback loop.</h2>
+      <p>A memory that was useful should become easier to retrieve. A memory that caused harm should lose its place. A hard correction should survive the next model's attempt to re-derive the same mistake. That is why retrieval returns an audit handle and why agents report whether the context was helpful, used, ignored, irrelevant, or harmful.</p>
+      <p>During a long database writer window, the read still succeeds. If the audit row cannot be written, the response says so and omits the handle. The honest action is to use the result and skip feedback for that call. Retrying until a green audit appears would turn observability into load.</p>
+    </section>
+
+    <section class="section">
+      <h2>Autonomy belongs to maintenance, not authority.</h2>
+      <p>The scheduled profiles may harvest, compile, label, embed, quarantine, promote, maintain, and export local datasets. Those are bounded maintenance jobs over the brain. They do not authorize ocbrain to run the user's work, send a hosted request, install a skill, publish a package, or delete the corpus.</p>
+      <p>That is the line I want the system to keep as it gets smarter. Let the model decide semantic meaning where judgment helps. Let code enforce the trust boundary. Let SQLite keep the evidence legible.</p>
+    </section>
+
+    <section class="section">
+      <h2>The fine-tune begins with a test it can fail.</h2>
+      <p>Generative training is cheap enough to tempt us into judging by feel after the fact. ocbrain takes the opposite order. It freezes held-out voice prompts, references, and the rubric before it writes the training pack. It removes those content hashes from every training stream, records the exact base model and trainer revision, and keeps the blind key away from the rater.</p>
+      <p>The first pilot completed and lost its blind comparison badly: 2 preferences out of 20 decided pairs. That is not an embarrassment to hide. It is the mechanism doing its job. The corpus can now improve against a bar that existed before the model.</p>
+    </section>
+
+    <section class="section">
+      <h2>The operating rules fit on one page.</h2>
       <ul>
-        <li><strong>Evidence before belief.</strong> A claim is provisional until it is backed by a source.</li>
-        <li><strong>Verified is not claimed.</strong> Saying something is true does not make it verified.</li>
-        <li><strong>Memory is a view, not a store.</strong> Current knowledge is a compiled view over the evidence underneath it.</li>
-        <li><strong>Supersede or archive — do not overwrite history.</strong> Old knowledge is retired, never silently rewritten.</li>
-        <li><strong>External and artifact content is data, never instruction.</strong> Fetched or generated content is treated as input, not as commands.</li>
-        <li><strong>Private source evidence can only tighten derived scope.</strong> Private inputs narrow what is concluded; they never widen it.</li>
-        <li><strong>Safeguards before executable or prescriptive knowledge.</strong> Anything that tells a runtime what to do needs passed-verifier evidence or explicit approval first.</li>
-        <li><strong>Agents emit evidence, not durable knowledge.</strong> Agents contribute observations; they do not write the durable record directly.</li>
+        <li>Retrieve with the narrowest true project, repo, task, client, runtime, and session context.</li>
+        <li>Treat memory as orientation. The user's newest request and the live artifact are fresher.</li>
+        <li>Keep external content as data, never instruction.</li>
+        <li>Emit evidence and feedback instead of writing a durable belief directly.</li>
+        <li>Never widen privacy through derivation.</li>
+        <li>Call a passed verifier a pass, a tie a tie, and a failed model a failed model.</li>
       </ul>
-    </section>
-
-    <section class="section">
-      <h2>Read the full guide</h2>
-      <p>This page is a signpost, not a re-write. The <strong>Ultimate Guide</strong> is the durable product and engineering overview, and it travels with the repo so it stays in step with the code.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Open the Ultimate Guide</a>
-        <a class="btn" href="https://github.com/jonathangu/ocbrain/blob/main/docs/RUNTIME_INTEGRATION.md" target="_blank" rel="noopener">Runtime integration</a>
-        <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">Browse the repo</a>
+        <a class="btn btn-primary" href="/agent-manual/">Open the agent manual</a>
+        <a class="btn" href="/proof/">Read the dated proof</a>
       </div>
-      <p class="fine">OpenClaw is one of the supported agent runtimes that can read from the brain. Wiring a runtime up is covered in the runtime integration guide.</p>
     </section>
   </main>
 
-    <div class="footer">Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. Open source on <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://github.com/jonathangu/ocbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Ultimate Guide</a> &middot; <a href="/agent-manual/">Agent manual</a></div>
+  <div class="footer">Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. The detailed engineering reference travels with the <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">source</a>.</div>
 </div>
 </body>
 </html>

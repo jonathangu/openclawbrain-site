@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>How ocbrain works · v0.2 architecture</title>
-  <meta name="description" content="The ocbrain v0.2 architecture: a local, self-improving knowledge brain for AI agents. Evidence in, knowledge compiled, good/bad auto-labeled, safe memory promoted, fine-tune datasets built — all on one machine, on a 15-minute light and hourly heavy cadence, with automatic safeguards instead of human gates.">
-  <meta property="og:title" content="How ocbrain works · v0.2 architecture">
+  <title>How ocbrain works · current architecture</title>
+  <meta name="description" content="The current ocbrain architecture: evidence in, scoped knowledge compiled, outcomes labeled, trustworthy memory promoted, and local fine-tuning datasets evaluated before training.">
+  <meta property="og:title" content="How ocbrain works · current architecture">
   <meta property="og:description" content="A local, self-improving knowledge brain for AI agents. Evidence → knowledge → labels → injectable memory → datasets, all on one machine with automatic safeguards.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://openclawbrain.ai/how-it-works/">
@@ -35,6 +35,7 @@
     .kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 2px 0 6px; }
     .kv .chip { justify-content: flex-start; }
     .tag { color: var(--accent-2); font-weight: 700; }
+    .actions-spaced { margin-top: 22px; }
   </style>
 </head>
 <body>
@@ -42,9 +43,9 @@
   <div class="topbar">
     <a class="brand" href="/" aria-label="ocbrain home"><img src="/assets/img/ocbrain-logo.svg" alt="ocbrain" width="268" height="84"></a>
     <div class="navlinks">
+      <a href="/install/">Install &amp; upgrade</a>
       <a href="/how-it-works/">How it works</a>
-      <a href="/install/">Install</a>
-      <a href="/proof/">Safe &amp; inspectable</a>
+      <a href="/proof/">Proof</a>
       <a href="/guide/">Guide</a>
       <a href="/agent-manual/">Agent manual</a>
       <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a>
@@ -53,9 +54,9 @@
 
   <main>
     <section class="hero">
-      <p class="eyebrow">How it works · v0.2</p>
+      <p class="eyebrow">How it works · current source</p>
       <h1>A local knowledge brain that improves itself while you work.</h1>
-      <p class="lead">ocbrain reads the history your AI agents already produce, compiles it into source-backed knowledge, decides what worked and what didn't, promotes only the trustworthy parts into an injectable memory, and quietly builds a fine-tuning dataset from your own decisions. It runs on a 15-minute light and hourly heavy cadence on your machine. Nothing leaves it.</p>
+      <p class="lead">ocbrain reads the history your AI agents already produce, compiles it into source-backed knowledge, decides what worked and what did not, promotes only the trustworthy parts into an injectable memory, and builds a local fine-tuning dataset from your own decisions. It runs on a 15-minute light and hourly heavy cadence on your machine.</p>
       <div class="actions">
         <a class="btn btn-primary" href="/install/">Install ocbrain</a>
         <a class="btn" href="/proof/">Safe &amp; inspectable</a>
@@ -72,9 +73,9 @@
     </section>
 
     <section class="section">
-      <h2>What changed in v0.2</h2>
-      <p>v0.1 was a careful librarian: it filed evidence and compiled knowledge, but a human had to approve anything durable. That gate was the bottleneck — the brain could only grow as fast as someone clicked "approve."</p>
-      <p>v0.2 removes the human approval queue entirely and replaces it with <strong>automatic safeguards</strong>. Instead of a person deciding what is safe to remember, the brain runs every write through the same invariants a good reviewer would enforce — provenance no-clobber, injection scanning, secret scrubbing, a privacy ratchet, tripwire quarantine, and a hash-chained audit trail — and only the clean, corroborated results reach the memory an agent actually sees.</p>
+      <h2>From a review queue to a self-maintaining evidence loop</h2>
+      <p>The first version was a careful librarian: it filed evidence and compiled knowledge, but a human had to approve anything durable. That gate was the bottleneck — the brain could only grow as fast as someone clicked "approve."</p>
+      <p>The current source replaces that general queue with <strong>automatic safeguards</strong>. Every write passes the same invariants a careful reviewer would enforce — provenance no-clobber, injection scanning, secret scrubbing, a privacy ratchet, tripwire quarantine, and a hash-chained audit trail — and only clean, corroborated results reach the memory an agent sees.</p>
       <blockquote><strong>The design bet:</strong> a fixed set of mechanical safeguards, applied to every write, is safer <em>and</em> faster than a human queue that gets skipped when it's busy. Gates don't scale. Invariants do.</blockquote>
       <div class="kv">
         <span class="chip">Human approval queue &rarr; <span class="tag">automatic safeguards</span></span>
@@ -161,7 +162,7 @@
 
     <section class="section">
       <h2>3 · Labels — good, bad, or neutral</h2>
-      <p>This is the heart of v0.2. The brain reads its own outcomes and decides which knowledge earned trust and which misled it, using a <strong>19-signal taxonomy</strong>. Signals are mined from the history that already exists — no extra instrumentation — and each is a small, dated, weighted vote attached to a piece of knowledge.</p>
+      <p>This is the heart of the system. The brain reads its own outcomes and decides which knowledge earned trust and which misled it, using a <strong>19-signal taxonomy</strong>. Signals are mined from the history that already exists — no extra instrumentation — and each is a small, dated, weighted vote attached to a piece of knowledge.</p>
       <div class="grid">
         <div class="card">
           <h3>Human feedback</h3>
@@ -181,7 +182,7 @@
         </div>
       </div>
       <p>Signals are folded into a label with <strong>time decay</strong> — recent evidence outweighs stale evidence — and a mass threshold, so a single weak vote can't flip a belief. A hard negative (an explicit "this is wrong") always wins outright. The result is written back as <code>good</code>, <code>bad</code>, or <code>neutral</code> with a confidence score.</p>
-      <p>For the genuinely ambiguous middle — conflicting signals, or a promotion candidate with no votes yet — an <strong>optional, budget-capped judge</strong> can weigh in. It is off unless a key is present, it operates on knowledge rows only (never on your raw data), <code>private</code> content is dropped before it ever runs, every body is secret-scrubbed, and every batch writes an egress-audit row. Its vote is just one more signal, and it can never override a hard human correction.</p>
+      <p>For the genuinely ambiguous middle, an <strong>optional, budget-capped judge</strong> can weigh in on targeted knowledge rows. It is off unless configured, never grades the dataset, drops <code>private</code> content before packaging, secret-scrubs every body, and writes an egress-audit row for each batch. Its vote is one signal among many and cannot override a hard human correction.</p>
     </section>
 
     <section class="section">
@@ -250,8 +251,15 @@ CREATE VIEW memory AS
     </section>
 
     <section class="section">
+      <h2>Grade locally, and build the evaluation before training</h2>
+      <p>Mining examples is not the same as earning a training corpus. <code>dataset-grade</code> applies a different local rubric to SFT, DPO, and persona rows, rejects non-loopback endpoints before reading an example, and records the model, prompt version, progress, and normalized grade.</p>
+      <p>The pilot reserves at least twenty graded persona prompts, writes their references and voice rubric, and removes their content hashes from every training stream. Only after that frozen evaluation exists does it write the training pack. Candidate responses are randomized against the references, the rater never reads the A/B key, and scoring is the one step that unblinds the result.</p>
+      <p class="fine muted">That order matters. It keeps a training run from quietly changing the test it is supposed to pass.</p>
+    </section>
+
+    <section class="section">
       <h2>The autopilot loop</h2>
-      <p>All of this runs as one idempotent, single-instance state machine — <strong>fourteen stages, on a 15-minute light and hourly heavy cadence</strong>, scheduled locally. Any stage can be killed and safely re-run; watermarks, stable ids, and uniqueness constraints mean nothing is double-counted and no committed progress is lost.</p>
+      <p>All of this runs as one idempotent, single-instance state machine on a <strong>15-minute light and hourly heavy cadence</strong>. The dispatch table has fourteen work stages, with lock and finalize wrapped around it by the runner. Any stage can be killed and safely re-run; watermarks, stable ids, and uniqueness constraints mean nothing is double-counted and no committed progress is lost.</p>
       <ol class="stagelist">
         <li><span class="n"></span><div><h4>Lock</h4><p>Single-instance file lock. A slow run never collides with the next tick — the second invocation just exits.</p></div></li>
         <li><span class="n"></span><div><h4>Snapshot</h4><p>A daily rotated copy of the database before anything is touched. Snapshot or migrate failing aborts the whole run.</p></div></li>
@@ -283,14 +291,14 @@ CREATE VIEW memory AS
         <div class="card"><h3>External content is data</h3><p>Harvested third-party text is scanned and quarantined, never trusted as instruction.</p></div>
         <div class="card"><h3>Local by construction</h3><p>The datasets have no hosted export path. Private scope never leaves. The machine is the boundary.</p></div>
       </div>
-      <div class="actions" style="margin-top:22px;">
+      <div class="actions actions-spaced">
         <a class="btn btn-primary" href="/proof/">See how it stays safe</a>
-        <a class="btn" href="https://github.com/jonathangu/ocbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Read the Ultimate Guide</a>
+        <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">Read the source</a>
       </div>
     </section>
   </main>
 
-  <div class="footer">Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. Open source on <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://github.com/jonathangu/ocbrain/blob/main/docs/ULTIMATE_GUIDE.md" target="_blank" rel="noopener">Ultimate Guide</a> &middot; <a href="/agent-manual/">Agent manual</a></div>
+  <div class="footer">Built by <a href="https://www.jonathangu.com/" target="_blank" rel="noopener">Jonathan Gu</a>. <a href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">GitHub</a> &middot; <a href="/guide/">Guide</a> &middot; <a href="/agent-manual/">Agent manual</a></div>
 </div>
 </body>
 </html>
