@@ -29,7 +29,7 @@
       <h1>What passed, what failed, and what is still only a bet.</h1>
       <p class="lead">Trust does not come from calling a system autonomous or safe. It comes from naming the claim, running the verifier, keeping the failed result, and dating the snapshot so nobody mistakes it for a permanent guarantee.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="#snapshot">July 9 snapshot</a>
+        <a class="btn btn-primary" href="#snapshot">July 10 snapshot</a>
         <a class="btn" href="#safeguards">Safeguards</a>
         <a class="btn" href="#pilot">Fine-tune pilot</a>
         <a class="btn" href="#risks">Open risks</a>
@@ -40,7 +40,7 @@
       <h2>Environment-verified snapshot · 2026-07-10</h2>
       <p>This is the acceptance state on one machine on one date. The version numbers are evidence about that run, not a promise that these will always be the latest releases.</p>
       <div class="grid">
-        <div class="card"><h3>Source gate</h3><p>482 tests passed. Ruff, changed-file formatting, compileall, package build, <code>git diff --check</code>, the tracked-tree privacy scan, and the outgoing-range privacy scan passed.</p></div>
+        <div class="card"><h3>Source gate</h3><p>494 tests passed. Ruff, changed-file formatting, compileall, package build, <code>git diff --check</code>, the tracked-tree privacy scan, and the outgoing-range privacy scan passed.</p></div>
         <div class="card"><h3>Codex and ChatGPT</h3><p>Codex CLI 0.144.1 used the ChatGPT-backed login, called <code>brain.search</code>, recorded <code>brain.feedback</code>, and completed the exact acceptance response. ChatGPT desktop build 26.707.31123 shared the migrated Codex session store.</p></div>
         <div class="card"><h3>OpenClaw</h3><p>OpenClaw 2026.6.11 ran loopback-only with a reachable gateway. Its MCP doctor and live probe passed, and a gateway-backed model completed a recorded search-to-feedback cycle.</p></div>
         <div class="card"><h3>Claude Code</h3><p>Claude Code 2.1.206 authenticated through Claude.ai, reported ocbrain connected, and a real Sonnet turn called <code>brain.search</code> successfully during an active heavy writer window.</p></div>
@@ -54,6 +54,8 @@
       <p>The release audit found five forms of the same mistake: one dataset transaction stayed open across 3,712.6 seconds of parsing, autolabel kept signal writes open across FTS searches, review held its first write while the lazy iterator parsed later transcripts, hosted judge/embedding calls waited on TLS after writing their audits, and persona preparation still ran after acquiring the writer. v0.3.2 bounds those paths and keeps parsing, quality work, and network I/O outside SQLite transactions. After the original live writer exited, a safe checkpoint reduced the WAL from 625,436,632 bytes to zero.</p>
       <p>The passive stall watcher follows the same boundary: deadman evidence commits before optional Telegram paging, and delivery state is recorded afterward.</p>
       <p>Historical v0.3.1 probes allowed 39 of 40 writer attempts during review and 40 of 40 during tripwires and promotion. The later heavy ledger exposed a 27.457-second persona hold, so v0.3.2 moved redaction, serialization, quality scoring, and dedup reads outside the transaction. Post-fix stress runs measured a 0.001128-second maximum across 200 large persona examples and 0.000863 seconds across one 200-tool-turn review session.</p>
+      <p>The v0.3.3 live audit verified the complete 306,974-event hash chain and reproduced all 101,641 projected beliefs byte-for-byte. It repaired five legacy foreign-key references without deleting their retrieval history, removed 5,202 parentless FTS rows, and left both checks at zero. A composite tripwire cursor closed an equal-timestamp skip window; replacing a per-row full-event-log scan with an indexed lookup cut a clean 1,000-row page from 301.2534 seconds to 0.0351 seconds.</p>
+      <p>The same release made the watchdog state durable: old findings outside the paging window retire once, failed delivery still retries, and an unchanged deadman state does not manufacture duplicate evidence. Autopilot maintenance reads stallcheck's heartbeat; autopilot commits a visible running row and moving deadline after every stage; stallcheck independently pages that deadline if progress stops.</p>
     </section>
 
     <section class="section" id="safeguards">

@@ -274,12 +274,18 @@ CREATE VIEW memory AS
         <li><span class="n"></span><div><h4>Tripwires</h4><p>Run the tripwire registry and auto-quarantine anything that fires.</p></div></li>
         <li><span class="n"></span><div><h4>Promote</h4><p>Re-score, promote the trustworthy rows into memory, demote what slipped, enforce the budget.</p></div></li>
         <li><span class="n"></span><div><h4>Excerpt-render</h4><p>Render the promoted rows into the excerpt form the injectable memory actually serves.</p></div></li>
-        <li><span class="n"></span><div><h4>Maintain</h4><p>Prune stale knowledge and heal conflicts, emitting supersession signals as it goes.</p></div></li>
+        <li><span class="n"></span><div><h4>Maintain</h4><p>Prune stale knowledge, heal conflicts, and independently check loop and stall-watcher heartbeats.</p></div></li>
         <li><span class="n"></span><div><h4>Dataset-mine</h4><p>Mine SFT, DPO, and persona examples from newly settled history in bounded, measured writer batches.</p></div></li>
         <li><span class="n"></span><div><h4>Dataset-export</h4><p>Deterministically write the JSONL corpora and manifest — skipping the write if nothing changed.</p></div></li>
         <li><span class="n"></span><div><h4>Finalize</h4><p>Record the run in a ledger — per-stage results or errors — and release the lock.</p></div></li>
       </ol>
       <p class="fine muted">Each independent stage runs in its own try/except: a failure is recorded and downgrades the run to <em>partial</em>, but later independent stages still run. Only the two foundational stages — snapshot and migrate — abort the whole run, because everything after assumes a snapshotted, migrated database.</p>
+    </section>
+
+    <section class="section" id="grit">
+      <h2>The grit contract has an independent witness</h2>
+      <p>Agent instructions forbid ending a work turn with passive waiting: finish with environment-verified completion or an explicit blocked report. The separate stallcheck job then inspects workflow ledgers, runner state, ingress timeouts, and its own heartbeat. Stable fingerprints deduplicate findings; delivery state survives restarts; failed pages remain retryable; findings too old to page retire once instead of staying new forever.</p>
+      <p>Stallcheck does not claim or resume work. It records and pages. Autopilot maintenance watches stallcheck's heartbeat; autopilot commits a visible running row and moving deadline after every stage; stallcheck watches that deadline. Neither process is its own only witness. This is durable across process restarts on the same machine, but not across disk loss or removal of both launchd jobs.</p>
     </section>
 
     <section class="section">

@@ -45,7 +45,7 @@
           <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">Browse the source</a>
         </div>
         <div class="chips">
-          <span class="chip">v0.3.2 · Apache-2.0</span>
+          <span class="chip">v0.3.3 · Apache-2.0</span>
           <span class="chip">ChatGPT / Codex</span>
           <span class="chip">Claude Code</span>
           <span class="chip">OpenClaw</span>
@@ -101,7 +101,8 @@
 
       <section class="section">
         <h2>Current proof, dated instead of implied.</h2>
-        <p>On 2026-07-10, the v0.3.2 source gate passed 482 tests, Ruff, compileall, diff checks, package builds, and public-safety scans. Two stress runs then measured a 1.128 ms maximum writer hold across 200 large persona examples and 0.863 ms across one 200-tool-turn review session.</p>
+        <p>On 2026-07-10, the v0.3.3 source gate passed 494 tests, Ruff, compileall, diff checks, package builds, and public-safety scans. The live audit also verified a 306,974-event hash chain, an exact 101,641-belief projection, zero foreign-key violations, and zero parentless search rows.</p>
+        <p>The same audit repaired the tripwire cursor and its hot path. A clean 1,000-row page fell from 301.2534 seconds to 0.0351 seconds. Four old stall findings that could never page were retired once instead of being rediscovered forever.</p>
         <p>The local evaluator now calibrates against a separate set of eight human labels, not machine-authored expected answers. It passed 7/8 at the unchanged 80% gate; the one disagreement remains documented, and the blind model evaluation was not rerun.</p>
         <p>Those are snapshots, not timeless promises. The proof page separates code gates, runtime acceptance, and model quality so a green result in one lane cannot stand in for another.</p>
         <div class="actions">

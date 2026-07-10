@@ -5,7 +5,7 @@ Claude Code, OpenClaw, and compatible agents. It records immutable evidence,
 compiles current knowledge, labels outcomes, promotes a bounded injectable
 memory view, and mines local SFT, DPO, and persona datasets.
 
-Current public release: v0.3.2 under Apache-2.0.
+Current public release: v0.3.3 under Apache-2.0.
 
 Primary pages:
 
@@ -64,6 +64,14 @@ Safety and evaluation:
 - Dataset preparation runs outside SQLite writer transactions. Dated v0.3.2
   stress runs measured maximum writer holds of 1.128 ms across 200 large
   persona examples and 0.863 ms across a 200-tool-turn review session.
+- The dated v0.3.3 live audit verified a 306,974-event hash chain, an exact
+  101,641-belief projection, zero foreign-key violations, and zero parentless
+  FTS rows. It also reduced a clean 1,000-row tripwire page from 301.2534
+  seconds to 0.0351 seconds and made expired stall findings retire once.
+- Autopilot commits a visible running row and profile deadman before work and
+  checkpoints both after every stage. Stallcheck reads that deadline while
+  autopilot maintenance reads stallcheck's heartbeat, so neither scheduled
+  process is its own only witness.
 - The second fine-tune pilot reused the first pilot's twenty prompts,
   references, rubric, held-out hashes, and blind randomization exactly. It
   improved from 2 preferences to 7 while the reference still won 13, so it
