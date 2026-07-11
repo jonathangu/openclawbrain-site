@@ -40,7 +40,7 @@
       <h2>Environment-verified snapshot · 2026-07-10</h2>
       <p>This is the acceptance state on one machine on one date. The version numbers are evidence about that run, not a promise that these will always be the latest releases.</p>
       <div class="grid">
-        <div class="card"><h3>Source gate</h3><p>494 tests passed. Ruff, changed-file formatting, compileall, package build, <code>git diff --check</code>, the tracked-tree privacy scan, and the outgoing-range privacy scan passed.</p></div>
+        <div class="card"><h3>Source gate</h3><p>The v0.4 suite passed 516 tests. Ruff, formatting, compileall, package inventory, <code>git diff --check</code>, and public-safety scans are release gates.</p></div>
         <div class="card"><h3>Codex and ChatGPT</h3><p>Codex CLI 0.144.1 used the ChatGPT-backed login, called <code>brain.search</code>, recorded <code>brain.feedback</code>, and completed the exact acceptance response. ChatGPT desktop build 26.707.31123 shared the migrated Codex session store.</p></div>
         <div class="card"><h3>OpenClaw</h3><p>OpenClaw 2026.6.11 ran loopback-only with a reachable gateway. Its MCP doctor and live probe passed, and a gateway-backed model completed a recorded search-to-feedback cycle.</p></div>
         <div class="card"><h3>Claude Code</h3><p>Claude Code 2.1.206 authenticated through Claude.ai, reported ocbrain connected, and a real Sonnet turn called <code>brain.search</code> successfully during an active heavy writer window.</p></div>
@@ -85,7 +85,7 @@
     <section class="section" id="pilot">
       <h2>The second fine-tune improved and still failed the model-quality bar.</h2>
       <p>Pilot two reused the first pilot's twenty prompts, references, rubric, held-out hashes, and blind randomization byte-for-byte. Eleven canonical first-party examples were added locally; ten cleared the unchanged 0.8 grade threshold. The same pinned base and trainer then ran for fifty steps, with validation loss moving from 2.648 to 2.359.</p>
-      <p>The original blind run used an automated 7/8 calibration preflight. On July 10, eight direct human decisions replaced those machine-authored expected winners as the calibration truth. The old judge failed that human gate at 6/8; after evaluator-only prompt alignment it passed 7/8. Calibration-only mode never opened the blind set, so the twenty model ratings and the 7-to-13 result were not rerun.</p>
+      <p>The original blind run used an automated 7/8 calibration preflight. On July 10, eight direct human decisions replaced those machine-authored expected winners as the calibration truth. v0.4 fixed the evaluator rubric without changing a label or lowering the 90% gate; the local Gemma judge passed 8/8. Calibration-only mode never opened the blind set, so the twenty model ratings and the 7-to-13 result were not rerun.</p>
       <blockquote><strong>The candidate improved from 2 preferences to 7, while the reference won 13.</strong> Candidate voice fidelity rose from 2.25 to 3.05, and naturalness rose from 2.90 to 3.50. That is real corpus progress. It is still a model-quality failure.</blockquote>
       <p>The useful conclusion remains the same: the evaluation can reject a weak model before anyone starts believing its style is Jonathan's.</p>
     </section>
@@ -93,9 +93,10 @@
     <section class="section" id="risks">
       <h2>What could still be wrong.</h2>
       <ul>
-        <li><strong>Judge calibration.</strong> The local judge passed 7/8 direct human labels. Eight decisions are still a small calibration set, and the preserved miss overvalues a longer explanation over the operator's concise answer that needs one reason added.</li>
+        <li><strong>Judge calibration.</strong> The local judge passed 8/8 direct human labels, but eight decisions are still a small calibration set. New disagreement cases should expand the set instead of making the gate easier.</li>
         <li><strong>Single-writer contention.</strong> The known long transactions are now bounded and measured, but SQLite still has one writer and new write-heavy stages need the same discipline.</li>
-        <li><strong>Retrieval quality.</strong> A healthy MCP call does not prove the returned context was the best context. A labeled retrieval evaluation harness is still needed.</li>
+        <li><strong>Feedback coverage.</strong> The frozen retrieval suite now measures relevance, citations, scope, negative probes, and injection probes. The harder live metric is whether agents report or conservatively infer what actually changed the result.</li>
+        <li><strong>Pilot-v3 corpus.</strong> Classification and deterministic selection are complete, but training remains locked until every selected example has a local grade and the unchanged stream minimums pass.</li>
         <li><strong>Single-machine fragility.</strong> The corpus has no automatic off-machine backup because a backup widens the privacy surface. That remains an operator decision.</li>
         <li><strong>Operator configuration.</strong> OpenClaw's own doctor still warns about plaintext operator credentials until a SecretRef provider is chosen. No credential or local config is part of the ocbrain repository or release.</li>
       </ul>

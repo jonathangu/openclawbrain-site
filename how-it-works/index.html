@@ -247,12 +247,14 @@ CREATE VIEW memory AS
         </div>
       </div>
       <p>Every example carries its source evidence ids, a privacy scope, a quality label, and a confidence. A quality scrub runs on each one — secret residue, high-entropy blobs, length bounds, near-duplicates, refusal-only answers, injected-memory leakage, and prompt-injection inside the target are all excluded before storage. Export is byte-deterministic with a signed manifest.</p>
+      <p>v0.4 then classifies each surviving row as <code>train_voice</code>, <code>train_judgment</code>, <code>train_skill</code>, <code>retrieval_only</code>, or <code>exclude</code>. Assistant text styled like Jonathan still cannot enter the voice class: author verification is load-bearing, not a soft score.</p>
       <blockquote><strong>The hard guarantee:</strong> the dataset is written to a local directory and there is no hosted export path in the code. <code>private</code>-scope rows never export regardless of flags. The dataset never leaves the machine.</blockquote>
     </section>
 
     <section class="section">
       <h2>Grade locally, and build the evaluation before training</h2>
-      <p>Mining examples is not the same as earning a training corpus. <code>dataset-grade</code> applies a different local rubric to SFT, DPO, and persona rows, rejects non-loopback endpoints before reading an example, and records the model, prompt version, progress, and normalized grade.</p>
+      <p>Mining examples is not the same as earning a training corpus. <code>dataset-pack-select</code> creates a deterministic bounded pack; <code>dataset-grade --selected-only</code> applies a different local rubric to SFT, DPO, and persona rows, rejects non-loopback endpoints before reading an example, and records the model, prompt version, progress, and normalized grade.</p>
+      <p>The v0.4 pilot refuses to train until 100% of that selected pack is locally graded and the passing set clears the predeclared skill, authentic-voice, judgment, and evaluation minimums. Failed rows do not disappear; they make the gate fail honestly.</p>
       <p>The pilot reserves at least twenty graded persona prompts, writes their references and voice rubric, and removes their content hashes from every training stream. Only after that frozen evaluation exists does it write the training pack. Candidate responses are randomized against the references, the rater never reads the A/B key, and scoring is the one step that unblinds the result.</p>
       <p>A later pilot can reuse those files byte-for-byte while changing only the training corpus. Before its local judge opens a blind pair, the judge must pass a separate calibration set against a complete human-label file with named provenance. Machine-authored winners embedded in cases are ignored, and calibration-only mode stops before blind material is read. That keeps a better training run from quietly moving either the test or the evaluator.</p>
       <p class="fine muted">That order matters. It keeps a training run from quietly changing the test it is supposed to pass.</p>
