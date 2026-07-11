@@ -53,6 +53,9 @@ Write mode adds:
 Safety and evaluation:
 
 - Derived privacy scope can tighten but never widen.
+- Optional MCP fields are required-but-nullable, object shapes are closed, and
+  explicit nulls are stripped at dispatch so eager providers do not invent
+  intended scope, flags, or limits.
 - Automatic safeguards cover provenance, injection, secrets, scope,
   quarantine, and audit history.
 - The local dataset grader rejects non-loopback endpoints before reading an
