@@ -97,7 +97,7 @@
         <li><strong>Judge calibration.</strong> The local judge passed 8/8 direct human labels, but eight decisions are still a small calibration set. New disagreement cases should expand the set instead of making the gate easier.</li>
         <li><strong>Single-writer contention.</strong> The known long transactions are now bounded and measured, but SQLite still has one writer and new write-heavy stages need the same discipline.</li>
         <li><strong>Feedback coverage.</strong> The frozen retrieval suite now measures relevance, citations, scope, negative probes, and injection probes. The harder live metric is whether agents report or conservatively infer what actually changed the result.</li>
-        <li><strong>Pilot-v3 corpus.</strong> Classification and deterministic selection are complete, but training remains locked until every selected example has a local grade and the unchanged stream minimums pass.</li>
+        <li><strong>Pilot-v3 corpus.</strong> The final 1,000 skill / 300 voice / 200 judgment pack is 100% locally graded and passing, and 100 held-out evaluations are frozen. Training remains locked until a human audits a deterministic stratified 10% of the pack.</li>
         <li><strong>Single-machine fragility.</strong> The corpus has no automatic off-machine backup because a backup widens the privacy surface. That remains an operator decision.</li>
         <li><strong>Operator configuration.</strong> OpenClaw's own doctor still warns about plaintext operator credentials until a SecretRef provider is chosen. No credential or local config is part of the ocbrain repository or release.</li>
       </ul>

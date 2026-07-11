@@ -67,6 +67,8 @@ Safety and evaluation:
 - v0.4 classifies examples into train_voice, train_judgment, train_skill,
   retrieval_only, or exclude; selects a deterministic bounded pack; and refuses
   pilot training until every selected row is locally graded and stream minimums pass.
+- A local grade is not human approval: a deterministic stratified 10% human audit
+  across skill, voice, and judgment is required before pilot-v3 training.
 - The byte-frozen 100-case retrieval benchmark spans ChatGPT, Codex, Claude
   Code, and OpenClaw with negative and injection probes. The dated final-code
   run passed 100/100 top-five relevance with all citation and scope checks passing.

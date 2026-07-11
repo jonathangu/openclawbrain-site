@@ -68,6 +68,7 @@
     <section class="section">
       <h2>The fine-tune begins with a test it can fail.</h2>
       <p>Generative training is cheap enough to tempt us into judging by feel after the fact. ocbrain takes the opposite order. It freezes held-out voice prompts, references, and the rubric before it writes the training pack. It removes those content hashes from every training stream, records the exact base model and trainer revision, and keeps the blind key away from the rater.</p>
+      <p>A local model grades every selected row, but that is not allowed to impersonate human approval. A deterministic stratified 10% human audit across all three training classes is required before the prepared pilot-v3 trainer command may run.</p>
       <p>The first pilot earned 2 preferences out of 20. The second reused that evaluation exactly and improved to 7, while the reference still won 13. That is not a result to inflate or hide. The corpus improved, the model still failed, and the bar stayed put.</p>
     </section>
 
