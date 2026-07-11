@@ -43,6 +43,7 @@
 cd ocbrain
 python3 -m venv .venv
 .venv/bin/python -m pip install -e ".[dev]"
+.venv/bin/ocbrain --version
 .venv/bin/ocbrain --db data/ocbrain.sqlite init</code></pre>
       <p class="fine">The database, snapshots, datasets, ratings, and model artifacts live under the gitignored local data tree. Do not move them into a public repository.</p>
     </section>
