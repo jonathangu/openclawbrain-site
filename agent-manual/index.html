@@ -92,6 +92,17 @@
       <p>The admin profile still has no hosted judgment, embedding, training, scheduler, or watchdog tool. It grants no authority to dispatch externally, publish a package, install a skill, or destructively rewrite the ledger.</p>
     </section>
 
+    <section class="section">
+      <h2>Evidence bundles are operator actions, not agent tools.</h2>
+      <p><code>export-bundle</code> and <code>import-bundle</code> are explicit local CLI commands. They are intentionally absent from runtime and admin MCP, so discovering a useful source does not authorize an agent to move it between machines.</p>
+      <ul>
+        <li>Never manufacture an evidence allowlist or <code>--approve-egress</code> decision on the operator's behalf.</li>
+        <li>Never treat a sender's object ID as local authority; imports derive new content IDs.</li>
+        <li>Never claim a default import changed SQLite. Validation is database-free until the operator supplies <code>--apply</code>.</li>
+        <li>Imported evidence starts confidential and <code>local_only</code>; later promotion remains a separate local decision.</li>
+      </ul>
+    </section>
+
     <section class="section" id="scope">
       <h2>Scope rules</h2>
       <ul>

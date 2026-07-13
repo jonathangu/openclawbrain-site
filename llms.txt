@@ -6,7 +6,7 @@ private evidence lake into a bounded dossier, expands exact sources on demand,
 records whether retrieval mattered, and links the eventual outcome back to the
 context the agent used.
 
-Current public release: v1.0.0 under Apache-2.0.
+Current public release: v1.0.1 under Apache-2.0.
 
 Primary pages:
 
@@ -83,6 +83,19 @@ Packages and safety:
   from the core MCP.
 - Legacy companion mutation requires an explicit legacy database.
 
+Explicit evidence bundles:
+
+- export-bundle requires explicit evidence IDs and publishes only a fresh
+  owner-only file after scope, egress, approval, size, and secret checks.
+- local_only and prohibited evidence cannot be exported.
+- import-bundle validates without opening SQLite by default; --apply is the
+  separate mutation step.
+- Sender IDs are provenance only. Imports derive local IDs and force arriving
+  evidence to confidential, local_only project scope.
+- Beliefs, retrieval receipts, closeouts, schedules, and companion state never
+  cross in a bundle.
+- Bundle commands are operator CLI actions, not MCP tools.
+
 Migration:
 
 - core-migrate-v1 is read-only in plan mode and fresh-path-only in execution.
@@ -103,6 +116,11 @@ Acceptance:
   pointer was retained.
 - No hosted call, timer, watchdog, training run, or automatic activation may
   occur during acceptance.
+- The v1.0.1 source/artifact gate passed 676 tests plus Ruff, compilation,
+  public-safety, six-package build/privacy checks, a clean Python 3.12 install,
+  exact eight-tool MCP inspection, and a two-database bundle round trip.
+- Fresh v1.0.1 receipts: Codex close_26d9880640570370, Claude Code
+  close_c0fe3d46b8b2b359, and OpenClaw close_58e9be2b0f92c05c.
 
 Training state:
 

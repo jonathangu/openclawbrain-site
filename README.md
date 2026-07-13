@@ -12,7 +12,8 @@ without crowding the front door.
 ## Pages
 
 - `/install/` — install, connect every runtime, archive-first migrate v0.x,
-  activate explicitly, verify real tool use, and upgrade safely.
+  activate explicitly, exchange bounded evidence, verify real tool use, and
+  upgrade safely.
 - `/how-it-works/` — the v1 event authority, Shared Context, exact source
   expansion, action/outcome receipts, and optional companion packages.
 - `/proof/` — dated source, migration, runtime, and model-quality evidence,
@@ -38,6 +39,8 @@ without crowding the front door.
   preview, egress preview, correction, proposal listing/decision, and tombstone
   controls; never document hosted judgment, training, scheduler, or watchdog
   tools as part of core MCP.
+- Keep evidence bundles in the explicit operator CLI. Never describe them as
+  automatic sync, an MCP tool, or a way to import beliefs and receipts.
 - Describe `brain_events` as the semantic authority and projections/search
   features as rebuildable. Keep `ocbrain-training` and `ocbrain-ops` optional
   and physically separate from the core.

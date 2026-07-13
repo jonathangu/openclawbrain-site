@@ -53,6 +53,7 @@
         <span class="chip">Shared Context</span>
         <span class="chip">Hash-verified sources</span>
         <span class="chip">Action/outcome receipts</span>
+        <span class="chip">Explicit evidence bundles</span>
       </div>
     </section>
 
@@ -77,7 +78,7 @@
         <li><span class="n"></span><div><h4>Feedback</h4><p><code>brain.feedback</code> records whether the retrieval was helpful, used, irrelevant, ignored, or harmful.</p></div></li>
         <li><span class="n"></span><div><h4>Closeout</h4><p><code>brain.closeout</code> appends status, decision impact, retrieval links, artifacts, verifiers, actions, outcomes, and provenance.</p></div></li>
       </ol>
-      <p>The default runtime profile exposes exactly eight tools: context, source, search, digest, get, feedback, ingest, and closeout. The explicit admin profile adds local preview, egress preview, correction, proposal listing/decision, and tombstone controls. It adds no hosted judgment, training, scheduler, or watchdog tool.</p>
+      <p>The default runtime profile exposes exactly eight tools: context, source, search, digest, get, feedback, ingest, and closeout. The explicit admin profile adds local preview, egress preview, correction, proposal listing/decision, and tombstone controls. It adds no hosted judgment, training, scheduler, watchdog, or bundle-transfer tool.</p>
     </section>
 
     <section class="section">
@@ -100,6 +101,17 @@
     </section>
 
     <section class="section">
+      <h2>Cross-machine exchange is evidence transfer, not brain cloning.</h2>
+      <p>An unbounded private lake still needs backup and migration choices, but automatic replication would widen the privacy and authority surface. v1.0.1 therefore makes portable exchange an explicit file-only operation.</p>
+      <div class="grid">
+        <div class="card"><h3>Export gate</h3><p>An operator names exact evidence IDs; scope, egress policy, approval, size, redaction, and fresh-file checks run before publication.</p></div>
+        <div class="card"><h3>Import gate</h3><p>Validation and canonical payload hashing finish before SQLite opens; mutation requires a separate <code>--apply</code>.</p></div>
+        <div class="card"><h3>Local authority</h3><p>Sender IDs remain provenance. The receiving core derives local IDs and forces evidence into confidential <code>local_only</code> scope.</p></div>
+        <div class="card"><h3>No semantic smuggling</h3><p>Bundles cannot carry beliefs, retrieval receipts, closeouts, schedules, model state, or companion databases.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
       <h2>A click is not a universal reward.</h2>
       <p>The same physical action can mean different things on different sites. OCBrain keeps both a portable shape and the local meaning.</p>
       <div class="grid">
@@ -112,7 +124,7 @@
     <section class="section">
       <h2>Core and companions are physically separate.</h2>
       <div class="grid">
-        <div class="card"><h3><code>ocbrain</code></h3><p>Strict core, MCP, projections, retrieval receipts, backup/restore, migration, and local diagnostics.</p></div>
+        <div class="card"><h3><code>ocbrain</code></h3><p>Strict core, MCP, projections, retrieval receipts, explicit evidence bundles, backup/restore, migration, and local diagnostics.</p></div>
         <div class="card"><h3><code>ocbrain-training</code></h3><p>Optional local curation, grading, audit, and training preparation in its own SQLite store.</p></div>
         <div class="card"><h3><code>ocbrain-ops</code></h3><p>Optional manual legacy operations and watchdog diagnostics in a separate store.</p></div>
       </div>
