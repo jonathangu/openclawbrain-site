@@ -3,39 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>How ocbrain works · current architecture</title>
-  <meta name="description" content="The current ocbrain architecture: evidence in, scoped knowledge compiled, outcomes labeled, trustworthy memory promoted, and local fine-tuning datasets evaluated before training.">
-  <meta property="og:title" content="How ocbrain works · current architecture">
-  <meta property="og:description" content="A local, self-improving knowledge brain for AI agents. Evidence → knowledge → labels → injectable memory → datasets, all on one machine with automatic safeguards.">
+  <title>How OCBrain v1 works · current architecture</title>
+  <meta name="description" content="OCBrain v1: one event-authoritative local core, bounded Shared Context, source expansion, feedback, closeouts, and optional isolated training and operations packages.">
+  <meta property="og:title" content="How OCBrain v1 works">
+  <meta property="og:description" content="Retrieval filters the private data lake; bounded long context and exact source expansion give Codex, Claude Code, and OpenClaw the evidence they need.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://openclawbrain.ai/how-it-works/">
   <link rel="canonical" href="https://openclawbrain.ai/how-it-works/">
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="icon" type="image/svg+xml" href="/assets/img/ocbrain-icon.svg">
   <style>
-    /* Page-local helpers, in the site palette */
-    .flow { width: 100%; height: auto; display: block; margin: 6px 0 4px; }
-    .flow text { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
     .stagelist { list-style: none; padding: 0; margin: 0; counter-reset: stage; }
-    .stagelist li {
-      display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start;
-      padding: 12px 0; border-top: 1px solid var(--line);
-    }
+    .stagelist li { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start; padding: 12px 0; border-top: 1px solid var(--line); }
     .stagelist li:first-child { border-top: 0; }
-    .stagelist .n {
-      counter-increment: stage;
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 34px; height: 34px; border-radius: 999px;
-      border: 1px solid var(--line); background: rgba(126,214,255,0.08);
-      color: var(--accent); font-weight: 800; font-size: 13px;
-    }
+    .stagelist .n { counter-increment: stage; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 999px; border: 1px solid var(--line); background: rgba(126,214,255,0.08); color: var(--accent); font-weight: 800; font-size: 13px; }
     .stagelist .n::before { content: counter(stage); }
     .stagelist h4 { margin: 4px 0 4px; font-size: 16px; }
     .stagelist p { margin: 0; color: var(--muted); font-size: 14.5px; }
-    .kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 2px 0 6px; }
-    .kv .chip { justify-content: flex-start; }
-    .tag { color: var(--accent-2); font-weight: 700; }
-    .actions-spaced { margin-top: 22px; }
   </style>
 </head>
 <body>
@@ -54,256 +38,99 @@
 
   <main>
     <section class="hero">
-      <p class="eyebrow">How it works · current source</p>
-      <h1>A local knowledge brain that improves itself while you work.</h1>
-      <p class="lead">ocbrain reads the history your AI agents already produce, compiles it into source-backed knowledge, decides what worked and what did not, promotes only the trustworthy parts into an injectable memory, and builds a local fine-tuning dataset from your own decisions. It runs on a 15-minute light and hourly heavy cadence on your machine.</p>
+      <p class="eyebrow">OCBrain v1 · current architecture</p>
+      <h1>Retrieval filters the lake. Bounded context does the reasoning.</h1>
+      <p class="lead">OCBrain is one local, source-backed bridge for Codex, Claude Code, and OpenClaw. It keeps an append-only evidence and outcome ledger, derives the current serving view, and gives each runtime a small coherent dossier with exact sources available on demand.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="/install/">Install ocbrain</a>
-        <a class="btn" href="/proof/">Safe &amp; inspectable</a>
-        <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">View on GitHub</a>
+        <a class="btn btn-primary" href="/install/">Install and verify</a>
+        <a class="btn" href="/proof/">Read the proof</a>
+        <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">View source</a>
       </div>
       <div class="chips">
-        <span class="chip">Evidence in</span>
-        <span class="chip">Knowledge compiled</span>
-        <span class="chip">Good/bad auto-labeled</span>
-        <span class="chip">Safe memory promoted</span>
-        <span class="chip">Datasets built</span>
-        <span class="chip">Local-only</span>
+        <span class="chip">Event-authoritative</span>
+        <span class="chip">Local SQLite</span>
+        <span class="chip">Scoped retrieval</span>
+        <span class="chip">Shared Context</span>
+        <span class="chip">Hash-verified sources</span>
+        <span class="chip">Action/outcome receipts</span>
       </div>
     </section>
 
     <section class="section">
-      <h2>From a review queue to a self-maintaining evidence loop</h2>
-      <p>The first version was a careful librarian: it filed evidence and compiled knowledge, but a human had to approve anything durable. That gate was the bottleneck — the brain could only grow as fast as someone clicked "approve."</p>
-      <p>The current source replaces that general queue with <strong>automatic safeguards</strong>. Every write passes the same invariants a careful reviewer would enforce — provenance no-clobber, injection scanning, secret scrubbing, a privacy ratchet, tripwire quarantine, and a hash-chained audit trail — and only clean, corroborated results reach the memory an agent sees.</p>
-      <blockquote><strong>The design bet:</strong> a fixed set of mechanical safeguards, applied to every write, is safer <em>and</em> faster than a human queue that gets skipped when it's busy. Gates don't scale. Invariants do.</blockquote>
-      <div class="kv">
-        <span class="chip">Human approval queue &rarr; <span class="tag">automatic safeguards</span></span>
-        <span class="chip">Manual promotion &rarr; <span class="tag">scored auto-promotion</span></span>
-        <span class="chip">Read-mostly server &rarr; <span class="tag">autonomous 15-min / hourly loop</span></span>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>The pipeline, end to end</h2>
-      <p class="sublead">One direction, five movements. Raw agent history becomes trustworthy, injectable memory — and a byproduct dataset — without any step being skipped or any history being overwritten.</p>
-
-      <svg class="flow" viewBox="0 0 940 150" role="img" aria-label="Pipeline: evidence to knowledge to labels to injectable memory, with datasets as a byproduct">
-        <defs>
-          <marker id="arw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M0,0 L10,5 L0,10 z" fill="#7ed6ff"></path>
-          </marker>
-        </defs>
-        <g font-size="14" font-weight="700">
-          <!-- boxes -->
-          <g>
-            <rect x="8" y="40" width="150" height="56" rx="14" fill="rgba(126,214,255,0.06)" stroke="#7ed6ff" stroke-opacity="0.5"></rect>
-            <text x="83" y="64" text-anchor="middle" fill="#eaf2fb">Evidence</text>
-            <text x="83" y="82" text-anchor="middle" fill="#a8b6c8" font-size="11.5" font-weight="500">immutable, hash-pinned</text>
-          </g>
-          <g>
-            <rect x="205" y="40" width="150" height="56" rx="14" fill="rgba(126,214,255,0.06)" stroke="#7ed6ff" stroke-opacity="0.5"></rect>
-            <text x="280" y="64" text-anchor="middle" fill="#eaf2fb">Knowledge</text>
-            <text x="280" y="82" text-anchor="middle" fill="#a8b6c8" font-size="11.5" font-weight="500">compiled belief</text>
-          </g>
-          <g>
-            <rect x="402" y="40" width="150" height="56" rx="14" fill="rgba(126,214,255,0.06)" stroke="#7ed6ff" stroke-opacity="0.5"></rect>
-            <text x="477" y="64" text-anchor="middle" fill="#eaf2fb">Labels</text>
-            <text x="477" y="82" text-anchor="middle" fill="#a8b6c8" font-size="11.5" font-weight="500">good / bad / neutral</text>
-          </g>
-          <g>
-            <rect x="599" y="40" width="150" height="56" rx="14" fill="rgba(159,245,192,0.08)" stroke="#9ff5c0" stroke-opacity="0.6"></rect>
-            <text x="674" y="64" text-anchor="middle" fill="#eaf2fb">Memory</text>
-            <text x="674" y="82" text-anchor="middle" fill="#a8b6c8" font-size="11.5" font-weight="500">injectable view</text>
-          </g>
-          <g>
-            <rect x="792" y="40" width="140" height="56" rx="14" fill="rgba(255,255,255,0.03)" stroke="#84b3e6" stroke-opacity="0.45" stroke-dasharray="4 4"></rect>
-            <text x="862" y="64" text-anchor="middle" fill="#eaf2fb">Datasets</text>
-            <text x="862" y="82" text-anchor="middle" fill="#a8b6c8" font-size="11.5" font-weight="500">SFT / DPO / persona</text>
-          </g>
-          <!-- arrows -->
-          <line x1="160" y1="68" x2="203" y2="68" stroke="#7ed6ff" stroke-width="2" marker-end="url(#arw)"></line>
-          <line x1="357" y1="68" x2="400" y2="68" stroke="#7ed6ff" stroke-width="2" marker-end="url(#arw)"></line>
-          <line x1="554" y1="68" x2="597" y2="68" stroke="#7ed6ff" stroke-width="2" marker-end="url(#arw)"></line>
-          <line x1="751" y1="68" x2="790" y2="68" stroke="#9ff5c0" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arw)"></line>
-          <!-- safeguards band -->
-          <text x="477" y="122" text-anchor="middle" fill="#a8b6c8" font-size="12" font-weight="600">every arrow passes automatic safeguards · injection-scan · no-clobber · secret-scrub · privacy ratchet · quarantine · hash-chain</text>
-        </g>
-      </svg>
-
-      <p class="fine muted">Datasets are drawn with a dashed edge because they are a read-only byproduct: they are compiled from the same evidence but never feed back into what an agent sees at runtime.</p>
-    </section>
-
-    <section class="section">
-      <h2>1 · Evidence — what actually happened</h2>
-      <p>Everything starts as <strong>evidence</strong>: immutable, append-only, hash-pinned records of what happened. Agent transcripts, task closeouts, correction events, verifier outputs, test and deploy results, loop iterations, liveness tripwires. Evidence is never edited in place — a correction is a new record, and the original stays exactly as written.</p>
-      <p>Before any harvested third-party content can influence memory, it is <strong>injection-scanned</strong>. External text — a web page, another tool's output, a pasted log — is treated as data, never as instructions. Anything that looks like a prompt-injection attempt (role hijacks, "ignore previous," exfiltration links, hidden characters, encoded blobs) is flagged at the evidence layer so it can never quietly become a belief.</p>
-      <div class="chips">
-        <span class="chip">claim</span>
-        <span class="chip">source</span>
-        <span class="chip">content_hash</span>
-        <span class="chip">privacy_scope</span>
-        <span class="chip">verifier_status</span>
-        <span class="chip">injection_scan_status</span>
-        <span class="chip">occurred_at</span>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>2 · Knowledge — the current belief</h2>
-      <p>A compiler turns evidence into <strong>knowledge</strong>: the current belief, not raw memory. Every piece of knowledge links back to the evidence that justifies it — a belief with no evidence is not a valid shape. Knowledge comes in three types, and it supersedes rather than overwrites, so the trail of what was once believed stays intact.</p>
+      <h2>RAG is not dead here—and long context is not the database.</h2>
+      <p>OCBrain's history is effectively unbounded and keeps changing. Re-reading it all for every question would waste compute and dilute attention. Pure top-k snippets are not enough either: models need a coherent local picture to compare sources, detect omissions, and understand what changed.</p>
       <div class="grid">
-        <div class="card"><h3>value</h3><p>Facts and metrics — the concrete, queryable truths the brain currently holds.</p></div>
-        <div class="card"><h3>doc</h3><p>Readable wiki and procedure pages — the prose an agent or human reads.</p></div>
-        <div class="card"><h3>capability</h3><p>Executable or loadable skills and procedures the brain can hand an agent.</p></div>
+        <div class="card"><h3>Retrieval filters</h3><p>Scope and search reduce the private lake to the small candidate set relevant to this project, repo, client, task, and session.</p></div>
+        <div class="card"><h3>Context assembles</h3><p><code>ocbrain.context.v1</code> packages serving beliefs, contradictions, exclusions, coverage, confidence, and source handles.</p></div>
+        <div class="card"><h3>Sources expand</h3><p>The model opens only the few exact sources it needs, within a size bound and after scope and content-hash checks.</p></div>
+        <div class="card"><h3>Outcomes return</h3><p>Feedback and closeout receipts link the decision, verification, action, and outcome back to what the model saw.</p></div>
       </div>
-      <p>A dedicated safeguard protects this step from the brain editing over its own — or your own — work. The <strong>no-clobber rule</strong>: an automatic write can never silently overwrite a human-authored row. If it tries, the write is refused and the attempt is recorded as an audit breadcrumb. The first writer of a fact wins; later automatic passes add evidence, they don't rewrite authorship.</p>
+      <blockquote><strong>The index is replaceable infrastructure. The evidence and outcome ledger is the product.</strong></blockquote>
     </section>
 
     <section class="section">
-      <h2>3 · Labels — good, bad, or neutral</h2>
-      <p>This is the heart of the system. The brain reads its own outcomes and decides which knowledge earned trust and which misled it, using a <strong>19-signal taxonomy</strong>. Signals are mined from the history that already exists — no extra instrumentation — and each is a small, dated, weighted vote attached to a piece of knowledge.</p>
-      <div class="grid">
-        <div class="card">
-          <h3>Human feedback</h3>
-          <p>Corrections, thanks, approvals, reverts. When you correct an agent, that's a strong negative signal on whatever it just relied on; a "perfect, ship it" is a positive one.</p>
-        </div>
-        <div class="card">
-          <h3>Verification</h3>
-          <p>Tests passing or failing, deploys succeeding or rolling back, verifier evidence. Verified beats claimed.</p>
-        </div>
-        <div class="card">
-          <h3>Retrieval outcomes</h3>
-          <p>Whether a memory that was served turned out helpful, used, ignored, irrelevant, or actively harmful.</p>
-        </div>
-        <div class="card">
-          <h3>Operational &amp; maintenance</h3>
-          <p>Commitment outcomes, scheduled-job results, error-recovery arcs, and conflict-heal supersessions the brain resolved on its own.</p>
-        </div>
-      </div>
-      <p>Signals are folded into a label with <strong>time decay</strong> — recent evidence outweighs stale evidence — and a mass threshold, so a single weak vote can't flip a belief. A hard negative (an explicit "this is wrong") always wins outright. The result is written back as <code>good</code>, <code>bad</code>, or <code>neutral</code> with a confidence score.</p>
-      <p>For the genuinely ambiguous middle, an <strong>optional, budget-capped judge</strong> can weigh in on targeted knowledge rows. It is off unless configured, never grades the dataset, drops <code>private</code> content before packaging, secret-scrubs every body, and writes an egress-audit row for each batch. Its vote is one signal among many and cannot override a hard human correction.</p>
-    </section>
-
-    <section class="section">
-      <h2>4 · Memory — only the trustworthy parts</h2>
-      <p>Memory is a <strong>read-only view</strong> over knowledge that has earned its place. Promotion into it is not automatic-by-default — it is <em>scored</em>. A row only becomes injectable when every one of these holds:</p>
-      <ul>
-        <li><strong>Current and not quarantined.</strong> A tripwire can pull any row out instantly.</li>
-        <li><strong>Labeled good, with confidence above threshold.</strong> Neutral and bad rows do not inject.</li>
-        <li><strong>Injection-scan clean.</strong> The body and every linked source are re-scanned before <code>inject = 1</code>.</li>
-        <li><strong>Risky classes carry verification.</strong> Executable or prescriptive knowledge additionally needs passed-verifier evidence or an explicit human approval signal — the automatic replacement for the old human gate on exactly the dangerous class.</li>
-      </ul>
-      <pre><code>-- memory is a projection, not a store
-CREATE VIEW memory AS
-  SELECT * FROM knowledge
-  WHERE status = 'current'
-    AND inject = 1
-    AND quarantine_reason IS NULL;</code></pre>
-      <p>Promotion is ranked by a score blending confidence, freshness, and how useful a memory has actually been when served, and the injectable set is <strong>budget-bounded</strong> — a fixed cap on rows and characters, so memory stays sharp instead of bloating. A label that flips to bad, a confidence drop, or a quarantine <strong>demotes immediately</strong>. Human-pinned rows are never auto-demoted by score.</p>
-    </section>
-
-    <section class="section">
-      <h2>Tripwire quarantine — the safety net</h2>
-      <p>Quarantine is the mechanical stand-in for a human saying "wait, not that." It is a status change, not a queue: a flagged row leaves the memory view, leaves retrieval, and leaves promotion the instant a tripwire fires — no one has to be watching.</p>
-      <div class="grid">
-        <div class="card"><h3>injection_suspected</h3><p>A linked third-party source, or the body itself, trips the injection scanner.</p></div>
-        <div class="card"><h3>secret_leak</h3><p>The value or title looks like it contains a credential or key.</p></div>
-        <div class="card"><h3>bad_feedback_spike</h3><p>Repeated harmful or failed retrieval outcomes in a short window.</p></div>
-        <div class="card"><h3>hard_correction</h3><p>An explicit, durable "this is wrong" targeting the row.</p></div>
-        <div class="card"><h3>contradiction_thrash</h3><p>The belief keeps flipping — superseded and re-asserted over and over.</p></div>
-        <div class="card"><h3>prescriptive_unverified</h3><p>Risky knowledge serving with no passed verifier and no approval signal.</p></div>
-      </div>
-      <p class="fine muted">Quarantine writes its own tripwire evidence and an audit event, and there is exactly one path back out — an explicit release. The append-only audit chain stays intact throughout.</p>
-    </section>
-
-    <section class="section">
-      <h2>Privacy only tightens</h2>
-      <p>Every record carries a scope, from least to most restrictive:</p>
-      <div class="chips">
-        <span class="chip">private</span>
-        <span class="chip">workspace</span>
-        <span class="chip">project</span>
-        <span class="chip">public</span>
-      </div>
-      <p>Derived knowledge inherits the <strong>most restrictive scope</strong> of everything it links. A public doc that cites a private source becomes private. Scope is a one-way ratchet — it can be pulled tighter by what a belief depends on, but private contents can never leak up into a broader audience through derivation. This is the invariant that lets everything else run automatically.</p>
-    </section>
-
-    <section class="section">
-      <h2>5 · Dataset factory — your decisions become training data</h2>
-      <p>The same evidence that feeds memory also compiles into fine-tuning datasets. This is the long game: over time, the brain accumulates the material for a model trained on how <em>you</em> actually work. Three streams, each carrying full provenance:</p>
-      <div class="grid">
-        <div class="card">
-          <h3>SFT</h3>
-          <p>Supervised chat examples — context plus a good final answer — mined from exchanges that ended well: an affirmation, a clean multi-step task success, a recovered error.</p>
-        </div>
-        <div class="card">
-          <h3>DPO</h3>
-          <p>Preference pairs mined from corrections. When a first attempt was corrected and a later attempt was accepted, that becomes a rejected/chosen pair. Your corrections are the training signal.</p>
-        </div>
-        <div class="card">
-          <h3>Persona</h3>
-          <p>Voice examples where your own verified messages and authored commits are the assistant target — so a fine-tuned model can learn your style, not a generic one.</p>
-        </div>
-      </div>
-      <p>Every example carries its source evidence ids, a privacy scope, a quality label, and a confidence. A quality scrub runs on each one — secret residue, high-entropy blobs, length bounds, near-duplicates, refusal-only answers, injected-memory leakage, and prompt-injection inside the target are all excluded before storage. Export is byte-deterministic with a signed manifest.</p>
-      <p>v0.4 then classifies each surviving row as <code>train_voice</code>, <code>train_judgment</code>, <code>train_skill</code>, <code>retrieval_only</code>, or <code>exclude</code>. Assistant text styled like Jonathan still cannot enter the voice class: author verification is load-bearing, not a soft score.</p>
-      <blockquote><strong>The hard guarantee:</strong> the dataset is written to a local directory and there is no hosted export path in the code. <code>private</code>-scope rows never export regardless of flags. The dataset never leaves the machine.</blockquote>
-    </section>
-
-    <section class="section">
-      <h2>Grade locally, and build the evaluation before training</h2>
-      <p>Mining examples is not the same as earning a training corpus. <code>dataset-pack-select</code> creates a deterministic bounded candidate pool; <code>dataset-grade --selected-only</code> applies a different local rubric to SFT, DPO, and persona rows, rejects non-loopback endpoints before reading an example, and records the model, prompt version, progress, and normalized grade. <code>dataset-pack-finalize</code> then keeps only deterministic passing rows.</p>
-      <p>The v0.4 pilot refuses to train until 100% of that final pack is locally graded and the passing set clears the predeclared skill, authentic-voice, judgment, and evaluation minimums. One hundred separately graded voice rows stay outside training for evaluation. Failed rows do not disappear; they make the gate fail honestly.</p>
-      <p>Local grading is a filter, not human approval. Before pilot-v3 training, a human must audit a deterministic stratified 10% across skill, voice, and judgment. That review remains private and local; a prepared trainer command is not permission to run it.</p>
-      <p>The pilot reserves at least twenty graded persona prompts, writes their references and voice rubric, and removes their content hashes from every training stream. Only after that frozen evaluation exists does it write the training pack. Candidate responses are randomized against the references, the rater never reads the A/B key, and scoring is the one step that unblinds the result.</p>
-      <p>A later pilot can reuse those files byte-for-byte while changing only the training corpus. Before its local judge opens a blind pair, the judge must pass a separate calibration set against a complete human-label file with named provenance. Machine-authored winners embedded in cases are ignored, and calibration-only mode stops before blind material is read. That keeps a better training run from quietly moving either the test or the evaluator.</p>
-      <p class="fine muted">That order matters. It keeps a training run from quietly changing the test it is supposed to pass.</p>
-    </section>
-
-    <section class="section">
-      <h2>The autopilot loop</h2>
-      <p>All of this runs as one idempotent, single-instance state machine on a <strong>15-minute light and hourly heavy cadence</strong>. The dispatch table has fourteen work stages, with lock and finalize wrapped around it by the runner. Any stage can be killed and safely re-run; watermarks, stable ids, and uniqueness constraints mean nothing is double-counted and no committed progress is lost.</p>
+      <h2>The runtime loop</h2>
       <ol class="stagelist">
-        <li><span class="n"></span><div><h4>Lock</h4><p>Single-instance file lock. A slow run never collides with the next tick — the second invocation just exits.</p></div></li>
-        <li><span class="n"></span><div><h4>Snapshot</h4><p>A daily rotated copy of the database before anything is touched. Snapshot or migrate failing aborts the whole run.</p></div></li>
-        <li><span class="n"></span><div><h4>Migrate</h4><p>Additive-only schema migration — new columns and tables, never a destructive rebuild.</p></div></li>
-        <li><span class="n"></span><div><h4>Harvest</h4><p>Fingerprint-gated import of new history into evidence rows.</p></div></li>
-        <li><span class="n"></span><div><h4>Injection-scan</h4><p>Scan new third-party evidence before it can reach anything injectable.</p></div></li>
-        <li><span class="n"></span><div><h4>Review</h4><p>Post-turn review of settled sessions, committing each complete session before the lazy iterator parses the next transcript.</p></div></li>
-        <li><span class="n"></span><div><h4>Compile</h4><p>Turn undecided proposals into knowledge, rebuilding the projection once at the end.</p></div></li>
-        <li><span class="n"></span><div><h4>Auto-label</h4><p>Mine signals, release the writer before expensive attribution and hosted judging, fold into labels, then fold again.</p></div></li>
-        <li><span class="n"></span><div><h4>Embed</h4><p>Commit the egress audit, release SQLite for network I/O, then store each completed vector batch.</p></div></li>
-        <li><span class="n"></span><div><h4>Tripwires</h4><p>Run the tripwire registry and auto-quarantine anything that fires.</p></div></li>
-        <li><span class="n"></span><div><h4>Promote</h4><p>Re-score, promote the trustworthy rows into memory, demote what slipped, enforce the budget.</p></div></li>
-        <li><span class="n"></span><div><h4>Excerpt-render</h4><p>Render the promoted rows into the excerpt form the injectable memory actually serves.</p></div></li>
-        <li><span class="n"></span><div><h4>Maintain</h4><p>Prune stale knowledge, heal conflicts, and independently check loop and stall-watcher heartbeats.</p></div></li>
-        <li><span class="n"></span><div><h4>Dataset-mine</h4><p>Mine SFT, DPO, and persona examples from newly settled history in bounded, measured writer batches.</p></div></li>
-        <li><span class="n"></span><div><h4>Dataset-export</h4><p>Deterministically write the JSONL corpora and manifest — skipping the write if nothing changed.</p></div></li>
-        <li><span class="n"></span><div><h4>Finalize</h4><p>Record the run in a ledger — per-stage results or errors — and release the lock.</p></div></li>
+        <li><span class="n"></span><div><h4>Context</h4><p><code>brain.context</code> returns a stable scoped dossier and retrieval-use ID.</p></div></li>
+        <li><span class="n"></span><div><h4>Source</h4><p><code>brain.source</code> expands one issued handle in the same scope and verifies that the body has not changed.</p></div></li>
+        <li><span class="n"></span><div><h4>Work</h4><p>The runtime treats context as evidence, not orders, verifies conflicts, and acts only within its existing authority.</p></div></li>
+        <li><span class="n"></span><div><h4>Feedback</h4><p><code>brain.feedback</code> records whether the retrieval was helpful, used, irrelevant, ignored, or harmful.</p></div></li>
+        <li><span class="n"></span><div><h4>Closeout</h4><p><code>brain.closeout</code> appends status, decision impact, retrieval links, artifacts, verifiers, actions, outcomes, and provenance.</p></div></li>
       </ol>
-      <p class="fine muted">Each independent stage runs in its own try/except: a failure is recorded and downgrades the run to <em>partial</em>, but later independent stages still run. Only the two foundational stages — snapshot and migrate — abort the whole run, because everything after assumes a snapshotted, migrated database.</p>
-    </section>
-
-    <section class="section" id="grit">
-      <h2>The grit contract has an independent witness</h2>
-      <p>Agent instructions forbid ending a work turn with passive waiting: finish with environment-verified completion or an explicit blocked report. The separate stallcheck job then inspects workflow ledgers, runner state, ingress timeouts, and its own heartbeat. Stable fingerprints deduplicate findings; delivery state survives restarts; failed pages remain retryable; findings too old to page retire once instead of staying new forever.</p>
-      <p>Stallcheck does not claim or resume work. It records and pages. Autopilot maintenance watches stallcheck's heartbeat; autopilot commits a visible running row and moving deadline after every stage; stallcheck watches that deadline. Neither process is its own only witness. This is durable across process restarts on the same machine, but not across disk loss or removal of both launchd jobs.</p>
+      <p>The default runtime profile exposes exactly eight tools: context, source, search, digest, get, feedback, ingest, and closeout. The explicit admin profile adds local preview, egress preview, correction, proposal listing/decision, and tombstone controls. It adds no hosted judgment, training, scheduler, or watchdog tool.</p>
     </section>
 
     <section class="section">
-      <h2>What stays true by construction</h2>
+      <h2>One semantic authority</h2>
+      <p><code>brain_events</code> is the append-only hash-chained authority. A correction, scope promotion, or tombstone is a later event; history is never silently rewritten.</p>
       <div class="grid">
-        <div class="card"><h3>Evidence before belief</h3><p>No durable knowledge is invented without a source that traces back to something that happened.</p></div>
-        <div class="card"><h3>Verified is not claimed</h3><p>Passing tests and verifier evidence outrank confident-sounding text.</p></div>
-        <div class="card"><h3>Memory is a view</h3><p>There is no second store to keep in sync — update the knowledge, the view follows.</p></div>
-        <div class="card"><h3>Supersede, never overwrite</h3><p>History is appended, not rewritten. You can always ask what was once believed.</p></div>
-        <div class="card"><h3>External content is data</h3><p>Harvested third-party text is scanned and quarantined, never trusted as instruction.</p></div>
-        <div class="card"><h3>Local by construction</h3><p>The datasets have no hosted export path. Private scope never leaves. The machine is the boundary.</p></div>
+        <div class="card"><h3>Durable</h3><p>Event payloads, source bodies and hashes, scope, provenance, actor/runtime, session, time, corrections, and aliases.</p></div>
+        <div class="card"><h3>Projected</h3><p>Evidence objects, current beliefs, evidence links, serving status, and search documents.</p></div>
+        <div class="card"><h3>Operational receipts</h3><p>Retrieval uses, source-handle issuance, egress audits, and closeouts survive semantic projection rebuilds.</p></div>
+        <div class="card"><h3>Disposable features</h3><p>Embeddings, FTS internals, rankings, summaries, classifications, and task-specific rewards can be rebuilt or replaced.</p></div>
       </div>
-      <div class="actions actions-spaced">
-        <a class="btn btn-primary" href="/proof/">See how it stays safe</a>
-        <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">Read the source</a>
+      <p>The strict v1 core contains no legacy relational knowledge/evidence plane and no dataset, trainer, judge, embedding, autopilot, scheduler, watchdog, deadman, or pager tables.</p>
+    </section>
+
+    <section class="section">
+      <h2>Scope is a gate, not a ranking hint.</h2>
+      <p>Each object carries scope type, scope ID, visibility, egress policy, and provenance. Confidential foreign scopes are excluded before ranking. Direct get and source expansion enforce the same boundary, so knowing an object ID is not an access bypass.</p>
+      <p>Migration maps only explicit legacy context. The placeholder value <code>workspace</code> becomes conservatively quarantined <code>legacy_unscoped</code>; it is not promoted into a fictional global project.</p>
+      <p>Historical <code>at_ts</code> retrieval is explicitly rejected in v1 until it can be implemented against event sequence correctly. It is never silently approximated.</p>
+    </section>
+
+    <section class="section">
+      <h2>A click is not a universal reward.</h2>
+      <p>The same physical action can mean different things on different sites. OCBrain keeps both a portable shape and the local meaning.</p>
+      <div class="grid">
+        <div class="card"><h3><code>ocbrain.action.v1</code></h3><p>Mechanism, local semantic role, target, pre-action context, policy/model, cost, provenance, and versioned features.</p></div>
+        <div class="card"><h3><code>ocbrain.outcome.v1</code></h3><p>Metric/value vector, role, unit, window, baseline, counterfactual, attribution, uncertainty, interpretation, and versioned features.</p></div>
+      </div>
+      <p>An experiment may derive one scalar reward for one policy. The append-only closeout keeps the components so a later model can reinterpret them without assuming a click, signup, subscription, deploy, or test pass means the same thing everywhere.</p>
+    </section>
+
+    <section class="section">
+      <h2>Core and companions are physically separate.</h2>
+      <div class="grid">
+        <div class="card"><h3><code>ocbrain</code></h3><p>Strict core, MCP, projections, retrieval receipts, backup/restore, migration, and local diagnostics.</p></div>
+        <div class="card"><h3><code>ocbrain-training</code></h3><p>Optional local curation, grading, audit, and training preparation in its own SQLite store.</p></div>
+        <div class="card"><h3><code>ocbrain-ops</code></h3><p>Optional manual legacy operations and watchdog diagnostics in a separate store.</p></div>
+      </div>
+      <p>The core wheel and MCP import no companion implementation. Companions install no recurring job, and legacy mutation requires an explicit legacy database.</p>
+    </section>
+
+    <section class="section">
+      <h2>Migration preserves before it transforms.</h2>
+      <p><code>core-migrate-v1</code> creates a coherent immutable archive, preserves the exact event sequence and hashes, appends deterministic import events, extracts training and operations stores, bulk-rebuilds FTS, verifies counts and integrity, and publishes only fresh outputs plus a manifest.</p>
+      <p>The July 13 full rehearsal verified 671,580 events, 232,677 evidence objects, 137,530 beliefs, 241,185 evidence links, 108,222 serving/search documents, 1,725 retrievals, and four closeouts. It made no hosted or network call, started no scheduler, and did not activate or repoint the live database. The operator later activated a byte-identical live copy provisionally; fresh Codex, Claude Code, and OpenClaw processes all passed context → source → feedback → closeout, so the pointer was retained.</p>
+    </section>
+
+    <section class="section">
+      <h2>Training remains blocked.</h2>
+      <p>The AI-delegated audit found 67 pass / 83 fail. That is valuable remediation evidence, not a named-human gate. The pack must be fixed, reminted, locally regraded, resampled, audited by a real named human, and separately authorized before any pilot-v3 training.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="/agent-manual/">Read the agent contract</a>
+        <a class="btn" href="/proof/">Inspect dated evidence</a>
       </div>
     </section>
   </main>

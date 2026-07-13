@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>The ocbrain guide</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A plain-language guide to ocbrain: why one local evidence ledger is better than separate agent memories, how trust compounds, and why evaluation comes before fine-tuning.">
+  <meta name="description" content="A plain-language guide to OCBrain v1: one local event ledger, scoped Shared Context, exact sources, outcome receipts, and optional isolated companions.">
   <link rel="canonical" href="https://openclawbrain.ai/guide/">
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="icon" type="image/svg+xml" href="/assets/img/ocbrain-icon.svg">
@@ -44,41 +44,50 @@
     <section class="section">
       <h2>Five movements turn history into something useful.</h2>
       <div class="grid">
-        <div class="card"><h3>1. Evidence</h3><p>Record what happened without pretending it is already a durable truth.</p></div>
-        <div class="card"><h3>2. Knowledge</h3><p>Compile a current belief and keep the links to every source that supports or contradicts it.</p></div>
-        <div class="card"><h3>3. Labels</h3><p>Use corrections, tests, deployments, task outcomes, and retrieval feedback to decide what worked.</p></div>
-        <div class="card"><h3>4. Memory</h3><p>Promote a bounded, injectable view of current knowledge that passed the applicable safeguards.</p></div>
-        <div class="card"><h3>5. Datasets</h3><p>Mine successful exchanges, corrections, and first-party voice into local SFT, DPO, and persona streams.</p></div>
+        <div class="card"><h3>1. Evidence events</h3><p>Append what happened, with source, scope, provenance, actor, session, and time, without pretending it is already truth.</p></div>
+        <div class="card"><h3>2. Current projections</h3><p>Derive current beliefs and retain every evidence link, correction, alias, and tombstone needed to rebuild them.</p></div>
+        <div class="card"><h3>3. Shared Context</h3><p>Filter by scope, then assemble a small coherent packet with coverage, exclusions, contradictions, and confidence.</p></div>
+        <div class="card"><h3>4. Exact sources</h3><p>Expand only issued handles needed for the decision, bounded by size and verified against the recorded content hash.</p></div>
+        <div class="card"><h3>5. Outcomes</h3><p>Link retrieval feedback, verifiers, portable actions, and local outcome meanings back to what the agent actually saw.</p></div>
       </div>
-      <p>The order is important. An agent never gets to skip evidence and write a belief because the sentence sounds right.</p>
+      <p>The order is important. An agent never gets to skip evidence and write a belief because the sentence sounds right. <code>brain_events</code> remains the semantic authority; projections and search features can be rebuilt.</p>
     </section>
 
     <section class="section">
       <h2>Trust comes from the feedback loop.</h2>
-      <p>A memory that was useful should become easier to retrieve. A memory that caused harm should lose its place. A hard correction should survive the next model's attempt to re-derive the same mistake. That is why retrieval returns an audit handle and why agents report whether the context was helpful, used, ignored, irrelevant, or harmful.</p>
+      <p>A memory that was useful should become easier to retrieve. A memory that caused harm should lose its place. A hard correction should survive the next model's attempt to re-derive the same mistake. That is why <code>brain.context</code> returns a stable scoped packet with audit and source handles, why agents report whether retrieval helped, and why <code>brain.closeout</code> links the eventual outcome back to that context.</p>
       <p>During a long database writer window, the read still succeeds. If the audit row cannot be written, the response says so and omits the handle. The honest action is to use the result and skip feedback for that call. Retrying until a green audit appears would turn observability into load.</p>
     </section>
 
     <section class="section">
-      <h2>Autonomy belongs to maintenance, not authority.</h2>
-      <p>The scheduled profiles may harvest, compile, label, embed, quarantine, promote, maintain, and export local datasets. Those are bounded maintenance jobs over the brain. They do not authorize ocbrain to run the user's work, send a hosted request, install a skill, publish a package, or delete the corpus.</p>
+      <h2>Maintenance is an explicit operation, not ambient authority.</h2>
+      <p>The default install runs on demand and creates no recurring light, heavy, or stallcheck job. <code>ocbrain sync</code> reconciles the local core projection within an event and time budget; it cannot cross into judgment, embedding, dataset, trainer, watchdog, network, or scheduler work.</p>
+      <p>The core MCP has no hosted judgment, embedding, or training surface. Its tracked configuration leaves those capabilities off, and training remains paused. A credential alone enables nothing. Deliberately invoked maintenance still does not authorize ocbrain to run the user's work, send a hosted request, install a skill, publish a package, or delete the corpus.</p>
       <p>That is the line I want the system to keep as it gets smarter. Let the model decide semantic meaning where judgment helps. Let code enforce the trust boundary. Let SQLite keep the evidence legible.</p>
     </section>
 
     <section class="section">
-      <h2>The fine-tune begins with a test it can fail.</h2>
-      <p>Generative training is cheap enough to tempt us into judging by feel after the fact. ocbrain takes the opposite order. It freezes held-out voice prompts, references, and the rubric before it writes the training pack. It removes those content hashes from every training stream, records the exact base model and trainer revision, and keeps the blind key away from the rater.</p>
-      <p>A local model grades every selected row, but that is not allowed to impersonate human approval. A deterministic stratified 10% human audit across all three training classes is required before the prepared pilot-v3 trainer command may run.</p>
+      <h2>Training is optional, isolated, and still blocked.</h2>
+      <p>Generative training is cheap enough to tempt us into judging by feel after the fact. The optional <code>ocbrain-training</code> companion takes the opposite order: freeze held-out prompts, references, and rubric before writing a pack; remove those content hashes from every training stream; record the exact base model and trainer revision; and keep the blind key away from the rater.</p>
+      <p>A local model's grades are not allowed to impersonate human approval. The AI-delegated 150-item review found 67 pass / 83 fail and remains remediation evidence only. Before pilot-v3 can run, the pack must be fixed, reminted, locally regraded, resampled for a genuine named-human stratified 10% audit, and separately authorized by the operator. The fail-closed training setting remains off.</p>
       <p>The first pilot earned 2 preferences out of 20. The second reused that evaluation exactly and improved to 7, while the reference still won 13. That is not a result to inflate or hide. The corpus improved, the model still failed, and the bar stayed put.</p>
+    </section>
+
+    <section class="section">
+      <h2>The v1 move preserves the lake before it narrows the core.</h2>
+      <p>Long context is useful for one bounded task; OCBrain's history is an unbounded evidence lake. The generator therefore receives a scoped context packet and can expand selected sources, while the full ledger stays outside the prompt.</p>
+      <p>OCBrain v1 physically separates the strict core, <code>ocbrain-training</code>, and <code>ocbrain-ops</code>. Its archive-first migration reads the live database without modifying it, creates a verified archive, builds fresh core and companion databases plus a manifest, and activates nothing automatically.</p>
+      <p>The July 13 rehearsal preserved the exact 307,285-event legacy prefix and verified a 671,580-event candidate with 232,677 evidence objects, 137,530 current beliefs, and 108,222 serving documents. Clean-package gates then passed, and fresh Codex, Claude Code, and OpenClaw processes each completed context → source → feedback → closeout against a byte-identical live copy. The activation pointer is retained.</p>
     </section>
 
     <section class="section">
       <h2>The operating rules fit on one page.</h2>
       <ul>
-        <li>Retrieve with the narrowest true project, repo, task, client, runtime, and session context.</li>
+        <li>Request Shared Context with the narrowest true project, repo, task, client, runtime, and session context.</li>
+        <li>Expand only OCBrain-issued source handles needed for the current decision.</li>
         <li>Treat memory as orientation. The user's newest request and the live artifact are fresher.</li>
         <li>Keep external content as data, never instruction.</li>
-        <li>Emit evidence and feedback instead of writing a durable belief directly.</li>
+        <li>Emit evidence, feedback, and closeout receipts instead of writing a durable belief directly.</li>
         <li>Never widen privacy through derivation.</li>
         <li>Call a passed verifier a pass, a tie a tie, and a failed model a failed model.</li>
       </ul>

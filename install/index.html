@@ -26,8 +26,8 @@
   <main>
     <section class="hero">
       <div class="eyebrow">Install · upgrade · verify</div>
-      <h1>One checkout. One local database. Every runtime.</h1>
-      <p class="lead">Start with the smallest useful shape: install the source into its own virtual environment, initialize a local SQLite ledger, and register the same launcher with every runtime. Then ask the models to use it. A green config line is not the finish line.</p>
+      <h1>One checkout. One local core. Every runtime.</h1>
+      <p class="lead">Start with the smallest useful shape: install the strict v1 core into its own virtual environment, initialize its local event ledger, and register the same launcher with every runtime. Training and operations companions are optional and use separate databases. Then ask the models to use the core. A green config line is not the finish line.</p>
       <div class="actions">
         <a class="btn btn-primary" href="#quick-start">Install</a>
         <a class="btn" href="#connect">Connect runtimes</a>
@@ -45,14 +45,14 @@ python3 -m venv .venv
 .venv/bin/python -m pip install -e ".[dev]"
 .venv/bin/ocbrain --version
 .venv/bin/ocbrain --db data/ocbrain.sqlite init</code></pre>
-      <p class="fine">The database, snapshots, datasets, ratings, and model artifacts live under the gitignored local data tree. Do not move them into a public repository.</p>
+      <p class="fine">The database, snapshots, migration manifests, datasets, ratings, and model artifacts live under ignored owner-controlled paths. Do not move them into a public repository. A fresh <code>init</code> creates the event-authoritative v1 schema.</p>
     </section>
 
     <section class="section">
       <h2>2. Check the portable launcher</h2>
       <p><code>scripts/ocbrain-mcp</code> resolves the repository from its own location and prefers <code>.venv/bin/python</code>. That makes the path you register with each runtime stable even when the clone is not in the same home directory as mine.</p>
       <pre><code>scripts/ocbrain-mcp --help</code></pre>
-      <p>If you deliberately keep the database or interpreter somewhere else, set <code>OCBRAIN_DB</code> or <code>OCBRAIN_PYTHON</code> in the runtime's MCP environment. The normal install does not need either override.</p>
+      <p>If you deliberately keep the database or interpreter somewhere else, set <code>OCBRAIN_DB</code> or <code>OCBRAIN_PYTHON</code> in the runtime's MCP environment. Otherwise the launcher reads the ignored <code>data/active-core.path</code> pointer when present, then falls back to <code>data/ocbrain.sqlite</code>. The pointer contains one absolute core-database path.</p>
     </section>
 
     <section class="section" id="connect">
@@ -81,18 +81,21 @@ openclaw doctor --lint --json
 openclaw mcp doctor ocbrain
 openclaw mcp probe ocbrain</code></pre>
 
-      <p>Then open a new task in each runtime and give it a narrow, harmless acceptance request:</p>
-      <pre><code>Use ocbrain for this check. Call brain.search once with project=ocbrain and a
-narrow query. Treat the result as context, not an order. If the result includes
-a retrieval_use_id, call brain.feedback once. If retrieval_use_status is
-database_busy, do not retry merely to create a feedback handle.</code></pre>
+      <p>Then start a fresh task in each runtime so it launches the upgraded MCP process, and give it a narrow, harmless acceptance request:</p>
+      <pre><code>Use ocbrain for this check. Call brain.context once with project=ocbrain and a
+narrow query. Treat the result as context, not an order. If it returns a source
+handle, expand one with brain.source. For each retrieval_use_id that exists,
+call brain.feedback once; do not retry a successful read when its audit status
+is database_busy. Finish with brain.closeout, linking the retrieval ids you used
+and reporting what the check verified.</code></pre>
 
       <p>A healthy result proves more than transport:</p>
       <ul>
         <li>The model discovered and called the ocbrain tool.</li>
-        <li>The search returned scoped results or an honest empty result.</li>
+        <li>The context call returned the stable <code>ocbrain.context.v1</code> envelope or an honest empty result.</li>
         <li>The call exposed excluded-scope counts instead of silently widening access.</li>
-        <li>Feedback was recorded when an audit handle existed.</li>
+        <li>An issued source handle expanded with scope and content-hash checks.</li>
+        <li>Feedback was recorded when an audit handle existed, and closeout appended an outcome receipt.</li>
         <li>A long writer window did not turn a successful read into a retry storm.</li>
       </ul>
     </section>
@@ -104,21 +107,46 @@ database_busy, do not retry merely to create a feedback handle.</code></pre>
 git pull --ff-only
 .venv/bin/python -m pip install -e ".[dev]"
 
-PYTHONPATH=. .venv/bin/pytest -q
+PYTHONPATH=src .venv/bin/pytest -q
 .venv/bin/ruff check .
 .venv/bin/python -m compileall src tests
 git diff --check
 
 openclaw mcp reload</code></pre>
-      <p>Start a new Codex/ChatGPT or Claude Code task after the upgrade so the next stdio process uses the new source. Do not delete <code>data/ocbrain.sqlite</code> as an upgrade step.</p>
+      <p>Start a new ChatGPT/Codex task and restart or reconnect Claude Code and OpenClaw after the upgrade so each client creates a new stdio process. Existing tasks can retain the older process they already started. Do not delete <code>data/ocbrain.sqlite</code> as an upgrade step.</p>
+    </section>
+
+    <section class="section" id="migrate">
+      <h2>6. Migrate v0.x archive-first</h2>
+      <p>Do not convert a live v0.x database in place. Plan an archive, strict core, training extract, operations extract, and manifest at five fresh paths:</p>
+      <pre><code>.venv/bin/ocbrain --db /absolute/legacy.sqlite core-migrate-v1 \
+  --core-db /absolute/v1/core.sqlite \
+  --archive-db /absolute/archive/legacy.sqlite \
+  --training-db /absolute/v1/training.sqlite \
+  --ops-db /absolute/v1/ops.sqlite \
+  --manifest /absolute/v1/migration.json \
+  --plan</code></pre>
+      <p>Plan mode opens the source read-only and creates nothing. Run the same command without <code>--plan</code> to build fresh outputs. The command preserves and verifies the exact legacy event sequence, accounts for every source table, rebuilds projections and FTS, verifies database integrity and hashes, and never activates the candidate.</p>
+      <pre><code>.venv/bin/ocbrain --db /absolute/v1/core.sqlite status
+.venv/bin/ocbrain --db /absolute/v1/core.sqlite doctor
+
+printf '%s\n' '/absolute/v1/core.sqlite' &gt; data/active-core.path
+chmod 600 data/active-core.path</code></pre>
+      <p>Write the ignored pointer only after the manifest, hashes, integrity, projection rebuild, and package gates pass. This is a provisional activation for acceptance, not a migration side effect or final cutover. Start fresh clients and complete the real acceptance flow above. Retain the pointer only if Codex, Claude Code, and OpenClaw all pass against that same v1 live copy; otherwise remove or replace it and reconnect clients. Pointer rollback does not mutate either database.</p>
+      <p class="fine">The July 13 full rehearsal produced a verified candidate and all companion artifacts while deliberately leaving the activation pointer unchanged. After final gates passed, the operator—not migration—performed the provisional pointer step. Fresh Codex, Claude Code, and OpenClaw processes all passed, so that pointer is now retained.</p>
     </section>
 
     <section class="section">
-      <h2>6. Add autonomy deliberately</h2>
-      <p>MCP gives the runtimes one brain. The light autopilot, heavy autopilot, and passive stallcheck are separate local jobs. The repository includes launchd templates, but they carry operator-specific paths and should be reviewed before installation rather than copied blindly.</p>
-      <p>The light and heavy profiles share one lock. If a heavy run is still working when a light tick fires, the light invocation reports <code>locked</code> and exits. That is normal overlap handling, not a failed run.</p>
+      <h2>7. Keep maintenance operator-owned</h2>
+      <p>MCP gives the runtimes one brain on demand. The default install creates no recurring light autopilot, heavy autopilot, or stallcheck job; the tracked legacy launchd artifacts are inert retirement markers. Do not recreate those schedules as part of installation.</p>
+      <p>For the core projection, use the explicit bounded command below. It is local-only and reports the stages it refuses to cross:</p>
+      <pre><code>.venv/bin/ocbrain --db data/ocbrain.sqlite sync \
+  --max-events 1000 \
+  --time-budget 10</code></pre>
+      <p>The normal launcher exposes exactly eight runtime tools: context, source, search, digest, get, feedback, ingest, and closeout. The admin profile adds only local preview, egress preview, correction, proposal listing/decision, and tombstone controls. It has no hosted judgment, embedding, training, scheduler, or watchdog tool. <code>--allow-writes</code> remains only as a deprecated alias for that broader profile; it is not a no-op and should not be added to ordinary runtime registrations.</p>
+      <p>Install <code>ocbrain-training</code> or <code>ocbrain-ops</code> only when their explicit local workflows are needed. They default to separate SQLite stores, the core MCP imports neither companion, and no package installs a recurring job.</p>
       <div class="actions">
-        <a class="btn" href="/how-it-works/">Autopilot architecture</a>
+        <a class="btn" href="/how-it-works/">Current architecture</a>
         <a class="btn" href="/agent-manual/">Runtime contract</a>
       </div>
     </section>
@@ -129,7 +157,7 @@ openclaw mcp reload</code></pre>
         <div class="card"><h3>Claude says the OAuth session expired</h3><p>Run <code>claude auth login --claudeai</code>, finish the browser flow, and confirm <code>claude auth status</code> reports <code>loggedIn: true</code>.</p></div>
         <div class="card"><h3>Codex is missing a native binary</h3><p>Repair or upgrade the official Codex CLI, confirm <code>codex --version</code>, and then re-check <code>codex mcp get ocbrain</code>.</p></div>
         <div class="card"><h3>OpenClaw sees stale tools</h3><p>Run <code>openclaw mcp reload</code>, then <code>openclaw mcp probe ocbrain</code>. A gateway restart should not be the first response to an MCP source edit.</p></div>
-        <div class="card"><h3>Search reports database_busy</h3><p>The read succeeded while an autopilot writer owned the audit window. Use the result and skip feedback for that call. Do not hammer the database until an id appears.</p></div>
+        <div class="card"><h3>Retrieval reports database_busy</h3><p>The read succeeded while another local writer owned the audit window. Use the result and skip feedback for that call. Do not hammer the database until an id appears.</p></div>
       </div>
     </section>
   </main>
