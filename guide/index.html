@@ -67,6 +67,12 @@
     </section>
 
     <section class="section">
+      <h2>Sharing a source is not the same as sharing a brain.</h2>
+      <p>Sometimes one machine has evidence another machine genuinely needs. v1.0.1 handles that case with a small, owner-controlled bundle: name the evidence, apply egress policy, redact secrets, write a fresh file, validate it on the other side, and require a separate apply step.</p>
+      <p>The receiver does not inherit the sender's beliefs or object authority. It gets confidential, local-only evidence with provenance and derives its own IDs. That keeps transfer learning possible without turning synchronization into silent trust.</p>
+    </section>
+
+    <section class="section">
       <h2>Training is optional, isolated, and still blocked.</h2>
       <p>Generative training is cheap enough to tempt us into judging by feel after the fact. The optional <code>ocbrain-training</code> companion takes the opposite order: freeze held-out prompts, references, and rubric before writing a pack; remove those content hashes from every training stream; record the exact base model and trainer revision; and keep the blind key away from the rater.</p>
       <p>A local model's grades are not allowed to impersonate human approval. The AI-delegated 150-item review found 67 pass / 83 fail and remains remediation evidence only. Before pilot-v3 can run, the pack must be fixed, reminted, locally regraded, resampled for a genuine named-human stratified 10% audit, and separately authorized by the operator. The fail-closed training setting remains off.</p>

@@ -52,7 +52,7 @@ python3 -m venv .venv
       <h2>2. Check the portable launcher</h2>
       <p><code>scripts/ocbrain-mcp</code> resolves the repository from its own location and prefers <code>.venv/bin/python</code>. That makes the path you register with each runtime stable even when the clone is not in the same home directory as mine.</p>
       <pre><code>scripts/ocbrain-mcp --help</code></pre>
-      <p>If you deliberately keep the database or interpreter somewhere else, set <code>OCBRAIN_DB</code> or <code>OCBRAIN_PYTHON</code> in the runtime's MCP environment. Otherwise the launcher reads the ignored <code>data/active-core.path</code> pointer when present, then falls back to <code>data/ocbrain.sqlite</code>. The pointer contains one absolute core-database path.</p>
+      <p>If you deliberately keep the database or interpreter somewhere else, set <code>OCBRAIN_DB</code> or <code>OCBRAIN_PYTHON</code> in the runtime's MCP environment. Otherwise the launcher reads the ignored <code>data/active-core.path</code> pointer when present, then falls back to <code>data/ocbrain.sqlite</code>. The pointer contains one absolute core-database path. A pointer-selected v1.0.1 process rechecks that choice before every request and exits if it changes, so an old client cannot silently keep writing a database that is no longer active.</p>
     </section>
 
     <section class="section" id="connect">
@@ -136,8 +136,26 @@ chmod 600 data/active-core.path</code></pre>
       <p class="fine">The July 13 full rehearsal produced a verified candidate and all companion artifacts while deliberately leaving the activation pointer unchanged. After final gates passed, the operator—not migration—performed the provisional pointer step. Fresh Codex, Claude Code, and OpenClaw processes all passed, so that pointer is now retained.</p>
     </section>
 
+    <section class="section" id="bundles">
+      <h2>7. Exchange evidence explicitly</h2>
+      <p>Evidence bundles are manual files, not synchronization daemons or MCP tools. Export requires explicit evidence IDs and writes a fresh owner-only path after scope, egress, approval, size, and secret-redaction checks:</p>
+      <pre><code>.venv/bin/ocbrain --db /absolute/source.sqlite export-bundle \
+  --evidence-id evd_example \
+  --project source-project \
+  --output /absolute/fresh.bundle.json</code></pre>
+      <p><code>local_only</code> and prohibited evidence cannot be exported. Approval-gated evidence also needs <code>--approve-egress</code>. Import validates the complete envelope and payload hash without opening a database unless <code>--apply</code> is present:</p>
+      <pre><code>.venv/bin/ocbrain import-bundle /absolute/fresh.bundle.json \
+  --project destination-project
+
+.venv/bin/ocbrain --db /absolute/destination.sqlite import-bundle \
+  /absolute/fresh.bundle.json \
+  --project destination-project \
+  --apply</code></pre>
+      <p>Import ignores sender IDs as authority, derives local content IDs, and appends evidence only. The arriving evidence is confidential and <code>local_only</code>; beliefs, source handles, retrieval receipts, closeouts, and companion state never cross in a bundle.</p>
+    </section>
+
     <section class="section">
-      <h2>7. Keep maintenance operator-owned</h2>
+      <h2>8. Keep maintenance operator-owned</h2>
       <p>MCP gives the runtimes one brain on demand. The default install creates no recurring light autopilot, heavy autopilot, or stallcheck job; the tracked legacy launchd artifacts are inert retirement markers. Do not recreate those schedules as part of installation.</p>
       <p>For the core projection, use the explicit bounded command below. It is local-only and reports the stages it refuses to cross:</p>
       <pre><code>.venv/bin/ocbrain --db data/ocbrain.sqlite sync \
@@ -158,6 +176,7 @@ chmod 600 data/active-core.path</code></pre>
         <div class="card"><h3>Codex is missing a native binary</h3><p>Repair or upgrade the official Codex CLI, confirm <code>codex --version</code>, and then re-check <code>codex mcp get ocbrain</code>.</p></div>
         <div class="card"><h3>OpenClaw sees stale tools</h3><p>Run <code>openclaw mcp reload</code>, then <code>openclaw mcp probe ocbrain</code>. A gateway restart should not be the first response to an MCP source edit.</p></div>
         <div class="card"><h3>Retrieval reports database_busy</h3><p>The read succeeded while another local writer owned the audit window. Use the result and skip feedback for that call. Do not hammer the database until an id appears.</p></div>
+        <div class="card"><h3>The active database pointer changed</h3><p>The old MCP process intentionally stopped. Start a fresh task or reconnect the client; do not retry writes against the retired process.</p></div>
       </div>
     </section>
   </main>

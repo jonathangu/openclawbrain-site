@@ -40,14 +40,16 @@
       <h2>Environment-verified v1 snapshot · 2026-07-13</h2>
       <p>This is the verified source, migration, and fresh-client acceptance state on one machine on one date. The version numbers are evidence about that run rather than a promise that they will always be the latest releases.</p>
       <div class="grid">
-        <div class="card"><h3>Split source gate</h3><p>The physically separated core, training, and operations source tree passed 632 tests and Ruff. The combined core, migration, MCP, and adversarial gate passed 31 focused tests.</p></div>
+        <div class="card"><h3>v1.0.1 source gate</h3><p>The physically separated core, training, and operations source tree passed 676 tests, Ruff, bytecode compilation, diff hygiene, and a zero-finding public-safety scan.</p></div>
         <div class="card"><h3>Verified event core</h3><p>The rehearsal preserved the exact 307,285-event legacy prefix and extended it through deterministic imports to a verified 671,580-event hash chain.</p></div>
         <div class="card"><h3>Projection counts</h3><p>The candidate contains 232,677 evidence objects, 137,530 current beliefs, 241,185 evidence links, and 108,222 serving documents; its FTS count is also 108,222.</p></div>
-        <div class="card"><h3>Receipts preserved</h3><p>The rehearsal preserved 1,725 retrievals, 1,448 egress audits, and four closeouts. After post-merge release acceptance, the live core has 1,744 retrieval uses and 15 closeouts, including a fresh verified receipt per client.</p></div>
+        <div class="card"><h3>Fresh release receipts</h3><p>Codex wrote <code>close_26d9880640570370</code>, Claude Code wrote <code>close_c0fe3d46b8b2b359</code>, and OpenClaw wrote <code>close_58e9be2b0f92c05c</code>. Each links a helpful context retrieval and the v1.0.1 release verifier.</p></div>
         <div class="card"><h3>Five owner-only artifacts</h3><p>The core, immutable v0 archive, training extract, operations extract, and manifest all match their recorded SHA-256 hashes. Every database passed integrity checks and the core has zero foreign-key violations.</p></div>
-        <div class="card"><h3>No implicit cutover</h3><p>The migration made zero hosted or network calls, started zero schedulers, and did not write the activation pointer or repoint a client.</p></div>
+        <div class="card"><h3>Six verified release assets</h3><p>Core, training, and operations wheels and source archives were built from the merged tree, downloaded after publication, and matched their recorded SHA-256 digests.</p></div>
       </div>
-      <p class="fine">The July 10 proof remains historical evidence for the v0.4 <code>brain.search</code> surface. On July 13, fresh Codex, Claude Code, and OpenClaw processes separately completed <code>context → source → feedback → closeout</code> against the same v1 live core. All three source expansions were hash-verified, all three context retrievals were marked helpful, and all three verified closeouts landed in that database.</p>
+      <p class="fine">The July 10 proof remains historical evidence for the v0.4 <code>brain.search</code> surface. On July 13, fresh Codex, Claude Code, and OpenClaw processes separately completed <code>context → source → feedback → closeout</code> against the same v1.0.1 live core. All three source expansions were hash-verified, all three context retrievals were marked helpful, and all three verified closeouts landed in that database.</p>
+      <p class="fine">The acceptance also found a stale pre-v1 Runtime Integration source preserved by migration. The current file was re-imported as project-scoped evidence, both serving legacy duplicates were retracted by append-only correction events, and a post-correction context/source check returned the new belief with a verified hash. OpenClaw's final acceptance used that refreshed source.</p>
+      <div class="actions"><a class="btn" href="https://github.com/jonathangu/ocbrain/releases/tag/v1.0.1" target="_blank" rel="noopener">Inspect the v1.0.1 release and assets</a></div>
     </section>
 
     <section class="section">
@@ -57,6 +59,8 @@
         <div class="card"><h3>Hosted work absent</h3><p>The core MCP has no hosted judgment, embedding, or training tools. Tracked judgment, embedding, training, and scheduler flags default to false; credentials do not silently enable them.</p></div>
         <div class="card"><h3>Training paused</h3><p>The optional training companion may support explicit local remediation and audit, but pilot-v3 remains blocked by the failed AI review, the missing named-human gate, and the fail-closed training setting.</p></div>
         <div class="card"><h3>Exact runtime surface</h3><p>The runtime profile exposes context, source, search, digest, get, feedback, ingest, and closeout. The admin profile adds only local preview, egress preview, correction, proposal listing/decision, and tombstone controls.</p></div>
+        <div class="card"><h3>Stale processes refuse writes</h3><p>A pointer-launched MCP process rechecks the active database before every request and exits on drift. Explicit <code>OCBRAIN_DB</code> launches remain intentionally pinned.</p></div>
+        <div class="card"><h3>Bundle authority stays local</h3><p>Cross-machine bundles are explicit owner-only files, dry-run on import by default, and absent from both runtime and admin MCP profiles.</p></div>
       </div>
     </section>
 
@@ -77,7 +81,7 @@
         <div class="card"><h3>Scope before rank</h3><p>Foreign confidential scopes are excluded before ranking rather than merely receiving a lower score.</p></div>
         <div class="card"><h3>Direct-read checks</h3><p><code>brain.get</code> enforces scope, confidentiality, serving lifecycle, and quarantine even when the caller already knows an object ID.</p></div>
         <div class="card"><h3>Bound source handles</h3><p><code>brain.source</code> accepts only issued handles, requires the original scope, bounds the response, and verifies the recorded content hash.</p></div>
-        <div class="card"><h3>Append-only correction</h3><p>Corrections, decisions, and tombstones append later events. They do not silently rewrite the evidence history.</p></div>
+        <div class="card"><h3>Append-only correction</h3><p>Corrections, decisions, and tombstones append later events. A late proposal decision cannot resurrect a tombstoned, retracted, or post-proposal-corrected belief.</p></div>
         <div class="card"><h3>Local egress preview</h3><p>The admin profile can show what policy would include or reject, but preview does not dispatch or authorize an external send.</p></div>
         <div class="card"><h3>Rebuildable hash chain</h3><p>The event sequence and hashes can be verified while beliefs, evidence links, aliases, and FTS are rebuilt and compared.</p></div>
       </div>
@@ -110,7 +114,7 @@
         <li><strong>Single-writer contention.</strong> The known long transactions are now bounded and measured, but SQLite still has one writer and new write-heavy stages need the same discipline.</li>
         <li><strong>Feedback coverage.</strong> The frozen retrieval suite now measures relevance, citations, scope, negative probes, and injection probes. The harder live metric is whether agents report or conservatively infer what actually changed the result.</li>
         <li><strong>Pilot-v3 corpus.</strong> The AI-delegated 150-item review found 67 pass / 83 fail. Those labels are remediation evidence, not named-human approval. Remediation, reminting, local regrading, a fresh stratified named-human audit, and separate operator authorization remain required.</li>
-        <li><strong>Acceptance durability.</strong> Fresh Codex, Claude Code, and OpenClaw processes passed on July 13. Future releases must repeat the real round trip; a saved configuration or historical receipt is not enough for a later binary.</li>
+        <li><strong>Acceptance durability.</strong> Fresh Codex, Claude Code, and OpenClaw processes passed again for v1.0.1 on July 13. Future releases must repeat the real round trip; a saved configuration or historical receipt is not enough for a later binary.</li>
         <li><strong>v1 activation.</strong> The pointer is retained after three-client acceptance, but cutover remains reversible and the immutable v0 archive remains the audit source—not a hidden runtime fallback.</li>
         <li><strong>Single-machine fragility.</strong> The corpus has no automatic off-machine backup because a backup widens the privacy surface. That remains an operator decision.</li>
         <li><strong>Operator configuration.</strong> OpenClaw's own doctor still warns about plaintext operator credentials until a SecretRef provider is chosen. No credential or local config is part of the ocbrain repository or release.</li>
