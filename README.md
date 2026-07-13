@@ -52,5 +52,6 @@ repository root:
 python3 -m http.server 8000
 ```
 
-Cloudflare deploys the production site from `main`. Validate the HTML, internal
+GitHub Pages publishes the production site from `main`; Cloudflare fronts the
+custom domain. Validate the HTML, internal
 links, responsive layout, and live URLs before calling a change published.

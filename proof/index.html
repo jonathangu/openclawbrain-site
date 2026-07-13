@@ -38,12 +38,12 @@
 
     <section class="section" id="snapshot">
       <h2>Environment-verified v1 snapshot · 2026-07-13</h2>
-      <p>This is the verified source and migration state on one machine on one date. It is not yet a fresh-client acceptance claim, and the version numbers are evidence about that run rather than a promise that they will always be the latest releases.</p>
+      <p>This is the verified source, migration, and fresh-client acceptance state on one machine on one date. The version numbers are evidence about that run rather than a promise that they will always be the latest releases.</p>
       <div class="grid">
-        <div class="card"><h3>Split source gate</h3><p>The physically separated core, training, and operations source tree passed 627 tests and Ruff. The combined core, migration, MCP, and adversarial gate passed 31 focused tests.</p></div>
+        <div class="card"><h3>Split source gate</h3><p>The physically separated core, training, and operations source tree passed 632 tests and Ruff. The combined core, migration, MCP, and adversarial gate passed 31 focused tests.</p></div>
         <div class="card"><h3>Verified event core</h3><p>The rehearsal preserved the exact 307,285-event legacy prefix and extended it through deterministic imports to a verified 671,580-event hash chain.</p></div>
         <div class="card"><h3>Projection counts</h3><p>The candidate contains 232,677 evidence objects, 137,530 current beliefs, 241,185 evidence links, and 108,222 serving documents; its FTS count is also 108,222.</p></div>
-        <div class="card"><h3>Receipts preserved</h3><p>The rehearsal preserved 1,725 retrievals, 1,448 egress audits, and four closeouts. After acceptance, the live core has 1,731 retrievals and seven closeouts, including one verified receipt per client.</p></div>
+        <div class="card"><h3>Receipts preserved</h3><p>The rehearsal preserved 1,725 retrievals, 1,448 egress audits, and four closeouts. After post-merge release acceptance, the live core has 1,744 retrieval uses and 15 closeouts, including a fresh verified receipt per client.</p></div>
         <div class="card"><h3>Five owner-only artifacts</h3><p>The core, immutable v0 archive, training extract, operations extract, and manifest all match their recorded SHA-256 hashes. Every database passed integrity checks and the core has zero foreign-key violations.</p></div>
         <div class="card"><h3>No implicit cutover</h3><p>The migration made zero hosted or network calls, started zero schedulers, and did not write the activation pointer or repoint a client.</p></div>
       </div>
