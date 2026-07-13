@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Install ocbrain, connect ChatGPT/Codex, Claude Code, and OpenClaw to one local source-backed memory, and verify the result instead of trusting a green config line.">
   <meta property="og:title" content="ocbrain · One local brain for your agents">
-  <meta property="og:description" content="Source-backed memory, scoped retrieval, automatic safeguards, and local fine-tuning datasets across ChatGPT/Codex, Claude Code, and OpenClaw.">
+  <meta property="og:description" content="Source-backed memory, stable scoped context, bounded source expansion, and outcome receipts across ChatGPT/Codex, Claude Code, and OpenClaw.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
@@ -36,8 +36,8 @@
       <section class="hero">
         <div class="eyebrow">One local brain for the agents you already use</div>
         <h1>Let ChatGPT, Codex, Claude Code, and OpenClaw remember together.</h1>
-        <p class="lead">The thing I keep coming back to is that agent memory should not be another confident summary with no source behind it. ocbrain reads the histories these runtimes already produce, compiles them into scoped knowledge, and serves only the parts that have earned trust.</p>
-        <p class="sublead">The store is local SQLite. Evidence stays attached to belief. Corrections, tests, tool results, and retrieval feedback change what the brain promotes. The training corpus stays on the machine, so the same history can improve memory now and a personal model later.</p>
+        <p class="lead">The thing I keep coming back to is that agent memory should not be another confident summary with no source behind it. ocbrain keeps an append-only evidence and outcome ledger, derives a scoped current view, and gives each runtime only the coherent context its decision needs.</p>
+        <p class="sublead">The store is local SQLite. A stable Shared Context packet gives every client the same retrieval shape, source handles expand exact material on demand, and closeout receipts connect actions and outcomes back to what the agent saw. Search features can change; the source record remains.</p>
         <div class="actions">
           <a class="btn btn-primary" href="/install/">Install and verify</a>
           <a class="btn" href="/how-it-works/">See the pipeline</a>
@@ -45,24 +45,25 @@
           <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">Browse the source</a>
         </div>
         <div class="chips">
-          <span class="chip">v0.4.0 · Learning Quality · Apache-2.0</span>
+          <span class="chip">v1.0.0 · Event-authoritative core · Apache-2.0</span>
           <span class="chip">ChatGPT / Codex</span>
           <span class="chip">Claude Code</span>
           <span class="chip">OpenClaw</span>
           <span class="chip">MCP</span>
           <span class="chip">Local SQLite</span>
           <span class="chip">Scoped retrieval</span>
-          <span class="chip">Local training corpus</span>
+          <span class="chip">Shared Context</span>
+          <span class="chip">Closeout receipts</span>
         </div>
         <figure class="hero-art">
           <img src="/assets/img/openclawbrain-hero.jpg" alt="A source-backed memory graph shared by several agent runtimes" width="1280" height="512" loading="eager">
-          <figcaption>One evidence ledger, several runtime lenses, and a memory view that can always point back to its source.</figcaption>
+          <figcaption>One event-authoritative ledger, several runtime lenses, and a bounded context packet that can always point back to its source.</figcaption>
         </figure>
       </section>
 
       <section class="section">
         <h2>Install first. Then make the proof real.</h2>
-        <p>A good memory system is not installed when three config files look plausible. It is installed when each runtime can call the same MCP server, retrieve scoped context, and record whether that context helped. The install guide now uses the current runtime CLIs and ends with those checks.</p>
+        <p>A good memory system is not installed when three config files look plausible. It is installed when each fresh runtime process can call the same MCP server, receive an <code>ocbrain.context.v1</code> packet, expand an issued source, record retrieval usefulness, and close out the task. The install guide uses the current runtime CLIs and ends with those checks.</p>
         <div class="actions">
           <a class="btn btn-primary" href="/install/#quick-start">Clone and install</a>
           <a class="btn" href="/install/#connect">Connect every runtime</a>
@@ -75,17 +76,17 @@
         <h2>One brain does not mean one undifferentiated memory pool.</h2>
         <p>Every retrieval carries the narrowest context the runtime knows: project, repo, task, client, runtime, and session. That context is a lens over one ledger. Stable doctrine can travel; confidential or project-specific evidence does not.</p>
         <div class="grid">
-          <div class="card"><h3>Evidence is immutable</h3><p>History enters as hash-pinned evidence. The current belief can change without rewriting what happened.</p></div>
-          <div class="card"><h3>Knowledge is compiled</h3><p>Signals from corrections, verifiers, outcomes, and retrieval use decide what remains current.</p></div>
-          <div class="card"><h3>Memory is a view</h3><p>Agents see a bounded view over current injectable knowledge, not a second store that can drift.</p></div>
-          <div class="card"><h3>Scope only tightens</h3><p>A derived object inherits the most restrictive linked source scope. Private evidence cannot make a public belief.</p></div>
+          <div class="card"><h3>Events are authority</h3><p>History enters an append-only hash chain. A correction or tombstone is a later event, never a silent rewrite.</p></div>
+          <div class="card"><h3>Belief is a projection</h3><p>Evidence objects, current beliefs, aliases, provenance links, and search are rebuildable derived views.</p></div>
+          <div class="card"><h3>Attention is bounded</h3><p>Retrieval filters the lake; Shared Context assembles a small dossier; exact sources expand only when needed.</p></div>
+          <div class="card"><h3>Scope is mechanical</h3><p>Confidential foreign scopes are excluded before ranking. Get and source expansion are not ID-based bypasses.</p></div>
         </div>
       </section>
 
       <section class="section">
-        <h2>The system maintains itself, but it does not act in the world.</h2>
-        <p>The light profile keeps recent knowledge labeled, embedded, checked, promoted, and rendered. The heavy profile adds snapshots, history harvest, compilation, maintenance, and dataset work. Both share one lock, so an overlap exits cleanly instead of double-running.</p>
-        <p>That autonomy belongs to memory maintenance. ocbrain does not enqueue agent work, install skills, ship packages, send hosted requests, or delete private data on its own.</p>
+        <h2>Maintenance is explicit, local, and bounded.</h2>
+        <p>The default install is an on-demand MCP process. It installs no recurring light, heavy, or stallcheck job. A bounded <code>ocbrain sync</code> reconciles the local event projection when an operator asks; it does not call a hosted judgment or embedding provider, build a dataset, train a model, or start a scheduler.</p>
+        <p>Hosted judgment, embedding, training, and watchdog controls are absent from the core MCP. ocbrain does not enqueue agent work, install skills, send hosted requests, train a model, or page an operator on its own.</p>
         <div class="actions">
           <a class="btn" href="/how-it-works/">Walk through the full loop</a>
           <a class="btn" href="/agent-manual/">Give an agent the contract</a>
@@ -93,17 +94,23 @@
       </section>
 
       <section class="section">
-        <h2>The dataset is the long game.</h2>
-        <p>The same evidence compiles into three local streams: successful exchanges for SFT, corrections for DPO, and verified first-party writing for persona and voice. v0.4 draws a hard boundary between examples that belong in model weights and facts that should remain retrieval-only, grades a bounded candidate pool locally, finalizes only passing rows, and freezes the evaluation before training.</p>
+        <h2>The dataset is optional—and still the long game.</h2>
+        <p>Local curation, grading, audit, and prepared training workflows now live in the separate <code>ocbrain-training</code> package and its own SQLite store. The core MCP neither imports nor queries it. The durable brain keeps changing facts and provenance; weights are reserved for stable voice, judgment, taste, and skills.</p>
         <blockquote><strong>The second pilot improved and still failed the model-quality bar.</strong> It reused the first pilot's twenty prompts, references, rubric, held-out hashes, and blind randomization exactly. After eleven canonical first-party examples were added locally, the candidate improved from 2 preferences to 7; the reference still won 13.</blockquote>
-        <p>The corpus, references, candidates, blind key, ratings, and adapter stay in the gitignored local dataset tree. There is no hosted dataset export path.</p>
+        <p>The AI-delegated 150-item audit found 67 pass / 83 fail, so pilot-v3 remains blocked. Those rulings are remediation evidence, not named-human approval. A clean private Markdown handoff omits the AI labels; even a completed human review still requires remediation, reminting, regrading, a fresh stratified audit, and separate operator authorization before training.</p>
+      </section>
+
+      <section class="section">
+        <h2>The v1 migration is archive-first.</h2>
+        <p>The migration command opens the live database read-only, preserves the exact event prefix, builds a strict event-authoritative core, extracts training and operations into separate stores, and publishes a verified archive plus manifest at fresh paths. It never converts in place.</p>
+        <p>The July 13 rehearsal produced all five artifacts and verified 671,580 events, 232,677 evidence objects, 137,530 beliefs, zero foreign-key violations, and matching manifest hashes. Migration did not activate or repoint a client. After the remaining gates passed, the operator provisionally pointed fresh clients at a byte-identical v1 live copy; Codex, Claude Code, and OpenClaw all completed the full round trip, so the pointer was retained.</p>
       </section>
 
       <section class="section">
         <h2>Current proof, dated instead of implied.</h2>
-        <p>On 2026-07-10, the v0.4 source suite passed 524 tests. The byte-frozen 100-case retrieval benchmark reached 100/100 top-five relevance across ChatGPT, Codex, Claude Code, and OpenClaw, with every citation and privacy-scope check passing.</p>
+        <p>On 2026-07-13, the physically split source tree passed 632 tests and Ruff. The combined core, migration, MCP, and adversarial gate passed 31 focused tests; clean Python 3.12 wheels and fresh-client acceptance also passed rather than being inferred from the source gates.</p>
         <p>The local evaluator now calibrates against a separate set of eight human labels, not machine-authored expected answers. It passed 8/8 at the fixed 90% gate after the evaluator rubric—not the labels or threshold—was corrected.</p>
-        <p>The v0.3.3 ledger audit remains the latest full-chain snapshot: 306,974 events reproduced 101,641 beliefs exactly, with zero foreign-key violations and zero parentless search rows.</p>
+        <p>The v1 candidate preserves the exact 307,285-event legacy prefix and extends it to a verified 671,580-event chain. Its 108,222 serving documents match the FTS count, and the archive/core/training/ops SHA-256 values match the private migration manifest.</p>
         <p>Those are snapshots, not timeless promises. The proof page separates code gates, runtime acceptance, and model quality so a green result in one lane cannot stand in for another.</p>
         <div class="actions">
           <a class="btn btn-primary" href="/proof/">See what passed and what did not</a>
