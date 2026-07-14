@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>ocbrain · One brain for ChatGPT/Codex, Claude Code, and OpenClaw</title>
+  <title>ocbrain · One local brain for the agents you choose</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Install ocbrain, connect ChatGPT/Codex, Claude Code, and OpenClaw to one local source-backed memory, and verify the result instead of trusting a green config line.">
+  <meta name="description" content="Install ocbrain, connect the MCP clients you use to one local source-backed memory, and verify real tool use. OpenClaw is optional.">
   <meta property="og:title" content="ocbrain · One local brain for your agents">
-  <meta property="og:description" content="Source-backed memory, stable scoped context, bounded source expansion, and outcome receipts across ChatGPT/Codex, Claude Code, and OpenClaw.">
+  <meta property="og:description" content="Source-backed memory, stable scoped context, bounded source expansion, and outcome receipts for compatible MCP clients. OpenClaw is optional.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://openclawbrain.ai/">
   <meta property="og:image" content="https://openclawbrain.ai/assets/img/openclawbrain-hero.jpg">
@@ -35,21 +35,22 @@
     <main>
       <section class="hero">
         <div class="eyebrow">One local brain for the agents you already use</div>
-        <h1>Let ChatGPT, Codex, Claude Code, and OpenClaw remember together.</h1>
+        <h1>Give the agents you use one source-backed memory.</h1>
         <p class="lead">The thing I keep coming back to is that agent memory should not be another confident summary with no source behind it. ocbrain keeps an append-only evidence and outcome ledger, derives a scoped current view, and gives each runtime only the coherent context its decision needs.</p>
-        <p class="sublead">The store is local SQLite. A stable Shared Context packet gives every client the same retrieval shape, source handles expand exact material on demand, and closeout receipts connect actions and outcomes back to what the agent saw. Search features can change; the source record remains.</p>
+        <p class="sublead">The store is local SQLite. A stable Shared Context packet gives every configured client the same retrieval shape, source handles expand exact material on demand, and closeout receipts connect actions and outcomes back to what the agent saw. Start with one compatible MCP client or connect several. OpenClaw is supported, not required.</p>
         <div class="actions">
           <a class="btn btn-primary" href="/install/">Install and verify</a>
           <a class="btn" href="/how-it-works/">See the pipeline</a>
           <a class="btn" href="/proof/">Read the proof</a>
           <a class="btn" href="https://github.com/jonathangu/ocbrain/releases/tag/v1.0.1" target="_blank" rel="noopener">Release v1.0.1</a>
           <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">Browse the source</a>
+          <a class="btn" href="/install/#contribute">Contribute</a>
         </div>
         <div class="chips">
           <span class="chip">v1.0.1 · Event-authoritative core · Apache-2.0</span>
           <span class="chip">ChatGPT / Codex</span>
           <span class="chip">Claude Code</span>
-          <span class="chip">OpenClaw</span>
+          <span class="chip">OpenClaw (optional)</span>
           <span class="chip">MCP</span>
           <span class="chip">Local SQLite</span>
           <span class="chip">Scoped retrieval</span>
@@ -65,10 +66,10 @@
 
       <section class="section">
         <h2>Install first. Then make the proof real.</h2>
-        <p>A good memory system is not installed when three config files look plausible. It is installed when each fresh runtime process can call the same MCP server, receive an <code>ocbrain.context.v1</code> packet, expand an issued source, record retrieval usefulness, and close out the task. The install guide uses the current runtime CLIs and ends with those checks.</p>
+        <p>A good memory system is not installed when a config file looks plausible. It is installed when each client you chose can start the same MCP server, receive an <code>ocbrain.context.v1</code> packet, expand an issued source when one exists, record retrieval usefulness, and close out the task. The install guide starts with requirements and ends with those checks.</p>
         <div class="actions">
           <a class="btn btn-primary" href="/install/#quick-start">Clone and install</a>
-          <a class="btn" href="/install/#connect">Connect every runtime</a>
+          <a class="btn" href="/install/#connect">Connect your clients</a>
           <a class="btn" href="/install/#verify">Verify tool use</a>
           <a class="btn" href="/install/#upgrade">Upgrade safely</a>
         </div>

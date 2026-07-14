@@ -8,6 +8,25 @@ context the agent used.
 
 Current public release: v1.0.1 under Apache-2.0.
 
+Requirements and installation:
+
+- Python 3.11 or newer, Git, and at least one compatible stdio MCP client.
+- The current public release is verified on macOS and uses POSIX facilities
+  including bash and fcntl. Linux is an intended target, but Linux and WSL do
+  not yet have a published release-acceptance record. Native Windows is not
+  supported.
+- Install from the public Git repository or a GitHub release. ocbrain is not
+  currently published to PyPI.
+- OpenClaw is optional. No hosted service, API key, or vector database is
+  required for the OCBrain core; configured clients retain their own
+  installation and authentication requirements.
+- The local SQLite database is not encrypted at rest. Create it under a
+  restrictive umask, keep it mode 0600, and use full-disk encryption when the
+  stored evidence is sensitive.
+- A fresh brain is intentionally empty. An honest empty context packet proves
+  the client/server path, but full source-expansion acceptance needs in-scope
+  promoted knowledge or a migrated v0.x brain.
+
 Primary pages:
 
 - Install and migration: https://openclawbrain.ai/install/
@@ -16,6 +35,23 @@ Primary pages:
 - Dated proof: https://openclawbrain.ai/proof/
 - Guide: https://openclawbrain.ai/guide/
 - Source: https://github.com/jonathangu/ocbrain
+
+Contribution and permissions:
+
+- The repository is public. Anyone can read it, fork it, open an issue, and
+  propose a pull request.
+- Public does not mean public write or merge access. External contributors
+  cannot push to main or merge their own work.
+- main currently requires one approving review and resolved review
+  conversations. @jonathangu is the only write collaborator, so an outside
+  pull request's qualifying approval normally comes from that account;
+  repository administrators retain a maintenance bypass.
+- New commits dismiss stale approvals. Force pushes and branch deletion are
+  disabled.
+- Do not include live databases, transcripts, credentials, tokens, private
+  absolute paths, or other owner data in an issue or pull request.
+- Report sensitive vulnerabilities privately at
+  https://github.com/jonathangu/ocbrain/security/advisories/new
 
 Runtime routine:
 

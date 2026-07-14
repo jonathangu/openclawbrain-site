@@ -5,15 +5,15 @@ operator and product documentation for
 [ocbrain](https://github.com/jonathangu/ocbrain).
 
 The site's first job is practical: help someone install, archive-first migrate,
-and verify one event-authoritative local core across ChatGPT/Codex, Claude Code,
-and OpenClaw. The explanation, proof, and agent contract support that job
-without crowding the front door.
+and verify one event-authoritative local core with the compatible MCP clients
+they choose. OpenClaw is supported but optional. The explanation, proof, and
+agent contract support that job without crowding the front door.
 
 ## Pages
 
-- `/install/` — install, connect every runtime, archive-first migrate v0.x,
-  activate explicitly, exchange bounded evidence, verify real tool use, and
-  upgrade safely.
+- `/install/` — check requirements; install; connect selected clients;
+  archive-first migrate v0.x; activate explicitly; exchange bounded evidence;
+  verify real tool use; contribute; and upgrade safely.
 - `/how-it-works/` — the v1 event authority, Shared Context, exact source
   expansion, action/outcome receipts, and optional companion packages.
 - `/proof/` — dated source, migration, runtime, and model-quality evidence,
@@ -45,6 +45,11 @@ without crowding the front door.
   features as rebuildable. Keep `ocbrain-training` and `ocbrain-ops` optional
   and physically separate from the core.
 - Keep install, upgrade, and verify first on this domain.
+- State that one compatible MCP client is enough and OpenClaw is optional.
+- Keep Cursor-specific setup out until its maintainer-authored integration is
+  ready.
+- Describe the repository as public without implying that public write or
+  merge access exists. External work arrives through reviewed pull requests.
 
 ## Development and deploy
 
