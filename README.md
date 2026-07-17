@@ -11,11 +11,13 @@ agent contract support that job without crowding the front door.
 
 ## Pages
 
-- `/install/` — check requirements; install; connect selected clients;
-  archive-first migrate v0.x; activate explicitly; exchange bounded evidence;
-  verify real tool use; contribute; and upgrade safely.
-- `/how-it-works/` — the v1 event authority, Shared Context, exact source
-  expansion, action/outcome receipts, and optional companion packages.
+- `/install/` — check requirements; install; seed the reviewed hosted-safe
+  demonstration; connect selected clients; optionally build the local vector
+  sidecar; archive-first migrate v0.x; verify real tool use; contribute; and
+  upgrade safely.
+- `/how-it-works/` — the v1 event authority, hybrid retrieval, hosted delivery
+  filtering, bounded Shared Context, exact source expansion, action/outcome
+  receipts, and optional companion packages.
 - `/proof/` — dated source, migration, runtime, and model-quality evidence,
   safeguards, and open risks.
 - `/agent-manual/` — the current MCP operating contract.
@@ -37,8 +39,8 @@ agent contract support that job without crowding the front door.
   activates a candidate.
 - Name the eight runtime MCP tools exactly. The admin profile adds only local
   preview, egress preview, correction, proposal listing/decision, and tombstone
-  controls; never document hosted judgment, training, scheduler, or watchdog
-  tools as part of core MCP.
+  controls; never document hosted judgment, hosted embedding, training,
+  scheduler, or watchdog tools as part of core MCP.
 - Keep evidence bundles in the explicit operator CLI. Never describe them as
   automatic sync, an MCP tool, or a way to import beliefs and receipts.
 - Describe `brain_events` as the semantic authority and projections/search
@@ -46,6 +48,14 @@ agent contract support that job without crowding the front door.
   and physically separate from the core.
 - Keep install, upgrade, and verify first on this domain.
 - State that one compatible MCP client is enough and OpenClaw is optional.
+- Treat the local Ollama vector sidecar as optional, derived, loopback-only,
+  and fail-soft to lexical retrieval. Never make it an install requirement.
+- Keep hosted delivery server-controlled. Name the 32 KB packet bound, separate
+  scope and delivery exclusion counts, their exact cardinality disclosure,
+  empty hosted exclusion samples, and redacted local paths.
+- Require the explicit `--allow-hosted-egress` acknowledgement for the public
+  hosted-context demonstration. Never imply that it authorizes the database,
+  full source file, or local path to leave the machine.
 - Keep Cursor-specific setup out until its maintainer-authored integration is
   ready.
 - Describe the repository as public without implying that public write or

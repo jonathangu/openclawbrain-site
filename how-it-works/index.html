@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>How OCBrain v1 works · current architecture</title>
-  <meta name="description" content="OCBrain v1: one event-authoritative local core, bounded Shared Context, source expansion, feedback, closeouts, and optional isolated training and operations packages.">
+  <meta name="description" content="OCBrain v1: one event-authoritative local core, fail-soft hybrid retrieval, hosted delivery filtering, bounded Shared Context, source expansion, feedback, closeouts, and optional isolated companions.">
   <meta property="og:title" content="How OCBrain v1 works">
   <meta property="og:description" content="Retrieval filters the private data lake; bounded context and exact source expansion give compatible MCP clients the evidence they need.">
   <meta property="og:type" content="article">
@@ -50,7 +50,9 @@
         <span class="chip">Event-authoritative</span>
         <span class="chip">Local SQLite</span>
         <span class="chip">Scoped retrieval</span>
+        <span class="chip">Optional local vectors</span>
         <span class="chip">Shared Context</span>
+        <span class="chip">32 KB packet limit</span>
         <span class="chip">Hash-verified sources</span>
         <span class="chip">Action/outcome receipts</span>
         <span class="chip">Explicit evidence bundles</span>
@@ -61,9 +63,9 @@
       <h2>RAG is not dead here—and long context is not the database.</h2>
       <p>OCBrain's history is effectively unbounded and keeps changing. Re-reading it all for every question would waste compute and dilute attention. Pure top-k snippets are not enough either: models need a coherent local picture to compare sources, detect omissions, and understand what changed.</p>
       <div class="grid">
-        <div class="card"><h3>Retrieval filters</h3><p>Scope and search reduce the private lake to the small candidate set relevant to this project, repo, client, task, and session.</p></div>
-        <div class="card"><h3>Context assembles</h3><p><code>ocbrain.context.v1</code> packages serving beliefs, contradictions, exclusions, coverage, confidence, and source handles.</p></div>
-        <div class="card"><h3>Sources expand</h3><p>The model opens only the few exact sources it needs, within a size bound and after scope and content-hash checks.</p></div>
+        <div class="card"><h3>Retrieval filters</h3><p>Scope-safe FTS5 works by itself. An optional loopback Ollama sidecar can add dense candidates without becoming authority.</p></div>
+        <div class="card"><h3>Context assembles</h3><p><code>ocbrain.context.v1</code> packages serving beliefs, contradictions, exclusion coverage, confidence, and source handles within 32 KB.</p></div>
+        <div class="card"><h3>Sources expand</h3><p>The model opens only the few exact sources it needs, within a size bound and after scope and content-hash checks. Hosted packets expose no local path.</p></div>
         <div class="card"><h3>Outcomes return</h3><p>Feedback and closeout receipts link the decision, verification, action, and outcome back to what the model saw.</p></div>
       </div>
       <blockquote><strong>The index is replaceable infrastructure. The evidence and outcome ledger is the product.</strong></blockquote>
@@ -78,7 +80,19 @@
         <li><span class="n"></span><div><h4>Feedback</h4><p><code>brain.feedback</code> records whether the retrieval was helpful, used, irrelevant, ignored, or harmful.</p></div></li>
         <li><span class="n"></span><div><h4>Closeout</h4><p><code>brain.closeout</code> appends status, decision impact, retrieval links, artifacts, verifiers, actions, outcomes, and provenance.</p></div></li>
       </ol>
-      <p>The default runtime profile exposes exactly eight tools: context, source, search, digest, get, feedback, ingest, and closeout. The explicit admin profile adds local preview, egress preview, correction, proposal listing/decision, and tombstone controls. It adds no hosted judgment, training, scheduler, watchdog, or bundle-transfer tool.</p>
+      <p>The default runtime profile exposes exactly eight tools: context, source, search, digest, get, feedback, ingest, and closeout. The explicit admin profile adds local preview, egress preview, correction, proposal listing/decision, and tombstone controls. It adds no hosted judgment, hosted embedding, training, scheduler, watchdog, or bundle-transfer tool.</p>
+    </section>
+
+    <section class="section">
+      <h2>Dense retrieval is optional, local, and disposable.</h2>
+      <p>v1.1.0 can combine lexical and dense candidate ranks with reciprocal-rank fusion. The dense index lives in a separate owner-only SQLite sidecar and uses only a loopback Ollama endpoint. It records the core event head, model digest, dimensions, and query-instruction hash so incompatible or stale vectors do not quietly participate.</p>
+      <div class="grid">
+        <div class="card"><h3>Lexical baseline</h3><p>FTS5 remains available with no extra service or package dependency.</p></div>
+        <div class="card"><h3>Explicit build</h3><p><code>vector-build</code> snapshots current serving beliefs only when an operator invokes it. No background indexer is installed.</p></div>
+        <div class="card"><h3>Fail-soft query</h3><p>A missing model, stopped Ollama server, stale event head, bad dimension, or incompatible sidecar returns a visible <code>dense_fallback</code> reason and continues lexically.</p></div>
+        <div class="card"><h3>No hosted fallback</h3><p>The endpoint must be loopback HTTP. Failure never redirects source text to a hosted embedding provider.</p></div>
+      </div>
+      <p>Lifecycle, scope, visibility, and delivery checks create the eligible inventory before either lexical or dense candidates are ranked. Retrieval quality features cannot widen authority.</p>
     </section>
 
     <section class="section">
@@ -95,7 +109,9 @@
 
     <section class="section">
       <h2>Scope is a gate, not a ranking hint.</h2>
-      <p>Each object carries scope type, scope ID, visibility, egress policy, and provenance. Confidential foreign scopes are excluded before ranking. Direct get and source expansion enforce the same boundary, so knowing an object ID is not an access bypass.</p>
+      <p>Each object carries scope type, scope ID, visibility, egress policy, and provenance. Scope matching and delivery eligibility are separate, pre-ranking gates. For the ordinary <code>hosted_model</code> server target, only non-confidential <code>hosted_ok</code> objects are eligible; <code>local_only</code>, <code>approval_required</code>, prohibited, confidential, and secret objects stay out of the packet.</p>
+      <p>The server chooses the delivery target; tool arguments cannot downgrade it to <code>local_model</code>. Coverage partitions the current serving inventory into exact, query-independent eligible, scope-excluded, and delivery-excluded cardinalities. Hosted packets expose no excluded ID, body, path, or object sample, and the complete serialized packet is hard-bounded to 32 KB.</p>
+      <p>Direct get and source expansion enforce the same boundary, so knowing an object ID is not an access bypass. Hosted source handles use <code>ocbrain://</code> locators instead of local paths. Explicit cross-scope retrieval can issue a handle, but expansion still requires context matching the source's own scope.</p>
       <p>Migration maps only explicit legacy context. The placeholder value <code>workspace</code> becomes conservatively quarantined <code>legacy_unscoped</code>; it is not promoted into a fictional global project.</p>
       <p>Historical <code>at_ts</code> retrieval is explicitly rejected in v1 until it can be implemented against event sequence correctly. It is never silently approximated.</p>
     </section>

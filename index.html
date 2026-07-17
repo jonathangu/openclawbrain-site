@@ -42,12 +42,12 @@
           <a class="btn btn-primary" href="/install/">Install and verify</a>
           <a class="btn" href="/how-it-works/">See the pipeline</a>
           <a class="btn" href="/proof/">Read the proof</a>
-          <a class="btn" href="https://github.com/jonathangu/ocbrain/releases/tag/v1.0.1" target="_blank" rel="noopener">Release v1.0.1</a>
+          <a class="btn" href="https://github.com/jonathangu/ocbrain/releases/tag/v1.1.0" target="_blank" rel="noopener">Release v1.1.0</a>
           <a class="btn" href="https://github.com/jonathangu/ocbrain" target="_blank" rel="noopener">Browse the source</a>
           <a class="btn" href="/install/#contribute">Contribute</a>
         </div>
         <div class="chips">
-          <span class="chip">v1.0.1 · Event-authoritative core · Apache-2.0</span>
+          <span class="chip">v1.1.0 · Event-authoritative core · Apache-2.0</span>
           <span class="chip">ChatGPT / Codex</span>
           <span class="chip">Claude Code</span>
           <span class="chip">OpenClaw (optional)</span>
@@ -66,7 +66,7 @@
 
       <section class="section">
         <h2>Install first. Then make the proof real.</h2>
-        <p>A good memory system is not installed when a config file looks plausible. It is installed when each client you chose can start the same MCP server, receive an <code>ocbrain.context.v1</code> packet, expand an issued source when one exists, record retrieval usefulness, and close out the task. The install guide starts with requirements and ends with those checks.</p>
+        <p>A good memory system is not installed when a config file looks plausible. It is installed when each client you chose can start the same MCP server, receive an <code>ocbrain.context.v1</code> packet no larger than 32 KB, expand an issued source when one exists, record retrieval usefulness, and close out the task. The install guide starts with requirements and ends with those checks.</p>
         <div class="actions">
           <a class="btn btn-primary" href="/install/#quick-start">Clone and install</a>
           <a class="btn" href="/install/#connect">Connect your clients</a>
@@ -76,20 +76,30 @@
       </section>
 
       <section class="section">
+        <h2>A fresh brain can prove a real source round trip.</h2>
+        <p>A new database starts empty on purpose. v1.1.0 includes a tracked demonstration with four public installation facts and one hash-pinned source. Review it, then apply it with <code>curated-apply --allow-hosted-egress</code>. The acknowledgement covers only those exact fact bodies; it does not authorize the database, full source file, or a local filesystem path to leave the machine.</p>
+        <p>After that explicit step, a fresh Codex, Claude Code, or other hosted-model client can retrieve the public facts, receive an <code>ocbrain://</code> source handle instead of a local path, and verify the source hash. Private or <code>local_only</code> material remains excluded before ranking and packet construction.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/install/#fresh-brain">Run the demonstration</a>
+          <a class="btn" href="https://github.com/jonathangu/ocbrain/tree/v1.1.0/examples/hosted-context-demo" target="_blank" rel="noopener">Review the tracked facts</a>
+        </div>
+      </section>
+
+      <section class="section">
         <h2>One brain does not mean one undifferentiated memory pool.</h2>
         <p>Every retrieval carries the narrowest context the runtime knows: project, repo, task, client, runtime, and session. That context is a lens over one ledger. Stable doctrine can travel; confidential or project-specific evidence does not.</p>
         <div class="grid">
           <div class="card"><h3>Events are authority</h3><p>History enters an append-only hash chain. A correction or tombstone is a later event, never a silent rewrite.</p></div>
           <div class="card"><h3>Belief is a projection</h3><p>Evidence objects, current beliefs, aliases, provenance links, and search are rebuildable derived views.</p></div>
-          <div class="card"><h3>Attention is bounded</h3><p>Retrieval filters the lake; Shared Context assembles a small dossier; exact sources expand only when needed.</p></div>
-          <div class="card"><h3>Scope is mechanical</h3><p>Confidential foreign scopes are excluded before ranking. Get and source expansion are not ID-based bypasses.</p></div>
+          <div class="card"><h3>Attention is bounded</h3><p>FTS5 always works; an optional local Ollama sidecar can add dense candidates. Shared Context stays within 32 KB and exact sources expand only when needed.</p></div>
+          <div class="card"><h3>Scope is mechanical</h3><p>Scope and hosted-delivery policy are enforced before ranking. Get and source expansion are not ID-based bypasses.</p></div>
         </div>
       </section>
 
       <section class="section">
         <h2>Maintenance is explicit, local, and bounded.</h2>
         <p>The default install is an on-demand MCP process. It installs no recurring light, heavy, or stallcheck job. A bounded <code>ocbrain sync</code> reconciles the local event projection when an operator asks; it does not call a hosted judgment or embedding provider, build a dataset, train a model, or start a scheduler.</p>
-        <p>Hosted judgment, embedding, training, and watchdog controls are absent from the core MCP. ocbrain does not enqueue agent work, install skills, send hosted requests, train a model, or page an operator on its own.</p>
+        <p>Hosted judgment, hosted embedding, training, and watchdog controls are absent from the core MCP. The optional dense path is loopback-only. ocbrain does not enqueue agent work, install skills, send hosted requests, train a model, or page an operator on its own.</p>
         <div class="actions">
           <a class="btn" href="/how-it-works/">Walk through the full loop</a>
           <a class="btn" href="/agent-manual/">Give an agent the contract</a>
@@ -122,14 +132,17 @@
 
       <section class="section">
         <h2>Current proof, dated instead of implied.</h2>
+        <p>On 2026-07-17, the v1.1.0 source gate passed its focused golden Shared Context contract, the complete 708-test suite, Ruff, bytecode compilation, lock coherence, and public-safety scanning on the exact main commit <code>9fb0e395</code>. Six clean-built release assets were installed together without an external package index, downloaded back from GitHub, and matched their published SHA-256 digests byte for byte.</p>
+        <p>The clean v1.1.0 wheel created an owner-only database, exposed exactly eight stdio MCP tools, applied the four-fact hosted demonstration idempotently, and completed <code>context → source → feedback → closeout</code> with <code>hash_verified=true</code>. That is source and artifact verification, not a claim that fresh model-driven Codex, Claude Code, and OpenClaw acceptance was repeated for v1.1.0.</p>
         <p>On 2026-07-13, the v1.0.1 source tree passed 676 tests, Ruff, bytecode compilation, and a zero-finding public-safety scan. Six fresh release artifacts passed package-isolation and privacy inventories; a clean Python 3.12 install exercised all three packages, the exact eight-tool MCP surface, and a two-database evidence-bundle round trip.</p>
         <p>Fresh Codex, Claude Code, and OpenClaw processes then each completed <code>context → source → feedback → closeout</code> against the same active core. The database—not the model prose—contains the linked receipts and release verifiers.</p>
         <p>The local evaluator now calibrates against a separate set of eight human labels, not machine-authored expected answers. It passed 8/8 at the fixed 90% gate after the evaluator rubric—not the labels or threshold—was corrected.</p>
         <p>The v1 candidate preserves the exact 307,285-event legacy prefix and extends it to a verified 671,580-event chain. Its 108,222 serving documents match the FTS count, and the archive/core/training/ops SHA-256 values match the private migration manifest.</p>
-        <p>Those are snapshots, not timeless promises. The proof page separates code gates, runtime acceptance, and model quality so a green result in one lane cannot stand in for another.</p>
+        <p>Those are historical v1.0.1 snapshots, not timeless promises or a substitute for v1.1.0 verification. The proof page separates code gates, runtime acceptance, and model quality so a green result in one lane cannot stand in for another.</p>
         <div class="actions">
           <a class="btn btn-primary" href="/proof/">See what passed and what did not</a>
-          <a class="btn" href="https://github.com/jonathangu/ocbrain/releases/tag/v1.0.1" target="_blank" rel="noopener">Open the v1.0.1 release</a>
+          <a class="btn" href="https://github.com/jonathangu/ocbrain/releases/tag/v1.1.0" target="_blank" rel="noopener">Open the current v1.1.0 release</a>
+          <a class="btn" href="https://github.com/jonathangu/ocbrain/releases/tag/v1.0.1" target="_blank" rel="noopener">Open the historical v1.0.1 release</a>
         </div>
       </section>
 

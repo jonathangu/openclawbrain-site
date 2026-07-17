@@ -46,8 +46,8 @@
       <div class="grid">
         <div class="card"><h3>1. Evidence events</h3><p>Append what happened, with source, scope, provenance, actor, session, and time, without pretending it is already truth.</p></div>
         <div class="card"><h3>2. Current projections</h3><p>Derive current beliefs and retain every evidence link, correction, alias, and tombstone needed to rebuild them.</p></div>
-        <div class="card"><h3>3. Shared Context</h3><p>Filter by scope, then assemble a small coherent packet with coverage, exclusions, contradictions, and confidence.</p></div>
-        <div class="card"><h3>4. Exact sources</h3><p>Expand only issued handles needed for the decision, bounded by size and verified against the recorded content hash.</p></div>
+        <div class="card"><h3>3. Shared Context</h3><p>Filter by scope and delivery policy, then assemble a coherent packet with coverage, exclusions, contradictions, and confidence within 32 KB.</p></div>
+        <div class="card"><h3>4. Exact sources</h3><p>Expand only issued handles needed for the decision, bounded by size and verified against the recorded content hash. Hosted clients never receive a local path.</p></div>
         <div class="card"><h3>5. Outcomes</h3><p>Link retrieval feedback, verifiers, portable actions, and local outcome meanings back to what the agent actually saw.</p></div>
       </div>
       <p>The order is important. An agent never gets to skip evidence and write a belief because the sentence sounds right. <code>brain_events</code> remains the semantic authority; projections and search features can be rebuilt.</p>
@@ -60,9 +60,15 @@
     </section>
 
     <section class="section">
+      <h2>Better retrieval should not acquire more authority.</h2>
+      <p>FTS5 is the baseline. v1.1.0 can also ask an explicitly installed loopback Ollama model for query vectors and merge lexical and dense ranks. The sidecar is derived, owner-only, and tied to the ledger head and model identity. If it is missing, stale, or unavailable, the query says why and continues lexically.</p>
+      <p>The eligibility gate runs first. A dense match cannot pull in a foreign confidential fact or make <code>local_only</code> evidence eligible for a hosted model. Better ranking changes attention within the allowed set; it does not rewrite scope, egress policy, or provenance.</p>
+    </section>
+
+    <section class="section">
       <h2>Maintenance is an explicit operation, not ambient authority.</h2>
       <p>The default install runs on demand and creates no recurring light, heavy, or stallcheck job. <code>ocbrain sync</code> reconciles the local core projection within an event and time budget; it cannot cross into judgment, embedding, dataset, trainer, watchdog, network, or scheduler work.</p>
-      <p>The core MCP has no hosted judgment, embedding, or training surface. Its tracked configuration leaves those capabilities off, and training remains paused. A credential alone enables nothing. Deliberately invoked maintenance still does not authorize ocbrain to run the user's work, send a hosted request, install a skill, publish a package, or delete the corpus.</p>
+      <p>The core MCP has no hosted judgment, hosted embedding, or training controls. Optional dense retrieval is loopback-only and has no hosted fallback. Its preserved compatibility configuration leaves unrelated hosted capabilities off, and training remains paused. A credential alone enables nothing. Deliberately invoked maintenance still does not authorize ocbrain to run the user's work, send a hosted request, install a skill, publish a package, or delete the corpus.</p>
       <p>That is the line I want the system to keep as it gets smarter. Let the model decide semantic meaning where judgment helps. Let code enforce the trust boundary. Let SQLite keep the evidence legible.</p>
     </section>
 
@@ -70,6 +76,12 @@
       <h2>Sharing a source is not the same as sharing a brain.</h2>
       <p>Sometimes one machine has evidence another machine genuinely needs. v1.0.1 handles that case with a small, owner-controlled bundle: name the evidence, apply egress policy, redact secrets, write a fresh file, validate it on the other side, and require a separate apply step.</p>
       <p>The receiver does not inherit the sender's beliefs or object authority. It gets confidential, local-only evidence with provenance and derives its own IDs. That keeps transfer learning possible without turning synchronization into silent trust.</p>
+    </section>
+
+    <section class="section">
+      <h2>A hosted model receives a filtered packet, not the lake.</h2>
+      <p>The ordinary MCP launcher conservatively marks delivery as <code>hosted_model</code>, and a tool caller cannot change that target. Only non-confidential facts explicitly marked <code>hosted_ok</code> are eligible. The packet reports exact, query-independent eligible, scope-excluded, and delivery-excluded cardinalities, but no excluded hosted ID, body, path, or sample.</p>
+      <p>The whole serialized packet stays within 32 KB. Excerpts are bounded, source expansion remains explicit, and hosted handles use an <code>ocbrain://</code> locator rather than exposing a local filesystem path. The tracked fresh-brain demonstration requires a human to acknowledge the four exact public fact bodies before they can enter that path.</p>
     </section>
 
     <section class="section">

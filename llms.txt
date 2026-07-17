@@ -6,26 +6,49 @@ private evidence lake into a bounded dossier, expands exact sources on demand,
 records whether retrieval mattered, and links the eventual outcome back to the
 context the agent used.
 
-Current public release: v1.0.1 under Apache-2.0.
+Current public release: v1.1.0 under Apache-2.0.
 
 Requirements and installation:
 
 - Python 3.11 or newer, Git, and at least one compatible stdio MCP client.
-- The current public release is verified on macOS and uses POSIX facilities
-  including bash and fcntl. Linux is an intended target, but Linux and WSL do
-  not yet have a published release-acceptance record. Native Windows is not
-  supported.
+- macOS and Linux are supported and the public source gate runs on Ubuntu with
+  Python 3.11. The dated model-driven three-client acceptance remains a macOS
+  record. WSL is expected to work but is not release-accepted. Native Windows
+  is not supported because the current launcher and locking use POSIX
+  facilities including bash and fcntl.
 - Install from the public Git repository or a GitHub release. ocbrain is not
   currently published to PyPI.
-- OpenClaw is optional. No hosted service, API key, or vector database is
-  required for the OCBrain core; configured clients retain their own
-  installation and authentication requirements.
+- OpenClaw is optional. No hosted service, API key, vector database, or
+  background daemon is required for the OCBrain core; configured clients
+  retain their own installation and authentication requirements.
+- FTS5 lexical retrieval works by itself. Optional dense retrieval uses a
+  separately built owner-only sidecar and a loopback Ollama endpoint. It has no
+  hosted embedding fallback.
 - The local SQLite database is not encrypted at rest. Create it under a
   restrictive umask, keep it mode 0600, and use full-disk encryption when the
   stored evidence is sensitive.
 - A fresh brain is intentionally empty. An honest empty context packet proves
   the client/server path, but full source-expansion acceptance needs in-scope
   promoted knowledge or a migrated v0.x brain.
+
+Fresh hosted-safe demonstration:
+
+- Review examples/hosted-context-demo/source.md and manifest.json first.
+- Apply it explicitly with:
+  .venv/bin/ocbrain --db data/ocbrain.sqlite curated-apply
+  examples/hosted-context-demo/manifest.json --allow-hosted-egress
+  --actor "human-curated:YOUR-NAME"
+- The command verifies the pinned source SHA-256, prevalidates the complete
+  manifest, and atomically appends evidence, proposal, and approval events. It
+  never writes a belief projection directly.
+- The acknowledgement covers only the four reviewed public fact bodies. It
+  does not authorize the database, complete source file, unlisted text, or a
+  local filesystem path to leave the machine.
+- A manifest with hosted_ok facts is refused atomically without the flag.
+  hosted_ok cannot be combined with confidential or secret visibility.
+- The tracked examples/curated-memory manifest remains local_only and is the
+  starting point for custom reviewed facts that should not reach a hosted
+  client.
 
 Primary pages:
 
@@ -90,6 +113,23 @@ Core architecture:
   append-only operational receipts that survive semantic rebuilds.
 - Scope is mechanical. Confidential foreign scopes are excluded before
   ranking; brain.get and brain.source are not ID-based bypasses.
+- Retrieval is hybrid when the optional local sidecar is healthy: FTS5 lexical
+  and dense ranks are merged with reciprocal-rank fusion. A missing, stale,
+  incompatible, or unavailable sidecar returns a dense_fallback reason and
+  continues lexically.
+- The vector endpoint must be loopback HTTP. The sidecar records the core event
+  head, model digest, dimensions, and query-instruction hash and can be rebuilt
+  with vector-build; vector-status reports whether it is current.
+- Ordinary stdio MCP delivery is server-controlled as hosted_model. Tool
+  arguments cannot change it. Only non-confidential hosted_ok objects are
+  eligible; local_only, approval_required, prohibited, confidential, and secret
+  objects are excluded before ranking and packet construction.
+- Coverage partitions current serving inventory into eligible,
+  excluded_scope_count, and excluded_delivery_count. These exact,
+  query-independent counts disclose category cardinalities. Hosted packets
+  expose no excluded ID, body, path, or object sample.
+- The complete serialized context packet is hard-bounded to 32 KB. Hosted
+  source handles use ocbrain:// locators instead of local filesystem paths.
 - at_ts is explicitly rejected in v1 until event-sequence-correct historical
   retrieval exists; it is never silently approximated.
 - Embeddings, rankings, summaries, labels, and rewards are replaceable derived
@@ -143,7 +183,32 @@ Migration:
 - Activation is a later explicit local pointer change after verification. The
   July 13 pointer was retained after fresh-client acceptance passed.
 
-Acceptance:
+Current v1.1.0 contract additions:
+
+- The public synthetic golden dataset drives real MCP brain.context and
+  brain.source calls across positive, negative, scope, delivery,
+  contradiction, hash-verification, and wrong-scope-denial cases. It is a test
+  fixture, not harvested data or training input.
+- Public CI runs that focused golden contract before the complete suite.
+- curated-apply provides explicit source-hash-verified onboarding, with an
+  additional acknowledgement before hosted_ok fact bodies can be delivered.
+
+Current v1.1.0 release verification:
+
+- On July 17, 2026, the focused golden contract and complete 708-test suite,
+  Ruff, bytecode compilation, lock coherence, main-branch CI, and public-safety
+  gates passed on commit 9fb0e395.
+- Six artifacts built from that exact commit installed together without an
+  external package index. Downloads from the GitHub release matched all six
+  published SHA-256 digests byte for byte.
+- The clean core wheel created a mode-0600 database, exposed exactly eight
+  stdio MCP tools, applied the four-fact hosted demonstration idempotently, and
+  completed context -> source -> feedback -> closeout with hash_verified=true.
+- This is source and artifact verification. Fresh model-driven Codex, Claude
+  Code, and OpenClaw acceptance was not repeated for v1.1.0; the dated
+  three-client record below remains historical v1.0.1 evidence.
+
+Historical v1.0.1 acceptance:
 
 - A config entry or MCP probe is not enough.
 - Fresh Codex, Claude Code, and OpenClaw processes each completed

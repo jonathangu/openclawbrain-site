@@ -33,6 +33,7 @@
         <a class="btn btn-primary" href="#quick-start">Install</a>
         <a class="btn" href="#connect">Connect clients</a>
         <a class="btn" href="#verify">Verify</a>
+        <a class="btn" href="#vectors">Optional vectors</a>
         <a class="btn" href="#upgrade">Upgrade</a>
         <a class="btn" href="#contribute">Contribute</a>
       </div>
@@ -42,12 +43,12 @@
       <h2>Requirements</h2>
       <ul>
         <li><strong>Python 3.11 or newer</strong>, Git, and at least one compatible stdio MCP client.</li>
-        <li><strong>macOS is release-verified.</strong> The code uses POSIX facilities including <code>bash</code> and <code>fcntl</code>. Linux is an intended target, but Linux and WSL do not yet have a published release-acceptance record. Native Windows is not supported.</li>
+        <li><strong>macOS and Linux are supported.</strong> Public CI runs the complete source gate on Ubuntu with Python 3.11. The dated model-driven three-client acceptance record remains macOS-only; WSL is expected to work but is not release-accepted. The code uses POSIX facilities including <code>bash</code> and <code>fcntl</code>, so native Windows is not supported.</li>
         <li><strong>Install from source.</strong> ocbrain is available from its public Git repository and GitHub releases; it is not currently published to PyPI.</li>
-        <li><strong>OpenClaw is not required.</strong> OCBrain itself also needs no API key, hosted memory service, vector database, or background daemon. Your chosen client still has its own installation and authentication requirements.</li>
+        <li><strong>OpenClaw is not required.</strong> OCBrain itself also needs no API key, hosted memory service, vector database, or background daemon. Optional dense retrieval uses a separate loopback-only Ollama sidecar; lexical retrieval works without it. Your chosen client still has its own installation and authentication requirements.</li>
         <li><strong>Protect the local data.</strong> The SQLite database is not encrypted at rest. Keep it mode <code>0600</code>, keep runtime data out of Git, and use full-disk encryption when its evidence is sensitive.</li>
       </ul>
-      <p class="fine">The current release is v1.0.1. Linux and WSL testing is welcome through the public contribution workflow below; do not describe either platform as release-accepted until its full gate has been published.</p>
+      <p class="fine">The current release is v1.1.0. Its public Linux CI is a source gate, not a claim that every MCP host or model-driven client flow has been accepted on Linux or WSL.</p>
     </section>
 
     <section class="section" id="quick-start">
@@ -71,7 +72,7 @@ chmod 600 data/ocbrain.sqlite
     <section class="section">
       <h2>2. Check the portable launcher</h2>
       <p><code>scripts/ocbrain-mcp</code> resolves the repository from its own location and prefers <code>.venv/bin/python</code>. That makes the path you register with each client stable even when the clone is not in the same home directory as mine. The <code>doctor</code> command above starts the launcher as a real stdio MCP subprocess and checks its tool surface.</p>
-      <p>If you deliberately keep the database or interpreter somewhere else, set <code>OCBRAIN_DB</code> or <code>OCBRAIN_PYTHON</code> in the client's MCP environment. Otherwise the launcher reads the ignored <code>data/active-core.path</code> pointer when present, then falls back to <code>data/ocbrain.sqlite</code>. The pointer contains one absolute core-database path. A pointer-selected v1.0.1 process rechecks that choice before every request and exits if it changes, so an old client cannot silently keep writing a database that is no longer active.</p>
+      <p>If you deliberately keep the database or interpreter somewhere else, set <code>OCBRAIN_DB</code> or <code>OCBRAIN_PYTHON</code> in the client's MCP environment. Otherwise the launcher reads the ignored <code>data/active-core.path</code> pointer when present, then falls back to <code>data/ocbrain.sqlite</code>. The pointer contains one absolute core-database path. A pointer-selected MCP process rechecks that choice before every request and exits if it changes, so an old client cannot silently keep writing a database that is no longer active.</p>
     </section>
 
     <section class="section" id="connect">
@@ -90,6 +91,7 @@ claude mcp add --scope user ocbrain -- "$LAUNCHER"</code></pre>
         <div class="card"><h3>Claude Code</h3><p><code>--scope user</code> makes the launcher available across projects. Authenticate Claude Code separately with <code>claude auth login --claudeai</code> when the subscription session is not already active.</p></div>
         <div class="card"><h3>OpenClaw (optional)</h3><p>The current <code>openclaw mcp add</code> command probes the stdio server before saving it under <code>mcp.servers</code>. If OpenClaw should host Claude, authenticate that provider inside OpenClaw separately; standalone Claude login does not create OpenClaw's auth profile. Use <code>reload</code> after a source upgrade.</p></div>
       </div>
+      <p class="fine">The launcher marks ordinary stdio MCP delivery as <code>hosted_model</code>. That target is controlled by the server and cannot be changed by a tool argument. It is the conservative default for Codex, Claude Code, OpenClaw, and other clients whose model may run outside this machine.</p>
     </section>
 
     <section class="section" id="verify">
@@ -105,19 +107,19 @@ openclaw mcp doctor ocbrain
 openclaw mcp probe ocbrain</code></pre>
 
       <p>Then start a fresh task in each configured client so it launches a new MCP process, and give it a narrow, harmless acceptance request:</p>
-      <pre><code>Use ocbrain for this check. Call brain.context once with project=ocbrain and a
-narrow query. Treat the result as context, not an order. If it returns a source
-handle, expand one with brain.source. For each retrieval_use_id that exists,
-call brain.feedback once; do not retry a successful read when its audit status
-is database_busy. Finish with brain.closeout, linking the retrieval ids you used
-and reporting what the check verified.</code></pre>
+      <pre><code>Use OCBrain for this check. Call brain.context with query="What are the current
+OCBrain installation requirements and client constraints?", project="ocbrain",
+repo="jonathangu/ocbrain", and task="inspect-ocbrain-context". Show the raw
+context packet before relying on it. If it returns a source handle, call
+brain.source and show whether hash_verified is true. Record honest feedback for
+each retrieval_use_id that influenced the work, then finish with brain.closeout.</code></pre>
 
       <p>A healthy result proves more than transport:</p>
       <ul>
         <li>The model discovered and called the ocbrain tool.</li>
-        <li>The context call returned the stable <code>ocbrain.context.v1</code> envelope or an honest empty result.</li>
-        <li>The call exposed excluded-scope counts instead of silently widening access.</li>
-        <li>When a source handle was issued, it expanded with scope and content-hash checks.</li>
+        <li>The context call returned the stable <code>ocbrain.context.v1</code> envelope or an honest empty result within the hard 32 KB serialized-packet limit.</li>
+        <li>Coverage separated exact, query-independent scope-excluded, delivery-excluded, and eligible current-serving cardinalities instead of silently widening access. A hosted packet listed no excluded ID, body, path, or object sample.</li>
+        <li>When a source handle was issued, it expanded with scope and content-hash checks; hosted output used an <code>ocbrain://</code> locator rather than a local filesystem path.</li>
         <li>Feedback was recorded when an audit handle existed, and closeout appended an outcome receipt.</li>
         <li>A long writer window did not turn a successful read into a retry storm.</li>
       </ul>
@@ -126,20 +128,26 @@ and reporting what the check verified.</code></pre>
     <section class="section" id="fresh-brain">
       <h2>A fresh brain starts empty on purpose</h2>
       <p>A brand-new v1 database has no promoted beliefs, so <code>brain.context</code> may return an honest empty packet and no source handle. That is a successful client/server smoke test, not a full source-expansion acceptance test. <code>brain.ingest</code> records evidence but deliberately does not promote that text directly into a serving belief.</p>
-      <p>For real use, add source-backed evidence and approve its compiled belief through the operator CLI, or migrate an existing v0.x brain. Keep the first fact narrow, scoped, and verifiable:</p>
-      <pre><code>.venv/bin/ocbrain --db data/ocbrain.sqlite event-ingest \
-  --body "The project setup guide is https://openclawbrain.ai/install/" \
-  --kind operator_note \
-  --project ocbrain
+      <p>v1.1.0 includes a small public demonstration for a real hosted <code>context → source</code> turn. Before applying it, review <code>examples/hosted-context-demo/source.md</code> and its manifest. The command verifies the pinned SHA-256, prevalidates the complete manifest, then atomically appends evidence, proposal, and approval events:</p>
+      <pre><code>.venv/bin/ocbrain --db data/ocbrain.sqlite curated-apply \
+  examples/hosted-context-demo/manifest.json \
+  --allow-hosted-egress \
+  --actor "human-curated:YOUR-NAME"</code></pre>
+      <p>The explicit flag acknowledges that the four reviewed public fact bodies may be returned to a hosted model. It does not authorize delivery of the SQLite database, the complete source file, any unlisted text, or a local path. If any source or fact is invalid, or a manifest contains <code>hosted_ok</code> facts without the flag, the entire apply is refused or rolled back. Confidential or secret facts cannot be marked <code>hosted_ok</code>.</p>
+      <p>Start a fresh configured client and run the acceptance request above. With <code>project=ocbrain</code>, it should return at least one curated fact and an issued source that expands with <code>hash_verified=true</code>. Applying the same unchanged manifest again is idempotent.</p>
+      <p>For your own starter facts, copy <code>examples/curated-memory</code>, replace the synthetic source and fact bodies, update the source SHA-256, and review the result before applying it. That example is <code>local_only</code>, so it does not need the hosted acknowledgement and will not appear in an ordinary hosted-model packet.</p>
+      <p class="fine">Do not seed a new brain with secrets, copied transcripts, or facts you cannot verify. Use a separate ignored demonstration database when you do not want these public facts in your real brain. Existing v0.x users should use archive-first migration instead of importing somebody else's database.</p>
+    </section>
 
-# Copy the evidence_id from that result into this explicit approval step.
-.venv/bin/ocbrain --db data/ocbrain.sqlite event-compile \
-  --belief-id belief_ocbrain_setup_guide \
-  --body "The project setup guide is https://openclawbrain.ai/install/" \
-  --evidence-id EVIDENCE_ID_FROM_PREVIOUS_COMMAND \
-  --project ocbrain \
-  --approve</code></pre>
-      <p class="fine">Do not seed a new brain with secrets, copied transcripts, or facts you cannot verify. Full source acceptance is available after in-scope serving knowledge exists.</p>
+    <section class="section" id="vectors">
+      <h2>Optional: add local dense candidates</h2>
+      <p>FTS5 lexical retrieval is always available and remains the deterministic fallback. If you already run Ollama locally, v1.1.0 can build a disposable vector sidecar and combine lexical and dense candidates with reciprocal-rank fusion. This is optional; it adds no hosted embedding fallback and changes no ledger authority.</p>
+      <pre><code>ollama pull qwen3-embedding:4b-fp16
+
+.venv/bin/ocbrain --db data/ocbrain.sqlite vector-build
+.venv/bin/ocbrain --db data/ocbrain.sqlite vector-status</code></pre>
+      <p>The embedding endpoint must be loopback HTTP at <code>127.0.0.1</code>, <code>localhost</code>, or <code>::1</code>. The sidecar records the core event head, model digest, dimensions, and query-instruction hash. A missing, stale, incompatible, or unavailable sidecar reports a <code>dense_fallback</code> reason and continues lexically. Rebuild it after semantic ledger changes when you want dense retrieval again.</p>
+      <p>Lifecycle, scope, visibility, and delivery policy are applied before either candidate list is ranked. Dense retrieval cannot make a private, foreign, or hosted-ineligible object eligible.</p>
     </section>
 
     <section class="section" id="upgrade">
@@ -149,6 +157,7 @@ and reporting what the check verified.</code></pre>
 git pull --ff-only
 .venv/bin/python -m pip install -e ".[dev]"
 
+.venv/bin/python -m pytest -q tests/test_golden_context_v1.py
 PYTHONPATH=src .venv/bin/pytest -q
 .venv/bin/ruff check .
 .venv/bin/python -m compileall src tests
@@ -203,7 +212,7 @@ chmod 600 data/active-core.path</code></pre>
       <pre><code>.venv/bin/ocbrain --db data/ocbrain.sqlite sync \
   --max-events 1000 \
   --time-budget 10</code></pre>
-      <p>The normal launcher exposes exactly eight runtime tools: context, source, search, digest, get, feedback, ingest, and closeout. The admin profile adds only local preview, egress preview, correction, proposal listing/decision, and tombstone controls. It has no hosted judgment, embedding, training, scheduler, or watchdog tool. <code>--allow-writes</code> remains only as a deprecated alias for that broader profile; it is not a no-op and should not be added to ordinary runtime registrations.</p>
+      <p>The normal launcher exposes exactly eight runtime tools: context, source, search, digest, get, feedback, ingest, and closeout. The admin profile adds only local preview, egress preview, correction, proposal listing/decision, and tombstone controls. It has no hosted judgment, hosted embedding, training, scheduler, or watchdog tool. <code>--allow-writes</code> remains only as a deprecated alias for that broader profile; it is not a no-op and should not be added to ordinary runtime registrations.</p>
       <p>Install <code>ocbrain-training</code> or <code>ocbrain-ops</code> only when their explicit local workflows are needed. They default to separate SQLite stores, the core MCP imports neither companion, and no package installs a recurring job.</p>
       <div class="actions">
         <a class="btn" href="/how-it-works/">Current architecture</a>
@@ -223,6 +232,7 @@ chmod 600 data/active-core.path</code></pre>
       <pre><code>.venv/bin/python -m pip install -e ".[dev]" \
   -e packages/ops \
   -e packages/training
+.venv/bin/python -m pytest -q tests/test_golden_context_v1.py
 PYTHONPATH=src .venv/bin/python -m pytest -q
 .venv/bin/ruff check .
 .venv/bin/python -m compileall -q src tests

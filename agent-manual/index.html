@@ -67,8 +67,8 @@
       <h2>The default runtime profile</h2>
       <p>The ordinary launcher exposes the tools an agent needs to share context and report outcomes. Its writes are limited to scoped evidence, retrieval usefulness, and append-only closeout receipts; it does not expose correction, lifecycle, egress, or tombstone authority.</p>
       <div class="grid">
-        <div class="card"><h3>brain.context</h3><p>Return the stable <code>ocbrain.context.v1</code> envelope: scoped results, coverage metadata, exclusions, contradictions, and source handles.</p></div>
-        <div class="card"><h3>brain.source</h3><p>Expand one OCBrain-issued handle within its original scope, bounded by size and checked against its recorded content hash.</p></div>
+        <div class="card"><h3>brain.context</h3><p>Return the stable <code>ocbrain.context.v1</code> envelope: scoped results, mutually exclusive inventory counts, contradictions, and source handles within a hard 32 KB serialized limit.</p></div>
+        <div class="card"><h3>brain.source</h3><p>Expand one OCBrain-issued handle in matching source scope, bounded by size and checked against its recorded content hash. Hosted output redacts local paths.</p></div>
         <div class="card"><h3>brain.search</h3><p>Focused source-backed retrieval. Pass context and avoid broad fishing.</p></div>
         <div class="card"><h3>brain.digest</h3><p>Return bounded current beliefs and core counts through the same scope gate.</p></div>
         <div class="card"><h3>brain.get</h3><p>Get one serving belief or evidence object after lifecycle, quarantine, confidentiality, and scope checks.</p></div>
@@ -89,7 +89,7 @@
         <div class="card"><h3>brain.proposals</h3><p>List pending or decided compilation proposals and optional local review packets.</p></div>
         <div class="card"><h3>brain.forget</h3><p>Append a gated tombstone so a belief stops serving without rewriting audit history.</p></div>
       </div>
-      <p>The admin profile still has no hosted judgment, embedding, training, scheduler, or watchdog tool. It grants no authority to dispatch externally, publish a package, install a skill, or destructively rewrite the ledger.</p>
+      <p>The admin profile still has no hosted judgment, hosted embedding, training, scheduler, or watchdog tool. Optional dense retrieval is loopback-only and is not an admin authority. The profile grants no authority to dispatch externally, publish a package, install a skill, or destructively rewrite the ledger.</p>
     </section>
 
     <section class="section">
@@ -119,6 +119,8 @@
   "runtime": "claude",
   "task": "runtime-acceptance"
 }</code></pre>
+      <p>Ordinary client launchers use the server-controlled <code>hosted_model</code> target. A tool caller cannot override it. Only non-confidential <code>hosted_ok</code> objects may enter that delivery path; <code>local_only</code>, <code>approval_required</code>, prohibited, confidential, and secret objects remain excluded before ranking.</p>
+      <p>Read the coverage as three current-serving inventory partitions: <code>ranking.eligible_count</code>, <code>excluded_scope_count</code>, and <code>excluded_delivery_count</code>. These exact, query-independent counts disclose category cardinalities. A hosted packet intentionally gives no excluded ID, body, path, or <code>excluded_sample</code> contents. Do not infer what an excluded object said.</p>
     </section>
 
     <section class="section" id="busy">
@@ -152,7 +154,7 @@ brain.closeout(task_ref="runtime-acceptance", status="completed",
   summary="Shared Context and source expansion verified",
   retrieval_use_ids=["ret_..."], decision_impact="informed",
   verifier_refs=[{"uri":"mcp://runtime-acceptance","kind":"mcp_smoke","status":"passed"}])</code></pre>
-      <p>Use ids returned by the live calls; omit feedback when no retrieval handle exists. A healthy install returns scoped results, visible exclusion counts, hash-verified bounded source expansion, and an append-only closeout receipt without a hosted call. A completed receipt with no verifier remains agent-reported rather than silently becoming verified.</p>
+      <p>Use ids returned by the live calls; omit feedback when no retrieval handle exists. A healthy install returns a packet no larger than 32 KB, separate scope and delivery exclusion counts, hash-verified bounded source expansion, and an append-only closeout receipt without OCBrain making its own hosted inference call. For hosted delivery, source locators use <code>ocbrain://</code> rather than revealing a local path. A completed receipt with no verifier remains agent-reported rather than silently becoming verified.</p>
     </section>
 
     <section class="section">
