@@ -57,8 +57,13 @@ agent contract support that job without crowding the front door.
   hosted-context demonstration. Never imply that it authorizes the database,
   full source file, or local path to leave the machine.
 - Keep Cursor-specific setup out until its maintainer-authored integration is
-  ready, or document candidate compatibility as unreleased and link the exact
-  source revision that implements it.
+  ready, or document unreleased compatibility with the exact tested and merged
+  source revisions that implement it.
+- Keep the homepage terse: one claim, one install path, current proof, and hard
+  boundaries. Put migration history, training results, and dated inventories on
+  `/proof/` instead of turning the front door into a changelog.
+- Avoid pill clouds, stacked gradient panels, repeated calls to action, and
+  decorative technical imagery that does not explain the product.
 - Describe the repository as public without implying that public write or
   merge access exists. External work arrives through reviewed pull requests.
 

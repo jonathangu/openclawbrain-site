@@ -8,26 +8,27 @@ context the agent used.
 
 Current public release: v1.1.0 under Apache-2.0.
 
-Unreleased source candidate (2026-08-03):
+Current unreleased main (2026-08-03):
 
-- Pull request #10 is under review at
-  https://github.com/jonathangu/ocbrain/pull/10 and is pinned here at commit
-  156166f80b3e00d31ae2e7930b644aac9e74da43. It is not a release asset and
-  does not replace v1.1.0 installation guidance.
-- The candidate passed 797 tests, Ruff, package build, diff hygiene, and the
-  repository public-safety scanner with zero findings before push.
+- Pull request #10 was merged into main at
+  91123ca7d862c38cec7d719f3fdf18252d61b7cf. Its tested head was
+  156166f80b3e00d31ae2e7930b644aac9e74da43; both commits have the same source
+  tree. This is not a release asset and does not replace v1.1.0 installation
+  guidance.
+- The merged tree passed 797 tests, Ruff, package build, diff hygiene, and the
+  repository public-safety scanner with zero findings before merge.
 - Two cross-domain negative controls that previously returned four and five
   filler memories now return zero. A strong semantic positive control still
   returns six relevant candidates.
 - The relevance correction expands lexical stopwords and raises dense-score
   admission floors. When neither lane has adequate evidence, the candidate
   returns an honest empty result instead of weak filler.
-- The same candidate includes exact-locator lookup, dot-free MCP client tool
+- The same merged tree includes exact-locator lookup, dot-free MCP client tool
   names, evidence-only history ingestion, sparse-wiki freshness, corpus-aware
   vector freshness, bounded SQLite writer behavior, and one-shot recovery from
   a closed MCP transport.
 - These are source and local acceptance results. Fresh model-driven
-  multi-client acceptance remains a separate release gate.
+  multi-client acceptance and release assets remain separate gates.
 
 Requirements and installation:
 

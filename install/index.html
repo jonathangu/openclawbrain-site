@@ -56,6 +56,7 @@
       <p>The core has no runtime package dependencies. Install it into a dedicated virtual environment, create its database under a restrictive process mask, and verify its health before connecting a client.</p>
       <pre><code>git clone https://github.com/jonathangu/ocbrain.git
 cd ocbrain
+git checkout v1.1.0
 python3 -m venv .venv
 .venv/bin/python -m pip install -e .
 .venv/bin/ocbrain --version
@@ -66,7 +67,7 @@ chmod 600 data/ocbrain.sqlite
 .venv/bin/ocbrain --db data/ocbrain.sqlite status
 .venv/bin/ocbrain --db data/ocbrain.sqlite doctor \
   --launcher "$PWD/scripts/ocbrain-mcp"</code></pre>
-      <p class="fine">The database, snapshots, migration manifests, datasets, ratings, and model artifacts live under ignored owner-controlled paths. Do not move them into a public repository. A fresh <code>init</code> creates the event-authoritative v1 schema.</p>
+      <p class="fine">The tag pins the current stable release. To evaluate unreleased <code>main</code>, omit that checkout and follow the dated proof separately. The database, snapshots, migration manifests, datasets, ratings, and model artifacts live under ignored owner-controlled paths. Do not move them into a public repository. A fresh <code>init</code> creates the event-authoritative v1 schema.</p>
     </section>
 
     <section class="section">

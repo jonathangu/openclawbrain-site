@@ -29,7 +29,7 @@
       <h1>What passed, what failed, and what is still only a bet.</h1>
       <p class="lead">Trust does not come from calling a system autonomous or safe. It comes from naming the claim, running the verifier, keeping the failed result, and dating the snapshot so nobody mistakes it for a permanent guarantee.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="#candidate">August 3 candidate</a>
+        <a class="btn btn-primary" href="#candidate">August 3 main</a>
         <a class="btn" href="#snapshot">July 13 v1 snapshot</a>
         <a class="btn" href="#safeguards">Safeguards</a>
         <a class="btn" href="#pilot">Fine-tune pilot</a>
@@ -38,19 +38,19 @@
     </section>
 
     <section class="section" id="candidate">
-      <h2>Unreleased retrieval and runtime candidate · 2026-08-03</h2>
-      <p><a href="https://github.com/jonathangu/ocbrain/pull/10" target="_blank" rel="noopener">Pull request #10</a> is public review evidence, not a release. The current public release remains v1.1.0. The candidate snapshot below refers to commit <a href="https://github.com/jonathangu/ocbrain/commit/156166f80b3e00d31ae2e7930b644aac9e74da43" target="_blank" rel="noopener"><code>156166f</code></a>.</p>
+      <h2>Current unreleased main · 2026-08-03</h2>
+      <p><a href="https://github.com/jonathangu/ocbrain/pull/10" target="_blank" rel="noopener">Pull request #10</a> is merged into <code>main</code> at <a href="https://github.com/jonathangu/ocbrain/commit/91123ca7d862c38cec7d719f3fdf18252d61b7cf" target="_blank" rel="noopener"><code>91123ca</code></a>. The current packaged release remains v1.1.0. The source gate below ran on tested head <a href="https://github.com/jonathangu/ocbrain/commit/156166f80b3e00d31ae2e7930b644aac9e74da43" target="_blank" rel="noopener"><code>156166f</code></a>; the merge commit has the same source tree.</p>
       <div class="grid">
-        <div class="card"><h3>797 tests passed</h3><p>The complete candidate suite passed, including regressions for exact locator resolution, wiki freshness, skill telemetry, runtime-client compatibility, and hybrid relevance.</p></div>
+        <div class="card"><h3>797 tests passed</h3><p>The complete merged tree passed, including regressions for exact locator resolution, wiki freshness, skill telemetry, runtime-client compatibility, and hybrid relevance.</p></div>
         <div class="card"><h3>Two negative controls passed</h3><p>An unrelated sports query fell from four returned memories to zero. An unrelated frontend-styling query fell from five to zero.</p></div>
         <div class="card"><h3>Positive recall survived</h3><p>A strongly related semantic query still returned all six relevant candidates after the dense admission floor was raised.</p></div>
-        <div class="card"><h3>Public surface stayed clean</h3><p>Ruff, package build, diff hygiene, and the repository's denylist and entropy scanner passed with zero findings before the branch was pushed.</p></div>
+        <div class="card"><h3>Public surface stayed clean</h3><p>Ruff, package build, diff hygiene, and the repository's denylist and entropy scanner passed with zero findings before merge.</p></div>
       </div>
-      <p>The relevance failure had two causes: common instruction words survived lexical tokenization, and weak dense candidates were admitted below a useful semantic-similarity floor. The candidate expands the stopword set, requires stronger dense scores, and keeps an honest empty packet when neither retrieval lane has adequate evidence.</p>
-      <p>The same branch includes exact-locator lookup, dot-free MCP names for clients that rewrite tool identifiers, evidence-only source-history ingestion, sparse-wiki freshness markers, corpus-aware vector freshness, bounded writer locks, and one-shot <code>Transport closed</code> recovery. Those behaviors have source and test evidence on the candidate branch; fresh model-driven multi-client acceptance remains a separate release gate.</p>
+      <p>The relevance failure had two causes: common instruction words survived lexical tokenization, and weak dense candidates were admitted below a useful semantic-similarity floor. Current <code>main</code> expands the stopword set, requires stronger dense scores, and keeps an honest empty packet when neither retrieval lane has adequate evidence.</p>
+      <p>The same merged tree includes exact-locator lookup, dot-free MCP names for clients that rewrite tool identifiers, evidence-only source-history ingestion, sparse-wiki freshness markers, corpus-aware vector freshness, bounded writer locks, and one-shot <code>Transport closed</code> recovery. Those behaviors have source and test evidence on <code>main</code>; fresh model-driven multi-client acceptance and release assets remain separate gates.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain/pull/10" target="_blank" rel="noopener">Inspect PR #10</a>
-        <a class="btn" href="https://github.com/jonathangu/ocbrain/commit/156166f80b3e00d31ae2e7930b644aac9e74da43" target="_blank" rel="noopener">Inspect exact commit</a>
+        <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain/pull/10" target="_blank" rel="noopener">Inspect merged PR #10</a>
+        <a class="btn" href="https://github.com/jonathangu/ocbrain/commit/156166f80b3e00d31ae2e7930b644aac9e74da43" target="_blank" rel="noopener">Inspect tested head</a>
         <a class="btn" href="https://github.com/jonathangu/ocbrain/releases/tag/v1.1.0" target="_blank" rel="noopener">Current release v1.1.0</a>
       </div>
     </section>
