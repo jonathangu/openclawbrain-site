@@ -38,8 +38,8 @@
     </section>
 
     <section class="section" id="candidate">
-      <h2>Unreleased retrieval and runtime candidate · 2026-08-03</h2>
-      <p><a href="https://github.com/jonathangu/ocbrain/pull/10" target="_blank" rel="noopener">Pull request #10</a> is public review evidence, not a release. The current public release remains v1.1.0. The candidate snapshot below refers to commit <a href="https://github.com/jonathangu/ocbrain/commit/156166f80b3e00d31ae2e7930b644aac9e74da43" target="_blank" rel="noopener"><code>156166f</code></a>.</p>
+      <h2>Merged retrieval and runtime candidate · 2026-08-03</h2>
+      <p><a href="https://github.com/jonathangu/ocbrain/pull/10" target="_blank" rel="noopener">Pull request #10</a> passed GitHub CI and merged to main at <a href="https://github.com/jonathangu/ocbrain/commit/91123ca7d862c38cec7d719f3fdf18252d61b7cf" target="_blank" rel="noopener"><code>91123ca</code></a>. It is public source evidence, not a release; the current public release remains v1.1.0. The test snapshot below refers to the PR head at <a href="https://github.com/jonathangu/ocbrain/commit/156166f80b3e00d31ae2e7930b644aac9e74da43" target="_blank" rel="noopener"><code>156166f</code></a>.</p>
       <div class="grid">
         <div class="card"><h3>797 tests passed</h3><p>The complete candidate suite passed, including regressions for exact locator resolution, wiki freshness, skill telemetry, runtime-client compatibility, and hybrid relevance.</p></div>
         <div class="card"><h3>Two negative controls passed</h3><p>An unrelated sports query fell from four returned memories to zero. An unrelated frontend-styling query fell from five to zero.</p></div>
@@ -47,10 +47,10 @@
         <div class="card"><h3>Public surface stayed clean</h3><p>Ruff, package build, diff hygiene, and the repository's denylist and entropy scanner passed with zero findings before the branch was pushed.</p></div>
       </div>
       <p>The relevance failure had two causes: common instruction words survived lexical tokenization, and weak dense candidates were admitted below a useful semantic-similarity floor. The candidate expands the stopword set, requires stronger dense scores, and keeps an honest empty packet when neither retrieval lane has adequate evidence.</p>
-      <p>The same branch includes exact-locator lookup, dot-free MCP names for clients that rewrite tool identifiers, evidence-only source-history ingestion, sparse-wiki freshness markers, corpus-aware vector freshness, bounded writer locks, and one-shot <code>Transport closed</code> recovery. Those behaviors have source and test evidence on the candidate branch; fresh model-driven multi-client acceptance remains a separate release gate.</p>
+      <p>The merged source includes exact-locator lookup, dot-free MCP names for clients that rewrite tool identifiers, evidence-only source-history ingestion, sparse-wiki freshness markers, corpus-aware vector freshness, bounded writer locks, and one-shot <code>Transport closed</code> recovery. Those behaviors have source, CI, and test evidence on main; fresh model-driven multi-client acceptance remains a separate release gate.</p>
       <div class="actions">
-        <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain/pull/10" target="_blank" rel="noopener">Inspect PR #10</a>
-        <a class="btn" href="https://github.com/jonathangu/ocbrain/commit/156166f80b3e00d31ae2e7930b644aac9e74da43" target="_blank" rel="noopener">Inspect exact commit</a>
+        <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain/pull/10" target="_blank" rel="noopener">Inspect merged PR #10</a>
+        <a class="btn" href="https://github.com/jonathangu/ocbrain/commit/91123ca7d862c38cec7d719f3fdf18252d61b7cf" target="_blank" rel="noopener">Inspect main merge</a>
         <a class="btn" href="https://github.com/jonathangu/ocbrain/releases/tag/v1.1.0" target="_blank" rel="noopener">Current release v1.1.0</a>
       </div>
     </section>
