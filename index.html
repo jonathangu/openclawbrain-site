@@ -146,6 +146,24 @@
         </div>
       </section>
 
+      <section class="section" id="candidate">
+        <div class="eyebrow">Unreleased source candidate · 2026-08-03</div>
+        <h2>The next candidate prefers no memory to bad memory.</h2>
+        <p>The current public release is still v1.1.0. <a href="https://github.com/jonathangu/ocbrain/pull/10" target="_blank" rel="noopener">Pull request #10</a>, pinned here at <a href="https://github.com/jonathangu/ocbrain/commit/156166f80b3e00d31ae2e7930b644aac9e74da43" target="_blank" rel="noopener"><code>156166f</code></a>, is a review candidate rather than a release. It combines the newer runtime and retrieval work with an explicit relevance correction: weak cross-domain matches are rejected instead of being padded into a confident-looking packet.</p>
+        <div class="grid">
+          <div class="card"><h3>Negative controls go empty</h3><p>Two unrelated queries that previously returned four and five filler results now return zero. A strong semantic positive control still returns six relevant results.</p></div>
+          <div class="card"><h3>Candidate source gate</h3><p>The exact branch passed 797 tests, Ruff, package build, diff hygiene, and the repository's public-safety scan with zero findings.</p></div>
+          <div class="card"><h3>Stricter retrieval boundaries</h3><p>The candidate raises dense-score admission floors, removes high-frequency instruction words from lexical matching, and short-circuits exact locators before fuzzy ranking.</p></div>
+          <div class="card"><h3>More honest runtime behavior</h3><p>It adds dot-free MCP client compatibility, evidence-only history ingestion, corpus-aware vector freshness, bounded SQLite writer behavior, and a one-shot recovery path for a closed MCP transport.</p></div>
+        </div>
+        <p class="fine">These are source and local acceptance results for an open pull request. They are not release assets, a completed review, or a claim that every model-driven client has repeated the full acceptance loop on this commit.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://github.com/jonathangu/ocbrain/pull/10" target="_blank" rel="noopener">Review candidate PR #10</a>
+          <a class="btn" href="/proof/#candidate">Read the dated candidate proof</a>
+          <a class="btn" href="https://github.com/jonathangu/ocbrain/releases/tag/v1.1.0" target="_blank" rel="noopener">Use current release v1.1.0</a>
+        </div>
+      </section>
+
       <section class="section">
         <h2>Formerly OpenClawBrain.</h2>
         <p>The project began as OpenClawBrain and became the smaller ocbrain runtime: local first, source-backed, shared through MCP, and conservative about what earns memory. The domain stayed because the question stayed the same. How should an agent remember without turning arbitrary text into truth?</p>
