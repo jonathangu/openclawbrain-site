@@ -57,7 +57,8 @@ agent contract support that job without crowding the front door.
   hosted-context demonstration. Never imply that it authorizes the database,
   full source file, or local path to leave the machine.
 - Keep Cursor-specific setup out until its maintainer-authored integration is
-  ready.
+  ready, or document candidate compatibility as unreleased and link the exact
+  source revision that implements it.
 - Describe the repository as public without implying that public write or
   merge access exists. External work arrives through reviewed pull requests.
 
